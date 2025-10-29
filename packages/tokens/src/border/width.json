@@ -1,0 +1,12 @@
+{
+  "border": {
+    "width": {
+      "$type": "dimension",
+      "0": { "$value": "0", "$description": "No border" },
+      "base": { "$value": "1px", "$description": "Base border width (1px)" },
+      "2": { "$value": "2px", "$description": "2px border" },
+      "4": { "$value": "4px", "$description": "4px border" },
+      "8": { "$value": "8px", "$description": "8px border" }
+    }
+  }
+}

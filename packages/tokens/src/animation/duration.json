@@ -1,0 +1,13 @@
+{
+  "animation": {
+    "duration": {
+      "$type": "duration",
+      "instant": { "$value": "0ms", "$description": "Instant (no animation)" },
+      "fast": { "$value": "100ms", "$description": "Fast animation" },
+      "normal": { "$value": "200ms", "$description": "Normal animation" },
+      "slow": { "$value": "300ms", "$description": "Slow animation" },
+      "slower": { "$value": "500ms", "$description": "Slower animation" },
+      "slowest": { "$value": "700ms", "$description": "Slowest animation" }
+    }
+  }
+}

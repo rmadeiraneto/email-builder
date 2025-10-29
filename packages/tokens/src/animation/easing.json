@@ -1,0 +1,21 @@
+{
+  "animation": {
+    "easing": {
+      "$type": "cubicBezier",
+      "linear": { "$value": "linear", "$description": "Linear easing" },
+      "ease": { "$value": "ease", "$description": "Default ease" },
+      "ease-in": { "$value": "ease-in", "$description": "Ease in" },
+      "ease-out": { "$value": "ease-out", "$description": "Ease out" },
+      "ease-in-out": { "$value": "ease-in-out", "$description": "Ease in and out" },
+      "ease-in-sine": { "$value": [0.12, 0, 0.39, 0], "$description": "Ease in sine curve" },
+      "ease-out-sine": { "$value": [0.61, 1, 0.88, 1], "$description": "Ease out sine curve" },
+      "ease-in-out-sine": { "$value": [0.37, 0, 0.63, 1], "$description": "Ease in-out sine curve" },
+      "ease-in-quad": { "$value": [0.11, 0, 0.5, 0], "$description": "Ease in quadratic curve" },
+      "ease-out-quad": { "$value": [0.5, 1, 0.89, 1], "$description": "Ease out quadratic curve" },
+      "ease-in-out-quad": { "$value": [0.45, 0, 0.55, 1], "$description": "Ease in-out quadratic curve" },
+      "ease-in-cubic": { "$value": [0.32, 0, 0.67, 0], "$description": "Ease in cubic curve" },
+      "ease-out-cubic": { "$value": [0.33, 1, 0.68, 1], "$description": "Ease out cubic curve" },
+      "ease-in-out-cubic": { "$value": [0.65, 0, 0.35, 1], "$description": "Ease in-out cubic curve" }
+    }
+  }
+}

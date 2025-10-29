@@ -1,0 +1,22 @@
+/**
+ * Label component styles
+ */
+
+// Placeholder values
+$gray-700: #374151;
+$error-color: #ef4444;
+
+.label {
+  display: inline-block;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: $gray-700;
+  margin-bottom: 0.25rem;
+  cursor: pointer;
+
+  &__required {
+    color: $error-color;
+    margin-left: 0.25rem;
+  }
+}

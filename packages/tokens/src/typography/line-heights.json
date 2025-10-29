@@ -1,0 +1,13 @@
+{
+  "typography": {
+    "line-height": {
+      "$type": "number",
+      "none": { "$value": "1", "$description": "No line height" },
+      "tight": { "$value": "1.25", "$description": "Tight line height" },
+      "snug": { "$value": "1.375", "$description": "Snug line height" },
+      "normal": { "$value": "1.5", "$description": "Normal line height" },
+      "relaxed": { "$value": "1.625", "$description": "Relaxed line height" },
+      "loose": { "$value": "2", "$description": "Loose line height" }
+    }
+  }
+}

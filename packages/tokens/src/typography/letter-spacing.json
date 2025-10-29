@@ -1,0 +1,13 @@
+{
+  "typography": {
+    "letter-spacing": {
+      "$type": "dimension",
+      "tighter": { "$value": "-0.05em", "$description": "Tighter letter spacing" },
+      "tight": { "$value": "-0.025em", "$description": "Tight letter spacing" },
+      "normal": { "$value": "0", "$description": "Normal letter spacing" },
+      "wide": { "$value": "0.025em", "$description": "Wide letter spacing" },
+      "wider": { "$value": "0.05em", "$description": "Wider letter spacing" },
+      "widest": { "$value": "0.1em", "$description": "Widest letter spacing" }
+    }
+  }
+}

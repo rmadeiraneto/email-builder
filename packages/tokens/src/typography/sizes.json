@@ -1,0 +1,20 @@
+{
+  "typography": {
+    "font-size": {
+      "$type": "dimension",
+      "xs": { "$value": "0.75rem", "$description": "Extra small font size (12px)" },
+      "sm": { "$value": "0.875rem", "$description": "Small font size (14px)" },
+      "base": { "$value": "1rem", "$description": "Base font size (16px)" },
+      "lg": { "$value": "1.125rem", "$description": "Large font size (18px)" },
+      "xl": { "$value": "1.25rem", "$description": "Extra large font size (20px)" },
+      "2xl": { "$value": "1.5rem", "$description": "2X large font size (24px)" },
+      "3xl": { "$value": "1.875rem", "$description": "3X large font size (30px)" },
+      "4xl": { "$value": "2.25rem", "$description": "4X large font size (36px)" },
+      "5xl": { "$value": "3rem", "$description": "5X large font size (48px)" },
+      "6xl": { "$value": "3.75rem", "$description": "6X large font size (60px)" },
+      "7xl": { "$value": "4.5rem", "$description": "7X large font size (72px)" },
+      "8xl": { "$value": "6rem", "$description": "8X large font size (96px)" },
+      "9xl": { "$value": "8rem", "$description": "9X large font size (128px)" }
+    }
+  }
+}

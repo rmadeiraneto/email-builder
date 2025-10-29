@@ -1,0 +1,16 @@
+{
+  "typography": {
+    "font-weight": {
+      "$type": "fontWeight",
+      "thin": { "$value": "100", "$description": "Thin weight" },
+      "extralight": { "$value": "200", "$description": "Extra light weight" },
+      "light": { "$value": "300", "$description": "Light weight" },
+      "normal": { "$value": "400", "$description": "Normal weight" },
+      "medium": { "$value": "500", "$description": "Medium weight" },
+      "semibold": { "$value": "600", "$description": "Semibold weight" },
+      "bold": { "$value": "700", "$description": "Bold weight" },
+      "extrabold": { "$value": "800", "$description": "Extra bold weight" },
+      "black": { "$value": "900", "$description": "Black weight" }
+    }
+  }
+}

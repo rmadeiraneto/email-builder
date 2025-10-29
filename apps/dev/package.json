@@ -1,0 +1,25 @@
+{
+  "name": "@email-builder/dev",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Development sandbox for the email builder",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@email-builder/core": "workspace:*",
+    "@email-builder/tokens": "workspace:*",
+    "@email-builder/ui-components": "workspace:*",
+    "@email-builder/ui-solid": "workspace:*",
+    "solid-js": "^1.8.15"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "vite": "^5.1.0",
+    "vite-plugin-solid": "^2.10.1"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "color": {
+    "semantic": {
+      "$type": "color",
+      "success": {
+        "light": { "$value": "#d1fae5", "$description": "Light success color" },
+        "base": { "$value": "#10b981", "$description": "Base success color" },
+        "dark": { "$value": "#047857", "$description": "Dark success color" }
+      },
+      "error": {
+        "light": { "$value": "#fee2e2", "$description": "Light error color" },
+        "base": { "$value": "#ef4444", "$description": "Base error color" },
+        "dark": { "$value": "#dc2626", "$description": "Dark error color" }
+      },
+      "warning": {
+        "light": { "$value": "#fef3c7", "$description": "Light warning color" },
+        "base": { "$value": "#f59e0b", "$description": "Base warning color" },
+        "dark": { "$value": "#d97706", "$description": "Dark warning color" }
+      },
+      "info": {
+        "light": { "$value": "#dbeafe", "$description": "Light info color" },
+        "base": { "$value": "#3b82f6", "$description": "Base info color" },
+        "dark": { "$value": "#1d4ed8", "$description": "Dark info color" }
+      }
+    }
+  }
+}

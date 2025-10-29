@@ -1,0 +1,15 @@
+{
+  "color": {
+    "syntax": {
+      "$type": "color",
+      "comment": { "$value": "#6b7280", "$description": "Code comment color" },
+      "keyword": { "$value": "#7c3aed", "$description": "Code keyword color" },
+      "string": { "$value": "#10b981", "$description": "Code string color" },
+      "number": { "$value": "#f59e0b", "$description": "Code number color" },
+      "function": { "$value": "#3b82f6", "$description": "Code function color" },
+      "variable": { "$value": "#ef4444", "$description": "Code variable color" },
+      "operator": { "$value": "#8b5cf6", "$description": "Code operator color" },
+      "constant": { "$value": "#d946ef", "$description": "Code constant color" }
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "color": {
+    "ui": {
+      "$type": "color",
+      "background": {
+        "primary": { "$value": "#ffffff", "$description": "Primary background (white)" },
+        "secondary": { "$value": "#f9fafb", "$description": "Secondary background (light gray)" },
+        "tertiary": { "$value": "#f3f4f6", "$description": "Tertiary background (medium gray)" },
+        "inverse": { "$value": "#111827", "$description": "Inverse background (dark)" },
+        "overlay": { "$value": "rgba(0, 0, 0, 0.5)", "$description": "Overlay background" }
+      },
+      "surface": {
+        "base": { "$value": "#ffffff", "$description": "Base surface color" },
+        "raised": { "$value": "#ffffff", "$description": "Raised surface color" },
+        "overlay": { "$value": "#ffffff", "$description": "Overlay surface color" }
+      },
+      "border": {
+        "base": { "$value": "#e5e7eb", "$description": "Base border color" },
+        "strong": { "$value": "#d1d5db", "$description": "Strong border color" },
+        "subtle": { "$value": "#f3f4f6", "$description": "Subtle border color" },
+        "focus": { "$value": "#3b82f6", "$description": "Focus border color" }
+      },
+      "text": {
+        "primary": { "$value": "#111827", "$description": "Primary text color" },
+        "secondary": { "$value": "#6b7280", "$description": "Secondary text color" },
+        "tertiary": { "$value": "#9ca3af", "$description": "Tertiary text color" },
+        "inverse": { "$value": "#ffffff", "$description": "Inverse text color (on dark)" },
+        "disabled": { "$value": "#d1d5db", "$description": "Disabled text color" },
+        "link": { "$value": "#3b82f6", "$description": "Link text color" },
+        "link-hover": { "$value": "#2563eb", "$description": "Link hover text color" }
+      },
+      "icon": {
+        "primary": { "$value": "#111827", "$description": "Primary icon color" },
+        "secondary": { "$value": "#6b7280", "$description": "Secondary icon color" },
+        "tertiary": { "$value": "#9ca3af", "$description": "Tertiary icon color" },
+        "inverse": { "$value": "#ffffff", "$description": "Inverse icon color" },
+        "disabled": { "$value": "#d1d5db", "$description": "Disabled icon color" }
+      },
+      "interactive": {
+        "default": { "$value": "#3b82f6", "$description": "Default interactive color" },
+        "hover": { "$value": "#2563eb", "$description": "Hover interactive color" },
+        "active": { "$value": "#1d4ed8", "$description": "Active interactive color" },
+        "disabled": { "$value": "#e5e7eb", "$description": "Disabled interactive color" }
+      }
+    },
+    "neutral": {
+      "$type": "color",
+      "50": { "$value": "#fafafa", "$description": "Neutral 50" },
+      "100": { "$value": "#f5f5f5", "$description": "Neutral 100" },
+      "200": { "$value": "#e5e5e5", "$description": "Neutral 200" },
+      "300": { "$value": "#d4d4d4", "$description": "Neutral 300" },
+      "400": { "$value": "#a3a3a3", "$description": "Neutral 400" },
+      "500": { "$value": "#737373", "$description": "Neutral 500" },
+      "600": { "$value": "#525252", "$description": "Neutral 600" },
+      "700": { "$value": "#404040", "$description": "Neutral 700" },
+      "800": { "$value": "#262626", "$description": "Neutral 800" },
+      "900": { "$value": "#171717", "$description": "Neutral 900" }
+    }
+  }
+}

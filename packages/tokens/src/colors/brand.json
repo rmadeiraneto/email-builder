@@ -1,0 +1,43 @@
+{
+  "color": {
+    "brand": {
+      "$type": "color",
+      "primary": {
+        "50": { "$value": "#eff6ff", "$description": "Lightest primary color" },
+        "100": { "$value": "#dbeafe", "$description": "Very light primary color" },
+        "200": { "$value": "#bfdbfe", "$description": "Light primary color" },
+        "300": { "$value": "#93c5fd", "$description": "Light-medium primary color" },
+        "400": { "$value": "#60a5fa", "$description": "Medium primary color" },
+        "500": { "$value": "#3b82f6", "$description": "Base primary color" },
+        "600": { "$value": "#2563eb", "$description": "Medium-dark primary color" },
+        "700": { "$value": "#1d4ed8", "$description": "Dark primary color" },
+        "800": { "$value": "#1e40af", "$description": "Very dark primary color" },
+        "900": { "$value": "#1e3a8a", "$description": "Darkest primary color" }
+      },
+      "secondary": {
+        "50": { "$value": "#f5f3ff", "$description": "Lightest secondary color" },
+        "100": { "$value": "#ede9fe", "$description": "Very light secondary color" },
+        "200": { "$value": "#ddd6fe", "$description": "Light secondary color" },
+        "300": { "$value": "#c4b5fd", "$description": "Light-medium secondary color" },
+        "400": { "$value": "#a78bfa", "$description": "Medium secondary color" },
+        "500": { "$value": "#8b5cf6", "$description": "Base secondary color" },
+        "600": { "$value": "#7c3aed", "$description": "Medium-dark secondary color" },
+        "700": { "$value": "#6d28d9", "$description": "Dark secondary color" },
+        "800": { "$value": "#5b21b6", "$description": "Very dark secondary color" },
+        "900": { "$value": "#4c1d95", "$description": "Darkest secondary color" }
+      },
+      "accent": {
+        "50": { "$value": "#fdf4ff", "$description": "Lightest accent color" },
+        "100": { "$value": "#fae8ff", "$description": "Very light accent color" },
+        "200": { "$value": "#f5d0fe", "$description": "Light accent color" },
+        "300": { "$value": "#f0abfc", "$description": "Light-medium accent color" },
+        "400": { "$value": "#e879f9", "$description": "Medium accent color" },
+        "500": { "$value": "#d946ef", "$description": "Base accent color" },
+        "600": { "$value": "#c026d3", "$description": "Medium-dark accent color" },
+        "700": { "$value": "#a21caf", "$description": "Dark accent color" },
+        "800": { "$value": "#86198f", "$description": "Very dark accent color" },
+        "900": { "$value": "#701a75", "$description": "Darkest accent color" }
+      }
+    }
+  }
+}

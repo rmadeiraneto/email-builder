@@ -1,0 +1,40 @@
+{
+  "name": "@email-builder/tokens",
+  "version": "0.1.0",
+  "description": "Design tokens for the email builder",
+  "main": "./build/js/tokens.js",
+  "module": "./build/js/tokens.js",
+  "types": "./build/ts/tokens.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/ts/tokens.d.ts",
+      "import": "./build/js/tokens.js"
+    },
+    "./colors": {
+      "types": "./build/ts/colors.d.ts",
+      "import": "./build/js/colors.js"
+    },
+    "./typography": {
+      "types": "./build/ts/typography.d.ts",
+      "import": "./build/js/typography.js"
+    },
+    "./spacing": {
+      "types": "./build/ts/spacing.d.ts",
+      "import": "./build/js/spacing.js"
+    },
+    "./scss": "./build/scss/_variables.scss",
+    "./css": "./build/css/variables.css"
+  },
+  "files": ["build", "src"],
+  "scripts": {
+    "build": "node scripts/build-tokens.js",
+    "watch": "node scripts/build-tokens.js --watch",
+    "clean": "rm -rf build"
+  },
+  "keywords": ["design-tokens", "design-system", "theme"],
+  "author": "Ricardo Madeira",
+  "license": "MIT",
+  "devDependencies": {
+    "style-dictionary": "^3.9.2"
+  }
+}

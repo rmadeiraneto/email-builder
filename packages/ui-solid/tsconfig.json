@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@tokens": ["../tokens/build/ts"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]
+}

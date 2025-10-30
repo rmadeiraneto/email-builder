@@ -24,7 +24,10 @@
     },
     "./styles": "./dist/styles/index.css"
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "vite build",
     "dev": "vite build --watch",
@@ -34,13 +37,18 @@
     "lint": "eslint src --ext .ts,.tsx",
     "lint:fix": "eslint src --ext .ts,.tsx --fix"
   },
-  "keywords": ["ui-components", "vanilla-js", "web-components"],
+  "keywords": [
+    "ui-components",
+    "vanilla-js",
+    "web-components"
+  ],
   "author": "Ricardo Madeira",
   "license": "MIT",
   "dependencies": {
     "@email-builder/tokens": "workspace:*"
   },
   "devDependencies": {
+    "jsdom": "^27.0.1",
     "sass": "^1.71.1",
     "typescript": "^5.3.3",
     "vite": "^5.1.0",

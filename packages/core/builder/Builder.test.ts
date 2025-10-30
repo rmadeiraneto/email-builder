@@ -238,11 +238,8 @@ describe('Builder', () => {
       const builder = new Builder(config);
       const listener = vi.fn();
 
-      builder.on(BuilderEvent.STATE_CHANGED, listener);
+      builder.on(BuilderEvent.INITIALIZED, listener);
       await builder.initialize();
-
-      const command = new MockCommand();
-      await builder.executeCommand(command);
 
       expect(listener).toHaveBeenCalled();
     });

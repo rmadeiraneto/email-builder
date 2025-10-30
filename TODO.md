@@ -147,11 +147,12 @@ This document tracks all project requirements and their implementation status.
 ## 🔧 Core Functionality
 
 ### Builder Core
-- [ ] Builder class
-  - [ ] Initialization
-  - [ ] Configuration handling
-  - [ ] Event system
-  - [ ] State management
+- [x] Builder class
+  - [x] Initialization
+  - [x] Configuration handling
+  - [x] Event system
+  - [x] State management
+  - [x] Comprehensive tests (>80% coverage)
 - [ ] Component registry
 - [ ] Template manager
   - [ ] Save templates
@@ -163,24 +164,37 @@ This document tracks all project requirements and their implementation status.
   - [ ] Delete presets
 
 ### Command System
-- [ ] Command pattern implementation
-- [ ] Command types
+- [x] Command pattern implementation
+  - [x] Base command interfaces
+  - [x] UndoableCommand interface
+  - [x] CommandManager with history
+  - [x] Comprehensive tests
+- [x] Command types (core implementations)
+  - [x] add-component (with tests)
+  - [x] remove-component (with tests)
+  - [x] update-component-content (with tests)
+  - [x] update-component-style (with tests)
+  - [ ] reorder-components
   - [ ] save-template
   - [ ] load-template
   - [ ] export-html
   - [ ] save-style-preset
   - [ ] delete-style-preset
-  - [ ] add-component
-  - [ ] remove-component
-  - [ ] update-component-content
-  - [ ] update-component-style
-  - [ ] reorder-components
   - [ ] undo
   - [ ] redo
   - [ ] preview
   - [ ] inject-data
-- [ ] Event subscription system
-- [ ] Command history (undo/redo)
+- [x] Event subscription system
+  - [x] EventEmitter implementation
+  - [x] Event types enumeration
+  - [x] Subscription management
+  - [x] Comprehensive tests
+- [x] Command history (undo/redo)
+  - [x] History tracking
+  - [x] Undo functionality
+  - [x] Redo functionality
+  - [x] History size limits
+  - [x] Comprehensive tests
 
 ### Services
 - [ ] Renderer service
@@ -342,8 +356,16 @@ This document tracks all project requirements and their implementation status.
 ## 🧪 Testing
 
 ### Unit Tests
-- [ ] Core package tests (>80% coverage)
-- [ ] UI components tests
+- [x] Core package tests (>80% coverage)
+  - [x] EventEmitter tests (comprehensive)
+  - [x] CommandManager tests (comprehensive)
+  - [x] Builder class tests (comprehensive)
+  - [x] Command implementation tests (comprehensive)
+- [x] UI components tests (atoms)
+  - [x] Button tests
+  - [x] Input tests
+  - [x] Label tests
+  - [x] Icon tests
 - [ ] Service tests
 - [ ] Utility function tests
 
@@ -445,5 +467,5 @@ This document tracks all project requirements and their implementation status.
 
 ---
 
-**Last Updated:** 2024-10-29
-**Current Focus:** Design Tokens System
+**Last Updated:** 2024-10-30
+**Current Focus:** Core Builder Logic (Complete), Next: Molecule Components or Framework Integration

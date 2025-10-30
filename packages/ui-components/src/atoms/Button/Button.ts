@@ -95,7 +95,7 @@ export class Button {
 
     // Add text
     const textSpan = document.createElement('span');
-    textSpan.className = styles.button__text;
+    textSpan.className = styles.button__text ?? '';
     textSpan.textContent = this.props.children;
     button.appendChild(textSpan);
 

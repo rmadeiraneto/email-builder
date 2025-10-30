@@ -3,9 +3,12 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
+    "noPropertyAccessFromIndexSignature": false,
     "paths": {
       "@/*": ["./src/*"],
-      "@tokens": ["../tokens/build/ts"]
+      "@tokens": ["../tokens/build/ts"],
+      "datatalks-utils": ["../../src/js/DataTalksUtils/_index.js"],
+      "datatalks-ui": ["../../src/js/DataTalksUI/_index.js"]
     }
   },
   "include": ["src"],

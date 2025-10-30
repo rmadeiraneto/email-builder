@@ -13,7 +13,7 @@
  * ```
  */
 
-import type { IconProps, IconSize } from './icon.types';
+import type { IconProps } from './icon.types';
 import styles from './icon.module.scss';
 
 export class Icon {

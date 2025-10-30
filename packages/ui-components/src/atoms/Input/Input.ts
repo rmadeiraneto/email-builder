@@ -88,7 +88,7 @@ export class Input {
     }
 
     if (this.props.autocomplete) {
-      input.autocomplete = this.props.autocomplete;
+      input.setAttribute('autocomplete', this.props.autocomplete);
     }
 
     // Set ARIA attributes

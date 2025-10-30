@@ -42,7 +42,7 @@ export class Label {
 
     if (this.props.required) {
       const required = document.createElement('span');
-      required.className = styles.label__required;
+      required.className = styles.label__required ?? '';
       required.textContent = '*';
       required.setAttribute('aria-hidden', 'true');
       label.appendChild(required);
@@ -84,7 +84,7 @@ export class Label {
 
       if (this.props.required) {
         const required = document.createElement('span');
-        required.className = styles.label__required;
+        required.className = styles.label__required ?? '';
         required.textContent = '*';
         required.setAttribute('aria-hidden', 'true');
         this.element.appendChild(required);

@@ -15,7 +15,14 @@ export default defineConfig({
       fileName: (format, entryName) => `${entryName}.js`,
     },
     rollupOptions: {
-      external: ['@email-builder/tokens'],
+      external: [
+        '@email-builder/tokens',
+        'lodash-es',
+        '@floating-ui/dom',
+        'color2k',
+        'alwan',
+        'lexical',
+      ],
       output: {
         preserveModules: true,
         preserveModulesRoot: 'src',
@@ -52,6 +59,8 @@ export default defineConfig({
     alias: {
       '@': resolve(__dirname, 'src'),
       '@tokens': resolve(__dirname, '../tokens/build/scss'),
+      'datatalks-utils': resolve(__dirname, '../../src/js/DataTalksUtils/_index.js'),
+      'datatalks-ui': resolve(__dirname, '../../src/js/DataTalksUI/_index.js'),
     },
   },
 });

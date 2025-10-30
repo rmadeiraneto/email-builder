@@ -1,1 +1,5 @@
-// Service exports - to be implemented
+/**
+ * Service exports
+ */
+
+export { EventEmitter } from './EventEmitter';

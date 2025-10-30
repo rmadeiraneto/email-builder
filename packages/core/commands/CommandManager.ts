@@ -9,7 +9,6 @@ import type {
   CommandResult,
   CommandHistoryEntry,
   UndoableCommand,
-  CommandType,
 } from '../types';
 import { EventEmitter } from '../services/EventEmitter';
 import { BuilderEvent } from '../types';

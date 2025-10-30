@@ -8,19 +8,13 @@
  */
 
 // Export types
-export * from './types';
+export * from '../types';
 
 // Export builder
-export * from './builder';
+export * from '../builder';
 
 // Export commands
-export * from './commands';
+export * from '../commands';
 
-// Export components
-export * from './components';
-
-// Export services
-export * from './services';
-
-// Export template
-export * from './template';
+// Export services (EventEmitter as concrete implementation)
+export { EventEmitter } from '../services';

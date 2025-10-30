@@ -41,10 +41,10 @@ export class UpdateComponentStyleCommand
       throw new Error(`Component ${this.payload.componentId} not found`);
     }
 
-    const currentStyles = (component.props.styles as Record<string, unknown>) ?? {};
+    const currentStyles = (component.props['styles'] as Record<string, unknown>) ?? {};
     this.previousStyles = { ...currentStyles };
 
-    component.props.styles = { ...currentStyles, ...this.payload.styles };
+    component.props['styles'] = { ...currentStyles, ...this.payload.styles };
 
     this.setState(state);
   }
@@ -54,7 +54,7 @@ export class UpdateComponentStyleCommand
       const state = new Map(this.getState());
       const component = state.get(this.payload.componentId);
       if (component) {
-        component.props.styles = this.previousStyles;
+        component.props['styles'] = this.previousStyles;
         this.setState(state);
       }
     }

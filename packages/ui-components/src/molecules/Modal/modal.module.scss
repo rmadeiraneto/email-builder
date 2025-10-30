@@ -1,0 +1,34 @@
+/**
+ * Modal Component Styles
+ *
+ * A modal dialog with backdrop overlay.
+ * Can be positioned absolutely (with trigger) or centered (default).
+ */
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000; // TODO: Use design token when available
+
+  &--open {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__dialog {
+    position: absolute;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: auto;
+  }
+}

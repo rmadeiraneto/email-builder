@@ -1,1 +1,3 @@
-// Molecule components - to be implemented
+// Molecule components
+export { Modal } from './Modal';
+export type { ModalProps } from './Modal';

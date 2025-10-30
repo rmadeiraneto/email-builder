@@ -4,7 +4,7 @@ This document contains coding standards, best practices, architectural decisions
 
 ## Table of Contents
 1. [Project Architecture](#project-architecture)
-2. [Development Philosophy](#development-philosophy)
+2. [Token Efficiency & Development Philosophy](#token-efficiency--development-philosophy)
 3. [Technology Stack](#technology-stack)
 4. [Styling Guidelines](#styling-guidelines)
 5. [TypeScript Conventions](#typescript-conventions)
@@ -42,6 +42,257 @@ ui-components (vanilla JS)
   ↓
 ui-solid / adapters (framework implementations)
 ```
+
+---
+
+## Token Efficiency & Development Philosophy
+
+### Core Principle: Do More with Less
+**CRITICAL**: Every decision—code structure, documentation, workflow—must optimize for token efficiency while maintaining quality.
+
+### Working Efficiently
+- **Read Selectively**: Only read files directly relevant to current task
+- **Targeted Edits**: Make precise changes, avoid full file rewrites
+- **Concise Docs**: Use TODO.md for tracking, avoid verbose planning docs
+- **Batch Operations**: Group related file reads/edits in single messages
+- **Trust Existing Patterns**: Reuse established structures instead of exploring alternatives
+
+### Code Structure Optimizations
+- **CSS Modules**: Auto-scoping eliminates manual prefix boilerplate
+- **Design Tokens**: Centralized values prevent hardcoded repetition
+- **Shared Utilities**: DRY principle reduces duplication
+- **TypeScript**: Static typing eliminates runtime validation code
+- **Component Composition**: Small, focused components over large monoliths
+
+### Documentation Strategy
+- **Just-In-Time**: Document when building, not before
+- **Code-First**: Self-documenting code > extensive comments
+- **Track in TODO.md**: Use checkboxes, not prose
+- **Link Don't Duplicate**: Reference existing docs instead of repeating
+
+### Session Planning
+- Break work into small, completable chunks
+- Track progress in TODO.md
+- Complete critical path items first
+- Defer nice-to-haves to later sessions
+- **CRITICAL**: Always update the "Next Session" section in TODO.md at the end of each session with clear, actionable goals for the next session
+
+---
+
+## UI Library Abstraction Strategy
+
+### Future Extraction Goal
+**IMPORTANT**: All UI components in this project are designed to be abstracted into a separate, standalone UI library in the future. Every architectural decision for UI components must facilitate easy extraction and external consumption.
+
+### Multi-Framework Component Architecture
+
+#### Component Layer Structure
+All UI components follow a layered architecture to support multiple framework implementations:
+
+```
+Component Base (Framework-Agnostic)
+  ↓
+├── Vanilla JS Implementation
+├── Solid JS Adapter
+├── React Adapter
+├── Next.js Adapter
+├── Vue Adapter (future)
+└── Blazor Adapter
+```
+
+#### Design Principles for Abstraction
+
+**1. Framework-Agnostic Core**
+- Business logic and state management must be framework-agnostic
+- Use pure TypeScript for shared logic
+- No framework-specific code in base components
+- Export clean, documented APIs
+
+**2. Adapter Pattern**
+- Each framework has its own adapter layer
+- Adapters wrap the framework-agnostic core
+- Minimal framework-specific code in adapters
+- Consistent API across all adapters
+
+**3. Clear Boundaries**
+- Separate base logic from presentation
+- Use dependency injection for framework-specific features
+- Avoid tight coupling to the email-builder project
+- Design for standalone operation
+
+**4. External Consumption Ready**
+- Components must work independently
+- No hard dependencies on email-builder-specific code
+- Clear, minimal peer dependencies
+- Comprehensive documentation for external users
+
+#### Component Organization for Future Extraction
+
+```
+packages/ui-components/          # Future standalone library
+├── src/
+│   ├── base/                    # Framework-agnostic core
+│   │   ├── Button/
+│   │   │   ├── ButtonCore.ts   # Core logic (pure TS)
+│   │   │   ├── types.ts        # Shared types
+│   │   │   └── utils.ts        # Shared utilities
+│   │   └── ...
+│   │
+│   ├── vanilla/                 # Vanilla JS implementation
+│   │   ├── Button/
+│   │   │   ├── Button.ts       # Uses ButtonCore
+│   │   │   └── button.module.scss
+│   │   └── ...
+│   │
+│   ├── solid/                   # Solid JS adapter
+│   │   ├── Button/
+│   │   │   ├── Button.tsx      # Wraps ButtonCore
+│   │   │   └── ...
+│   │   └── ...
+│   │
+│   ├── react/                   # React adapter
+│   ├── next/                    # Next.js adapter
+│   └── blazor/                  # Blazor adapter
+│
+└── package.json                 # Future standalone package
+```
+
+#### Guidelines for Component Development
+
+**DO:**
+- ✅ Keep framework-agnostic logic in `base/` directory
+- ✅ Use pure TypeScript for shared functionality
+- ✅ Document all public APIs comprehensively
+- ✅ Write framework-agnostic tests for base logic
+- ✅ Design components to work without email-builder context
+- ✅ Use design tokens for all styling (easy to swap)
+- ✅ Create clear, minimal interfaces
+
+**DON'T:**
+- ❌ Couple components tightly to email-builder logic
+- ❌ Mix framework-specific code with base logic
+- ❌ Use email-builder-specific types in component APIs
+- ❌ Hard-code dependencies on other packages
+- ❌ Create circular dependencies
+- ❌ Skip documentation for external consumers
+
+#### Example: Multi-Framework Button
+
+```typescript
+// base/Button/ButtonCore.ts - Framework agnostic
+export interface ButtonCoreProps {
+  variant: 'primary' | 'secondary' | 'ghost';
+  size: 'small' | 'medium' | 'large';
+  disabled?: boolean;
+}
+
+export class ButtonCore {
+  constructor(private props: ButtonCoreProps) {}
+
+  getClassNames(): string[] {
+    // Pure logic, no framework dependencies
+    return [
+      'button',
+      `button--${this.props.variant}`,
+      `button--${this.props.size}`,
+      this.props.disabled ? 'button--disabled' : ''
+    ];
+  }
+
+  isDisabled(): boolean {
+    return this.props.disabled ?? false;
+  }
+}
+
+// vanilla/Button/Button.ts - Vanilla JS
+export class Button {
+  private core: ButtonCore;
+  private element: HTMLButtonElement;
+
+  constructor(props: ButtonCoreProps) {
+    this.core = new ButtonCore(props);
+    this.element = this.createButton();
+  }
+
+  private createButton(): HTMLButtonElement {
+    const button = document.createElement('button');
+    button.className = this.core.getClassNames().join(' ');
+    button.disabled = this.core.isDisabled();
+    return button;
+  }
+
+  render(): HTMLElement {
+    return this.element;
+  }
+}
+
+// solid/Button/Button.tsx - Solid JS Adapter
+import { Component } from 'solid-js';
+import { ButtonCore, ButtonCoreProps } from '../../base/Button/ButtonCore';
+
+export const Button: Component<ButtonCoreProps> = (props) => {
+  const core = () => new ButtonCore(props);
+
+  return (
+    <button
+      class={core().getClassNames().join(' ')}
+      disabled={core().isDisabled()}
+    >
+      {props.children}
+    </button>
+  );
+};
+
+// react/Button/Button.tsx - React Adapter
+import { ButtonCore, ButtonCoreProps } from '../../base/Button/ButtonCore';
+
+export const Button: React.FC<ButtonCoreProps> = (props) => {
+  const core = new ButtonCore(props);
+
+  return (
+    <button
+      className={core.getClassNames().join(' ')}
+      disabled={core.isDisabled()}
+    >
+      {props.children}
+    </button>
+  );
+};
+```
+
+#### Migration Strategy
+
+When ready to extract the UI library:
+
+1. **Package Separation**
+   - Create new repository/package
+   - Move `base/` and framework adapters
+   - Set up independent build system
+   - Configure independent CI/CD
+
+2. **Dependency Management**
+   - Remove email-builder dependencies
+   - Make design tokens optional/overridable
+   - Configure peer dependencies
+
+3. **Documentation**
+   - Create standalone documentation
+   - Add usage examples for each framework
+   - Document customization options
+   - Provide migration guide
+
+4. **Distribution**
+   - Publish to npm as scoped package
+   - Version independently
+   - Maintain changelog
+   - Support semantic versioning
+
+#### Current Phase
+
+- **Phase 1** (Current): Build components within email-builder
+- **Phase 2**: Refactor to use base/adapter pattern
+- **Phase 3**: Abstract into standalone library
+- **Phase 4**: Consume as external dependency
 
 ---
 

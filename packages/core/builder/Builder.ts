@@ -19,13 +19,29 @@
  * ```
  */
 
-import type { BuilderConfig, EventSubscription, Command, CommandResult } from '../types';
+import type {
+  BuilderConfig,
+  EventSubscription,
+  Command,
+  CommandResult,
+  StorageConfig,
+  FeatureFlags,
+  BuilderCallbacks,
+} from '../types';
 import { EventEmitter } from '../services/EventEmitter';
 import { CommandManager } from '../commands/CommandManager';
 import { BuilderEvent } from '../types';
 
+interface NormalizedConfig extends BuilderConfig {
+  locale: string;
+  features: Required<FeatureFlags>;
+  callbacks: BuilderCallbacks;
+  debug: boolean;
+  storage: Required<Pick<StorageConfig, 'method' | 'keyPrefix'>> & Omit<StorageConfig, 'method' | 'keyPrefix'>;
+}
+
 export class Builder {
-  private config: Required<BuilderConfig>;
+  private config: NormalizedConfig;
   private eventEmitter: EventEmitter;
   private commandManager: CommandManager;
   private initialized: boolean = false;
@@ -41,13 +57,13 @@ export class Builder {
    * Initializes the builder
    */
   public async initialize(): Promise<void> {
-    if (this.initialized) {
-      throw new Error('Builder already initialized');
-    }
-
     try {
+      if (this.initialized) {
+        throw new Error('Builder already initialized');
+      }
+
       if (this.config.initialTemplate) {
-        this.state.template = this.config.initialTemplate;
+        this.state['template'] = this.config.initialTemplate;
       }
 
       this.initialized = true;
@@ -134,7 +150,7 @@ export class Builder {
   /**
    * Gets the builder configuration
    */
-  public getConfig(): Readonly<Required<BuilderConfig>> {
+  public getConfig(): Readonly<NormalizedConfig> {
     return { ...this.config };
   }
 
@@ -198,16 +214,25 @@ export class Builder {
   /**
    * Normalizes configuration with defaults
    */
-  private normalizeConfig(config: BuilderConfig): Required<BuilderConfig> {
-    return {
+  private normalizeConfig(config: BuilderConfig): NormalizedConfig {
+    const normalizedStorage: Required<Pick<StorageConfig, 'method' | 'keyPrefix'>> &
+      Omit<StorageConfig, 'method' | 'keyPrefix'> = {
+      method: config.storage.method,
+      keyPrefix: config.storage.keyPrefix ?? 'email-builder',
+    };
+
+    if (config.storage.adapter !== undefined) {
+      normalizedStorage.adapter = config.storage.adapter;
+    }
+
+    if (config.storage.apiEndpoint !== undefined) {
+      normalizedStorage.apiEndpoint = config.storage.apiEndpoint;
+    }
+
+    const normalized: NormalizedConfig = {
       target: config.target,
       locale: config.locale ?? 'en-US',
-      storage: {
-        method: config.storage.method,
-        adapter: config.storage.adapter,
-        apiEndpoint: config.storage.apiEndpoint,
-        keyPrefix: config.storage.keyPrefix ?? 'email-builder',
-      },
+      storage: normalizedStorage,
       features: {
         customComponents: config.features?.customComponents ?? true,
         dataInjection: config.features?.dataInjection ?? true,
@@ -216,8 +241,13 @@ export class Builder {
         autoSave: config.features?.autoSave ?? false,
       },
       callbacks: config.callbacks ?? {},
-      initialTemplate: config.initialTemplate,
       debug: config.debug ?? false,
     };
+
+    if (config.initialTemplate !== undefined) {
+      normalized.initialTemplate = config.initialTemplate;
+    }
+
+    return normalized;
   }
 }

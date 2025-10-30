@@ -1,1 +1,5 @@
-// Builder exports - to be implemented
+/**
+ * Builder exports
+ */
+
+export { Builder } from './Builder';

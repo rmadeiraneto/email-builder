@@ -1,0 +1,59 @@
+// Tooltip Component Styles
+// Uses CSS Modules for automatic scoping
+
+.tooltip {
+	&__trigger {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		cursor: help;
+
+		// Accessibility: ensure focus is visible
+		&:focus {
+			outline: 2px solid #3b82f6;
+			outline-offset: 2px;
+		}
+	}
+
+	&__content {
+		// Content styles applied via global .eb-tooltip-content class
+		// since content is rendered in the floater
+	}
+}
+
+// Global styles for tooltip floater (rendered at body level)
+:global {
+	.eb-tooltip-floater {
+		--tooltip-left: 0;
+		--tooltip-top: 0;
+		--tooltip-position: fixed;
+		left: var(--tooltip-left);
+		top: var(--tooltip-top);
+		position: var(--tooltip-position);
+		z-index: 9999;
+		pointer-events: none;
+
+		&--hidden {
+			visibility: hidden;
+		}
+	}
+
+	.eb-tooltip-content {
+		padding: 0.75rem;
+		background-color: #3f4254;
+		color: #fff;
+		border-radius: 0.42rem;
+		pointer-events: none;
+		font-size: 0.925rem;
+		font-weight: 400;
+		transition: opacity 0.2s;
+		max-width: 220px;
+		width: max-content;
+		white-space: normal;
+		word-wrap: break-word;
+		line-height: 1.5;
+
+		// Add small arrow effect with shadow
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	}
+}

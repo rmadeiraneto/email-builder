@@ -1,0 +1,78 @@
+/**
+ * RadioButtonGroup styles
+ */
+
+.radio-btn-group {
+  display: flex;
+  text-align: center;
+}
+
+.radio-btn-group-item {
+  background: white;
+  border-color: #eaedf2;
+  border-style: solid;
+  border-width: 1px 0 1px 1px;
+  cursor: pointer;
+  flex-grow: 1;
+  font-weight: 500;
+  font-size: 12px;
+  padding: 14px 16px;
+  transition: all 0.2s ease;
+
+  &__icon {
+    display: inline-block;
+  }
+
+  &__label {
+    display: inline-block;
+  }
+
+  &__tooltip-trigger {
+    vertical-align: middle;
+    margin-left: 4px;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    text-align: center;
+    border-radius: 50%;
+    background: #ddd;
+    color: #666;
+    font-size: 10px;
+    cursor: help;
+  }
+
+  // First child gets left border radius
+  &:first-child {
+    border-radius: 6px 0 0 6px;
+  }
+
+  // Last child gets right border radius and full border
+  &:last-child {
+    border-radius: 0 6px 6px 0;
+    border-width: 1px;
+  }
+
+  // Active state
+  &--active {
+    background-color: #f4f7fc;
+    border-width: 1px;
+    color: #3b82f6;
+    font-weight: 600;
+
+    // Active border variant
+    &.radio-btn-group-item--active-border {
+      border-color: currentColor;
+    }
+  }
+
+  // Remove left border from item following an active item
+  &--active + & {
+    border-left: 0;
+  }
+
+  // Hover state
+  &:hover:not(&--active) {
+    background-color: #f9fafb;
+  }
+}

@@ -1,0 +1,36 @@
+// ExpandCollapse Component Styles
+// BEM Methodology with CSS Modules
+
+.expandCollapse {
+  --expandable-gap: 4px;
+
+  position: relative;
+
+  // Modifier: Expanded state
+  &--expanded {
+    .expandCollapse__expandable {
+      display: block;
+    }
+  }
+
+  // Modifier: Right-aligned expandable
+  &--right {
+    .expandCollapse__expandable {
+      left: unset;
+      right: 0;
+    }
+  }
+
+  // Element: Expandable content container
+  &__expandable {
+    left: 0;
+    position: absolute;
+    top: calc(100% + var(--expandable-gap));
+    display: none; // Hidden by default
+  }
+
+  // Element: Trigger element
+  &__trigger {
+    cursor: pointer;
+  }
+}

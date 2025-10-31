@@ -1,0 +1,107 @@
+.dropdown {
+  // CSS Variables
+  --dropdown-height: 40px;
+  --dropdown-arrow-size: 20px;
+  --dropdown-options-height: 200px;
+  --dropdown-item-padding: 12px;
+  --dropdown-control-border-color: #eaedf2;
+  --dropdown-control-text-color: inherit;
+  --dropdown-control-font-weight: inherit;
+  --dropdown-control-gap: 12px;
+  --dropdown-control-padding: 0 12px;
+  --floater-coords-left: 0;
+  --floater-coords-top: 100%;
+
+  font-size: 14px;
+  position: relative;
+
+  // Control (trigger button)
+  &__control {
+    align-items: center;
+    border: 1px solid var(--dropdown-control-border-color);
+    border-radius: 6px;
+    color: var(--dropdown-control-text-color);
+    cursor: pointer;
+    display: flex;
+    font-weight: var(--dropdown-control-font-weight);
+    gap: var(--dropdown-control-gap);
+    height: var(--dropdown-height);
+    justify-content: space-between;
+    line-height: 1;
+    padding: var(--dropdown-control-padding);
+
+    &-content {
+      align-items: center;
+      display: flex;
+    }
+
+    &-arrow {
+      font-size: var(--dropdown-arrow-size);
+      display: flex;
+      align-items: center;
+
+      // Hide arrows by default using hidden attribute
+      &-up[hidden],
+      &-down[hidden] {
+        display: none;
+      }
+    }
+  }
+
+  // Options container (dropdown menu)
+  &__options {
+    background-color: white;
+    border: 1px solid #eaedf2;
+    border-radius: 6px;
+    box-shadow: 4px 4px 34px rgba(0, 0, 0, 0.05);
+    display: none;
+    left: var(--floater-coords-left);
+    max-height: var(--dropdown-options-height);
+    overflow-y: auto;
+    position: absolute;
+    top: var(--floater-coords-top);
+    z-index: 1000;
+    min-width: 100%;
+  }
+
+  // Dropdown item
+  &__item {
+    cursor: pointer;
+    padding: var(--dropdown-item-padding);
+
+    &:hover {
+      background-color: #d1d3e0;
+    }
+
+    &--active {
+      background-color: #e8e9f0;
+      font-weight: 600;
+    }
+  }
+
+  // States - Open
+  &--open {
+    .dropdown__options {
+      display: block;
+    }
+  }
+
+  // Modifiers - Size variants
+  &--sm {
+    --dropdown-height: 24px;
+    --dropdown-arrow-size: 16px;
+    --dropdown-item-padding: 8px;
+    --dropdown-control-gap: 8px;
+    --dropdown-control-padding: 0 8px;
+    font-size: 12px;
+  }
+
+  &--lg {
+    --dropdown-height: 48px;
+    --dropdown-arrow-size: 24px;
+    --dropdown-item-padding: 16px;
+    --dropdown-control-gap: 16px;
+    --dropdown-control-padding: 0 16px;
+    font-size: 16px;
+  }
+}

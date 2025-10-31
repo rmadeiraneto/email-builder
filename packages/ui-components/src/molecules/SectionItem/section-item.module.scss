@@ -1,0 +1,28 @@
+// SectionItem Component Styles
+// BEM Methodology with CSS Modules
+
+.sectionItem {
+  // Spacing between consecutive section items
+  & + & {
+    margin-top: 12px;
+  }
+
+  // Element: Label
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+    color: #7e8299;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  // Element: Content
+  &__content {
+    // Content after label gets top margin
+    .sectionItem__label + & {
+      margin-top: 16px;
+    }
+  }
+}

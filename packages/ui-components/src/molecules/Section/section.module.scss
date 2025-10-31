@@ -1,0 +1,23 @@
+/**
+ * Section Component Styles
+ * Generic section wrapper with optional label and content
+ */
+
+.section {
+  // Base section styles
+  display: block;
+  position: relative;
+
+  // Label element
+  &__label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  // Content container
+  &__content {
+    display: block;
+    position: relative;
+  }
+}

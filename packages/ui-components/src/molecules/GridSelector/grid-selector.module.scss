@@ -1,0 +1,115 @@
+/**
+ * GridSelector component styles
+ *
+ * Supports responsive grid layout with configurable columns and breakpoints
+ * Uses CSS custom properties for dynamic configuration
+ */
+
+// CSS Custom Properties (defaults)
+:root {
+	// Column counts for different breakpoints
+	--grid-columns: 4;
+	--grid-columns-lg: 3;
+	--grid-columns-md: 2;
+	--grid-columns-sm: 1;
+
+	// Breakpoints
+	--grid-breakpoint-lg: 992px;
+	--grid-breakpoint-md: 768px;
+	--grid-breakpoint-sm: 480px;
+
+	// Item styling
+	--grid-selector-card-min-height: auto;
+	--grid-selector-gap: 1rem;
+	--grid-selector-item-padding: 1rem;
+	--grid-selector-item-border-radius: 0.5rem;
+	--grid-selector-item-border-width: 2px;
+	--grid-selector-item-border-color: #e5e7eb;
+	--grid-selector-item-bg: #ffffff;
+	--grid-selector-item-bg-hover: #f9fafb;
+	--grid-selector-item-bg-selected: #eff6ff;
+	--grid-selector-item-border-selected: #3b82f6;
+	--grid-selector-item-text-color: #374151;
+	--grid-selector-item-text-selected: #1e40af;
+}
+
+.grid-selector {
+	// Layout
+	display: grid;
+	grid-template-columns: repeat(var(--grid-columns), 1fr);
+	gap: var(--grid-selector-gap);
+
+	// Box model
+	width: 100%;
+
+	// Responsive behavior
+	@media (max-width: var(--grid-breakpoint-lg)) {
+		grid-template-columns: repeat(var(--grid-columns-lg), 1fr);
+	}
+
+	@media (max-width: var(--grid-breakpoint-md)) {
+		grid-template-columns: repeat(var(--grid-columns-md), 1fr);
+	}
+
+	@media (max-width: var(--grid-breakpoint-sm)) {
+		grid-template-columns: repeat(var(--grid-columns-sm), 1fr);
+	}
+
+	// Grid item
+	&__item {
+		// Layout
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		// Box model
+		min-height: var(--grid-selector-card-min-height);
+		padding: var(--grid-selector-item-padding);
+
+		// Visual
+		background-color: var(--grid-selector-item-bg);
+		border: var(--grid-selector-item-border-width) solid
+			var(--grid-selector-item-border-color);
+		border-radius: var(--grid-selector-item-border-radius);
+		color: var(--grid-selector-item-text-color);
+
+		// Typography
+		text-align: center;
+
+		// Animation
+		transition: all 0.2s ease;
+
+		// Cursor (only when user-enabled)
+		&--user-enabled {
+			cursor: pointer;
+
+			// Hover state (only when user-enabled)
+			&:hover {
+				background-color: var(--grid-selector-item-bg-hover);
+				transform: translateY(-2px);
+				box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+					0 2px 4px -2px rgb(0 0 0 / 0.1);
+			}
+
+			// Active state (only when user-enabled)
+			&:active {
+				transform: translateY(0);
+				box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+			}
+		}
+
+		// Selected state
+		&--selected {
+			background-color: var(--grid-selector-item-bg-selected);
+			border-color: var(--grid-selector-item-border-selected);
+			color: var(--grid-selector-item-text-selected);
+			font-weight: 500;
+		}
+
+		// Disabled state (when user interaction is disabled)
+		&:not(&--user-enabled) {
+			cursor: not-allowed;
+			opacity: 0.6;
+		}
+	}
+}

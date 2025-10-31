@@ -1,0 +1,53 @@
+@use '@tokens/scss' as tokens;
+
+.linked-inputs {
+  align-items: flex-end;
+  display: flex;
+
+  &__items {
+    align-items: flex-end;
+    display: inline-flex;
+  }
+
+  &__item-wrapper {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__item {
+    // First item gets left border radius
+    &:first-child {
+      :global(.input-number__input) {
+        border-radius: 6px 0 0 6px;
+      }
+    }
+  }
+
+  &__label {
+    color: var(--DT-Gray-04, #7e8299);
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 140%;
+  }
+
+  &__input {
+    border-right-width: 0;
+    border-radius: 0;
+  }
+
+  &__link {
+    border-radius: 0 6px 6px 0;
+    height: 28px; // Match input height
+    min-width: 32px;
+
+    &--active {
+      background-color: var(--color-primary-500, #3b82f6);
+      color: white;
+
+      &:hover {
+        background-color: var(--color-primary-600, #2563eb);
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+/**
+ * ToggleButton Component Styles
+ * Toggle button with active and disabled states using data attributes
+ */
+
+.toggle-button {
+  // Base toggle button styles
+  display: inline-block;
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background-color: #ccc;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  // Toggle indicator (sliding circle)
+  &::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+  }
+
+  // Active state (toggled on)
+  &[data-toggled='true'] {
+    background-color: #4caf50;
+
+    &::before {
+      transform: translateX(20px);
+    }
+  }
+
+  // Disabled state
+  &[data-toggle-disabled='true'] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  // Hover state (when not disabled)
+  &:not([data-toggle-disabled='true']):hover {
+    opacity: 0.9;
+  }
+}

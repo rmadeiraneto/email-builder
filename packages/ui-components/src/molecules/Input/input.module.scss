@@ -1,0 +1,40 @@
+/**
+ * Input Component Styles
+ * Basic input field with customizable height
+ */
+
+.input {
+  // Base input styles
+  display: block;
+  width: 100%;
+  height: var(--input-height, 36px);
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+  // Focus state
+  &:focus {
+    outline: 0;
+    border-color: #66afe9;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+
+  // Disabled state
+  &:disabled {
+    background-color: #e9ecef;
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  // Placeholder
+  &::placeholder {
+    color: #999;
+    opacity: 1;
+  }
+}

@@ -139,3 +139,13 @@ export type {
   InteractiveCardActionCallback,
   InteractiveCardInteractionType,
 } from './InteractiveCard';
+
+export { ToggleableSection } from './ToggleableSection';
+export type {
+  ToggleableSectionOptions,
+  IToggleableSection,
+  ToggleableSectionEvent,
+  ToggleableSectionEventCallback,
+  ToggleableSectionType,
+  ElementContent as ToggleableSectionElementContent,
+} from './ToggleableSection';

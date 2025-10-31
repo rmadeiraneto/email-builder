@@ -1,0 +1,60 @@
+// ToggleableSection Component Styles
+// BEM Methodology with CSS Modules
+
+.toggleableSection {
+  // TODO: Specify this in a layout stylesheet
+  &:where(:not(:first-child)) {
+    margin-top: 12px;
+  }
+
+  // Label element
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  // Wrapper for label and toggle button (when toggleable)
+  &__labelWrapper {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  // Content element
+  &__content {
+    margin-top: 6px;
+
+    // Hide content when section is not open
+    &:not(.toggleableSection--open > &) {
+      display: none;
+    }
+  }
+
+  // Wrapper for toggle label and toggle button
+  &__toggleLabelWrapper {
+    align-items: center;
+    display: inline-flex;
+    gap: 6px;
+    justify-content: flex-end;
+  }
+
+  // Toggle label element
+  &__toggleLabel {
+    font-weight: unset;
+  }
+
+  // Open state modifier
+  &--open {
+    // Content is shown when open
+    .toggleableSection__content {
+      display: block;
+    }
+  }
+
+  // Type modifiers (for different section types)
+  // Add custom styling for specific types as needed
+  &--custom {
+    // Custom type styling
+  }
+}

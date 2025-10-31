@@ -1287,23 +1287,23 @@ Now that the foundation is built, we need to implement the core functionality to
 
 **Priority Order:**
 
-#### 1. **Create New Template Functionality** (Highest Priority)
-- Add "New Template" button in toolbar
-- Create modal/dialog for template creation
-- Wire up `TemplateManager.createTemplate()` from core
-- Initialize empty template with default canvas settings
-- Update BuilderContext state with new template
-- Display empty canvas ready for components
+#### ✅ 1. **Create New Template Functionality** (COMPLETED)
+- ✅ Add "New Template" button in toolbar
+- ✅ Create modal/dialog for template creation (NewTemplateModal)
+- ✅ Wire up `TemplateManager.create()` from core
+- ✅ Initialize empty template with default canvas settings
+- ✅ Update BuilderContext state with new template
+- ✅ Display empty canvas ready for components
 
-#### 2. **Drag-and-Drop Implementation** (Critical)
-- Complete the drop handler in Builder.tsx
-- Create component instance from dropped component type
-- Use component factories from core (createButton, createText, etc.)
-- Add component to template at drop position
-- Update template state in BuilderContext
-- Visual feedback during drag (ghost image, drop zones)
+#### ✅ 2. **Drag-and-Drop Implementation** (COMPLETED)
+- ✅ Complete the drop handler in Builder.tsx
+- ✅ Create component instance from dropped component type
+- ✅ Use component factories from core (createButton, createText, etc.)
+- ✅ Add component to template at drop position
+- ✅ Update template state in BuilderContext
+- ✅ Visual feedback during drag (purple highlight on canvas/drop zones)
 
-#### 3. **Property Panel Implementation**
+#### 🔄 3. **Property Panel Implementation** (NEXT - High Priority)
 - Create `packages/ui-solid/src/sidebar/PropertyPanel.tsx`
 - Dynamic form based on selected component type
 - Use migrated UI components:
@@ -1314,18 +1314,19 @@ Now that the foundation is built, we need to implement the core functionality to
   - Section/SectionItem for grouping
 - Real-time property updates
 - Wire up to component update in template
+- Handle different component types (Button, Text, Image, etc.)
 
-#### 4. **Template Toolbar Implementation**
-- Create `packages/ui-solid/src/toolbar/TemplateToolbar.tsx`
-- Buttons:
-  - New Template (create new)
-  - Save Template (save to storage)
-  - Load Template (open template picker)
-  - Undo (wire to Builder.undo())
-  - Redo (wire to Builder.redo())
-  - Export (HTML/JSON download)
-- Disable states (undo/redo based on canUndo/canRedo)
-- Use Button component from ui-components
+#### ✅ 4. **Template Toolbar Implementation** (COMPLETED)
+- ✅ Create `packages/ui-solid/src/toolbar/TemplateToolbar.tsx`
+- ✅ Buttons:
+  - ✅ New Template (create new)
+  - ✅ Save Template (save to storage)
+  - ✅ Load Template (open template picker)
+  - ✅ Undo (wire to Builder.undo())
+  - ✅ Redo (wire to Builder.redo())
+  - ✅ Export (HTML/JSON download)
+- ✅ Disable states (undo/redo based on canUndo/canRedo)
+- ✅ Styled with design tokens
 
 #### 5. **Template Operations**
 - Save template to LocalStorage via TemplateManager
@@ -1379,14 +1380,133 @@ const handleDrop = (event: DragEvent) => {
 ### Testing Checklist
 
 After implementation, verify:
-- [ ] Can create a new template
-- [ ] Can drag components from palette to canvas
-- [ ] Components appear on canvas after drop
-- [ ] Can select components on canvas
+- [x] Can create a new template
+- [x] Can drag components from palette to canvas
+- [x] Components appear on canvas after drop
+- [x] Can select components on canvas
 - [ ] Can edit component properties in property panel
 - [ ] Properties update in real-time
 - [ ] Can save template to LocalStorage
 - [ ] Can load saved templates
+- [ ] Can undo/redo changes
+- [ ] Can export template to HTML/JSON
+
+---
+
+## 📋 IMMEDIATE NEXT STEPS (Priority Order)
+
+### 1. **Property Panel** - Enable component editing
+**Goal:** Allow users to edit properties of selected components
+
+**Tasks:**
+- Create PropertyPanel component with dynamic form generation
+- Implement property editors for each component type:
+  - Button: text, link, colors, padding, border radius
+  - Text: content, font family, size, weight, color, alignment
+  - Image: src, alt, width, height, alignment
+  - Separator: height, color, style
+  - Spacer: height
+- Add real-time updates to template state
+- Use design tokens for consistent styling
+- Implement validation for required fields
+
+**Files to create:**
+- `packages/ui-solid/src/sidebar/PropertyPanel.tsx`
+- `packages/ui-solid/src/sidebar/PropertyPanel.module.scss`
+- `packages/ui-solid/src/sidebar/PropertyPanel.types.ts`
+
+### 2. **Component Reordering** - Drag to reorder on canvas
+**Goal:** Allow users to change component order via drag-and-drop
+
+**Tasks:**
+- Add drag handles to components on canvas
+- Implement drag-and-drop reordering within canvas
+- Update template component array order
+- Visual feedback for drop position (insertion indicator)
+
+### 3. **Component Deletion** - Remove components
+**Goal:** Allow users to delete selected components
+
+**Tasks:**
+- Add delete button to property panel or component overlay
+- Implement delete action in BuilderContext
+- Add keyboard shortcut (Delete/Backspace key)
+- Show confirmation for destructive actions
+
+### 4. **Template Picker Modal** - Load existing templates
+**Goal:** Allow users to browse and load saved templates
+
+**Tasks:**
+- Create TemplatePickerModal component
+- Display list of saved templates with metadata
+- Show template preview/thumbnail
+- Wire up to BuilderContext.loadTemplate()
+- Add search/filter functionality
+
+### 5. **Component Rendering** - Actual HTML preview
+**Goal:** Show actual rendered components instead of JSON
+
+**Tasks:**
+- Create component renderer for each type
+- Implement HTML generation from component data
+- Add iframe preview for isolated rendering
+- Support responsive preview modes (mobile/tablet/desktop)
+
+### 6. **Undo/Redo Implementation** - Complete history management
+**Goal:** Make undo/redo fully functional
+
+**Tasks:**
+- Integrate with Builder's command pattern
+- Track state changes as commands
+- Test undo/redo for all operations
+- Add keyboard shortcuts (Ctrl+Z, Ctrl+Y)
+
+### 7. **Component Duplication** - Clone components
+**Goal:** Allow users to duplicate existing components
+
+**Tasks:**
+- Add duplicate button to component overlay
+- Clone component with new ID
+- Insert after original component
+- Keyboard shortcut (Ctrl+D)
+
+### 8. **Canvas Settings** - Configure canvas properties
+**Goal:** Allow users to customize canvas appearance
+
+**Tasks:**
+- Add canvas settings panel
+- Configure width, max-width, background color
+- Set padding and margins
+- Preview changes in real-time
+
+---
+
+## 🐛 Known Issues to Fix
+
+1. **TypeScript Errors in Build**
+   - Fix SCSS module type declarations
+   - Fix Template.canvas property (doesn't exist in type)
+
+2. **Design Token Integration**
+   - Tokens are imported via relative path - should use package alias
+   - Need to add CSS export to tokens package.json
+
+3. **Component Selection**
+   - Currently only logs to console
+   - Need visual selection indicator on canvas
+
+---
+
+## 🎯 Success Metrics
+
+Track progress with these milestones:
+
+- [x] Phase 1: Drag-and-drop working smoothly ← **WE ARE HERE**
+- [ ] Phase 2: Can edit component properties
+- [ ] Phase 3: Can save/load templates
+- [ ] Phase 4: Can see actual HTML preview
+- [ ] Phase 5: Full undo/redo working
+- [ ] Phase 6: Ready for user testing
 - [ ] Undo/redo works correctly
 - [ ] Can export template as HTML/JSON
 

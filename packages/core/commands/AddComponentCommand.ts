@@ -44,7 +44,8 @@ export class AddComponentCommand implements UndoableCommand<AddComponentPayload>
     const state = new Map(this.getState());
     this.previousState = new Map(state);
 
-    this.componentId = `component-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    // Use crypto.randomUUID for cryptographically secure random IDs
+    this.componentId = `component-${Date.now()}-${crypto.randomUUID().slice(0, 9)}`;
 
     const newComponent: ComponentData = {
       id: this.componentId,

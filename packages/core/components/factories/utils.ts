@@ -14,7 +14,8 @@ import type { CSSValue, Spacing, ResponsiveVisibility } from '../../types';
  */
 export function generateId(prefix: string): string {
   const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(2, 9);
+  // Use crypto.randomUUID for cryptographically secure random IDs
+  const random = crypto.randomUUID().slice(0, 9);
   return `${prefix}-${timestamp}-${random}`;
 }
 

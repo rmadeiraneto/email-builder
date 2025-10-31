@@ -29,8 +29,9 @@ describe('Factory Utilities', () => {
       const id1 = generateId('button');
       const id2 = generateId('button');
 
-      expect(id1).toMatch(/^button-\d+-[a-z0-9]+$/);
-      expect(id2).toMatch(/^button-\d+-[a-z0-9]+$/);
+      // Updated regex to accept UUID format with dashes
+      expect(id1).toMatch(/^button-\d+-[a-z0-9-]+$/);
+      expect(id2).toMatch(/^button-\d+-[a-z0-9-]+$/);
       expect(id1).not.toBe(id2);
     });
 

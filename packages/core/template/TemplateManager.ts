@@ -445,10 +445,12 @@ export class TemplateManager {
   }
 
   /**
-   * Generate unique template ID
+   * Generate unique template ID using crypto.randomUUID for security
    */
   private generateId(): string {
-    return `tpl_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // Use crypto.randomUUID for cryptographically secure random IDs
+    const uuid = crypto.randomUUID().slice(0, 9);
+    return `tpl_${Date.now()}_${uuid}`;
   }
 
   /**

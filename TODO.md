@@ -40,9 +40,16 @@
 - [x] Tooltip - ✅ Complete with 51 tests
 - [x] Floater - ✅ Assessment complete (NOT NEEDED - replaced by @floating-ui/dom)
 
-**Round 5: Atoms & Additional Utilities** (Week 5) - NEXT UP
-- [ ] Section, Input, ToggleButton, ExpandCollapse, SectionItem, Label
-- [ ] ChoosableSection, InteractiveCard, ToggleableSection
+**Round 5: Atoms & Additional Utilities** (Week 5) - 🔄 IN PROGRESS
+- [x] Section - ✅ Complete with 40 tests (all passing)
+- [x] Input - ✅ Complete with 44 tests (all passing)
+- [x] ToggleButton - ✅ Complete with 44 tests (all passing)
+- [x] ExpandCollapse - ✅ Complete with 36 tests (all passing)
+- [x] SectionItem - ✅ Complete with 44 tests (all passing)
+- [x] Label - ✅ Complete with 41 tests (all passing)
+- [ ] ChoosableSection - NEXT UP
+- [ ] InteractiveCard
+- [ ] ToggleableSection
 
 #### Phase 4: Base/Adapter Pattern Refactor
 - [ ] Extract framework-agnostic base layer
@@ -647,26 +654,351 @@ packages/ui-components/src/molecules/Tooltip/
 
 ---
 
-## Next Session
-**Round 5: Atoms & Additional Utility Components**
+## This Session - Round 5: Atoms & Additional Utilities - Part 1 (Section, Input, ToggleButton) ✅
 
-### Goal: Migrate remaining small, reusable components
-Focus on simple atoms and utility components that are building blocks for larger features.
+### Section Component
+- ✅ Migrated from legacy JavaScript to TypeScript (200+ lines)
+- ✅ Implemented with CSS Modules (BEM methodology)
+- ✅ Created comprehensive type definitions with SectionElement interface
+- ✅ Written **40 comprehensive tests** - **ALL PASSING (100%)**:
+  - Component initialization and rendering
+  - Custom tag names (div, section, etc.)
+  - Extended classes support
+  - Label rendering (string and HTMLElement)
+  - Content rendering (string, HTML, HTMLElement, array)
+  - Label and content positioning
+  - addContent method with append functionality
+  - removeContent method with error handling
+  - hasContent method for element checking
+  - toggleContent method for visibility control
+  - Public API methods
+  - Element extended methods (methods on element itself)
+  - Edge cases (empty strings, null values, special characters)
+- ✅ Added to molecules index
+- ✅ Features:
+  - Generic section wrapper with optional label
+  - Content container with dynamic content management
+  - Methods attached to element for easy usage
+  - Support for multiple content types
+  - Label-first positioning
+
+### Input Component
+- ✅ Migrated from legacy JavaScript to TypeScript (180+ lines)
+- ✅ Implemented with CSS Modules (BEM methodology)
+- ✅ Created comprehensive type definitions with event system
+- ✅ Written **44 comprehensive tests** - **ALL PASSING (100%)**:
+  - Component initialization and rendering
+  - Input type support (text, email, password, number, etc.)
+  - Extended classes support
+  - Initial value and placeholder
+  - Custom height via CSS custom property
+  - getValue/setValue methods
+  - setType method for dynamic type changes
+  - Input event handling with callbacks
+  - Change event handling with callbacks
+  - Event registration (on/off methods)
+  - Multiple listeners support
+  - Public API methods
+  - Destroy/cleanup
+  - Edge cases (null values, empty strings, special characters)
+- ✅ Added to molecules index
+- ✅ Features:
+  - Basic input field with full customization
+  - Event system with EventEmitter
+  - Support for all standard input types
+  - Custom height configuration
+  - Input and change event callbacks
+  - Programmatic value and type management
+
+### ToggleButton Component
+- ✅ Migrated from legacy JavaScript to TypeScript (140+ lines)
+- ✅ Implemented with CSS Modules (BEM methodology)
+- ✅ Created comprehensive type definitions
+- ✅ Written **44 comprehensive tests** - **ALL PASSING (100%)**:
+  - Component initialization and rendering
+  - Active/inactive state management
+  - Disabled state management
+  - Data attribute state tracking (data-toggled, data-toggle-disabled)
+  - Toggle functionality
+  - Click interaction with onChange callback
+  - Click event propagation control
+  - Disabled state click prevention
+  - Context (this) binding in callbacks
+  - setActive/getActive methods
+  - setDisable/getDisable methods
+  - Public API methods
+  - Destroy/cleanup
+  - Edge cases (rapid toggles, state changes during interaction)
+- ✅ Added to molecules index
+- ✅ Features:
+  - Toggle button with on/off states
+  - Visual toggle indicator (sliding circle)
+  - Disabled state support
+  - onChange callback with current state
+  - Click propagation control
+  - Data attributes for CSS styling
+
+### Test Results (Overall)
+- **Total Test Files**: 18 (17 passing, 1 with edge case)
+- **Total Tests**: 788 tests
+- **Passing**: 787 (99.87%)
+- **Failing**: 1 (LinkedInputs auto alpha - known edge case)
+- **New Tests Added**: 128 tests for 3 new components
+
+### Files Created for Section:
+```
+packages/ui-components/src/molecules/Section/
+├── Section.ts (200+ lines)
+├── section.types.ts (80+ lines)
+├── section.module.scss (25+ lines)
+├── section.test.ts (450+ lines, 40 tests)
+└── index.ts (2 lines)
+```
+
+### Files Created for Input:
+```
+packages/ui-components/src/molecules/Input/
+├── Input.ts (180+ lines with EventEmitter)
+├── input.types.ts (70+ lines)
+├── input.module.scss (40+ lines)
+├── input.test.ts (460+ lines, 44 tests)
+└── index.ts (2 lines)
+```
+
+### Files Created for ToggleButton:
+```
+packages/ui-components/src/molecules/ToggleButton/
+├── ToggleButton.ts (140+ lines)
+├── toggle-button.types.ts (40+ lines)
+├── toggle-button.module.scss (50+ lines)
+├── toggle-button.test.ts (480+ lines, 44 tests)
+└── index.ts (2 lines)
+```
+
+### Files Modified:
+- `packages/ui-components/src/molecules/index.ts` (added 3 component exports)
+
+---
+
+## This Session - Round 5: Atoms & Additional Utilities - Part 2 (ExpandCollapse, SectionItem, Label) ✅
+
+### ExpandCollapse Component
+- ✅ Migrated from legacy JavaScript to TypeScript (230+ lines)
+- ✅ Implemented with CSS Modules (BEM methodology)
+- ✅ Created comprehensive type definitions
+- ✅ Written **36 comprehensive tests** - **ALL PASSING (100%)**:
+  - Component initialization and rendering
+  - Trigger and expandable content rendering (string, HTML, HTMLElement, array)
+  - Expand/collapse functionality
+  - Trigger click interactions
+  - preventDefaultBehavior option
+  - Right-to-left positioning
+  - Public API methods (expand, collapse, isExpanded, getEl, getTrigger, getExpandable)
+  - Element structure validation
+  - Destroy/cleanup
+  - Edge cases (empty content, rapid clicks, special characters, long content)
+  - Custom element support
+- ✅ Added to molecules index
+- ✅ Features:
+  - Trigger and expandable content areas
+  - Click to toggle expand/collapse
+  - Absolute positioning below trigger
+  - Right-to-left alignment option
+  - Manual control with preventDefaultBehavior
+  - Multiple content types support
+  - Custom element base support
+
+### SectionItem Component
+- ✅ Migrated from legacy JavaScript to TypeScript (210+ lines)
+- ✅ Implemented with CSS Modules (BEM methodology)
+- ✅ Created comprehensive type definitions
+- ✅ Written **44 comprehensive tests** - **ALL PASSING (100%)**:
+  - Component initialization and rendering
+  - Custom tag name support
+  - Label rendering (string, HTML, HTMLElement, array)
+  - Content rendering (string, HTML, HTMLElement, array)
+  - Description tooltip integration
+  - Extended classes for all elements
+  - Show/hide functionality
+  - Element structure validation
+  - Public API methods (show, hide, getEl, getLabel, getContent)
+  - Destroy/cleanup with tooltip cleanup
+  - Edge cases (empty strings, special characters, multiple classes)
+  - Custom tag names (article, section, aside)
+- ✅ Added to molecules index
+- ✅ Features:
+  - Optional label with eb-label class consistency
+  - Optional content section
+  - Description tooltip support (integrates with Tooltip component)
+  - Custom tag name support
+  - Show/hide functionality
+  - Extended classes for label, content, and root
+  - Proper element ordering (label first, content second)
+
+### Label Component
+- ✅ Migrated from legacy JavaScript to TypeScript (110+ lines)
+- ✅ Implemented with CSS Modules (BEM methodology)
+- ✅ Created comprehensive type definitions
+- ✅ Written **41 comprehensive tests** - **ALL PASSING (100%)**:
+  - Component initialization and rendering
+  - Text content setting and updating
+  - htmlFor attribute setting and updating
+  - Extended classes support
+  - setText() method with various text types
+  - setFor() method with form association
+  - Form element association
+  - Element reference integrity
+  - Destroy/cleanup
+  - Edge cases (empty strings, special characters, unicode, whitespace, newlines)
+  - Consecutive updates
+  - Alternating text and for updates
+- ✅ Added to molecules index
+- ✅ Features:
+  - Simple label wrapper component
+  - Text content support
+  - Form element association (htmlFor attribute)
+  - Programmatic text and for updates
+  - Extended classes support
+  - Lightweight and flexible
+
+### Test Results (Overall)
+- **Total Test Files**: 21 (20 passing, 1 with known edge case)
+- **Total Tests**: 909 tests
+- **Passing**: 908 (99.89%)
+- **Failing**: 1 (LinkedInputs auto alpha - pre-existing known edge case)
+- **New Tests Added**: 121 tests for 3 new components
+
+### Round 5 Summary - Part 2 COMPLETE
+✅ All 3 small atom components migrated successfully:
+1. ✅ ExpandCollapse (36 tests)
+2. ✅ SectionItem (44 tests)
+3. ✅ Label (41 tests)
+
+**Total Small Atoms Tests**: 121 tests (100% passing)
+
+### Files Created for ExpandCollapse:
+```
+packages/ui-components/src/molecules/ExpandCollapse/
+├── ExpandCollapse.ts (230+ lines)
+├── expand-collapse.types.ts (95+ lines)
+├── expand-collapse.module.scss (30+ lines)
+├── expand-collapse.test.ts (450+ lines, 36 tests)
+└── index.ts (2 lines)
+```
+
+### Files Created for SectionItem:
+```
+packages/ui-components/src/molecules/SectionItem/
+├── SectionItem.ts (210+ lines)
+├── section-item.types.ts (90+ lines)
+├── section-item.module.scss (25+ lines)
+├── section-item.test.ts (550+ lines, 44 tests)
+└── index.ts (2 lines)
+```
+
+### Files Created for Label:
+```
+packages/ui-components/src/molecules/Label/
+├── Label.ts (110+ lines)
+├── label.types.ts (50+ lines)
+├── label.module.scss (8+ lines)
+├── label.test.ts (500+ lines, 41 tests)
+└── index.ts (2 lines)
+```
+
+### Files Modified:
+- `packages/ui-components/src/molecules/index.ts` (added 3 component exports)
+
+---
+
+## This Session - Round 5: Atoms & Additional Utilities - Part 3 (ChoosableSection, InteractiveCard) ✅
+
+### ChoosableSection Component
+- ✅ Migrated from legacy JavaScript to TypeScript (230+ lines)
+- ✅ Implemented with CSS Modules (BEM methodology)
+- ✅ Created comprehensive type definitions with Dropdown integration
+- ✅ Written **40 comprehensive tests** - **ALL PASSING (100%)**:
+  - Component initialization and rendering
+  - Label rendering (main label and dropdown label)
+  - Dropdown creation with items
+  - Content rendering when item is selected
+  - onChange callback with item data
+  - Item onSelect/onDeselect callbacks
+  - Content management (setContent method)
+  - Event system (on/off listeners)
+  - Public API methods (getEl, getDropdown, getContent)
+  - Destroy/cleanup
+  - Edge cases (empty items, function content, HTMLElement content, rapid selections)
+  - Integration with Dropdown component
+- ✅ Added to molecules index
+- ✅ Features:
+  - Section with main label and dropdown menu
+  - Dropdown allows selecting between different content options
+  - Content changes dynamically based on selection
+  - Support for function and HTMLElement content
+  - Event system with change callbacks
+  - Optional dropdown label
+  - Extended classes for all elements
+
+### InteractiveCard Component
+- ✅ Migrated from legacy JavaScript to TypeScript (170+ lines)
+- ✅ Implemented with CSS Modules (BEM methodology)
+- ✅ Created comprehensive type definitions
+- ✅ Written basic tests (3 tests passing)
+- ✅ Added to molecules index
+- ✅ Features:
+  - Card with content and interactive overlay
+  - Actions displayed on hover or click
+  - Two interaction types: 'hover' and 'click'
+  - Action buttons with icons and labels
+  - Overlay with semi-transparent background
+  - Centered action buttons
+  - Event callbacks for actions
+
+### Test Results (Overall)
+- **Total Test Files**: 23 (22 passing, 1 with known edge case)
+- **Total Tests**: 952 tests
+- **Passing**: 951 (99.89%)
+- **Failing**: 1 (LinkedInputs auto alpha - pre-existing known edge case)
+- **New Tests Added**: 40 tests for ChoosableSection, 3 tests for InteractiveCard
+
+### Files Created for ChoosableSection:
+```
+packages/ui-components/src/molecules/ChoosableSection/
+├── ChoosableSection.ts (230+ lines with EventEmitter)
+├── choosable-section.types.ts (100+ lines)
+├── choosable-section.module.scss (30+ lines)
+├── choosable-section.test.ts (500+ lines, 40 tests)
+└── index.ts (6 lines)
+```
+
+### Files Created for InteractiveCard:
+```
+packages/ui-components/src/molecules/InteractiveCard/
+├── InteractiveCard.ts (170+ lines)
+├── interactive-card.types.ts (80+ lines)
+├── interactive-card.module.scss (50+ lines)
+├── interactive-card.test.ts (25+ lines, 3 tests)
+└── index.ts (6 lines)
+```
+
+### Files Modified:
+- `packages/ui-components/src/molecules/index.ts` (added 2 component exports)
+
+---
+
+## Next Session
+**Round 5: Atoms & Additional Utility Components - Part 3 (Continued)**
+
+### Goal: Complete ToggleableSection and enhance tests
+Finish the final medium-complexity component to complete Round 5.
 
 ### Available Components (Sorted by Complexity)
 
-#### **Small Components (60-110 lines)** - Start Here ⭐
-1. **Section** (64 lines) - Generic section wrapper
-2. **Input** (76 lines) - Basic input component
-3. **ToggleButton** (77 lines) - Toggle button control
-4. **ExpandCollapse** (80 lines) - Collapsible content sections
-5. **SectionItem** (101 lines) - Section item component
-6. **Label** (103 lines) - Form label component
-
-#### **Medium Components (160-190 lines)** - After Small Ones
-7. **ChoosableSection** (164 lines) - Selectable sections/cards
-8. **InteractiveCard** (170 lines) - Card with interactive states
-9. **ToggleableSection** (184 lines) - Toggleable section wrapper
+#### **Medium Components (160-190 lines)** - Next Up ⭐
+1. ✅ **ChoosableSection** (164 lines) - Selectable sections/cards - 40 tests
+2. ✅ **InteractiveCard** (170 lines) - Card with interactive states - 3 tests
+3. **ToggleableSection** (184 lines) - Toggleable section wrapper - REMAINING
 
 #### **Already Migrated** ✅
 - Button (277 lines)
@@ -684,6 +1016,12 @@ Focus on simple atoms and utility components that are building blocks for larger
 - Popup (150 lines)
 - Dropdown (with @floating-ui/dom)
 - Tooltip (with @floating-ui/dom)
+- **Section** (64 lines) ✅
+- **Input** (76 lines) ✅
+- **ToggleButton** (77 lines) ✅
+- **ExpandCollapse** (80 lines) ✅ NEW
+- **SectionItem** (101 lines) ✅ NEW
+- **Label** (103 lines) ✅ NEW
 
 #### **Deferred (Too Complex)** ⏸️
 - **Floater** (791 lines) - NOT NEEDED (replaced by @floating-ui/dom) ✅
@@ -692,16 +1030,17 @@ Focus on simple atoms and utility components that are building blocks for larger
 
 ### Recommended Approach
 
-**Session 1-2: Small Atoms (6 components)**
-Start with the simplest components to build momentum:
-1. Section (64 lines)
-2. Input (76 lines)
-3. ToggleButton (77 lines)
-4. ExpandCollapse (80 lines)
-5. SectionItem (101 lines)
-6. Label (103 lines)
+**Session 1: Small Atoms Part 1 (3 components)** - ✅ COMPLETE
+1. ✅ Section (64 lines) - 40 tests
+2. ✅ Input (76 lines) - 44 tests
+3. ✅ ToggleButton (77 lines) - 44 tests
 
-**Session 3: Medium Components (3 components)**
+**Session 2: Small Atoms Part 2 (3 components)** - ✅ COMPLETE
+4. ✅ ExpandCollapse (80 lines) - 36 tests
+5. ✅ SectionItem (101 lines) - 44 tests
+6. ✅ Label (103 lines) - 41 tests
+
+**Session 3: Medium Components (3 components)** - NEXT UP
 7. ChoosableSection (164 lines)
 8. InteractiveCard (170 lines)
 9. ToggleableSection (184 lines)
@@ -709,14 +1048,16 @@ Start with the simplest components to build momentum:
 ### Development Standards
 - Continue CSS Modules + BEM pattern
 - Comprehensive type definitions
-- 20-50 tests per component (based on complexity)
+- 30-50 tests per component (based on complexity)
 - Add demos to ComponentShowcase
 - Maintain 99%+ test pass rate
 
 ### Current Status
+- **Round 1 Progress**: 4/4 components complete (100%) ✅
 - **Round 2 Progress**: 5/5 components complete (100%) ✅
 - **Round 3 Progress**: 2/4 components complete (ColorPicker, GridSelector) ✅
 - **Round 4 Progress**: 4/4 components complete (Alert, Popup, Tooltip, Floater assessment) ✅
-- **Overall Test Pass Rate**: 99.8% (659/660 tests)
-- **Components Migrated**: 15 total molecules
-- **Next Up**: Start Round 5 with small atoms (Section, Input, ToggleButton)
+- **Round 5 Progress**: 8/9 components complete (Section, Input, ToggleButton, ExpandCollapse, SectionItem, Label, ChoosableSection, InteractiveCard) ✅
+- **Overall Test Pass Rate**: 99.89% (951/952 tests)
+- **Components Migrated**: 23 total (20 molecules + 3 atoms)
+- **Next Up**: Complete Round 5 with ToggleableSection (1 remaining)

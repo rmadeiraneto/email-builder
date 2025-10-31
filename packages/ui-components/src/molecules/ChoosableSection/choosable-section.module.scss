@@ -1,0 +1,30 @@
+/**
+ * ChoosableSection styles
+ */
+
+.choosable-section {
+  &__label-wrapper {
+    align-items: center;
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+  }
+
+  &__dropdown-label-wrapper {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+  }
+
+  &__label {
+    // Main label styles (uses eb-label global class)
+  }
+
+  &__toggle-label {
+    // Dropdown label styles (uses eb-label global class)
+  }
+
+  &__content {
+    // Content area styles
+  }
+}

@@ -7,7 +7,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
-      '@tokens': resolve(__dirname, '../../packages/tokens/build/scss'),
+      '@tokens': resolve(__dirname, '../../packages/tokens/build/scss/_variables.scss'),
     },
   },
   css: {
@@ -16,7 +16,7 @@ export default defineConfig({
     },
     preprocessorOptions: {
       scss: {
-        additionalData: `@use "@tokens" as tokens;`,
+        additionalData: `@use "@tokens" as tokens;\n`,
       },
     },
   },

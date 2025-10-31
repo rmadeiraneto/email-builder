@@ -16,6 +16,8 @@ export default defineConfig({
     alias: {
       '@': resolve(__dirname, 'src'),
       '@tokens': resolve(__dirname, '../tokens/build/ts'),
+      'datatalks-utils': resolve(__dirname, '../../src/js/DataTalksUtils/_index.js'),
+      'datatalks-ui': resolve(__dirname, '../../src/js/DataTalksUI/_index.js'),
     },
   },
   css: {

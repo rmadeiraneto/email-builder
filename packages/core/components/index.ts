@@ -8,3 +8,6 @@ export type { ComponentFilter } from './ComponentRegistry';
 
 // Factories
 export * from './factories';
+
+// Component Definitions
+export * from './definitions';

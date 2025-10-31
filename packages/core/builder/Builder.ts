@@ -27,10 +27,20 @@ import type {
   StorageConfig,
   FeatureFlags,
   BuilderCallbacks,
+  StorageAdapter,
 } from '../types';
+import type {
+  Template,
+  TemplateListItem,
+} from '../types/template.types';
 import { EventEmitter } from '../services/EventEmitter';
 import { CommandManager } from '../commands/CommandManager';
 import { BuilderEvent } from '../types';
+import { LocalStorageAdapter } from '../services/LocalStorageAdapter';
+import { TemplateStorage } from '../template/TemplateStorage';
+import { TemplateManager, type CreateTemplateOptions } from '../template/TemplateManager';
+import { ComponentRegistry } from '../components/ComponentRegistry';
+import { createDefaultRegistry } from '../components/definitions/registry-init';
 
 interface NormalizedConfig extends BuilderConfig {
   locale: string;
@@ -44,6 +54,9 @@ export class Builder {
   private config: NormalizedConfig;
   private eventEmitter: EventEmitter;
   private commandManager: CommandManager;
+  private componentRegistry: ComponentRegistry;
+  private templateManager: TemplateManager;
+  private storageAdapter: StorageAdapter;
   private initialized: boolean = false;
   private state: Record<string, unknown> = {};
 
@@ -51,6 +64,19 @@ export class Builder {
     this.config = this.normalizeConfig(config);
     this.eventEmitter = new EventEmitter();
     this.commandManager = new CommandManager(this.eventEmitter);
+
+    // Initialize component registry with default components
+    this.componentRegistry = createDefaultRegistry();
+
+    // Initialize storage adapter
+    this.storageAdapter = this.createStorageAdapter();
+
+    // Initialize template manager
+    const templateStorage = new TemplateStorage(
+      this.storageAdapter,
+      this.config.storage.keyPrefix
+    );
+    this.templateManager = new TemplateManager(templateStorage, this.componentRegistry);
   }
 
   /**
@@ -162,6 +188,85 @@ export class Builder {
   }
 
   /**
+   * Gets the component registry
+   */
+  public getComponentRegistry(): ComponentRegistry {
+    return this.componentRegistry;
+  }
+
+  /**
+   * Gets the template manager
+   */
+  public getTemplateManager(): TemplateManager {
+    return this.templateManager;
+  }
+
+  /**
+   * Creates a new template
+   */
+  public async createTemplate(options: CreateTemplateOptions): Promise<Template> {
+    this.ensureInitialized();
+    return this.templateManager.create(options);
+  }
+
+  /**
+   * Loads a template
+   */
+  public async loadTemplate(templateId: string): Promise<Template> {
+    this.ensureInitialized();
+    return this.templateManager.load(templateId);
+  }
+
+  /**
+   * Saves the current template
+   */
+  public async saveTemplate(template: Template): Promise<void> {
+    this.ensureInitialized();
+    await this.templateManager.update(template.metadata.id, {
+      metadata: {
+        name: template.metadata.name,
+        description: template.metadata.description,
+        author: template.metadata.author,
+        category: template.metadata.category,
+        tags: template.metadata.tags,
+        thumbnail: template.metadata.thumbnail,
+        version: template.metadata.version,
+        updatedAt: Date.now(),
+      },
+      settings: template.settings,
+      generalStyles: template.generalStyles,
+      components: template.components,
+    });
+
+    if (this.config.callbacks?.onSaveTemplate) {
+      this.config.callbacks.onSaveTemplate(template);
+    }
+  }
+
+  /**
+   * Deletes a template
+   */
+  public async deleteTemplate(templateId: string): Promise<void> {
+    this.ensureInitialized();
+    return this.templateManager.delete(templateId);
+  }
+
+  /**
+   * Lists all templates
+   */
+  public async listTemplates(): Promise<TemplateListItem[]> {
+    this.ensureInitialized();
+    return this.templateManager.list();
+  }
+
+  /**
+   * Gets the current template
+   */
+  public getCurrentTemplate(): Template | null {
+    return this.templateManager.getCurrentTemplate();
+  }
+
+  /**
    * Destroys the builder and cleans up resources
    */
   public destroy(): void {
@@ -209,6 +314,33 @@ export class Builder {
     if (!this.initialized) {
       throw new Error('Builder not initialized. Call initialize() first.');
     }
+  }
+
+  /**
+   * Creates storage adapter based on configuration
+   */
+  private createStorageAdapter(): StorageAdapter {
+    const { method, adapter } = this.config.storage;
+
+    if (method === 'custom') {
+      if (!adapter) {
+        throw new Error('Custom storage adapter not provided');
+      }
+      return adapter;
+    }
+
+    if (method === 'local') {
+      return new LocalStorageAdapter();
+    }
+
+    if (method === 'api') {
+      // API adapter would be implemented here
+      // For now, fall back to localStorage
+      console.warn('API storage not implemented, falling back to localStorage');
+      return new LocalStorageAdapter();
+    }
+
+    throw new Error(`Unsupported storage method: ${method}`);
   }
 
   /**

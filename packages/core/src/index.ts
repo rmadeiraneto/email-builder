@@ -16,5 +16,13 @@ export * from '../builder';
 // Export commands
 export * from '../commands';
 
-// Export services (EventEmitter as concrete implementation)
-export { EventEmitter } from '../services';
+// Export services
+export { EventEmitter, LocalStorageAdapter } from '../services';
+
+// Export template management
+export * from '../template';
+
+// Export component registry and definitions
+export { ComponentRegistry, RegistryEvent, RegistryError } from '../components/ComponentRegistry';
+export type { ComponentFilter } from '../components/ComponentRegistry';
+export * from '../components/definitions/registry-init';

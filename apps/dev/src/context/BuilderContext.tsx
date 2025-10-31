@@ -32,9 +32,14 @@ export interface BuilderContextValue {
     setTemplate: (template: Template | null) => void;
     selectComponent: (id: string | null) => void;
     setDraggedComponent: (component: BaseComponent | null) => void;
+    addComponent: (component: BaseComponent) => void;
     undo: () => Promise<void>;
     redo: () => Promise<void>;
     updateUndoRedoState: () => void;
+    createTemplate: (name: string, type?: 'email' | 'web') => Promise<void>;
+    saveTemplate: () => Promise<void>;
+    loadTemplate: (id: string) => Promise<void>;
+    exportTemplate: (format: 'html' | 'json') => Promise<void>;
   };
 }
 
@@ -97,6 +102,22 @@ export const BuilderProvider: ParentComponent = (props) => {
       setState('draggedComponent', component);
     },
 
+    addComponent: (component: BaseComponent) => {
+      if (!state.template) {
+        console.error('[BuilderContext] Cannot add component: no template loaded');
+        return;
+      }
+
+      // Create a new template with the added component
+      const updatedTemplate = {
+        ...state.template,
+        components: [...state.template.components, component],
+      };
+
+      setState('template', updatedTemplate);
+      console.log('[BuilderContext] Component added:', component.type);
+    },
+
     undo: async () => {
       const success = await builder.undo();
       if (success) {
@@ -114,6 +135,103 @@ export const BuilderProvider: ParentComponent = (props) => {
     updateUndoRedoState: () => {
       setState('canUndo', builder.canUndo());
       setState('canRedo', builder.canRedo());
+    },
+
+    createTemplate: async (name: string, type: 'email' | 'web' = 'email') => {
+      try {
+        const templateManager = builder.getTemplateManager();
+
+        // Create template with proper settings
+        const template = await templateManager.create({
+          name,
+          settings: {
+            target: type,
+            canvasDimensions: {
+              width: type === 'email' ? 600 : 1200,
+              maxWidth: type === 'email' ? 600 : undefined,
+            },
+            breakpoints: {
+              mobile: 480,
+              tablet: 768,
+              desktop: 1024,
+            },
+            responsive: type === 'web',
+            locale: 'en-US',
+          },
+        });
+
+        setState('template', template);
+        actions.updateUndoRedoState();
+        console.log('[BuilderContext] Template created:', template);
+      } catch (error) {
+        console.error('[BuilderContext] Failed to create template:', error);
+        throw error;
+      }
+    },
+
+    saveTemplate: async () => {
+      try {
+        if (!state.template) {
+          throw new Error('No template to save');
+        }
+        const templateManager = builder.getTemplateManager();
+        await templateManager.saveTemplate(state.template);
+        console.log('[BuilderContext] Template saved:', state.template);
+      } catch (error) {
+        console.error('[BuilderContext] Failed to save template:', error);
+        throw error;
+      }
+    },
+
+    loadTemplate: async (id: string) => {
+      try {
+        const templateManager = builder.getTemplateManager();
+        const template = await templateManager.loadTemplate(id);
+        setState('template', template);
+        actions.updateUndoRedoState();
+        console.log('[BuilderContext] Template loaded:', template);
+      } catch (error) {
+        console.error('[BuilderContext] Failed to load template:', error);
+        throw error;
+      }
+    },
+
+    exportTemplate: async (format: 'html' | 'json') => {
+      try {
+        if (!state.template) {
+          throw new Error('No template to export');
+        }
+        const exporter = builder.getTemplateExporter();
+        let content: string;
+        let filename: string;
+        let mimeType: string;
+
+        if (format === 'html') {
+          content = await exporter.toHTML(state.template);
+          filename = `${state.template.name || 'template'}.html`;
+          mimeType = 'text/html';
+        } else {
+          content = await exporter.toJSON(state.template);
+          filename = `${state.template.name || 'template'}.json`;
+          mimeType = 'application/json';
+        }
+
+        // Create download link
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        console.log('[BuilderContext] Template exported:', format, filename);
+      } catch (error) {
+        console.error('[BuilderContext] Failed to export template:', error);
+        throw error;
+      }
     },
   };
 

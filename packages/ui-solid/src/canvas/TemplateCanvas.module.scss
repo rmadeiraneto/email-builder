@@ -5,6 +5,22 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  transition: background-color 0.2s ease;
+
+  &.draggingOver {
+    background-color: rgba(79, 70, 229, 0.05);
+
+    .templateContainer {
+      border-color: var(--color-primary-500, #6366f1);
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    }
+
+    .dropZone {
+      border-color: var(--color-primary-500, #6366f1);
+      background: var(--color-primary-100, #e0e7ff);
+      border-width: 3px;
+    }
+  }
 }
 
 .templateContainer {

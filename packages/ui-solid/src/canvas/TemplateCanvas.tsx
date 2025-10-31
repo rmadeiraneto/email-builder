@@ -4,7 +4,7 @@
  * Renders the template and allows for component selection and interaction
  */
 
-import { type Component, For, Show, createEffect } from 'solid-js';
+import { type Component, For, Show, createSignal } from 'solid-js';
 import type { Template, BaseComponent } from '@email-builder/core';
 import styles from './TemplateCanvas.module.scss';
 
@@ -18,6 +18,7 @@ export interface TemplateCanvasProps {
 
 export const TemplateCanvas: Component<TemplateCanvasProps> = (props) => {
   let canvasRef: HTMLDivElement | undefined;
+  const [isDraggingOver, setIsDraggingOver] = createSignal(false);
 
   const handleComponentClick = (component: BaseComponent, event: MouseEvent) => {
     event.stopPropagation();
@@ -32,19 +33,29 @@ export const TemplateCanvas: Component<TemplateCanvasProps> = (props) => {
   const handleDragOver = (event: DragEvent) => {
     event.preventDefault();
     event.dataTransfer!.dropEffect = 'copy';
+    setIsDraggingOver(true);
+  };
+
+  const handleDragLeave = (event: DragEvent) => {
+    // Only set to false if we're leaving the canvas itself, not a child element
+    if (event.currentTarget === event.target) {
+      setIsDraggingOver(false);
+    }
   };
 
   const handleDrop = (event: DragEvent) => {
     event.preventDefault();
+    setIsDraggingOver(false);
     props.onDrop?.(event);
   };
 
   return (
     <div
       ref={canvasRef}
-      class={styles.canvas}
+      class={`${styles.canvas} ${isDraggingOver() ? styles.draggingOver : ''}`}
       onClick={handleCanvasClick}
       onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
       <Show when={props.template} fallback={<EmptyState />}>

@@ -11,16 +11,16 @@
       "import": "./dist/index.js"
     },
     "./canvas": {
-      "types": "./dist/canvas/index.d.ts",
-      "import": "./dist/canvas/index.js"
+      "types": "./dist/canvas.d.ts",
+      "import": "./dist/canvas.js"
     },
     "./sidebar": {
-      "types": "./dist/sidebar/index.d.ts",
-      "import": "./dist/sidebar/index.js"
+      "types": "./dist/sidebar.d.ts",
+      "import": "./dist/sidebar.js"
     },
     "./toolbar": {
-      "types": "./dist/toolbar/index.d.ts",
-      "import": "./dist/toolbar/index.js"
+      "types": "./dist/toolbar.d.ts",
+      "import": "./dist/toolbar.js"
     }
   },
   "files": ["dist", "src"],

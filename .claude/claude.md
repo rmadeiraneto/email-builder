@@ -71,6 +71,7 @@ ui-solid / adapters (framework implementations)
 - **Link Don't Duplicate**: Reference existing docs instead of repeating
 
 ### Session Planning
+- **CRITICAL**: When the user says "Let's start a new session", ALWAYS check the "Next Session" section in TODO.md first to understand what to work on
 - Break work into small, completable chunks
 - Track progress in TODO.md
 - Complete critical path items first

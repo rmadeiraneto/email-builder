@@ -33,6 +33,7 @@ export interface BuilderContextValue {
     selectComponent: (id: string | null) => void;
     setDraggedComponent: (component: BaseComponent | null) => void;
     addComponent: (component: BaseComponent) => void;
+    updateComponentProperty: (componentId: string, propertyPath: string, value: any) => void;
     undo: () => Promise<void>;
     redo: () => Promise<void>;
     updateUndoRedoState: () => void;
@@ -116,6 +117,43 @@ export const BuilderProvider: ParentComponent = (props) => {
 
       setState('template', updatedTemplate);
       console.log('[BuilderContext] Component added:', component.type);
+    },
+
+    updateComponentProperty: (componentId: string, propertyPath: string, value: any) => {
+      if (!state.template) {
+        console.error('[BuilderContext] Cannot update component: no template loaded');
+        return;
+      }
+
+      // Helper to set nested property value
+      const setNestedValue = (obj: any, path: string, value: any): void => {
+        const keys = path.split('.');
+        const lastKey = keys.pop()!;
+        const target = keys.reduce((current, key) => {
+          if (!current[key]) current[key] = {};
+          return current[key];
+        }, obj);
+        target[lastKey] = value;
+      };
+
+      // Find the component and update it
+      const updatedComponents = state.template.components.map((comp) => {
+        if (comp.id === componentId) {
+          const updatedComp = JSON.parse(JSON.stringify(comp)); // Deep clone
+          setNestedValue(updatedComp, propertyPath, value);
+          return updatedComp;
+        }
+        return comp;
+      });
+
+      // Update template with new components array
+      const updatedTemplate = {
+        ...state.template,
+        components: updatedComponents,
+      };
+
+      setState('template', updatedTemplate);
+      console.log('[BuilderContext] Component property updated:', componentId, propertyPath, value);
     },
 
     undo: async () => {

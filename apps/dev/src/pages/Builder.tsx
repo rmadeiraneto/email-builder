@@ -4,10 +4,10 @@
  * Main page for the email/template builder application
  */
 
-import { type Component, Show, createSignal } from 'solid-js';
+import { type Component, Show, createSignal, createMemo } from 'solid-js';
 import { BuilderProvider, useBuilder } from '../context/BuilderContext';
 import { TemplateCanvas } from '@email-builder/ui-solid/canvas';
-import { ComponentPalette } from '@email-builder/ui-solid/sidebar';
+import { ComponentPalette, PropertyPanel } from '@email-builder/ui-solid/sidebar';
 import { TemplateToolbar } from '@email-builder/ui-solid/toolbar';
 import { NewTemplateModal } from '../components/modals/NewTemplateModal';
 import type { ComponentDefinition } from '@email-builder/core';
@@ -17,8 +17,18 @@ const BuilderContent: Component = () => {
   const { state, actions, componentDefinitions } = useBuilder();
   const [isNewTemplateModalOpen, setIsNewTemplateModalOpen] = createSignal(false);
 
+  // Get the selected component from the template
+  const selectedComponent = createMemo(() => {
+    if (!state.template || !state.selectedComponentId) return null;
+    return state.template.components.find(c => c.id === state.selectedComponentId) || null;
+  });
+
   const handleComponentSelect = (id: string | null) => {
     actions.selectComponent(id);
+  };
+
+  const handlePropertyChange = (componentId: string, propertyPath: string, value: any) => {
+    actions.updateComponentProperty(componentId, propertyPath, value);
   };
 
   const handleComponentDragStart = (definition: ComponentDefinition, event: DragEvent) => {
@@ -142,14 +152,10 @@ const BuilderContent: Component = () => {
           </main>
 
           <aside class={styles.rightSidebar}>
-            <h2>Properties</h2>
-            {/* Property Panel will go here */}
-            <Show when={state.selectedComponentId}>
-              <p>Component selected: {state.selectedComponentId}</p>
-            </Show>
-            <Show when={!state.selectedComponentId}>
-              <p>No component selected</p>
-            </Show>
+            <PropertyPanel
+              selectedComponent={selectedComponent()}
+              onPropertyChange={handlePropertyChange}
+            />
           </aside>
         </div>
       </div>

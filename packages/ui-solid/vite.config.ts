@@ -33,11 +33,12 @@ export default defineConfig({
   },
   plugins: [
     solid(),
-    dts({
-      include: ['src/**/*'],
-      exclude: ['**/*.test.ts', '**/*.test.tsx'],
-      insertTypesEntry: true,
-    }),
+    // Temporarily disable type generation to speed up development
+    // dts({
+    //   include: ['src/**/*'],
+    //   exclude: ['**/*.test.ts', '**/*.test.tsx'],
+    //   insertTypesEntry: true,
+    // }),
   ],
   css: {
     modules: {

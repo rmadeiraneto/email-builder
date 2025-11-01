@@ -4,7 +4,7 @@
  * Main page for the email/template builder application
  */
 
-import { type Component, Show, createSignal, createMemo } from 'solid-js';
+import { type Component, Show, createSignal, createMemo, onMount, onCleanup } from 'solid-js';
 import { BuilderProvider, useBuilder } from '../context/BuilderContext';
 import { TemplateCanvas } from '@email-builder/ui-solid/canvas';
 import { ComponentPalette, PropertyPanel } from '@email-builder/ui-solid/sidebar';
@@ -30,6 +30,34 @@ const BuilderContent: Component = () => {
   const handlePropertyChange = (componentId: string, propertyPath: string, value: any) => {
     actions.updateComponentProperty(componentId, propertyPath, value);
   };
+
+  const handleDelete = (componentId: string) => {
+    actions.deleteComponent(componentId);
+  };
+
+  // Keyboard shortcut handler
+  const handleKeyDown = (event: KeyboardEvent) => {
+    // Delete or Backspace key - delete selected component
+    if ((event.key === 'Delete' || event.key === 'Backspace') && state.selectedComponentId) {
+      // Don't delete if user is typing in an input field
+      const target = event.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+        return;
+      }
+
+      event.preventDefault();
+      handleDelete(state.selectedComponentId);
+    }
+  };
+
+  // Set up keyboard event listener
+  onMount(() => {
+    window.addEventListener('keydown', handleKeyDown);
+  });
+
+  onCleanup(() => {
+    window.removeEventListener('keydown', handleKeyDown);
+  });
 
   const handleComponentDragStart = (definition: ComponentDefinition, event: DragEvent) => {
     console.log('[Builder] Component drag started:', definition.type);
@@ -155,6 +183,7 @@ const BuilderContent: Component = () => {
             <PropertyPanel
               selectedComponent={selectedComponent()}
               onPropertyChange={handlePropertyChange}
+              onDelete={handleDelete}
             />
           </aside>
         </div>

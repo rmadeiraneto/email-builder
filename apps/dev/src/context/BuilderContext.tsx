@@ -34,6 +34,7 @@ export interface BuilderContextValue {
     setDraggedComponent: (component: BaseComponent | null) => void;
     addComponent: (component: BaseComponent) => void;
     updateComponentProperty: (componentId: string, propertyPath: string, value: any) => void;
+    deleteComponent: (componentId: string) => void;
     undo: () => Promise<void>;
     redo: () => Promise<void>;
     updateUndoRedoState: () => void;
@@ -154,6 +155,33 @@ export const BuilderProvider: ParentComponent = (props) => {
 
       setState('template', updatedTemplate);
       console.log('[BuilderContext] Component property updated:', componentId, propertyPath, value);
+    },
+
+    deleteComponent: (componentId: string) => {
+      if (!state.template) {
+        console.error('[BuilderContext] Cannot delete component: no template loaded');
+        return;
+      }
+
+      // Filter out the component with matching ID
+      const updatedComponents = state.template.components.filter(
+        (comp) => comp.id !== componentId
+      );
+
+      // Update template with filtered components array
+      const updatedTemplate = {
+        ...state.template,
+        components: updatedComponents,
+      };
+
+      setState('template', updatedTemplate);
+
+      // Clear selection if the deleted component was selected
+      if (state.selectedComponentId === componentId) {
+        setState('selectedComponentId', null);
+      }
+
+      console.log('[BuilderContext] Component deleted:', componentId);
     },
 
     undo: async () => {

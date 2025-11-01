@@ -430,9 +430,21 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
         }
       >
         <div class={styles.propertyPanelHeader}>
-          <h3 class={styles.propertyPanelTitle}>
-            {props.selectedComponent?.type} Properties
-          </h3>
+          <div class={styles.propertyPanelHeaderTop}>
+            <h3 class={styles.propertyPanelTitle}>
+              {props.selectedComponent?.type} Properties
+            </h3>
+            <Show when={props.onDelete}>
+              <button
+                class={styles.deleteButton}
+                onClick={() => props.onDelete?.(props.selectedComponent!.id)}
+                title="Delete component"
+                aria-label="Delete component"
+              >
+                🗑️
+              </button>
+            </Show>
+          </div>
           <span class={styles.componentId}>ID: {props.selectedComponent?.id}</span>
         </div>
 

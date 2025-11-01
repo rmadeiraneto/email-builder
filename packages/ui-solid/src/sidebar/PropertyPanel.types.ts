@@ -15,6 +15,11 @@ export interface PropertyPanelProps {
   onPropertyChange: (componentId: string, property: string, value: any) => void;
 
   /**
+   * Callback when the delete button is clicked
+   */
+  onDelete?: (componentId: string) => void;
+
+  /**
    * Optional CSS class names
    */
   class?: string;

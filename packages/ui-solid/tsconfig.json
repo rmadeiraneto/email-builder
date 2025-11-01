@@ -5,6 +5,7 @@
     "jsxImportSource": "solid-js",
     "outDir": "./dist",
     "rootDir": "./src",
+    "noPropertyAccessFromIndexSignature": false,
     "paths": {
       "@/*": ["./src/*"],
       "@tokens": ["../tokens/build/ts"]

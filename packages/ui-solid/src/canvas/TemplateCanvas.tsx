@@ -11,7 +11,7 @@ import styles from './TemplateCanvas.module.scss';
 export interface TemplateCanvasProps {
   template: Template | null;
   selectedComponentId: string | null;
-  onComponentSelect?: (id: string) => void;
+  onComponentSelect?: (id: string | null) => void;
   onComponentAdd?: (component: BaseComponent, index?: number) => void;
   onDrop?: (event: DragEvent) => void;
   onComponentReorder?: (componentId: string, newIndex: number) => void;
@@ -113,13 +113,13 @@ export const TemplateCanvas: Component<TemplateCanvasProps> = (props) => {
         <div
           class={styles.templateContainer}
           style={{
-            width: props.template?.canvas?.width
-              ? `${props.template.canvas.width}px`
+            width: props.template?.settings.canvasDimensions.width
+              ? `${props.template.settings.canvasDimensions.width}px`
               : '100%',
-            'max-width': props.template?.canvas?.maxWidth
-              ? `${props.template.canvas.maxWidth}px`
+            'max-width': props.template?.settings.canvasDimensions.maxWidth
+              ? `${props.template.settings.canvasDimensions.maxWidth}px`
               : 'none',
-            'background-color': props.template?.canvas?.backgroundColor || '#ffffff',
+            'background-color': props.template?.generalStyles.canvasBackgroundColor || '#ffffff',
           }}
         >
           <Show

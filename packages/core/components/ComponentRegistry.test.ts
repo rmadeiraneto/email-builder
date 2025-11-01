@@ -35,7 +35,7 @@ function createMockDefinition(
       backgroundColor: '#ffffff',
     },
     create: () => ({
-      id: `${type}-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+      id: `${type}-${Date.now()}-${crypto.randomUUID().slice(0, 9)}`,
       type: type as ComponentType,
       metadata: {
         name: `${type} Component`,
@@ -61,7 +61,7 @@ function createMockPreset(id: string, name: string): ComponentPreset {
     name,
     description: `${name} preset`,
     styles: {
-      backgroundColor: '#' + Math.floor(Math.random() * 16777215).toString(16),
+      backgroundColor: '#' + crypto.randomUUID().slice(0, 6),
     },
     createdAt: Date.now(),
   };

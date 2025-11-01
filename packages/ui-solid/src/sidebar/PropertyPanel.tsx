@@ -230,7 +230,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
   });
 
   const groupedProperties = createMemo(() => {
-    const grouped: Record<string, PropertyDefinition[]> = {
+    const grouped: Record<'content' | 'styles' | 'settings', PropertyDefinition[]> = {
       content: [],
       styles: [],
       settings: [],
@@ -450,30 +450,30 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
 
         <div class={styles.propertyPanelContent}>
           {/* Content Section */}
-          <Show when={groupedProperties()['content'].length > 0}>
+          <Show when={groupedProperties().content.length > 0}>
             <div class={styles.propertySection}>
               <h4 class={styles.propertySectionTitle}>Content</h4>
-              <For each={groupedProperties()['content']}>
+              <For each={groupedProperties().content}>
                 {(property) => renderPropertyEditor(property)}
               </For>
             </div>
           </Show>
 
           {/* Styles Section */}
-          <Show when={groupedProperties()['styles'].length > 0}>
+          <Show when={groupedProperties().styles.length > 0}>
             <div class={styles.propertySection}>
               <h4 class={styles.propertySectionTitle}>Styles</h4>
-              <For each={groupedProperties()['styles']}>
+              <For each={groupedProperties().styles}>
                 {(property) => renderPropertyEditor(property)}
               </For>
             </div>
           </Show>
 
           {/* Settings Section */}
-          <Show when={groupedProperties()['settings'].length > 0}>
+          <Show when={groupedProperties().settings.length > 0}>
             <div class={styles.propertySection}>
               <h4 class={styles.propertySectionTitle}>Settings</h4>
-              <For each={groupedProperties()['settings']}>
+              <For each={groupedProperties().settings}>
                 {(property) => renderPropertyEditor(property)}
               </For>
             </div>

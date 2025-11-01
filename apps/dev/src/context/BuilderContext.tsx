@@ -13,7 +13,7 @@ import {
   onCleanup,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
-import { Builder, type Template, type BaseComponent, type ComponentDefinition, getAllComponentDefinitions } from '@email-builder/core';
+import { Builder, type Template, type BaseComponent, type ComponentDefinition, type TemplateListItem, getAllComponentDefinitions } from '@email-builder/core';
 
 export interface BuilderState {
   template: Template | null;
@@ -35,12 +35,15 @@ export interface BuilderContextValue {
     addComponent: (component: BaseComponent) => void;
     updateComponentProperty: (componentId: string, propertyPath: string, value: any) => void;
     deleteComponent: (componentId: string) => void;
+    reorderComponent: (componentId: string, newIndex: number) => void;
     undo: () => Promise<void>;
     redo: () => Promise<void>;
     updateUndoRedoState: () => void;
     createTemplate: (name: string, type?: 'email' | 'web') => Promise<void>;
     saveTemplate: () => Promise<void>;
     loadTemplate: (id: string) => Promise<void>;
+    listTemplates: () => Promise<TemplateListItem[]>;
+    deleteTemplate: (id: string) => Promise<void>;
     exportTemplate: (format: 'html' | 'json') => Promise<void>;
   };
 }
@@ -184,6 +187,36 @@ export const BuilderProvider: ParentComponent = (props) => {
       console.log('[BuilderContext] Component deleted:', componentId);
     },
 
+    reorderComponent: (componentId: string, newIndex: number) => {
+      if (!state.template) {
+        console.error('[BuilderContext] Cannot reorder component: no template loaded');
+        return;
+      }
+
+      const components = [...state.template.components];
+      const currentIndex = components.findIndex((comp) => comp.id === componentId);
+
+      if (currentIndex === -1) {
+        console.error('[BuilderContext] Component not found:', componentId);
+        return;
+      }
+
+      // Remove component from current position
+      const [component] = components.splice(currentIndex, 1);
+
+      // Insert component at new position
+      components.splice(newIndex, 0, component);
+
+      // Update template with reordered components array
+      const updatedTemplate = {
+        ...state.template,
+        components,
+      };
+
+      setState('template', updatedTemplate);
+      console.log('[BuilderContext] Component reordered:', componentId, 'to index', newIndex);
+    },
+
     undo: async () => {
       const success = await builder.undo();
       if (success) {
@@ -258,6 +291,35 @@ export const BuilderProvider: ParentComponent = (props) => {
         console.log('[BuilderContext] Template loaded:', template);
       } catch (error) {
         console.error('[BuilderContext] Failed to load template:', error);
+        throw error;
+      }
+    },
+
+    listTemplates: async () => {
+      try {
+        const templateManager = builder.getTemplateManager();
+        const templates = await templateManager.list();
+        console.log('[BuilderContext] Templates listed:', templates.length);
+        return templates;
+      } catch (error) {
+        console.error('[BuilderContext] Failed to list templates:', error);
+        throw error;
+      }
+    },
+
+    deleteTemplate: async (id: string) => {
+      try {
+        const templateManager = builder.getTemplateManager();
+        await templateManager.deleteTemplate(id);
+        console.log('[BuilderContext] Template deleted:', id);
+
+        // If the deleted template is currently loaded, clear it
+        if (state.template?.metadata?.id === id) {
+          setState('template', null);
+          setState('selectedComponentId', null);
+        }
+      } catch (error) {
+        console.error('[BuilderContext] Failed to delete template:', error);
         throw error;
       }
     },

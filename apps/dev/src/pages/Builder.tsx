@@ -10,12 +10,14 @@ import { TemplateCanvas } from '@email-builder/ui-solid/canvas';
 import { ComponentPalette, PropertyPanel } from '@email-builder/ui-solid/sidebar';
 import { TemplateToolbar } from '@email-builder/ui-solid/toolbar';
 import { NewTemplateModal } from '../components/modals/NewTemplateModal';
+import { TemplatePickerModal } from '../components/modals/TemplatePickerModal';
 import type { ComponentDefinition } from '@email-builder/core';
 import styles from './Builder.module.scss';
 
 const BuilderContent: Component = () => {
   const { state, actions, componentDefinitions } = useBuilder();
   const [isNewTemplateModalOpen, setIsNewTemplateModalOpen] = createSignal(false);
+  const [isTemplatePickerModalOpen, setIsTemplatePickerModalOpen] = createSignal(false);
 
   // Get the selected component from the template
   const selectedComponent = createMemo(() => {
@@ -98,6 +100,11 @@ const BuilderContent: Component = () => {
     }
   };
 
+  const handleComponentReorder = (componentId: string, newIndex: number) => {
+    console.log('[Builder] Component reordered:', componentId, 'to index', newIndex);
+    actions.reorderComponent(componentId, newIndex);
+  };
+
   // Toolbar handlers
   const handleNewTemplate = () => {
     setIsNewTemplateModalOpen(true);
@@ -124,8 +131,31 @@ const BuilderContent: Component = () => {
   };
 
   const handleLoadTemplate = () => {
-    // TODO: Show template picker modal
-    alert('Load template functionality coming soon!');
+    setIsTemplatePickerModalOpen(true);
+  };
+
+  const handleTemplateLoad = async (id: string) => {
+    try {
+      await actions.loadTemplate(id);
+      console.log('[Builder] Template loaded successfully');
+    } catch (error) {
+      console.error('[Builder] Failed to load template:', error);
+      alert('Failed to load template. Please try again.');
+    }
+  };
+
+  const handleTemplateDelete = async (id: string) => {
+    try {
+      await actions.deleteTemplate(id);
+      console.log('[Builder] Template deleted successfully');
+    } catch (error) {
+      console.error('[Builder] Failed to delete template:', error);
+      alert('Failed to delete template. Please try again.');
+    }
+  };
+
+  const handleListTemplates = async () => {
+    return await actions.listTemplates();
   };
 
   const handleExport = async () => {
@@ -175,6 +205,7 @@ const BuilderContent: Component = () => {
                 selectedComponentId={state.selectedComponentId}
                 onComponentSelect={handleComponentSelect}
                 onDrop={handleDrop}
+                onComponentReorder={handleComponentReorder}
               />
             </Show>
           </main>
@@ -193,6 +224,14 @@ const BuilderContent: Component = () => {
         isOpen={isNewTemplateModalOpen()}
         onClose={() => setIsNewTemplateModalOpen(false)}
         onCreateTemplate={handleCreateTemplate}
+      />
+
+      <TemplatePickerModal
+        isOpen={isTemplatePickerModalOpen()}
+        onClose={() => setIsTemplatePickerModalOpen(false)}
+        onLoadTemplate={handleTemplateLoad}
+        onDeleteTemplate={handleTemplateDelete}
+        onListTemplates={handleListTemplates}
       />
     </>
   );

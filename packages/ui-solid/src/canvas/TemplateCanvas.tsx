@@ -14,11 +14,14 @@ export interface TemplateCanvasProps {
   onComponentSelect?: (id: string) => void;
   onComponentAdd?: (component: BaseComponent, index?: number) => void;
   onDrop?: (event: DragEvent) => void;
+  onComponentReorder?: (componentId: string, newIndex: number) => void;
 }
 
 export const TemplateCanvas: Component<TemplateCanvasProps> = (props) => {
   let canvasRef: HTMLDivElement | undefined;
   const [isDraggingOver, setIsDraggingOver] = createSignal(false);
+  const [draggedComponentId, setDraggedComponentId] = createSignal<string | null>(null);
+  const [dropIndicatorIndex, setDropIndicatorIndex] = createSignal<number | null>(null);
 
   const handleComponentClick = (component: BaseComponent, event: MouseEvent) => {
     event.stopPropagation();
@@ -32,7 +35,15 @@ export const TemplateCanvas: Component<TemplateCanvasProps> = (props) => {
 
   const handleDragOver = (event: DragEvent) => {
     event.preventDefault();
-    event.dataTransfer!.dropEffect = 'copy';
+    const dataType = event.dataTransfer?.types[0];
+
+    // Check if we're dragging an existing component for reordering
+    if (dataType === 'component/reorder') {
+      event.dataTransfer!.dropEffect = 'move';
+    } else {
+      event.dataTransfer!.dropEffect = 'copy';
+    }
+
     setIsDraggingOver(true);
   };
 
@@ -40,13 +51,53 @@ export const TemplateCanvas: Component<TemplateCanvasProps> = (props) => {
     // Only set to false if we're leaving the canvas itself, not a child element
     if (event.currentTarget === event.target) {
       setIsDraggingOver(false);
+      setDropIndicatorIndex(null);
     }
   };
 
   const handleDrop = (event: DragEvent) => {
     event.preventDefault();
     setIsDraggingOver(false);
-    props.onDrop?.(event);
+    setDropIndicatorIndex(null);
+
+    const dataType = event.dataTransfer?.types[0];
+
+    // Handle reordering
+    if (dataType === 'component/reorder') {
+      const componentId = event.dataTransfer?.getData('component/reorder');
+      const dropIndex = dropIndicatorIndex();
+
+      if (componentId && dropIndex !== null) {
+        props.onComponentReorder?.(componentId, dropIndex);
+      }
+
+      setDraggedComponentId(null);
+    } else {
+      // Handle adding new component from palette
+      props.onDrop?.(event);
+    }
+  };
+
+  const handleComponentDragStart = (component: BaseComponent, event: DragEvent) => {
+    event.stopPropagation();
+    event.dataTransfer!.effectAllowed = 'move';
+    event.dataTransfer!.setData('component/reorder', component.id);
+    setDraggedComponentId(component.id);
+  };
+
+  const handleComponentDragOver = (index: number, event: DragEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const dataType = event.dataTransfer?.types[0];
+    if (dataType === 'component/reorder') {
+      setDropIndicatorIndex(index);
+    }
+  };
+
+  const handleComponentDragEnd = () => {
+    setDraggedComponentId(null);
+    setDropIndicatorIndex(null);
   };
 
   return (
@@ -76,12 +127,24 @@ export const TemplateCanvas: Component<TemplateCanvasProps> = (props) => {
             fallback={<DropZone />}
           >
             <For each={props.template?.components}>
-              {(component) => (
-                <ComponentItem
-                  component={component}
-                  isSelected={props.selectedComponentId === component.id}
-                  onClick={(event) => handleComponentClick(component, event)}
-                />
+              {(component, index) => (
+                <>
+                  <Show when={dropIndicatorIndex() === index()}>
+                    <div class={styles.dropIndicator}>Drop here</div>
+                  </Show>
+                  <ComponentItem
+                    component={component}
+                    isSelected={props.selectedComponentId === component.id}
+                    isDragging={draggedComponentId() === component.id}
+                    onClick={(event) => handleComponentClick(component, event)}
+                    onDragStart={(event) => handleComponentDragStart(component, event)}
+                    onDragOver={(event) => handleComponentDragOver(index(), event)}
+                    onDragEnd={handleComponentDragEnd}
+                  />
+                  <Show when={dropIndicatorIndex() === props.template!.components.length && index() === props.template!.components.length - 1}>
+                    <div class={styles.dropIndicator}>Drop here</div>
+                  </Show>
+                </>
               )}
             </For>
           </Show>
@@ -113,18 +176,29 @@ const DropZone: Component = () => {
 interface ComponentItemProps {
   component: BaseComponent;
   isSelected: boolean;
+  isDragging: boolean;
   onClick: (event: MouseEvent) => void;
+  onDragStart: (event: DragEvent) => void;
+  onDragOver: (event: DragEvent) => void;
+  onDragEnd: () => void;
 }
 
 const ComponentItem: Component<ComponentItemProps> = (props) => {
   return (
     <div
-      class={`${styles.component} ${props.isSelected ? styles.selected : ''}`}
+      class={`${styles.component} ${props.isSelected ? styles.selected : ''} ${props.isDragging ? styles.dragging : ''}`}
       onClick={props.onClick}
+      draggable={true}
+      onDragStart={props.onDragStart}
+      onDragOver={props.onDragOver}
+      onDragEnd={props.onDragEnd}
       data-component-id={props.component.id}
       data-component-type={props.component.type}
     >
       <div class={styles.componentOverlay}>
+        <span class={styles.dragHandle} title="Drag to reorder">
+          ⋮⋮
+        </span>
         <span class={styles.componentLabel}>
           {props.component.type}
         </span>

@@ -98,6 +98,10 @@
     .componentOverlay {
       opacity: 1;
     }
+
+    .dragHandle {
+      opacity: 1;
+    }
   }
 
   &.selected {
@@ -108,6 +112,15 @@
       opacity: 1;
       background: rgba(79, 70, 229, 0.1);
     }
+
+    .dragHandle {
+      opacity: 1;
+    }
+  }
+
+  &.dragging {
+    opacity: 0.5;
+    cursor: move;
   }
 }
 
@@ -121,6 +134,27 @@
   pointer-events: none;
 }
 
+.dragHandle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.5rem);
+  background: var(--color-neutral-600, #4b5563);
+  color: white;
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: var(--font-weight-bold, 700);
+  border-radius: var(--border-radius-sm, 0.25rem) 0 var(--border-radius-sm, 0.25rem) 0;
+  cursor: move;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: auto;
+  user-select: none;
+
+  &:hover {
+    background: var(--color-neutral-700, #374151);
+  }
+}
+
 .componentLabel {
   display: inline-block;
   padding: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.5rem);
@@ -131,6 +165,52 @@
   border-radius: 0 var(--border-radius-sm, 0.25rem) 0 var(--border-radius-sm, 0.25rem);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  margin-left: 2rem;
+}
+
+.dropIndicator {
+  height: 4px;
+  background: var(--color-primary-500, #6366f1);
+  margin: var(--spacing-xs, 0.25rem) var(--spacing-md, 1rem);
+  border-radius: var(--border-radius-full, 9999px);
+  box-shadow: 0 0 8px rgba(79, 70, 229, 0.5);
+  animation: pulse 1s ease-in-out infinite;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background: var(--color-primary-500, #6366f1);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(79, 70, 229, 0.5);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background: var(--color-primary-500, #6366f1);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(79, 70, 229, 0.5);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 
 .componentContent {

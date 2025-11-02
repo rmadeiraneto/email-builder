@@ -7,7 +7,7 @@
 import { type Component, Show, createSignal, createMemo, onMount, onCleanup } from 'solid-js';
 import { BuilderProvider, useBuilder } from '../context/BuilderContext';
 import { TemplateCanvas } from '@email-builder/ui-solid/canvas';
-import { ComponentPalette, PropertyPanel } from '@email-builder/ui-solid/sidebar';
+import { ComponentPalette, PropertyPanel, CanvasSettings } from '@email-builder/ui-solid/sidebar';
 import { TemplateToolbar } from '@email-builder/ui-solid/toolbar';
 import { NewTemplateModal } from '../components/modals/NewTemplateModal';
 import { TemplatePickerModal } from '../components/modals/TemplatePickerModal';
@@ -37,13 +37,47 @@ const BuilderContent: Component = () => {
     actions.deleteComponent(componentId);
   };
 
+  const handleCanvasSettingChange = (path: string, value: any) => {
+    actions.updateCanvasSetting(path, value);
+  };
+
   // Keyboard shortcut handler
   const handleKeyDown = (event: KeyboardEvent) => {
+    // Don't handle keyboard shortcuts if user is typing in an input field
+    const target = event.target as HTMLElement;
+    const isInputField = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
+
+    // Undo: Ctrl+Z or Cmd+Z
+    if ((event.ctrlKey || event.metaKey) && event.key === 'z' && !event.shiftKey && !isInputField) {
+      event.preventDefault();
+      actions.undo();
+      return;
+    }
+
+    // Redo: Ctrl+Y or Cmd+Y or Ctrl+Shift+Z or Cmd+Shift+Z
+    if (
+      ((event.ctrlKey || event.metaKey) && event.key === 'y') ||
+      ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'z')
+    ) {
+      if (!isInputField) {
+        event.preventDefault();
+        actions.redo();
+      }
+      return;
+    }
+
+    // Duplicate: Ctrl+D or Cmd+D
+    if ((event.ctrlKey || event.metaKey) && event.key === 'd' && state.selectedComponentId) {
+      if (!isInputField) {
+        event.preventDefault();
+        actions.duplicateComponent(state.selectedComponentId);
+      }
+      return;
+    }
+
     // Delete or Backspace key - delete selected component
     if ((event.key === 'Delete' || event.key === 'Backspace') && state.selectedComponentId) {
-      // Don't delete if user is typing in an input field
-      const target = event.target as HTMLElement;
-      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+      if (isInputField) {
         return;
       }
 
@@ -62,7 +96,7 @@ const BuilderContent: Component = () => {
   });
 
   const handleComponentDragStart = (definition: ComponentDefinition, event: DragEvent) => {
-    console.log('[Builder] Component drag started:', definition.type);
+    // Component drag started
   };
 
   const handleDrop = (event: DragEvent) => {
@@ -77,7 +111,6 @@ const BuilderContent: Component = () => {
       }
 
       const { type } = JSON.parse(data);
-      console.log('[Builder] Component dropped:', type);
 
       // Find the component definition
       const definition = componentDefinitions.find(def => def.type === type);
@@ -88,7 +121,6 @@ const BuilderContent: Component = () => {
 
       // Create a new component instance using the definition's create method
       const newComponent = definition.create();
-      console.log('[Builder] Created component:', newComponent);
 
       // Add the component to the template
       actions.addComponent(newComponent);
@@ -101,7 +133,6 @@ const BuilderContent: Component = () => {
   };
 
   const handleComponentReorder = (componentId: string, newIndex: number) => {
-    console.log('[Builder] Component reordered:', componentId, 'to index', newIndex);
     actions.reorderComponent(componentId, newIndex);
   };
 
@@ -113,7 +144,6 @@ const BuilderContent: Component = () => {
   const handleCreateTemplate = async (name: string, type: 'email' | 'web') => {
     try {
       await actions.createTemplate(name, type);
-      console.log('[Builder] Template created successfully');
     } catch (error) {
       console.error('[Builder] Failed to create template:', error);
       alert('Failed to create template. Please try again.');
@@ -137,7 +167,6 @@ const BuilderContent: Component = () => {
   const handleTemplateLoad = async (id: string) => {
     try {
       await actions.loadTemplate(id);
-      console.log('[Builder] Template loaded successfully');
     } catch (error) {
       console.error('[Builder] Failed to load template:', error);
       alert('Failed to load template. Please try again.');
@@ -147,7 +176,6 @@ const BuilderContent: Component = () => {
   const handleTemplateDelete = async (id: string) => {
     try {
       await actions.deleteTemplate(id);
-      console.log('[Builder] Template deleted successfully');
     } catch (error) {
       console.error('[Builder] Failed to delete template:', error);
       alert('Failed to delete template. Please try again.');
@@ -161,7 +189,6 @@ const BuilderContent: Component = () => {
   const handleExport = async () => {
     try {
       await actions.exportTemplate('html');
-      console.log('[Builder] Template exported successfully');
     } catch (error) {
       console.error('[Builder] Failed to export template:', error);
       alert('Failed to export template. Please try again.');
@@ -211,6 +238,10 @@ const BuilderContent: Component = () => {
           </main>
 
           <aside class={styles.rightSidebar}>
+            <CanvasSettings
+              template={state.template}
+              onSettingChange={handleCanvasSettingChange}
+            />
             <PropertyPanel
               selectedComponent={selectedComponent()}
               onPropertyChange={handlePropertyChange}

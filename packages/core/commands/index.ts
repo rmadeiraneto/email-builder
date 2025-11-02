@@ -11,6 +11,13 @@ export { SaveTemplateCommand } from './SaveTemplateCommand';
 export { LoadTemplateCommand } from './LoadTemplateCommand';
 export { ExportTemplateCommand } from './ExportTemplateCommand';
 
+// Template-aware commands
+export { TemplateAddComponentCommand } from './TemplateAddComponentCommand';
+export { TemplateUpdateComponentCommand } from './TemplateUpdateComponentCommand';
+export { TemplateRemoveComponentCommand } from './TemplateRemoveComponentCommand';
+export { TemplateReorderComponentCommand } from './TemplateReorderComponentCommand';
+export { TemplateDuplicateComponentCommand } from './TemplateDuplicateComponentCommand';
+
 export type { AddComponentPayload, ComponentData } from './AddComponentCommand';
 export type { RemoveComponentPayload } from './RemoveComponentCommand';
 export type { UpdateComponentContentPayload } from './UpdateComponentContentCommand';
@@ -18,3 +25,10 @@ export type { UpdateComponentStylePayload } from './UpdateComponentStyleCommand'
 export type { SaveTemplatePayload } from './SaveTemplateCommand';
 export type { LoadTemplatePayload } from './LoadTemplateCommand';
 export type { ExportTemplatePayload } from './ExportTemplateCommand';
+
+// Template-aware command types
+export type { TemplateAddComponentPayload } from './TemplateAddComponentCommand';
+export type { TemplateUpdateComponentPayload } from './TemplateUpdateComponentCommand';
+export type { TemplateRemoveComponentPayload } from './TemplateRemoveComponentCommand';
+export type { TemplateReorderComponentPayload } from './TemplateReorderComponentCommand';
+export type { TemplateDuplicateComponentPayload } from './TemplateDuplicateComponentCommand';

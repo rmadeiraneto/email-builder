@@ -13,7 +13,19 @@ import {
   onCleanup,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
-import { Builder, type Template, type BaseComponent, type ComponentDefinition, type TemplateListItem, getAllComponentDefinitions } from '@email-builder/core';
+import {
+  Builder,
+  type Template,
+  type BaseComponent,
+  type ComponentDefinition,
+  type TemplateListItem,
+  getAllComponentDefinitions,
+  TemplateAddComponentCommand,
+  TemplateUpdateComponentCommand,
+  TemplateRemoveComponentCommand,
+  TemplateReorderComponentCommand,
+  TemplateDuplicateComponentCommand,
+} from '@email-builder/core';
 
 export interface BuilderState {
   template: Template | null;
@@ -32,10 +44,12 @@ export interface BuilderContextValue {
     setTemplate: (template: Template | null) => void;
     selectComponent: (id: string | null) => void;
     setDraggedComponent: (component: BaseComponent | null) => void;
-    addComponent: (component: BaseComponent) => void;
-    updateComponentProperty: (componentId: string, propertyPath: string, value: any) => void;
-    deleteComponent: (componentId: string) => void;
-    reorderComponent: (componentId: string, newIndex: number) => void;
+    addComponent: (component: BaseComponent) => Promise<void>;
+    updateComponentProperty: (componentId: string, propertyPath: string, value: any) => Promise<void>;
+    updateCanvasSetting: (settingPath: string, value: any) => void;
+    deleteComponent: (componentId: string) => Promise<void>;
+    duplicateComponent: (componentId: string) => Promise<void>;
+    reorderComponent: (componentId: string, newIndex: number) => Promise<void>;
     undo: () => Promise<void>;
     redo: () => Promise<void>;
     updateUndoRedoState: () => void;
@@ -59,17 +73,16 @@ export const BuilderProvider: ParentComponent = (props) => {
     },
     callbacks: {
       onSaveTemplate: (template) => {
-        console.log('[Builder] Template saved:', template);
+        // Template saved successfully
       },
       onLoadTemplate: (template) => {
-        console.log('[Builder] Template loaded:', template);
         setState('template', template);
       },
       onExportTemplate: (format, content) => {
-        console.log('[Builder] Template exported:', format, content);
+        // Template exported successfully
       },
     },
-    debug: true,
+    debug: false,
   });
 
   // Create reactive state
@@ -87,7 +100,6 @@ export const BuilderProvider: ParentComponent = (props) => {
     try {
       await builder.initialize();
       setState('isInitialized', true);
-      console.log('[BuilderContext] Builder initialized');
     } catch (error) {
       console.error('[BuilderContext] Failed to initialize builder:', error);
     }
@@ -107,114 +119,142 @@ export const BuilderProvider: ParentComponent = (props) => {
       setState('draggedComponent', component);
     },
 
-    addComponent: (component: BaseComponent) => {
+    addComponent: async (component: BaseComponent) => {
       if (!state.template) {
         console.error('[BuilderContext] Cannot add component: no template loaded');
         return;
       }
 
-      // Create a new template with the added component
-      const updatedTemplate = {
-        ...state.template,
-        components: [...state.template.components, component],
-      };
+      // Create and execute command
+      const command = new TemplateAddComponentCommand(
+        { component },
+        () => state.template,
+        (template) => setState('template', template)
+      );
 
-      setState('template', updatedTemplate);
-      console.log('[BuilderContext] Component added:', component.type);
+      const result = await builder.executeCommand(command);
+      if (result.success) {
+        actions.updateUndoRedoState();
+      } else {
+        console.error('[BuilderContext] Failed to add component:', result.error);
+      }
     },
 
-    updateComponentProperty: (componentId: string, propertyPath: string, value: any) => {
+    updateComponentProperty: async (componentId: string, propertyPath: string, value: any) => {
       if (!state.template) {
         console.error('[BuilderContext] Cannot update component: no template loaded');
         return;
       }
 
-      // Helper to set nested property value
-      const setNestedValue = (obj: any, path: string, value: any): void => {
-        const keys = path.split('.');
-        const lastKey = keys.pop()!;
-        const target = keys.reduce((current, key) => {
-          if (!current[key]) current[key] = {};
-          return current[key];
-        }, obj);
-        target[lastKey] = value;
-      };
+      // Create and execute command
+      const command = new TemplateUpdateComponentCommand(
+        { componentId, propertyPath, value },
+        () => state.template,
+        (template) => setState('template', template)
+      );
 
-      // Find the component and update it
-      const updatedComponents = state.template.components.map((comp) => {
-        if (comp.id === componentId) {
-          const updatedComp = JSON.parse(JSON.stringify(comp)); // Deep clone
-          setNestedValue(updatedComp, propertyPath, value);
-          return updatedComp;
-        }
-        return comp;
-      });
-
-      // Update template with new components array
-      const updatedTemplate = {
-        ...state.template,
-        components: updatedComponents,
-      };
-
-      setState('template', updatedTemplate);
-      console.log('[BuilderContext] Component property updated:', componentId, propertyPath, value);
+      const result = await builder.executeCommand(command);
+      if (result.success) {
+        actions.updateUndoRedoState();
+      } else {
+        console.error('[BuilderContext] Failed to update component:', result.error);
+      }
     },
 
-    deleteComponent: (componentId: string) => {
+    updateCanvasSetting: (settingPath: string, value: any) => {
+      if (!state.template) {
+        console.error('[BuilderContext] Cannot update canvas setting: no template loaded');
+        return;
+      }
+
+      // Create a deep copy of the template
+      const updatedTemplate = JSON.parse(JSON.stringify(state.template));
+
+      // Set nested value using dot notation
+      const keys = settingPath.split('.');
+      const lastKey = keys.pop()!;
+      const target = keys.reduce((current, key) => {
+        if (!current[key]) current[key] = {};
+        return current[key];
+      }, updatedTemplate as any);
+      target[lastKey] = value;
+
+      // Update the template in state
+      setState('template', updatedTemplate);
+    },
+
+    deleteComponent: async (componentId: string) => {
       if (!state.template) {
         console.error('[BuilderContext] Cannot delete component: no template loaded');
         return;
       }
 
-      // Filter out the component with matching ID
-      const updatedComponents = state.template.components.filter(
-        (comp) => comp.id !== componentId
+      // Create and execute command
+      const command = new TemplateRemoveComponentCommand(
+        { componentId },
+        () => state.template,
+        (template) => setState('template', template)
       );
 
-      // Update template with filtered components array
-      const updatedTemplate = {
-        ...state.template,
-        components: updatedComponents,
-      };
+      const result = await builder.executeCommand(command);
+      if (result.success) {
+        actions.updateUndoRedoState();
 
-      setState('template', updatedTemplate);
-
-      // Clear selection if the deleted component was selected
-      if (state.selectedComponentId === componentId) {
-        setState('selectedComponentId', null);
+        // Clear selection if the deleted component was selected
+        if (state.selectedComponentId === componentId) {
+          setState('selectedComponentId', null);
+        }
+      } else {
+        console.error('[BuilderContext] Failed to delete component:', result.error);
       }
-
-      console.log('[BuilderContext] Component deleted:', componentId);
     },
 
-    reorderComponent: (componentId: string, newIndex: number) => {
+    duplicateComponent: async (componentId: string) => {
+      if (!state.template) {
+        console.error('[BuilderContext] Cannot duplicate component: no template loaded');
+        return;
+      }
+
+      // Create and execute command
+      const command = new TemplateDuplicateComponentCommand(
+        { componentId },
+        () => state.template,
+        (template) => setState('template', template)
+      );
+
+      const result = await builder.executeCommand(command);
+      if (result.success) {
+        actions.updateUndoRedoState();
+
+        // Select the newly duplicated component
+        const newComponentId = command.getNewComponentId();
+        if (newComponentId) {
+          setState('selectedComponentId', newComponentId);
+        }
+      } else {
+        console.error('[BuilderContext] Failed to duplicate component:', result.error);
+      }
+    },
+
+    reorderComponent: async (componentId: string, newIndex: number) => {
       if (!state.template) {
         console.error('[BuilderContext] Cannot reorder component: no template loaded');
         return;
       }
 
-      const components = [...state.template.components];
-      const currentIndex = components.findIndex((comp) => comp.id === componentId);
+      // Create and execute command
+      const command = new TemplateReorderComponentCommand(
+        { componentId, newIndex },
+        () => state.template,
+        (template) => setState('template', template)
+      );
 
-      if (currentIndex === -1) {
-        console.error('[BuilderContext] Component not found:', componentId);
-        return;
+      const result = await builder.executeCommand(command);
+      if (result.success) {
+        actions.updateUndoRedoState();
+      } else {
+        console.error('[BuilderContext] Failed to reorder component:', result.error);
       }
-
-      // Remove component from current position
-      const [component] = components.splice(currentIndex, 1);
-
-      // Insert component at new position
-      components.splice(newIndex, 0, component);
-
-      // Update template with reordered components array
-      const updatedTemplate = {
-        ...state.template,
-        components,
-      };
-
-      setState('template', updatedTemplate);
-      console.log('[BuilderContext] Component reordered:', componentId, 'to index', newIndex);
     },
 
     undo: async () => {
@@ -261,7 +301,6 @@ export const BuilderProvider: ParentComponent = (props) => {
 
         setState('template', template);
         actions.updateUndoRedoState();
-        console.log('[BuilderContext] Template created:', template);
       } catch (error) {
         console.error('[BuilderContext] Failed to create template:', error);
         throw error;
@@ -275,7 +314,6 @@ export const BuilderProvider: ParentComponent = (props) => {
         }
         const templateManager = builder.getTemplateManager();
         await templateManager.saveTemplate(state.template);
-        console.log('[BuilderContext] Template saved:', state.template);
       } catch (error) {
         console.error('[BuilderContext] Failed to save template:', error);
         throw error;
@@ -288,7 +326,6 @@ export const BuilderProvider: ParentComponent = (props) => {
         const template = await templateManager.loadTemplate(id);
         setState('template', template);
         actions.updateUndoRedoState();
-        console.log('[BuilderContext] Template loaded:', template);
       } catch (error) {
         console.error('[BuilderContext] Failed to load template:', error);
         throw error;
@@ -299,7 +336,6 @@ export const BuilderProvider: ParentComponent = (props) => {
       try {
         const templateManager = builder.getTemplateManager();
         const templates = await templateManager.list();
-        console.log('[BuilderContext] Templates listed:', templates.length);
         return templates;
       } catch (error) {
         console.error('[BuilderContext] Failed to list templates:', error);
@@ -311,7 +347,6 @@ export const BuilderProvider: ParentComponent = (props) => {
       try {
         const templateManager = builder.getTemplateManager();
         await templateManager.deleteTemplate(id);
-        console.log('[BuilderContext] Template deleted:', id);
 
         // If the deleted template is currently loaded, clear it
         if (state.template?.metadata?.id === id) {
@@ -354,8 +389,6 @@ export const BuilderProvider: ParentComponent = (props) => {
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
-
-        console.log('[BuilderContext] Template exported:', format, filename);
       } catch (error) {
         console.error('[BuilderContext] Failed to export template:', error);
         throw error;

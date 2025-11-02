@@ -71,12 +71,14 @@ ui-solid / adapters (framework implementations)
 - **Link Don't Duplicate**: Reference existing docs instead of repeating
 
 ### Session Planning
-- **CRITICAL**: When the user says "Let's start a new session", ALWAYS check the "Next Session" section in TODO.md first to understand what to work on
+- **CRITICAL**: At the start of EVERY new session, ALWAYS check `NEXT_TASK.md` first to understand what to work on
+- **CRITICAL**: If `NEXT_TASK.md` exists, start working on it immediately without asking what to do
+- **CRITICAL**: Only ask what to do if `NEXT_TASK.md` is missing or empty
 - Break work into small, completable chunks
 - Track progress in TODO.md
 - Complete critical path items first
 - Defer nice-to-haves to later sessions
-- **CRITICAL**: Always update the "Next Session" section in TODO.md at the end of each session with clear, actionable goals for the next session
+- **CRITICAL**: At the end of each session, update `NEXT_TASK.md` with the next task to work on, or create it if starting a multi-session task
 
 ---
 

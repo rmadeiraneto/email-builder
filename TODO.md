@@ -132,7 +132,13 @@
 - [ ] Test preset system end-to-end
 
 #### Phase 3: Polish & Testing (IN PROGRESS)
-- [ ] Wire up export/import handlers
+- [x] Wire up export/import handlers ✅ COMPLETE
+  - [x] exportPresets() in BuilderContext
+  - [x] importPresets(file) in BuilderContext
+  - [x] Export button in PresetManager modal
+  - [x] Import button in PresetManager modal
+  - [x] Conflict resolution for imported presets
+  - [x] Full integration with PropertyPanel
 - [ ] Add preset badges to ComponentPalette (optional)
 - [ ] End-to-end testing of all workflows
 - [ ] Bug fixes and UX improvements

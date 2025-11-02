@@ -8,9 +8,9 @@ Complete the Style Presets System by implementing the UI layer. The backend infr
 
 **Why**: This is a core requirement (REQUIREMENTS.md §2.3.3) and the infrastructure is already built. Completing the UI will deliver a fully functional preset system.
 
-**Status**: Phase 2 Complete ✅ ~80% - Ready for Phase 3 Polish & Testing
-**Estimated Time**: 1-2 hours remaining (Phase 3)
-**Dependencies**: ✅ All backend infrastructure + UI layer complete
+**Status**: Phase 3 In Progress - Task 1/4 Complete ✅
+**Estimated Time**: 30-60 minutes remaining (Phase 3)
+**Dependencies**: ✅ All backend infrastructure + UI layer complete + Export/Import wired
 
 ---
 
@@ -87,11 +87,30 @@ Complete the Style Presets System by implementing the UI layer. The backend infr
 - ✅ List (3): Compact, Spacious, Grid
 - ✅ CTA (3): Bold, Subtle, Boxed
 
-### 🎯 What's Next: Phase 3 - Polish & Testing
+### � Task 1 Complete: Export/Import Handlers
 
-**Focus**: Final polish and comprehensive testing
+**Commit**: 1b743b0
 
-**Starting Point**: Wire up export/import handlers in BuilderContext
+**What's Done:**
+- ✅ Added `exportPresets()` to BuilderContext - exports all custom presets as JSON
+- ✅ Added `importPresets(file)` to BuilderContext - imports presets with conflict resolution
+- ✅ Extended PropertyPanel.types.ts with updatePreset, deletePreset, exportPresets, importPresets
+- ✅ Integrated PresetManager modal into PropertyPanel with "Manage" button
+- ✅ Wired up all CRUD handlers (update, delete, duplicate)
+- ✅ Connected export/import buttons to BuilderContext actions
+- ✅ Updated Builder.tsx to pass all 7 preset actions to PropertyPanel
+
+**How It Works:**
+- Users click "⚙️ Manage" button in PropertyPanel
+- In PresetManager modal, click "Export" to download JSON file
+- Click "Import" to upload JSON file with automatic ID conflict resolution
+- Full preset lifecycle now supported in UI
+
+### 🎯 What's Next: Phase 3 - Testing & Polish
+
+**Focus**: Final testing and optional polish
+
+**Starting Point**: End-to-end testing of all preset workflows
 
 ---
 
@@ -406,8 +425,8 @@ interface PresetManagerProps {
 - [x] Can edit existing custom preset
 - [x] Can delete custom preset (with confirmation)
 - [x] Can duplicate any preset
-- [x] Can export presets as JSON (UI ready, needs handler wiring)
-- [x] Can import presets from JSON (UI ready, needs handler wiring)
+- [x] Can export presets as JSON ✅ COMPLETE
+- [x] Can import presets from JSON ✅ COMPLETE
 - [x] All operations use commands (undo/redo support)
 - [x] Real-time updates when presets change
 
@@ -629,12 +648,12 @@ packages/ui-solid/src/
 - Export/Import UI ready in PresetManager
 
 ### Phase 3: Polish & Testing (1-2 hours) ⏳ CURRENT FOCUS
-8. ⬜ Wire up export/import handlers in BuilderContext → **START HERE**
-9. ⬜ Add preset badges to ComponentPalette (optional)
-10. ⬜ Test all workflows end-to-end
+8. ✅ Wire up export/import handlers in BuilderContext
+9. ⬜ Add preset badges to ComponentPalette (optional) → **SKIP (Optional)**
+10. ⬜ Test all workflows end-to-end → **START HERE**
 11. ⬜ Fix bugs and improve UX
 
-**Total Estimated Time**: 8-11 hours (6-8 hours complete, 1-2 hours remaining)
+**Total Estimated Time**: 8-11 hours (7-9 hours complete, 30-60 minutes remaining)
 
 ---
 

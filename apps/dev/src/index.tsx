@@ -7,7 +7,7 @@
 
 import { render } from 'solid-js/web';
 import App from './App';
-import '../../../packages/tokens/build/css/variables.css';
+import '@email-builder/tokens/css';
 import './index.css';
 
 const root = document.getElementById('root');

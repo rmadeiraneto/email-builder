@@ -13,6 +13,42 @@ const path = require('path');
 
 console.log('Building design tokens...\n');
 
+// Register parser for W3C Design Tokens format
+StyleDictionary.registerParser({
+  pattern: /\.json$/,
+  parse: ({ contents }) => {
+    const data = JSON.parse(contents);
+
+    // Transform W3C format ($value, $type, $description) to Style Dictionary format
+    function transformTokens(obj) {
+      const result = {};
+
+      for (const [key, value] of Object.entries(obj)) {
+        // Skip $type at category level
+        if (key === '$type') continue;
+
+        if (value && typeof value === 'object') {
+          if ('$value' in value) {
+            // This is a token - transform it
+            result[key] = {
+              value: value.$value,
+              ...(value.$description && { comment: value.$description }),
+              ...(value.$type && { type: value.$type }),
+            };
+          } else {
+            // This is a nested group - recurse
+            result[key] = transformTokens(value);
+          }
+        }
+      }
+
+      return result;
+    }
+
+    return transformTokens(data);
+  },
+});
+
 // Custom formatter for TypeScript
 StyleDictionary.registerFormat({
   name: 'typescript/module',

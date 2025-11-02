@@ -11,7 +11,7 @@
 - [x] Run and verify all tests pass (325/325 passing)
 - [x] Fix Math.random() security issue (use crypto.randomUUID())
 - [x] Replace deprecated String.substr() with slice() (no instances found)
-- [ ] Add main package README with examples
+- [x] Add main package README with examples
 - [ ] Add Builder usage documentation
 - [ ] Add Command system documentation
 
@@ -50,29 +50,29 @@
 
 ## ⭐ NEXT SESSION PRIORITIES
 
-### 1. **Component Reordering** - Drag to reorder on canvas
+### 1. **Component Reordering** ✅ COMPLETE
 **Goal:** Allow users to change component order via drag-and-drop
 
 **Tasks:**
-- [ ] Add drag handles to components on canvas
-- [ ] Implement drag-and-drop reordering within canvas
-- [ ] Update template component array order
-- [ ] Visual feedback for drop position (insertion indicator)
-- [ ] Prevent reordering during property editing
+- [x] Add drag handles to components on canvas
+- [x] Implement drag-and-drop reordering within canvas
+- [x] Update template component array order
+- [x] Visual feedback for drop position (insertion indicator)
+- [x] Prevent reordering during property editing
 
-### 2. **Template Operations** - Save/Load/Delete templates
+### 2. **Template Operations** ✅ COMPLETE
 **Goal:** Make templates persistent and manageable
 
 **Tasks:**
-- [ ] Implement save template to LocalStorage via TemplateManager
-- [ ] Create TemplatePickerModal component
-- [ ] Display list of saved templates with metadata
-- [ ] Wire up template loading
-- [ ] Add delete template functionality
-- [ ] Template metadata editing (name, description)
-- [ ] Add search/filter to template picker
+- [x] Implement save template to LocalStorage via TemplateManager
+- [x] Create TemplatePickerModal component
+- [x] Display list of saved templates with metadata
+- [x] Wire up template loading
+- [x] Add delete template functionality
+- [x] Template metadata editing (name, description)
+- [x] Add search/filter to template picker
 
-### 3. **Component Rendering** - Actual HTML preview ✅ CORE COMPLETE
+### 3. **Component Rendering** ✅ BASE COMPONENTS COMPLETE
 **Goal:** Show actual rendered components instead of JSON
 
 **Tasks:**
@@ -80,31 +80,35 @@
 - [x] Implement HTML generation from component data
 - [x] Add styles for rendered components
 - [x] Support for all component properties
-- [ ] Handle nested components (email components)
+- [ ] Handle nested components (email components - future)
 
 ---
 
 ## 📋 IMMEDIATE NEXT STEPS (Priority Order)
 
-### 1. Component Reordering
-- Add drag handles to components on canvas
-- Implement drag-and-drop reordering within canvas
-- Update template component array order
-- Visual feedback for drop position (insertion indicator)
+### All Core Features Complete! ✅
 
-### 2. Template Picker Modal
-- Create TemplatePickerModal component
-- Display list of saved templates with metadata
-- Show template preview/thumbnail
-- Wire up to BuilderContext.loadTemplate()
-- Add search/filter functionality
+The following features have been successfully implemented:
+
+### 1. Component Reordering ✅ COMPLETE
+- [x] Add drag handles to components on canvas
+- [x] Implement drag-and-drop reordering within canvas
+- [x] Update template component array order
+- [x] Visual feedback for drop position (insertion indicator)
+
+### 2. Template Picker Modal ✅ COMPLETE
+- [x] Create TemplatePickerModal component
+- [x] Display list of saved templates with metadata
+- [x] Show template preview/thumbnail
+- [x] Wire up to BuilderContext.loadTemplate()
+- [x] Add search/filter functionality
 
 ### 3. Component Rendering ✅ BASE COMPONENTS COMPLETE
 - [x] Create component renderer for each type
 - [x] Implement HTML generation from component data
 - [ ] Add iframe preview for isolated rendering (future)
 - [ ] Support responsive preview modes (mobile/tablet/desktop) (future)
-- [ ] Email component renderers (Header, Footer, Hero, List, CTA)
+- [ ] Email component renderers (Header, Footer, Hero, List, CTA - future)
 
 ### 4. Undo/Redo Implementation ✅ COMPLETE
 - [x] Integrate with Builder's command pattern
@@ -174,15 +178,18 @@
    - ✅ TypeScript builds cleanly (ui-solid package)
    - [ ] Re-enable DTS plugin for production builds (optional)
 
-2. **Component Selection Visual Feedback**
-   - Add visual selection indicator on canvas
-   - Highlight selected component border
-   - Show selection in component tree (future)
+2. ~~**Component Selection Visual Feedback**~~ ✅ FIXED
+   - ✅ Visual selection indicator on canvas (border highlight)
+   - ✅ Highlight selected component border with box-shadow
+   - ✅ Component overlay visible when selected
+   - [ ] Show selection in component tree (future enhancement)
 
 ### Medium Priority
-3. **Design Token Integration**
-   - Tokens imported via relative path - should use package alias
-   - Add CSS export to tokens package.json
+3. ~~**Design Token Integration**~~ ✅ FIXED
+   - ✅ Added W3C Design Tokens parser to build script
+   - ✅ SCSS and CSS variables now generate properly
+   - ✅ Package alias `@email-builder/tokens` working for TypeScript
+   - ✅ CSS/SCSS exports available in package.json
 
 4. **LinkedInputs Edge Case**
    - 1 failing test in auto alpha input detection

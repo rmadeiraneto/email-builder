@@ -6,10 +6,10 @@
 
 import { type Component, For } from 'solid-js';
 import styles from './TypographyTokens.module.scss';
-import fonts from '../../../../../packages/tokens/src/typography/fonts.json';
-import sizes from '../../../../../packages/tokens/src/typography/sizes.json';
-import weights from '../../../../../packages/tokens/src/typography/weights.json';
-import lineHeights from '../../../../../packages/tokens/src/typography/line-heights.json';
+import fonts from '@email-builder/tokens/typography/fonts';
+import sizes from '@email-builder/tokens/typography/sizes';
+import weights from '@email-builder/tokens/typography/weights';
+import lineHeights from '@email-builder/tokens/typography/line-heights';
 
 interface TypographyToken {
   name: string;

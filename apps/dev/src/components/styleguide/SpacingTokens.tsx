@@ -6,7 +6,7 @@
 
 import { type Component, For } from 'solid-js';
 import styles from './SpacingTokens.module.scss';
-import spacingData from '../../../../../packages/tokens/src/spacing/scale.json';
+import spacingData from '@email-builder/tokens/spacing/scale';
 
 interface SpacingToken {
   name: string;

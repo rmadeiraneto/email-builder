@@ -10,20 +10,17 @@
       "types": "./build/ts/tokens.d.ts",
       "import": "./build/js/tokens.js"
     },
-    "./colors": {
-      "types": "./build/ts/colors.d.ts",
-      "import": "./build/js/colors.js"
-    },
-    "./typography": {
-      "types": "./build/ts/typography.d.ts",
-      "import": "./build/js/typography.js"
-    },
-    "./spacing": {
-      "types": "./build/ts/spacing.d.ts",
-      "import": "./build/js/spacing.js"
-    },
     "./scss": "./build/scss/_variables.scss",
-    "./css": "./build/css/variables.css"
+    "./css": "./build/css/variables.css",
+    "./colors/brand": "./src/colors/brand.json",
+    "./colors/semantic": "./src/colors/semantic.json",
+    "./colors/ui": "./src/colors/ui.json",
+    "./colors/syntax": "./src/colors/syntax.json",
+    "./typography/fonts": "./src/typography/fonts.json",
+    "./typography/sizes": "./src/typography/sizes.json",
+    "./typography/weights": "./src/typography/weights.json",
+    "./typography/line-heights": "./src/typography/line-heights.json",
+    "./spacing/scale": "./src/spacing/scale.json"
   },
   "files": ["build", "src"],
   "scripts": {

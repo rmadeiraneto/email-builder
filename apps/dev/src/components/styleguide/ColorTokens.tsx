@@ -6,9 +6,9 @@
 
 import { type Component, For } from 'solid-js';
 import styles from './ColorTokens.module.scss';
-import brandColors from '../../../../../packages/tokens/src/colors/brand.json';
-import semanticColors from '../../../../../packages/tokens/src/colors/semantic.json';
-import uiColors from '../../../../../packages/tokens/src/colors/ui.json';
+import brandColors from '@email-builder/tokens/colors/brand';
+import semanticColors from '@email-builder/tokens/colors/semantic';
+import uiColors from '@email-builder/tokens/colors/ui';
 
 interface ColorToken {
   name: string;

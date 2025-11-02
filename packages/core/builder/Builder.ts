@@ -41,6 +41,8 @@ import { TemplateStorage } from '../template/TemplateStorage';
 import { TemplateManager, type CreateTemplateOptions } from '../template/TemplateManager';
 import { ComponentRegistry } from '../components/ComponentRegistry';
 import { createDefaultRegistry } from '../components/definitions/registry-init';
+import { PresetStorage } from '../preset/PresetStorage';
+import { PresetManager } from '../preset/PresetManager';
 
 interface NormalizedConfig extends BuilderConfig {
   locale: string;
@@ -56,6 +58,7 @@ export class Builder {
   private commandManager: CommandManager;
   private componentRegistry: ComponentRegistry;
   private templateManager: TemplateManager;
+  private presetManager: PresetManager;
   private storageAdapter: StorageAdapter;
   private initialized: boolean = false;
   private state: Record<string, unknown> = {};
@@ -77,6 +80,13 @@ export class Builder {
       this.config.storage.keyPrefix
     );
     this.templateManager = new TemplateManager(templateStorage, this.componentRegistry);
+
+    // Initialize preset manager
+    const presetStorage = new PresetStorage(
+      this.storageAdapter,
+      this.config.storage.keyPrefix
+    );
+    this.presetManager = new PresetManager(presetStorage, this.componentRegistry);
   }
 
   /**
@@ -91,6 +101,9 @@ export class Builder {
       if (this.config.initialTemplate) {
         this.state['template'] = this.config.initialTemplate;
       }
+
+      // Load presets from storage into registry
+      await this.presetManager.loadAllFromStorage();
 
       this.initialized = true;
       this.eventEmitter.emit(BuilderEvent.INITIALIZED, {
@@ -199,6 +212,13 @@ export class Builder {
    */
   public getTemplateManager(): TemplateManager {
     return this.templateManager;
+  }
+
+  /**
+   * Gets the preset manager
+   */
+  public getPresetManager(): PresetManager {
+    return this.presetManager;
   }
 
   /**

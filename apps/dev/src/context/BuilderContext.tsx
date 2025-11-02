@@ -19,12 +19,18 @@ import {
   type BaseComponent,
   type ComponentDefinition,
   type TemplateListItem,
+  type ComponentType,
+  type ComponentPreset,
   getAllComponentDefinitions,
   TemplateAddComponentCommand,
   TemplateUpdateComponentCommand,
   TemplateRemoveComponentCommand,
   TemplateReorderComponentCommand,
   TemplateDuplicateComponentCommand,
+  ApplyPresetCommand,
+  CreatePresetCommand,
+  UpdatePresetCommand,
+  DeletePresetCommand,
 } from '@email-builder/core';
 
 export interface BuilderState {
@@ -59,6 +65,11 @@ export interface BuilderContextValue {
     listTemplates: () => Promise<TemplateListItem[]>;
     deleteTemplate: (id: string) => Promise<void>;
     exportTemplate: (format: 'html' | 'json') => Promise<void>;
+    applyPreset: (componentId: string, presetId: string) => Promise<void>;
+    createPreset: (componentId: string, name: string, description?: string) => Promise<ComponentPreset | undefined>;
+    updatePreset: (componentType: ComponentType, presetId: string, updates: { name?: string; description?: string; styles?: any }) => Promise<void>;
+    deletePreset: (componentType: ComponentType, presetId: string) => Promise<void>;
+    listPresets: (componentType?: ComponentType) => Promise<ComponentPreset[]>;
   };
 }
 
@@ -392,6 +403,129 @@ export const BuilderProvider: ParentComponent = (props) => {
       } catch (error) {
         console.error('[BuilderContext] Failed to export template:', error);
         throw error;
+      }
+    },
+
+    applyPreset: async (componentId: string, presetId: string) => {
+      if (!state.template) {
+        console.error('[BuilderContext] Cannot apply preset: no template loaded');
+        return;
+      }
+
+      const component = state.template.components.find(c => c.id === componentId);
+      if (!component) {
+        console.error('[BuilderContext] Component not found:', componentId);
+        return;
+      }
+
+      const presetManager = builder.getPresetManager();
+
+      const command = new ApplyPresetCommand(
+        { componentId, componentType: component.type, presetId },
+        presetManager,
+        (id) => state.template?.components.find(c => c.id === id),
+        (updatedComponent) => {
+          if (state.template) {
+            const updatedComponents = state.template.components.map(c =>
+              c.id === updatedComponent.id ? updatedComponent : c
+            );
+            setState('template', 'components', updatedComponents);
+          }
+        }
+      );
+
+      const result = await builder.executeCommand(command);
+      if (result.success) {
+        actions.updateUndoRedoState();
+      } else {
+        console.error('[BuilderContext] Failed to apply preset:', result.error);
+      }
+    },
+
+    createPreset: async (componentId: string, name: string, description?: string) => {
+      if (!state.template) {
+        console.error('[BuilderContext] Cannot create preset: no template loaded');
+        return undefined;
+      }
+
+      const component = state.template.components.find(c => c.id === componentId);
+      if (!component) {
+        console.error('[BuilderContext] Component not found:', componentId);
+        return undefined;
+      }
+
+      const presetManager = builder.getPresetManager();
+
+      const command = new CreatePresetCommand(
+        {
+          componentType: component.type,
+          name,
+          description,
+          styles: component.styles,
+          isCustom: true,
+        },
+        presetManager
+      );
+
+      const result = await builder.executeCommand(command);
+      if (result.success) {
+        actions.updateUndoRedoState();
+        // Return the created preset from the command
+        return (command as any).createdPreset;
+      } else {
+        console.error('[BuilderContext] Failed to create preset:', result.error);
+        return undefined;
+      }
+    },
+
+    updatePreset: async (componentType: ComponentType, presetId: string, updates: { name?: string; description?: string; styles?: any }) => {
+      const presetManager = builder.getPresetManager();
+
+      const command = new UpdatePresetCommand(
+        { componentType, presetId, updates },
+        presetManager
+      );
+
+      const result = await builder.executeCommand(command);
+      if (result.success) {
+        actions.updateUndoRedoState();
+      } else {
+        console.error('[BuilderContext] Failed to update preset:', result.error);
+      }
+    },
+
+    deletePreset: async (componentType: ComponentType, presetId: string) => {
+      const presetManager = builder.getPresetManager();
+
+      const command = new DeletePresetCommand(
+        { componentType, presetId },
+        presetManager
+      );
+
+      const result = await builder.executeCommand(command);
+      if (result.success) {
+        actions.updateUndoRedoState();
+      } else {
+        console.error('[BuilderContext] Failed to delete preset:', result.error);
+      }
+    },
+
+    listPresets: async (componentType?: ComponentType) => {
+      try {
+        const presetManager = builder.getPresetManager();
+        const presetListItems = await presetManager.list(componentType);
+
+        // Load full preset data for each preset
+        const presets = await Promise.all(
+          presetListItems.map(item =>
+            presetManager.load(item.componentType, item.id)
+          )
+        );
+
+        return presets;
+      } catch (error) {
+        console.error('[BuilderContext] Failed to list presets:', error);
+        return [];
       }
     },
   };

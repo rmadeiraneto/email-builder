@@ -62,6 +62,62 @@ export const headerDefinition: ComponentDefinition = {
     imageMaxWidth: createCSSValue(200),
     imageMaxHeight: createCSSValue(60),
   },
+  presets: [
+    {
+      id: 'header-centered',
+      name: 'Centered',
+      description: 'Centered header with logo',
+      styles: {
+        backgroundColor: '#ffffff',
+        padding: createUniformSpacing(24),
+        textAlign: 'center',
+        linkStyles: {
+          fontSize: createCSSValue(14),
+          fontWeight: 500,
+          color: '#333333',
+        },
+        linkHoverColor: '#0066CC',
+        navigationGap: createCSSValue(24),
+      },
+      isCustom: false,
+    },
+    {
+      id: 'header-left-aligned',
+      name: 'Left Aligned',
+      description: 'Left-aligned header with navigation',
+      styles: {
+        backgroundColor: '#ffffff',
+        padding: createUniformSpacing(20),
+        textAlign: 'left',
+        linkStyles: {
+          fontSize: createCSSValue(14),
+          fontWeight: 500,
+          color: '#333333',
+        },
+        linkHoverColor: '#0066CC',
+        navigationGap: createCSSValue(20),
+      },
+      isCustom: false,
+    },
+    {
+      id: 'header-with-background',
+      name: 'With Background',
+      description: 'Header with colored background',
+      styles: {
+        backgroundColor: '#1a1a1a',
+        padding: createUniformSpacing(24),
+        textAlign: 'center',
+        linkStyles: {
+          fontSize: createCSSValue(14),
+          fontWeight: 500,
+          color: '#ffffff',
+        },
+        linkHoverColor: '#0066CC',
+        navigationGap: createCSSValue(24),
+      },
+      isCustom: false,
+    },
+  ],
   create: () => createHeader(),
   validate: (component) => {
     const errors: string[] = [];
@@ -115,6 +171,62 @@ export const footerDefinition: ComponentDefinition = {
     socialIconHoverColor: '#007bff',
     sectionGap: createCSSValue(24),
   },
+  presets: [
+    {
+      id: 'footer-simple',
+      name: 'Simple',
+      description: 'Simple footer with copyright text',
+      styles: {
+        backgroundColor: '#f8f9fa',
+        padding: createUniformSpacing(32),
+        textAlign: 'center',
+        textStyles: {
+          fontSize: createCSSValue(12),
+          color: '#6c757d',
+        },
+      },
+      isCustom: false,
+    },
+    {
+      id: 'footer-social',
+      name: 'Social',
+      description: 'Footer with prominent social media links',
+      styles: {
+        backgroundColor: '#ffffff',
+        padding: createUniformSpacing(40),
+        textAlign: 'center',
+        textStyles: {
+          fontSize: createCSSValue(14),
+          color: '#6c757d',
+        },
+        socialIconSize: createCSSValue(32),
+        socialIconGap: createCSSValue(20),
+        socialIconColor: '#0066CC',
+        socialIconHoverColor: '#0052A3',
+      },
+      isCustom: false,
+    },
+    {
+      id: 'footer-detailed',
+      name: 'Detailed',
+      description: 'Detailed footer with multiple sections',
+      styles: {
+        backgroundColor: '#1a1a1a',
+        padding: createUniformSpacing(48),
+        textAlign: 'left',
+        textStyles: {
+          fontSize: createCSSValue(14),
+          color: '#cccccc',
+        },
+        socialIconSize: createCSSValue(24),
+        socialIconGap: createCSSValue(16),
+        socialIconColor: '#ffffff',
+        socialIconHoverColor: '#0066CC',
+        sectionGap: createCSSValue(32),
+      },
+      isCustom: false,
+    },
+  ],
   create: () => createFooter(),
   validate: (component) => {
     const errors: string[] = [];
@@ -187,6 +299,77 @@ export const heroDefinition: ComponentDefinition = {
     contentMaxWidth: createCSSValue(600),
     contentAlign: 'center',
   },
+  presets: [
+    {
+      id: 'hero-bold',
+      name: 'Bold',
+      description: 'Bold hero with large text and strong colors',
+      styles: {
+        backgroundColor: '#0066CC',
+        padding: createUniformSpacing(80),
+        headingStyles: {
+          fontSize: createCSSValue(56),
+          fontWeight: 800,
+          color: '#ffffff',
+          lineHeight: createCSSValue(1.1),
+        },
+        descriptionStyles: {
+          fontSize: createCSSValue(20),
+          fontWeight: 400,
+          color: '#e6f0ff',
+          lineHeight: createCSSValue(1.6),
+        },
+        contentAlign: 'center',
+      },
+      isCustom: false,
+    },
+    {
+      id: 'hero-minimal',
+      name: 'Minimal',
+      description: 'Clean minimal hero with subtle styling',
+      styles: {
+        backgroundColor: '#ffffff',
+        padding: createUniformSpacing(60),
+        headingStyles: {
+          fontSize: createCSSValue(40),
+          fontWeight: 600,
+          color: '#1a1a1a',
+          lineHeight: createCSSValue(1.3),
+        },
+        descriptionStyles: {
+          fontSize: createCSSValue(16),
+          fontWeight: 400,
+          color: '#666666',
+          lineHeight: createCSSValue(1.6),
+        },
+        contentAlign: 'left',
+      },
+      isCustom: false,
+    },
+    {
+      id: 'hero-image-focus',
+      name: 'Image Focus',
+      description: 'Hero emphasizing the image with overlay text',
+      styles: {
+        backgroundColor: 'transparent',
+        padding: createUniformSpacing(100),
+        headingStyles: {
+          fontSize: createCSSValue(48),
+          fontWeight: 700,
+          color: '#ffffff',
+          lineHeight: createCSSValue(1.2),
+        },
+        descriptionStyles: {
+          fontSize: createCSSValue(18),
+          fontWeight: 400,
+          color: '#ffffff',
+          lineHeight: createCSSValue(1.6),
+        },
+        contentAlign: 'center',
+      },
+      isCustom: false,
+    },
+  ],
   create: () => createHero(),
   validate: (component) => {
     const errors: string[] = [];
@@ -250,6 +433,71 @@ export const listDefinition: ComponentDefinition = {
     imageMaxWidth: createCSSValue(100, '%'),
     imageMaxHeight: createCSSValue(200),
   },
+  presets: [
+    {
+      id: 'list-compact',
+      name: 'Compact',
+      description: 'Compact list with minimal spacing',
+      styles: {
+        padding: createUniformSpacing(24),
+        itemGap: createCSSValue(16),
+        titleStyles: {
+          fontSize: createCSSValue(16),
+          fontWeight: 600,
+          color: '#212529',
+        },
+        descriptionStyles: {
+          fontSize: createCSSValue(14),
+          color: '#6c757d',
+        },
+        itemPadding: createCSSValue(12),
+      },
+      isCustom: false,
+    },
+    {
+      id: 'list-spacious',
+      name: 'Spacious',
+      description: 'Spacious list with generous padding',
+      styles: {
+        padding: createUniformSpacing(48),
+        itemGap: createCSSValue(32),
+        titleStyles: {
+          fontSize: createCSSValue(24),
+          fontWeight: 600,
+          color: '#212529',
+        },
+        descriptionStyles: {
+          fontSize: createCSSValue(16),
+          color: '#6c757d',
+          lineHeight: createCSSValue(1.6),
+        },
+        itemPadding: createCSSValue(24),
+        itemBackgroundColor: '#f8f9fa',
+      },
+      isCustom: false,
+    },
+    {
+      id: 'list-grid',
+      name: 'Grid',
+      description: 'Grid layout for items',
+      styles: {
+        padding: createUniformSpacing(40),
+        itemGap: createCSSValue(24),
+        titleStyles: {
+          fontSize: createCSSValue(18),
+          fontWeight: 600,
+          color: '#212529',
+        },
+        descriptionStyles: {
+          fontSize: createCSSValue(14),
+          color: '#6c757d',
+        },
+        itemPadding: createCSSValue(16),
+        itemBackgroundColor: '#ffffff',
+      },
+      isCustom: false,
+    },
+  ],
   create: () => createList(),
   validate: (component) => {
     const errors: string[] = [];
@@ -325,6 +573,79 @@ export const ctaDefinition: ComponentDefinition = {
     buttonGap: createCSSValue(16),
     contentMaxWidth: createCSSValue(600),
   },
+  presets: [
+    {
+      id: 'cta-bold',
+      name: 'Bold',
+      description: 'Bold CTA with strong colors',
+      styles: {
+        backgroundColor: '#0066CC',
+        padding: createUniformSpacing(64),
+        headingStyles: {
+          fontSize: createCSSValue(40),
+          fontWeight: 700,
+          color: '#ffffff',
+        },
+        descriptionStyles: {
+          fontSize: createCSSValue(18),
+          color: '#e6f0ff',
+        },
+        buttonGap: createCSSValue(16),
+      },
+      isCustom: false,
+    },
+    {
+      id: 'cta-subtle',
+      name: 'Subtle',
+      description: 'Subtle CTA with light background',
+      styles: {
+        backgroundColor: '#f8f9fa',
+        padding: createUniformSpacing(48),
+        headingStyles: {
+          fontSize: createCSSValue(32),
+          fontWeight: 600,
+          color: '#212529',
+        },
+        descriptionStyles: {
+          fontSize: createCSSValue(16),
+          color: '#6c757d',
+        },
+        buttonGap: createCSSValue(12),
+      },
+      isCustom: false,
+    },
+    {
+      id: 'cta-boxed',
+      name: 'Boxed',
+      description: 'CTA in a contained box with border',
+      styles: {
+        backgroundColor: '#ffffff',
+        padding: createUniformSpacing(40),
+        border: {
+          width: { value: 2, unit: 'px' },
+          style: 'solid',
+          color: '#0066CC',
+          radius: {
+            topLeft: { value: 12, unit: 'px' },
+            topRight: { value: 12, unit: 'px' },
+            bottomRight: { value: 12, unit: 'px' },
+            bottomLeft: { value: 12, unit: 'px' },
+          },
+        },
+        headingStyles: {
+          fontSize: createCSSValue(28),
+          fontWeight: 600,
+          color: '#212529',
+        },
+        descriptionStyles: {
+          fontSize: createCSSValue(16),
+          color: '#6c757d',
+        },
+        buttonGap: createCSSValue(16),
+      },
+      isCustom: false,
+    },
+  ],
   create: () => createCTA(),
   validate: (component) => {
     const errors: string[] = [];

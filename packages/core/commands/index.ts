@@ -18,6 +18,12 @@ export { TemplateRemoveComponentCommand } from './TemplateRemoveComponentCommand
 export { TemplateReorderComponentCommand } from './TemplateReorderComponentCommand';
 export { TemplateDuplicateComponentCommand } from './TemplateDuplicateComponentCommand';
 
+// Preset commands
+export { CreatePresetCommand } from './CreatePresetCommand';
+export { UpdatePresetCommand } from './UpdatePresetCommand';
+export { DeletePresetCommand } from './DeletePresetCommand';
+export { ApplyPresetCommand } from './ApplyPresetCommand';
+
 export type { AddComponentPayload, ComponentData } from './AddComponentCommand';
 export type { RemoveComponentPayload } from './RemoveComponentCommand';
 export type { UpdateComponentContentPayload } from './UpdateComponentContentCommand';
@@ -32,3 +38,9 @@ export type { TemplateUpdateComponentPayload } from './TemplateUpdateComponentCo
 export type { TemplateRemoveComponentPayload } from './TemplateRemoveComponentCommand';
 export type { TemplateReorderComponentPayload } from './TemplateReorderComponentCommand';
 export type { TemplateDuplicateComponentPayload } from './TemplateDuplicateComponentCommand';
+
+// Preset command types
+export type { CreatePresetPayload } from './CreatePresetCommand';
+export type { UpdatePresetPayload } from './UpdatePresetCommand';
+export type { DeletePresetPayload } from './DeletePresetCommand';
+export type { ApplyPresetPayload } from './ApplyPresetCommand';

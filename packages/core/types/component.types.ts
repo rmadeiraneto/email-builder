@@ -353,12 +353,12 @@ export interface ComponentPreset {
   /**
    * Preset description
    */
-  description?: string;
+  description?: string | undefined;
 
   /**
    * Preview thumbnail
    */
-  thumbnail?: string;
+  thumbnail?: string | undefined;
 
   /**
    * Preset styles
@@ -368,10 +368,10 @@ export interface ComponentPreset {
   /**
    * Whether this is a custom preset
    */
-  isCustom?: boolean;
+  isCustom?: boolean | undefined;
 
   /**
    * Creation timestamp
    */
-  createdAt?: number;
+  createdAt?: number | undefined;
 }

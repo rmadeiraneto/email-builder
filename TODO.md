@@ -12,8 +12,8 @@
 - [x] Fix Math.random() security issue (use crypto.randomUUID())
 - [x] Replace deprecated String.substr() with slice() (no instances found)
 - [x] Add main package README with examples
-- [ ] Add Builder usage documentation
-- [ ] Add Command system documentation
+- [x] Add Builder usage documentation
+- [x] Add Command system documentation
 
 **Priority: Medium**
 - [ ] Extract hard-coded values to constants (e.g., email width limit)

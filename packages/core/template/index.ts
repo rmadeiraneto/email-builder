@@ -7,9 +7,9 @@
 export { ComponentTreeBuilder } from './ComponentTreeBuilder';
 export { TemplateValidator } from './TemplateValidator';
 export { TemplateStorage, TemplateStorageError } from './TemplateStorage';
+export { TemplateManagerError } from '../errors';
 export {
   TemplateManager,
-  TemplateManagerError,
   TemplateManagerEvent,
   type CreateTemplateOptions,
   type UpdateTemplateOptions,

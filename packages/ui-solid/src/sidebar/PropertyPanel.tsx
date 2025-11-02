@@ -1,9 +1,11 @@
-import { Component, Show, For, createMemo } from 'solid-js';
+import { Component, Show, For, createMemo, createSignal, createEffect } from 'solid-js';
 import type {
   PropertyPanelProps,
   PropertyDefinition,
   ComponentPropertyMap,
 } from './PropertyPanel.types';
+import type { ComponentPreset } from '@email-builder/core';
+import { PresetPreview } from '../modals';
 import styles from './PropertyPanel.module.scss';
 
 /**
@@ -532,6 +534,14 @@ function setNestedValue(obj: any, path: string, value: any): void {
  * Displays and manages properties of the selected component
  */
 export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
+  // Preset state
+  const [presets, setPresets] = createSignal<ComponentPreset[]>([]);
+  const [selectedPresetId, setSelectedPresetId] = createSignal<string>('');
+  const [showCreatePresetModal, setShowCreatePresetModal] = createSignal(false);
+  const [showPreviewModal, setShowPreviewModal] = createSignal(false);
+  const [newPresetName, setNewPresetName] = createSignal('');
+  const [newPresetDescription, setNewPresetDescription] = createSignal('');
+
   const properties = createMemo(() => {
     if (!props.selectedComponent) return [];
     const componentType = props.selectedComponent.type.toLowerCase();
@@ -551,6 +561,69 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
 
     return grouped;
   });
+
+  // Load presets when component type changes
+  createEffect(() => {
+    const component = props.selectedComponent;
+    if (component && props.presetActions) {
+      props.presetActions.listPresets(component.type as any).then(setPresets);
+    } else {
+      setPresets([]);
+      setSelectedPresetId('');
+    }
+  });
+
+  // Get selected preset
+  const selectedPreset = createMemo(() => {
+    const id = selectedPresetId();
+    return id ? presets().find(p => p.id === id) : null;
+  });
+
+  // Preset handlers
+  const handleApplyPreset = async () => {
+    if (!props.selectedComponent || !selectedPresetId() || !props.presetActions) return;
+
+    await props.presetActions.applyPreset(props.selectedComponent.id, selectedPresetId());
+  };
+
+  const handlePreviewPreset = () => {
+    if (selectedPresetId()) {
+      setShowPreviewModal(true);
+    }
+  };
+
+  const handleApplyFromPreview = async (presetId: string) => {
+    if (!props.selectedComponent || !props.presetActions) return;
+
+    await props.presetActions.applyPreset(props.selectedComponent.id, presetId);
+  };
+
+  const handleCreatePreset = async () => {
+    if (!props.selectedComponent || !newPresetName().trim() || !props.presetActions) return;
+
+    const preset = await props.presetActions.createPreset(
+      props.selectedComponent.id,
+      newPresetName().trim(),
+      newPresetDescription().trim() || undefined
+    );
+
+    if (preset) {
+      // Reload presets to include the new one
+      const updatedPresets = await props.presetActions.listPresets(props.selectedComponent.type as any);
+      setPresets(updatedPresets);
+
+      // Clear modal state
+      setShowCreatePresetModal(false);
+      setNewPresetName('');
+      setNewPresetDescription('');
+    }
+  };
+
+  const handleCancelCreatePreset = () => {
+    setShowCreatePresetModal(false);
+    setNewPresetName('');
+    setNewPresetDescription('');
+  };
 
   const handlePropertyChange = (property: PropertyDefinition, value: any) => {
     if (!props.selectedComponent) return;
@@ -758,6 +831,132 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
         </div>
 
         <div class={styles.propertyPanelContent}>
+          {/* Presets Section */}
+          <Show when={props.presetActions && presets().length > 0}>
+            <div class={styles.propertySection}>
+              <h4 class={styles.propertySectionTitle}>Style Presets</h4>
+
+              <div class={styles.presetControls}>
+                <div class={styles.presetSelectGroup}>
+                  <select
+                    class={styles.propertySelect}
+                    value={selectedPresetId()}
+                    onChange={(e) => setSelectedPresetId(e.currentTarget.value)}
+                  >
+                    <option value="">Select a preset...</option>
+                    <For each={presets()}>
+                      {(preset) => (
+                        <option value={preset.id}>
+                          {preset.name} {preset.isCustom ? '(Custom)' : ''}
+                        </option>
+                      )}
+                    </For>
+                  </select>
+
+                  <button
+                    class={styles.presetApplyButton}
+                    onClick={handleApplyPreset}
+                    disabled={!selectedPresetId()}
+                    title="Apply selected preset"
+                  >
+                    Apply
+                  </button>
+
+                  <button
+                    class={styles.presetPreviewButton}
+                    onClick={handlePreviewPreset}
+                    disabled={!selectedPresetId()}
+                    title="Preview selected preset"
+                  >
+                    👁 Preview
+                  </button>
+                </div>
+
+                <button
+                  class={styles.presetCreateButton}
+                  onClick={() => setShowCreatePresetModal(true)}
+                  title="Save current styles as preset"
+                >
+                  + Save Preset
+                </button>
+              </div>
+
+              <Show when={selectedPresetId()}>
+                {(() => {
+                  const preset = presets().find(p => p.id === selectedPresetId());
+                  return preset?.description ? (
+                    <p class={styles.presetDescription}>{preset.description}</p>
+                  ) : null;
+                })()}
+              </Show>
+            </div>
+          </Show>
+
+          {/* Create Preset Modal */}
+          <Show when={showCreatePresetModal()}>
+            <div class={styles.modalOverlay} onClick={handleCancelCreatePreset}>
+              <div class={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+                <div class={styles.modalHeader}>
+                  <h3 class={styles.modalTitle}>Save Style Preset</h3>
+                  <button
+                    class={styles.modalCloseButton}
+                    onClick={handleCancelCreatePreset}
+                    aria-label="Close modal"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                <div class={styles.modalBody}>
+                  <div class={styles.propertyField}>
+                    <label for="preset-name" class={styles.propertyLabel}>
+                      Preset Name *
+                    </label>
+                    <input
+                      id="preset-name"
+                      type="text"
+                      class={styles.propertyInput}
+                      value={newPresetName()}
+                      onInput={(e) => setNewPresetName(e.currentTarget.value)}
+                      placeholder="e.g., Professional Blue"
+                      autofocus
+                    />
+                  </div>
+
+                  <div class={styles.propertyField}>
+                    <label for="preset-description" class={styles.propertyLabel}>
+                      Description (Optional)
+                    </label>
+                    <textarea
+                      id="preset-description"
+                      class={styles.propertyTextarea}
+                      value={newPresetDescription()}
+                      onInput={(e) => setNewPresetDescription(e.currentTarget.value)}
+                      placeholder="Describe this preset..."
+                      rows={3}
+                    />
+                  </div>
+                </div>
+
+                <div class={styles.modalFooter}>
+                  <button
+                    class={styles.modalCancelButton}
+                    onClick={handleCancelCreatePreset}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    class={styles.modalSaveButton}
+                    onClick={handleCreatePreset}
+                    disabled={!newPresetName().trim()}
+                  >
+                    Save Preset
+                  </button>
+                </div>
+              </div>
+            </div>
+          </Show>
+
           {/* Content Section */}
           <Show when={groupedProperties().content.length > 0}>
             <div class={styles.propertySection}>
@@ -789,6 +988,15 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
           </Show>
         </div>
       </Show>
+
+      {/* Preset Preview Modal */}
+      <PresetPreview
+        preset={selectedPreset() || null}
+        componentType={props.selectedComponent?.type || ''}
+        isOpen={showPreviewModal()}
+        onClose={() => setShowPreviewModal(false)}
+        onApply={handleApplyFromPreview}
+      />
     </div>
   );
 };

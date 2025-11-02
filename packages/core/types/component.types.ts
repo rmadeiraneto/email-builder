@@ -361,9 +361,9 @@ export interface ComponentPreset {
   thumbnail?: string | undefined;
 
   /**
-   * Preset styles
+   * Preset styles (can include component-specific styles beyond BaseStyles)
    */
-  styles: BaseStyles;
+  styles: any;
 
   /**
    * Whether this is a custom preset

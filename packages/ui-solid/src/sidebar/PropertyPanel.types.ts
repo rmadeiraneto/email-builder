@@ -1,4 +1,4 @@
-import type { BaseComponent } from '@email-builder/core';
+import type { BaseComponent, ComponentPreset, ComponentType } from '@email-builder/core';
 
 /**
  * Property Panel Props
@@ -23,6 +23,15 @@ export interface PropertyPanelProps {
    * Optional CSS class names
    */
   class?: string;
+
+  /**
+   * Preset actions
+   */
+  presetActions?: {
+    applyPreset: (componentId: string, presetId: string) => Promise<void>;
+    createPreset: (componentId: string, name: string, description?: string) => Promise<ComponentPreset | undefined>;
+    listPresets: (componentType?: ComponentType) => Promise<ComponentPreset[]>;
+  };
 }
 
 /**

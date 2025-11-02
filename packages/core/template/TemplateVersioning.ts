@@ -53,7 +53,10 @@ export class TemplateVersionManager {
       );
     }
 
-    const [major, minor, patch] = parts.map(Number);
+    const [majorStr, minorStr, patchStr] = parts;
+    const major = Number(majorStr);
+    const minor = Number(minorStr);
+    const patch = Number(patchStr);
 
     if (isNaN(major) || isNaN(minor) || isNaN(patch)) {
       throw new Error(`Invalid version format: ${versionString}`);
@@ -362,7 +365,7 @@ export function getVersionHistory(template: Template): Array<{
   timestamp: number;
   description?: string;
 }> {
-  const history = template.customData?.__versionHistory as Array<{
+  const history = template.customData?.['__versionHistory'] as Array<{
     version: string;
     timestamp: number;
     description?: string;

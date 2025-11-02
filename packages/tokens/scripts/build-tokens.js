@@ -88,7 +88,9 @@ StyleDictionary.registerFormat({
       if (!groups[category]) {
         groups[category] = [];
       }
-      const varName = token.path.join('-');
+      // Replace dots with hyphens in each path segment for valid SCSS variable names
+      const sanitizedPath = token.path.map(segment => String(segment).replace(/\./g, '-'));
+      const varName = sanitizedPath.join('-');
       groups[category].push(`$${varName}: ${token.value};`);
     });
 

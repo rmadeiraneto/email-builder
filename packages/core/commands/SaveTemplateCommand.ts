@@ -67,11 +67,11 @@ export class SaveTemplateCommand implements UndoableCommand<SaveTemplatePayload>
           {
             metadata: {
               name: template.metadata.name,
-              description: template.metadata.description,
-              author: template.metadata.author,
-              category: template.metadata.category,
-              tags: template.metadata.tags,
-              thumbnail: template.metadata.thumbnail,
+              ...(template.metadata.description !== undefined && { description: template.metadata.description }),
+              ...(template.metadata.author !== undefined && { author: template.metadata.author }),
+              ...(template.metadata.category !== undefined && { category: template.metadata.category }),
+              ...(template.metadata.tags !== undefined && { tags: template.metadata.tags }),
+              ...(template.metadata.thumbnail !== undefined && { thumbnail: template.metadata.thumbnail }),
               version: template.metadata.version,
               updatedAt: Date.now(),
             },
@@ -84,10 +84,10 @@ export class SaveTemplateCommand implements UndoableCommand<SaveTemplatePayload>
         // Create new template (shouldn't normally happen, but handle it)
         this.savedTemplate = await this.templateManager.create({
           name: template.metadata.name,
-          description: template.metadata.description,
-          author: template.metadata.author,
-          category: template.metadata.category,
-          tags: template.metadata.tags,
+          ...(template.metadata.description !== undefined && { description: template.metadata.description }),
+          ...(template.metadata.author !== undefined && { author: template.metadata.author }),
+          ...(template.metadata.category !== undefined && { category: template.metadata.category }),
+          ...(template.metadata.tags !== undefined && { tags: template.metadata.tags }),
           settings: template.settings,
           generalStyles: template.generalStyles,
           components: template.components,

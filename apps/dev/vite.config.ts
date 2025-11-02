@@ -8,6 +8,7 @@ export default defineConfig({
     alias: {
       '@': resolve(__dirname, 'src'),
       '@tokens': resolve(__dirname, '../../packages/tokens/build/scss/_variables.scss'),
+      '@email-builder/core': resolve(__dirname, '../../packages/core/src'),
       '@email-builder/ui-solid': resolve(__dirname, '../../packages/ui-solid/src'),
       '@email-builder/ui-solid/canvas': resolve(__dirname, '../../packages/ui-solid/src/canvas'),
       '@email-builder/ui-solid/sidebar': resolve(__dirname, '../../packages/ui-solid/src/sidebar'),
@@ -15,7 +16,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ['@email-builder/ui-solid'],
+    exclude: ['@email-builder/ui-solid', '@email-builder/core'],
   },
   css: {
     modules: {

@@ -30,68 +30,62 @@ export class TemplateDuplicateComponentCommand implements UndoableCommand<Templa
     this.id = crypto.randomUUID();
   }
 
-  async execute(): Promise<boolean> {
-    try {
-      const template = this.getTemplate();
-      if (!template) {
-        return false;
-      }
-
-      // Store previous state for undo
-      this.previousState = JSON.parse(JSON.stringify(template));
-
-      // Find the component to duplicate
-      const componentIndex = template.components.findIndex(
-        (c) => c.id === this.payload.componentId
-      );
-
-      if (componentIndex === -1) {
-        return false;
-      }
-
-      const originalComponent = template.components[componentIndex];
-
-      // Create a deep copy of the component
-      const duplicatedComponent: BaseComponent = JSON.parse(
-        JSON.stringify(originalComponent)
-      );
-
-      // Generate a new ID for the duplicated component
-      this.newComponentId = crypto.randomUUID();
-      duplicatedComponent.id = this.newComponentId;
-
-      // Insert the duplicated component right after the original
-      const updatedComponents = [...template.components];
-      updatedComponents.splice(componentIndex + 1, 0, duplicatedComponent);
-
-      // Update the template
-      const updatedTemplate: Template = {
-        ...template,
-        components: updatedComponents,
-        metadata: {
-          ...template.metadata,
-          updatedAt: Date.now(),
-        },
-      };
-
-      this.setTemplate(updatedTemplate);
-      return true;
-    } catch (error) {
-      return false;
+  async execute(): Promise<void> {
+    const template = this.getTemplate();
+    if (!template) {
+      throw new Error('No template available');
     }
+
+    // Store previous state for undo
+    this.previousState = JSON.parse(JSON.stringify(template));
+
+    // Find the component to duplicate
+    const componentIndex = template.components.findIndex(
+      (c) => c.id === this.payload.componentId
+    );
+
+    if (componentIndex === -1) {
+      throw new Error(`Component not found: ${this.payload.componentId}`);
+    }
+
+    const originalComponent = template.components[componentIndex];
+
+    // Create a deep copy of the component
+    const duplicatedComponent: BaseComponent = JSON.parse(
+      JSON.stringify(originalComponent)
+    );
+
+    // Generate a new ID for the duplicated component
+    this.newComponentId = crypto.randomUUID();
+    duplicatedComponent.id = this.newComponentId;
+
+    // Insert the duplicated component right after the original
+    const updatedComponents = [...template.components];
+    updatedComponents.splice(componentIndex + 1, 0, duplicatedComponent);
+
+    // Update the template
+    const updatedTemplate: Template = {
+      ...template,
+      components: updatedComponents,
+      metadata: {
+        ...template.metadata,
+        updatedAt: Date.now(),
+      },
+    };
+
+    this.setTemplate(updatedTemplate);
   }
 
-  async undo(): Promise<boolean> {
-    try {
-      if (!this.previousState) {
-        return false;
-      }
-
-      this.setTemplate(this.previousState);
-      return true;
-    } catch (error) {
-      return false;
+  async undo(): Promise<void> {
+    if (!this.previousState) {
+      throw new Error('No previous state to restore');
     }
+
+    this.setTemplate(this.previousState);
+  }
+
+  canUndo(): boolean {
+    return this.previousState !== null;
   }
 
   getNewComponentId(): string | null {

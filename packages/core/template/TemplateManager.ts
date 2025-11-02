@@ -5,10 +5,8 @@
  */
 
 import {
-  TemplateNotFoundError,
-  ComponentNotFoundError,
+  TemplateManagerError,
   ValidationError,
-  StorageError,
 } from '../errors';
 import type {
   Template,

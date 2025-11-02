@@ -5,8 +5,7 @@
  */
 
 import { EMAIL_CONSTRAINTS } from '../constants';
-import type { Template, TemplateValidationResult } from '../types/template.types';
-import type { BaseComponent } from '../types/component.types';
+import type { Template } from '../types/template.types';
 
 /**
  * Constraint severity levels

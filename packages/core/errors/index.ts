@@ -62,6 +62,17 @@ export class StorageError extends BuilderError {
 }
 
 /**
+ * Template Manager Error
+ * Thrown when template manager operations fail
+ */
+export class TemplateManagerError extends BuilderError {
+  constructor(message: string, context?: Record<string, unknown>) {
+    super(message, 'TEMPLATE_MANAGER_ERROR', context);
+    this.name = 'TemplateManagerError';
+  }
+}
+
+/**
  * Template Not Found Error
  * Thrown when a template cannot be found
  */

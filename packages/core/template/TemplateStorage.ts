@@ -300,13 +300,13 @@ export class TemplateStorage {
     const listItem: TemplateListItem = {
       id: template.metadata.id,
       name: template.metadata.name,
-      description: template.metadata.description,
-      thumbnail: template.metadata.thumbnail,
-      tags: template.metadata.tags,
-      category: template.metadata.category,
+      ...(template.metadata.description !== undefined && { description: template.metadata.description }),
+      ...(template.metadata.thumbnail !== undefined && { thumbnail: template.metadata.thumbnail }),
+      ...(template.metadata.tags !== undefined && { tags: template.metadata.tags }),
+      ...(template.metadata.category !== undefined && { category: template.metadata.category }),
       updatedAt: template.metadata.updatedAt,
       target: template.settings.target,
-      isCustom: template.customData?.isCustom as boolean | undefined,
+      ...(template.customData?.['isCustom'] !== undefined && { isCustom: template.customData['isCustom'] }),
     };
 
     // Add to list

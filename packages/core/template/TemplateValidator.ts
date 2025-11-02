@@ -8,7 +8,6 @@ import { EMAIL_CONSTRAINTS } from '../constants';
 import type {
   Template,
   TemplateValidationResult,
-  ComponentTreeNode,
 } from '../types/template.types';
 import type { BaseComponent, ValidationResult } from '../types/component.types';
 import type { ComponentRegistry } from '../components/ComponentRegistry';
@@ -270,7 +269,7 @@ export class TemplateValidator {
 
     const componentIds = new Set<string>();
 
-    template.components.forEach((component, index) => {
+    template.components.forEach((component) => {
       // Check for duplicate IDs
       if (componentIds.has(component.id)) {
         errors.push({

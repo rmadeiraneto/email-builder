@@ -246,6 +246,11 @@ const BuilderContent: Component = () => {
               selectedComponent={selectedComponent()}
               onPropertyChange={handlePropertyChange}
               onDelete={handleDelete}
+              presetActions={{
+                applyPreset: actions.applyPreset,
+                createPreset: actions.createPreset,
+                listPresets: actions.listPresets,
+              }}
             />
           </aside>
         </div>

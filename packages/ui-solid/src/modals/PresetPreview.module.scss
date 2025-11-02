@@ -1,0 +1,230 @@
+/**
+ * Preset Preview Modal Styles
+ */
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+  }
+
+  &__content {
+    position: relative;
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 1001;
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+  }
+
+  &__subtitle {
+    margin: 0.25rem 0 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    line-height: 1;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 0;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.25rem;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+
+    &:hover {
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    &:focus-visible {
+      outline: 2px solid #3b82f6;
+      outline-offset: 2px;
+    }
+  }
+
+  &__body {
+    padding: 1.5rem;
+  }
+
+  &__section {
+    margin-bottom: 1.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__sectionTitle {
+    margin: 0 0 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__description {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: #4b5563;
+    line-height: 1.6;
+  }
+
+  &__stylesList {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  &__styleItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.25rem;
+    background: #fff;
+    border-radius: 0.25rem;
+    font-size: 0.8125rem;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__styleKey {
+    color: #6b7280;
+    font-weight: 500;
+    margin-right: 1rem;
+  }
+
+  &__styleValue {
+    color: #111827;
+    font-weight: 600;
+    text-align: right;
+    word-break: break-word;
+  }
+
+  &__emptyState {
+    margin: 0;
+    padding: 2rem;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 0.875rem;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    background: #dbeafe;
+    border-radius: 9999px;
+    margin-top: 1rem;
+  }
+
+  &__badgeText {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #1e40af;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  &__button {
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: none;
+
+    &--secondary {
+      background: #fff;
+      color: #374151;
+      border: 1px solid #d1d5db;
+
+      &:hover {
+        background: #f9fafb;
+        border-color: #9ca3af;
+      }
+
+      &:focus-visible {
+        outline: 2px solid #3b82f6;
+        outline-offset: 2px;
+      }
+    }
+
+    &--primary {
+      background: #3b82f6;
+      color: #fff;
+
+      &:hover {
+        background: #2563eb;
+      }
+
+      &:active {
+        background: #1d4ed8;
+      }
+
+      &:focus-visible {
+        outline: 2px solid #3b82f6;
+        outline-offset: 2px;
+      }
+    }
+  }
+}

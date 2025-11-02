@@ -245,11 +245,11 @@ export class Builder {
     await this.templateManager.update(template.metadata.id, {
       metadata: {
         name: template.metadata.name,
-        description: template.metadata.description,
-        author: template.metadata.author,
-        category: template.metadata.category,
-        tags: template.metadata.tags,
-        thumbnail: template.metadata.thumbnail,
+        ...(template.metadata.description !== undefined && { description: template.metadata.description }),
+        ...(template.metadata.author !== undefined && { author: template.metadata.author }),
+        ...(template.metadata.category !== undefined && { category: template.metadata.category }),
+        ...(template.metadata.tags !== undefined && { tags: template.metadata.tags }),
+        ...(template.metadata.thumbnail !== undefined && { thumbnail: template.metadata.thumbnail }),
         version: template.metadata.version,
         updatedAt: Date.now(),
       },

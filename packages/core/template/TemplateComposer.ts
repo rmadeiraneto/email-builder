@@ -11,7 +11,6 @@ import type {
   TemplateMetadata,
   TemplateSettings,
   GeneralStyles,
-  CanvasDimensions,
   ResponsiveBreakpoints,
   TypographyPreset,
 } from '../types/template.types';

@@ -67,7 +67,7 @@ export class TemplateExporter {
     template: Template,
     options: TemplateExportOptions
   ): string {
-    const { settings, generalStyles, components } = template;
+    const { settings, components } = template;
 
     // Build component tree if not present
     const tree =
@@ -257,8 +257,8 @@ export class TemplateExporter {
    * Generate button HTML
    */
   private generateButtonHTML(content: Record<string, unknown>, attrs: string): string {
-    const text = content.text || 'Button';
-    const href = content.href || '#';
+    const text = content['text'] || 'Button';
+    const href = content['href'] || '#';
     return `<a href="${this.escapeHTML(String(href))}" ${attrs}>${this.escapeHTML(String(text))}</a>`;
   }
 
@@ -266,8 +266,8 @@ export class TemplateExporter {
    * Generate text HTML
    */
   private generateTextHTML(content: Record<string, unknown>, attrs: string): string {
-    const text = content.text || '';
-    const tag = content.tag || 'p';
+    const text = content['text'] || '';
+    const tag = content['tag'] || 'p';
     return `<${tag} ${attrs}>${this.escapeHTML(String(text))}</${tag}>`;
   }
 
@@ -275,8 +275,8 @@ export class TemplateExporter {
    * Generate image HTML
    */
   private generateImageHTML(content: Record<string, unknown>, attrs: string): string {
-    const src = content.src || '';
-    const alt = content.alt || '';
+    const src = content['src'] || '';
+    const alt = content['alt'] || '';
     return `<img src="${this.escapeHTML(String(src))}" alt="${this.escapeHTML(String(alt))}" ${attrs}>`;
   }
 
@@ -291,7 +291,7 @@ export class TemplateExporter {
    * Generate spacer HTML
    */
   private generateSpacerHTML(content: Record<string, unknown>, attrs: string): string {
-    const height = content.height || '20px';
+    const height = content['height'] || '20px';
     return `<div ${attrs} style="height: ${height};"></div>`;
   }
 
@@ -299,11 +299,11 @@ export class TemplateExporter {
    * Generate section HTML (header, footer, hero, cta)
    */
   private generateSectionHTML(
-    type: string,
+    _type: string,
     content: Record<string, unknown>,
     attrs: string
   ): string {
-    const innerContent = content.html || content.text || '';
+    const innerContent = content['html'] || content['text'] || '';
     return `<section ${attrs}>\n  ${innerContent}\n</section>`;
   }
 
@@ -311,8 +311,8 @@ export class TemplateExporter {
    * Generate list HTML
    */
   private generateListHTML(content: Record<string, unknown>, attrs: string): string {
-    const items = (content.items as string[]) || [];
-    const ordered = content.ordered || false;
+    const items = (content['items'] as string[]) || [];
+    const ordered = content['ordered'] || false;
     const tag = ordered ? 'ol' : 'ul';
 
     let html = `<${tag} ${attrs}>\n`;
@@ -335,7 +335,7 @@ export class TemplateExporter {
   /**
    * Generate CSS for template
    */
-  private generateCSS(template: Template, options: TemplateExportOptions): string {
+  private generateCSS(template: Template, _options: TemplateExportOptions): string {
     const { generalStyles, settings } = template;
     let css = '';
 
@@ -403,7 +403,7 @@ export class TemplateExporter {
    */
   private buildInlineStyles(
     styles: BaseStyles,
-    template: Template
+    _template: Template
   ): string {
     const cssProps: string[] = [];
 

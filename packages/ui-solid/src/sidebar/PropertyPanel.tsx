@@ -534,6 +534,10 @@ function setNestedValue(obj: any, path: string, value: any): void {
  * Displays and manages properties of the selected component
  */
 export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
+  // Tab state
+  type TabType = 'content' | 'style';
+  const [activeTab, setActiveTab] = createSignal<TabType>('content');
+
   // Preset state
   const [presets, setPresets] = createSignal<ComponentPreset[]>([]);
   const [selectedPresetId, setSelectedPresetId] = createSignal<string>('');
@@ -684,7 +688,9 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
     presets().forEach(preset => {
       // Extract component type from preset ID (e.g., "button-primary" -> "button")
       const type = preset.id.split('-')[0];
-      types.add(type);
+      if (type) {
+        types.add(type);
+      }
     });
     return Array.from(types);
   });
@@ -894,9 +900,29 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
           <span class={styles.componentId}>ID: {props.selectedComponent?.id}</span>
         </div>
 
+        {/* Tab Navigation */}
+        <div class={styles.tabNavigation}>
+          <button
+            class={`${styles.tabButton} ${activeTab() === 'content' ? styles.tabButtonActive : ''}`}
+            onClick={() => setActiveTab('content')}
+            aria-label="Content tab"
+            aria-selected={activeTab() === 'content'}
+          >
+            Content
+          </button>
+          <button
+            class={`${styles.tabButton} ${activeTab() === 'style' ? styles.tabButtonActive : ''}`}
+            onClick={() => setActiveTab('style')}
+            aria-label="Style tab"
+            aria-selected={activeTab() === 'style'}
+          >
+            Style
+          </button>
+        </div>
+
         <div class={styles.propertyPanelContent}>
-          {/* Presets Section */}
-          <Show when={props.presetActions && presets().length > 0}>
+          {/* Presets Section - Only show in Style tab */}
+          <Show when={activeTab() === 'style' && props.presetActions && presets().length > 0}>
             <div class={styles.propertySection}>
               <h4 class={styles.propertySectionTitle}>Style Presets</h4>
 
@@ -1031,8 +1057,8 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
             </div>
           </Show>
 
-          {/* Content Section */}
-          <Show when={groupedProperties().content.length > 0}>
+          {/* Content Section - Only show in Content tab */}
+          <Show when={activeTab() === 'content' && groupedProperties().content.length > 0}>
             <div class={styles.propertySection}>
               <h4 class={styles.propertySectionTitle}>Content</h4>
               <For each={groupedProperties().content}>
@@ -1041,8 +1067,8 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
             </div>
           </Show>
 
-          {/* Styles Section */}
-          <Show when={groupedProperties().styles.length > 0}>
+          {/* Styles Section - Only show in Style tab */}
+          <Show when={activeTab() === 'style' && groupedProperties().styles.length > 0}>
             <div class={styles.propertySection}>
               <h4 class={styles.propertySectionTitle}>Styles</h4>
               <For each={groupedProperties().styles}>

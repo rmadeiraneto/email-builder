@@ -5,7 +5,7 @@ import type {
   ComponentPropertyMap,
 } from './PropertyPanel.types';
 import type { ComponentPreset } from '@email-builder/core';
-import { PresetPreview } from '../modals';
+import { PresetPreview, PresetManager } from '../modals';
 import styles from './PropertyPanel.module.scss';
 
 /**
@@ -539,6 +539,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
   const [selectedPresetId, setSelectedPresetId] = createSignal<string>('');
   const [showCreatePresetModal, setShowCreatePresetModal] = createSignal(false);
   const [showPreviewModal, setShowPreviewModal] = createSignal(false);
+  const [showPresetManagerModal, setShowPresetManagerModal] = createSignal(false);
   const [newPresetName, setNewPresetName] = createSignal('');
   const [newPresetDescription, setNewPresetDescription] = createSignal('');
 
@@ -624,6 +625,66 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
     setNewPresetName('');
     setNewPresetDescription('');
   };
+
+  // PresetManager handlers
+  const handleUpdatePreset = async (componentType: string, presetId: string, updates: { name?: string; description?: string }) => {
+    if (!props.presetActions) return;
+    await props.presetActions.updatePreset(componentType as any, presetId, updates);
+    // Reload presets to show updated data
+    const updatedPresets = await props.presetActions.listPresets();
+    setPresets(updatedPresets);
+  };
+
+  const handleDeletePreset = async (componentType: string, presetId: string) => {
+    if (!props.presetActions) return;
+    await props.presetActions.deletePreset(componentType as any, presetId);
+    // Reload presets to show updated list
+    const updatedPresets = await props.presetActions.listPresets();
+    setPresets(updatedPresets);
+  };
+
+  const handleDuplicatePreset = async (preset: ComponentPreset) => {
+    if (!props.presetActions || !props.selectedComponent) return;
+
+    // Create a new preset with the same styles but a different name
+    const duplicatedPreset = await props.presetActions.createPreset(
+      props.selectedComponent.id,
+      `${preset.name} (Copy)`,
+      preset.description
+    );
+
+    if (duplicatedPreset) {
+      // Reload presets to include the duplicated one
+      const updatedPresets = await props.presetActions.listPresets();
+      setPresets(updatedPresets);
+    }
+
+    return duplicatedPreset;
+  };
+
+  const handleExportPresets = async () => {
+    if (!props.presetActions) return;
+    await props.presetActions.exportPresets();
+  };
+
+  const handleImportPresets = async (file: File) => {
+    if (!props.presetActions) return;
+    await props.presetActions.importPresets(file);
+    // Reload presets to show imported presets
+    const updatedPresets = await props.presetActions.listPresets();
+    setPresets(updatedPresets);
+  };
+
+  // Get all unique component types from presets
+  const componentTypes = createMemo(() => {
+    const types = new Set<string>();
+    presets().forEach(preset => {
+      // Extract component type from preset ID (e.g., "button-primary" -> "button")
+      const type = preset.id.split('-')[0];
+      types.add(type);
+    });
+    return Array.from(types);
+  });
 
   const handlePropertyChange = (property: PropertyDefinition, value: any) => {
     if (!props.selectedComponent) return;
@@ -879,6 +940,16 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
                 >
                   + Save Preset
                 </button>
+
+                <Show when={props.presetActions}>
+                  <button
+                    class={styles.presetManageButton}
+                    onClick={() => setShowPresetManagerModal(true)}
+                    title="Manage all presets"
+                  >
+                    ⚙️ Manage
+                  </button>
+                </Show>
               </div>
 
               <Show when={selectedPresetId()}>
@@ -997,6 +1068,26 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
         onClose={() => setShowPreviewModal(false)}
         onApply={handleApplyFromPreview}
       />
+
+      {/* Preset Manager Modal */}
+      <Show when={props.presetActions}>
+        <PresetManager
+          isOpen={showPresetManagerModal()}
+          onClose={() => setShowPresetManagerModal(false)}
+          presets={presets()}
+          componentTypes={componentTypes()}
+          onCreatePreset={async (_name: string, _description: string, _componentType: string) => {
+            // For now, we can't create a preset from scratch without a component
+            // This would need to be implemented differently
+            console.warn('Creating preset from scratch not yet implemented');
+          }}
+          onUpdatePreset={handleUpdatePreset}
+          onDeletePreset={handleDeletePreset}
+          onDuplicatePreset={handleDuplicatePreset}
+          onExportPresets={handleExportPresets}
+          onImportPresets={handleImportPresets}
+        />
+      </Show>
     </div>
   );
 };

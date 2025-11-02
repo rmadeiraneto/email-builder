@@ -70,6 +70,8 @@ export interface BuilderContextValue {
     updatePreset: (componentType: ComponentType, presetId: string, updates: { name?: string; description?: string; styles?: any }) => Promise<void>;
     deletePreset: (componentType: ComponentType, presetId: string) => Promise<void>;
     listPresets: (componentType?: ComponentType) => Promise<ComponentPreset[]>;
+    exportPresets: () => Promise<void>;
+    importPresets: (file: File) => Promise<void>;
   };
 }
 
@@ -526,6 +528,86 @@ export const BuilderProvider: ParentComponent = (props) => {
       } catch (error) {
         console.error('[BuilderContext] Failed to list presets:', error);
         return [];
+      }
+    },
+
+    exportPresets: async () => {
+      try {
+        const presetManager = builder.getPresetManager();
+
+        // Get all custom presets (we only export custom presets, not defaults)
+        const allPresets = await presetManager.search({ isCustom: true });
+
+        // Group presets by component type and export all
+        const exportData: Array<{
+          componentType: ComponentType;
+          preset: ComponentPreset;
+          savedAt: number;
+        }> = [];
+
+        for (const presetItem of allPresets) {
+          const preset = await presetManager.load(presetItem.componentType, presetItem.id);
+          exportData.push({
+            componentType: presetItem.componentType,
+            preset,
+            savedAt: Date.now(),
+          });
+        }
+
+        // Create JSON string
+        const jsonString = JSON.stringify(exportData, null, 2);
+
+        // Create download link
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `presets-${Date.now()}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('[BuilderContext] Failed to export presets:', error);
+        throw error;
+      }
+    },
+
+    importPresets: async (file: File) => {
+      try {
+        // Read file as text
+        const text = await file.text();
+
+        // Parse JSON
+        const importData = JSON.parse(text);
+
+        if (!Array.isArray(importData)) {
+          throw new Error('Invalid preset file: expected array of presets');
+        }
+
+        const presetManager = builder.getPresetManager();
+
+        // Import each preset
+        for (const item of importData) {
+          if (!item.preset || !item.componentType) {
+            console.warn('[BuilderContext] Skipping invalid preset data:', item);
+            continue;
+          }
+
+          // Create preset with new ID to avoid conflicts
+          await presetManager.create({
+            componentType: item.componentType,
+            name: item.preset.name,
+            description: item.preset.description,
+            styles: item.preset.styles,
+            isCustom: true,
+          });
+        }
+
+        console.log(`[BuilderContext] Successfully imported ${importData.length} presets`);
+      } catch (error) {
+        console.error('[BuilderContext] Failed to import presets:', error);
+        throw error;
       }
     },
   };

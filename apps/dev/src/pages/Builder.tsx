@@ -249,7 +249,11 @@ const BuilderContent: Component = () => {
               presetActions={{
                 applyPreset: actions.applyPreset,
                 createPreset: actions.createPreset,
+                updatePreset: actions.updatePreset,
+                deletePreset: actions.deletePreset,
                 listPresets: actions.listPresets,
+                exportPresets: actions.exportPresets,
+                importPresets: actions.importPresets,
               }}
             />
           </aside>

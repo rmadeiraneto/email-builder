@@ -4,6 +4,7 @@
  * Validates template structure, components, and email compatibility
  */
 
+import { EMAIL_CONSTRAINTS } from '../constants';
 import type {
   Template,
   TemplateValidationResult,
@@ -175,10 +176,10 @@ export class TemplateValidator {
       }
 
       // Email templates should have standard widths
-      if (settings.target === 'email' && settings.canvasDimensions.width > 650) {
+      if (settings.target === 'email' && settings.canvasDimensions.width > EMAIL_CONSTRAINTS.MAX_WIDTH_WARNING) {
         errors.push({
           field: 'settings.canvasDimensions.width',
-          message: 'Email canvas width should not exceed 650px for better compatibility',
+          message: `Email canvas width should not exceed ${EMAIL_CONSTRAINTS.MAX_WIDTH_WARNING}px for better compatibility`,
           severity: 'warning',
         });
       }

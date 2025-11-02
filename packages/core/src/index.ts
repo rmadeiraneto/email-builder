@@ -7,6 +7,12 @@
  * @packageDocumentation
  */
 
+// Export constants
+export * from '../constants';
+
+// Export errors
+export * from '../errors';
+
 // Export types
 export * from '../types';
 

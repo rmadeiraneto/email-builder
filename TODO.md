@@ -16,10 +16,10 @@
 - [x] Add Command system documentation
 
 **Priority: Medium**
-- [ ] Extract hard-coded values to constants (e.g., email width limit)
-- [ ] Create more specific custom error types
-- [ ] Add performance optimizations (tree caching)
-- [ ] Improve async error handling consistency
+- [x] Extract hard-coded values to constants (e.g., email width limit)
+- [x] Create more specific custom error types
+- [x] Add performance optimizations (tree caching)
+- [x] Improve async error handling consistency
 
 ---
 

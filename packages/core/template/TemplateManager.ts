@@ -4,6 +4,12 @@
  * Core service for template CRUD operations and lifecycle management
  */
 
+import {
+  TemplateNotFoundError,
+  ComponentNotFoundError,
+  ValidationError,
+  StorageError,
+} from '../errors';
 import type {
   Template,
   TemplateMetadata,
@@ -28,16 +34,6 @@ export enum TemplateManagerEvent {
   TEMPLATE_DELETED = 'template:deleted',
   TEMPLATE_LOADED = 'template:loaded',
   TEMPLATE_VALIDATED = 'template:validated',
-}
-
-/**
- * Template Manager error
- */
-export class TemplateManagerError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'TemplateManagerError';
-  }
 }
 
 /**
@@ -130,9 +126,10 @@ export class TemplateManager {
       if (!validation.valid) {
         const errors = validation.errors
           .filter((e) => e.severity === 'error')
-          .map((e) => e.message);
-        throw new TemplateManagerError(
-          `Template validation failed: ${errors.join(', ')}`
+          .map((e) => ({ field: e.field || 'unknown', message: e.message }));
+        throw new ValidationError(
+          `Template validation failed: ${errors.map(e => e.message).join(', ')}`,
+          errors
         );
       }
 

@@ -4,6 +4,7 @@
  * Manages command execution, history, and undo/redo functionality
  */
 
+import { COMMAND_DEFAULTS } from '../constants';
 import type {
   Command,
   CommandResult,
@@ -19,7 +20,7 @@ export class CommandManager {
   private maxHistorySize: number;
   private eventEmitter: EventEmitter;
 
-  constructor(eventEmitter: EventEmitter, maxHistorySize: number = 50) {
+  constructor(eventEmitter: EventEmitter, maxHistorySize: number = COMMAND_DEFAULTS.MAX_HISTORY_SIZE) {
     this.eventEmitter = eventEmitter;
     this.maxHistorySize = maxHistorySize;
   }

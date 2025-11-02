@@ -5,6 +5,7 @@
  * and common template patterns
  */
 
+import { CANVAS_DEFAULTS } from '../constants';
 import type {
   Template,
   TemplateMetadata,
@@ -296,13 +297,13 @@ export class TemplateComposer {
   private getDefaultWidth(target: BuilderTarget): number {
     switch (target) {
       case 'email':
-        return 600;
+        return CANVAS_DEFAULTS.EMAIL.WIDTH;
       case 'hybrid':
-        return 650;
+        return CANVAS_DEFAULTS.HYBRID.WIDTH;
       case 'web':
-        return 1200;
+        return CANVAS_DEFAULTS.WEB.WIDTH;
       default:
-        return 800;
+        return CANVAS_DEFAULTS.DEFAULT.WIDTH;
     }
   }
 
@@ -312,13 +313,13 @@ export class TemplateComposer {
   private getDefaultMaxWidth(target: BuilderTarget): number {
     switch (target) {
       case 'email':
-        return 650;
+        return CANVAS_DEFAULTS.EMAIL.MAX_WIDTH;
       case 'hybrid':
-        return 800;
+        return CANVAS_DEFAULTS.HYBRID.MAX_WIDTH;
       case 'web':
-        return 1920;
+        return CANVAS_DEFAULTS.WEB.MAX_WIDTH;
       default:
-        return 1200;
+        return CANVAS_DEFAULTS.DEFAULT.MAX_WIDTH;
     }
   }
 

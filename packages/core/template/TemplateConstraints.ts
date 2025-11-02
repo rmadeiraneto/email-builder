@@ -4,6 +4,7 @@
  * Defines validation rules, constraints, and policies for templates
  */
 
+import { EMAIL_CONSTRAINTS } from '../constants';
 import type { Template, TemplateValidationResult } from '../types/template.types';
 import type { BaseComponent } from '../types/component.types';
 
@@ -380,7 +381,7 @@ export const emailWidthConstraint: TemplateConstraint = {
     const violations: ConstraintViolation[] = [];
 
     if (template.settings.target === 'email' || template.settings.target === 'hybrid') {
-      const maxWidth = 650;
+      const maxWidth = EMAIL_CONSTRAINTS.MAX_WIDTH_WARNING;
       const currentWidth = template.settings.canvasDimensions.width;
 
       if (currentWidth > maxWidth) {

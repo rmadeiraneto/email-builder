@@ -8,14 +8,28 @@ import type { BaseComponent } from '../types/component.types';
 import type { ComponentTreeNode } from '../types/template.types';
 
 /**
+ * Cache entry for tree building
+ */
+interface TreeCacheEntry {
+  components: BaseComponent[];
+  tree: ComponentTreeNode[];
+  timestamp: number;
+}
+
+/**
  * Component Tree Builder Service
  *
  * Converts flat component arrays to hierarchical tree structures
- * and provides tree traversal and manipulation utilities
+ * and provides tree traversal and manipulation utilities.
+ * Includes performance caching for repeated tree builds.
  */
 export class ComponentTreeBuilder {
+  private cache: Map<string, TreeCacheEntry> = new Map();
+  private readonly maxCacheSize: number = 100;
+  private readonly cacheExpiryMs: number = 5 * 60 * 1000; // 5 minutes
+
   /**
-   * Build component tree from flat array of components
+   * Build component tree from flat array of components with caching
    *
    * @param components - Flat array of components
    * @returns Array of root tree nodes
@@ -24,6 +38,29 @@ export class ComponentTreeBuilder {
     if (!components || components.length === 0) {
       return [];
     }
+
+    // Generate cache key from components
+    const cacheKey = this.generateCacheKey(components);
+
+    // Check cache first
+    const cached = this.cache.get(cacheKey);
+    if (cached && this.isCacheValid(cached)) {
+      return this.deepCloneTree(cached.tree);
+    }
+
+    // Build tree if not cached or cache expired
+    const tree = this.buildTreeInternal(components);
+
+    // Store in cache
+    this.addToCache(cacheKey, components, tree);
+
+    return tree;
+  }
+
+  /**
+   * Internal method to build the tree
+   */
+  private buildTreeInternal(components: BaseComponent[]): ComponentTreeNode[] {
 
     // Create a map for quick lookup
     const componentMap = new Map<string, BaseComponent>();
@@ -331,5 +368,79 @@ export class ComponentTreeBuilder {
     });
 
     return this.buildTree(updatedComponents);
+  }
+
+  /**
+   * Generate cache key from components array
+   */
+  private generateCacheKey(components: BaseComponent[]): string {
+    // Create a stable key based on component IDs and structure
+    const ids = components.map(c => c.id).sort().join(',');
+    return `tree_${ids}`;
+  }
+
+  /**
+   * Check if cache entry is still valid
+   */
+  private isCacheValid(entry: TreeCacheEntry): boolean {
+    const now = Date.now();
+    return now - entry.timestamp < this.cacheExpiryMs;
+  }
+
+  /**
+   * Add entry to cache with size management
+   */
+  private addToCache(key: string, components: BaseComponent[], tree: ComponentTreeNode[]): void {
+    // Limit cache size
+    if (this.cache.size >= this.maxCacheSize) {
+      // Remove oldest entry
+      const oldestKey = this.cache.keys().next().value;
+      if (oldestKey) {
+        this.cache.delete(oldestKey);
+      }
+    }
+
+    this.cache.set(key, {
+      components: components.slice(),
+      tree: this.deepCloneTree(tree),
+      timestamp: Date.now(),
+    });
+  }
+
+  /**
+   * Deep clone tree to prevent mutations
+   */
+  private deepCloneTree(tree: ComponentTreeNode[]): ComponentTreeNode[] {
+    return tree.map(node => this.cloneNode(node));
+  }
+
+  /**
+   * Clone a single tree node
+   */
+  private cloneNode(node: ComponentTreeNode): ComponentTreeNode {
+    return {
+      component: { ...node.component },
+      children: node.children.map(child => this.cloneNode(child)),
+      parentId: node.parentId,
+      depth: node.depth,
+      order: node.order,
+    };
+  }
+
+  /**
+   * Clear the cache (useful for testing or memory management)
+   */
+  public clearCache(): void {
+    this.cache.clear();
+  }
+
+  /**
+   * Get cache statistics (useful for debugging/monitoring)
+   */
+  public getCacheStats(): { size: number; maxSize: number } {
+    return {
+      size: this.cache.size,
+      maxSize: this.maxCacheSize,
+    };
   }
 }

@@ -1,0 +1,80 @@
+/**
+ * Component Renderer Styles
+ */
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.button {
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+}
+
+.text {
+  // Text styles are applied inline from component data
+  // This class is just for any global text overrides
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+
+  p {
+    margin: 0 0 1em 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0 0 0.5em 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.imageContainer {
+  overflow: hidden;
+}
+
+.image {
+  max-width: 100%;
+  height: auto;
+}
+
+.separator {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.spacer {
+  // Spacer styles are applied inline
+  // This is a visual indicator in the editor
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: repeating-linear-gradient(
+      90deg,
+      #e0e0e0 0,
+      #e0e0e0 4px,
+      transparent 4px,
+      transparent 8px
+    );
+    opacity: 0.3;
+  }
+}

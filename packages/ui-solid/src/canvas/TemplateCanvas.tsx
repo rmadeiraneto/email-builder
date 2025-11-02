@@ -6,6 +6,7 @@
 
 import { type Component, For, Show, createSignal } from 'solid-js';
 import type { Template, BaseComponent } from '@email-builder/core';
+import { ComponentRenderer } from './ComponentRenderer';
 import styles from './TemplateCanvas.module.scss';
 
 export interface TemplateCanvasProps {
@@ -216,15 +217,9 @@ interface ComponentPreviewProps {
 }
 
 const ComponentPreview: Component<ComponentPreviewProps> = (props) => {
-  // Simple preview for now - will be enhanced with actual rendering
   return (
     <div class={styles.preview}>
-      <strong>{props.component.type}</strong>
-      <Show when={props.component.content}>
-        <div class={styles.previewContent}>
-          {JSON.stringify(props.component.content, null, 2)}
-        </div>
-      </Show>
+      <ComponentRenderer component={props.component} />
     </div>
   );
 };

@@ -251,6 +251,7 @@ const BuilderContent: Component = () => {
                 createPreset: actions.createPreset,
                 updatePreset: actions.updatePreset,
                 deletePreset: actions.deletePreset,
+                duplicatePreset: actions.duplicatePreset,
                 listPresets: actions.listPresets,
                 exportPresets: actions.exportPresets,
                 importPresets: actions.importPresets,

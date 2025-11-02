@@ -32,6 +32,7 @@ export interface PropertyPanelProps {
     createPreset: (componentId: string, name: string, description?: string) => Promise<ComponentPreset | undefined>;
     updatePreset: (componentType: ComponentType, presetId: string, updates: { name?: string; description?: string; styles?: any }) => Promise<void>;
     deletePreset: (componentType: ComponentType, presetId: string) => Promise<void>;
+    duplicatePreset: (componentType: ComponentType, presetId: string, newName?: string) => Promise<ComponentPreset | undefined>;
     listPresets: (componentType?: ComponentType) => Promise<ComponentPreset[]>;
     exportPresets: () => Promise<void>;
     importPresets: (file: File) => Promise<void>;

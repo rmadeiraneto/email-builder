@@ -644,13 +644,16 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
   };
 
   const handleDuplicatePreset = async (preset: ComponentPreset) => {
-    if (!props.presetActions || !props.selectedComponent) return;
+    if (!props.presetActions) return;
 
-    // Create a new preset with the same styles but a different name
-    const duplicatedPreset = await props.presetActions.createPreset(
-      props.selectedComponent.id,
-      `${preset.name} (Copy)`,
-      preset.description
+    // Extract component type from preset ID (e.g., "button-primary" -> "button")
+    const componentType = preset.id.split('-')[0];
+
+    // Duplicate the preset using the PresetManager's duplicate method
+    const duplicatedPreset = await props.presetActions.duplicatePreset(
+      componentType as any,
+      preset.id,
+      `${preset.name} (Copy)`
     );
 
     if (duplicatedPreset) {

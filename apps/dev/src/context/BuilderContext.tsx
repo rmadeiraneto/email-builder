@@ -69,6 +69,7 @@ export interface BuilderContextValue {
     createPreset: (componentId: string, name: string, description?: string) => Promise<ComponentPreset | undefined>;
     updatePreset: (componentType: ComponentType, presetId: string, updates: { name?: string; description?: string; styles?: any }) => Promise<void>;
     deletePreset: (componentType: ComponentType, presetId: string) => Promise<void>;
+    duplicatePreset: (componentType: ComponentType, presetId: string, newName?: string) => Promise<ComponentPreset | undefined>;
     listPresets: (componentType?: ComponentType) => Promise<ComponentPreset[]>;
     exportPresets: () => Promise<void>;
     importPresets: (file: File) => Promise<void>;
@@ -509,6 +510,17 @@ export const BuilderProvider: ParentComponent = (props) => {
         actions.updateUndoRedoState();
       } else {
         console.error('[BuilderContext] Failed to delete preset:', result.error);
+      }
+    },
+
+    duplicatePreset: async (componentType: ComponentType, presetId: string, newName?: string) => {
+      try {
+        const presetManager = builder.getPresetManager();
+        const duplicated = await presetManager.duplicate(componentType, presetId, newName);
+        return duplicated;
+      } catch (error) {
+        console.error('[BuilderContext] Failed to duplicate preset:', error);
+        return undefined;
       }
     },
 

@@ -216,20 +216,39 @@ When no component is selected, show "General Styles" tab:
 - [x] Auto-save to template state
 - [x] 30+ general style controls organized by category
 
-### 5. Text Editor Integration (Lexical) 📝
+### 5. Text Editor Integration (Lexical) � IN PROGRESS �📝
 **Priority: Medium** - REQUIREMENTS.md §2.5
+**Status**: ~65% Complete - Core editor built, PropertyPanel integration remaining
+**Estimated Time**: 2-3 hours remaining
+**See**: [NEXT_TASK.md](./NEXT_TASK.md) for detailed implementation notes
 
-- [ ] Integrate Lexical editor for rich text editing
-- [ ] Toolbar features:
-  - [ ] Bold, Italic, Strikethrough, Underline
-  - [ ] Text alignment (left, center, right, justify)
-  - [ ] Text style (paragraph, h1, h2, h3)
-  - [ ] Font family selector
-  - [ ] Font color picker
-  - [ ] Font size
-  - [ ] Line height
-  - [ ] Link insertion/editing
-  - [ ] Undo/Redo (integrate with Builder undo/redo)
+#### Phase 1: Core Editor ✅ COMPLETE (5 hours)
+- [x] Install Lexical packages (v0.38.2)
+- [x] Create RichTextEditor component
+- [x] Toolbar features implemented:
+  - [x] Bold, Italic, Strikethrough, Underline
+  - [x] Text alignment (left, center, right, justify)
+  - [x] Text style (paragraph, h1, h2, h3)
+  - [x] Undo/Redo (integrated with Lexical history)
+- [x] TypeScript integration with strict mode
+- [x] SolidJS integration using Lexical core API
+- [x] Export from @email-builder/ui-solid package
+- [x] Modern UI with Remix Icons
+- [x] Triple content format (HTML, editor state JSON, plain text)
+
+#### Phase 2: Integration 🔄 NEXT (2-3 hours)
+- [ ] Integrate RichTextEditor into PropertyPanel
+- [ ] Verify Text component factory property names
+- [ ] Browser testing and bug fixes
+- [ ] Polish and refinement
+
+#### Deferred Features (Future Enhancement)
+- [ ] Font family selector (available in Style tab)
+- [ ] Font color picker (available in Style tab)
+- [ ] Font size control (available in Style tab)
+- [ ] Line height control (available in Style tab)
+- [ ] Link insertion/editing UI
+- [ ] Lists (ul/ol) UI support
 
 ### 6. Preview Modes 👁️
 **Priority: Medium** - REQUIREMENTS.md §2.7

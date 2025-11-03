@@ -14,3 +14,6 @@ export * from './sidebar';
 
 // Export toolbar
 export * from './toolbar';
+
+// Export editors
+export * from './editors';

@@ -4,8 +4,8 @@
 
 ### 🔄 **IN PROGRESS** - Email Testing & Compatibility System
 **Priority**: HIGH 🔴
-**Status**: ~30% Complete (Phase 1: 60% done)
-**Total Time**: 16-24 hours (estimated 5-6 hours completed)
+**Status**: ~40% Complete (Phase 1: 80% done)
+**Total Time**: 16-24 hours (estimated 8-9 hours completed)
 **Dependencies**: ✅ Builder + Template system
 
 ---
@@ -103,6 +103,70 @@
 - Exported from `apps/dev/src/components/modals/index.ts`
 - Ready for integration with Builder settings
 
+### Phase 1.4: Email Export Enhancement ✅ COMPLETE (2-3 hours)
+
+**EmailExportService Implementation**:
+- File: `packages/core/services/EmailExportService.ts`
+- File: `packages/core/services/email-export.types.ts`
+- File: `packages/core/services/EmailExportService.test.ts`
+
+**Features**:
+- ✅ **CSS Inlining**: Parses CSS rules from style tags and applies them as inline styles
+  - Handles CSS specificity correctly
+  - Merges with existing inline styles
+  - Preserves !important declarations
+- ✅ **Table-Based Layout Conversion**: Converts div-based layouts to email-safe tables
+  - Detects layout containers via data-layout attribute and common class names
+  - Preserves styling (background-color, padding, alignment)
+  - Uses proper table structure (tbody, tr, td)
+  - Sets email-safe table attributes (border=0, cellpadding, cellspacing, role="presentation")
+- ✅ **Outlook Conditional Comments**: Adds MSO-specific fixes
+  - Wraps content in Outlook-safe table structure
+  - Adds Outlook-specific font family declarations
+  - Configurable via options
+- ✅ **Email-Incompatible CSS Removal**: Filters out unsupported properties
+  - Removes flexbox, grid, position, float, z-index
+  - Removes animations, transitions, transforms
+  - Removes box-shadow, text-shadow, opacity
+  - Keeps email-safe properties (color, background, padding, margin, etc.)
+  - Removes all style tags from final output
+- ✅ **Email Structure Optimizations**: Adds proper DOCTYPE, meta tags, and resets
+  - Email-specific DOCTYPE (XHTML 1.0 Transitional)
+  - Meta tags: charset, viewport, X-UA-Compatible
+  - Client-specific optimizations:
+    - Gmail: Anti-link styling, u + .body fixes
+    - iOS: Format detection prevention
+    - Outlook: MSO table spacing fixes
+    - Yahoo: Compatible resets
+  - CSS reset styles for cross-client compatibility
+  - Wraps content in responsive table structure
+- ✅ **Comprehensive Testing**: 33 tests covering all features
+  - Constructor and options
+  - Basic export functionality
+  - CSS inlining
+  - Table conversion
+  - Outlook fixes
+  - Email structure optimization
+  - Incompatible CSS removal
+  - Minification
+  - Custom DOCTYPE/charset
+  - Error handling
+  - Integration tests
+
+**Architecture**:
+- Regex-based HTML processing (works in both browser and Node.js)
+- Configurable export options with sensible defaults
+- Warning system for problematic content
+- Statistics tracking (inlined rules, converted elements, removed properties, output size)
+- Modular design with single-responsibility methods
+
+**Exported API**:
+```typescript
+const service = new EmailExportService(options);
+const result = service.export(html);
+// result contains: { html, warnings, stats }
+```
+
 ---
 
 ## 📂 Files Created
@@ -121,42 +185,16 @@
 1. ✅ `EmailTestingSettingsModal.tsx` - Settings UI component
 2. ✅ `EmailTestingSettingsModal.module.scss` - Professional styles
 
+**Core Services** (`packages/core/services/`):
+1. ✅ `EmailExportService.ts` - Email export service implementation
+2. ✅ `email-export.types.ts` - Type definitions for email export
+3. ✅ `EmailExportService.test.ts` - Comprehensive test suite (33 tests)
+
 ---
 
 ## 🎯 What's Next
 
-### Phase 1.4: Email Export Enhancement 🔄 CURRENTLY IN PROGRESS (2-3 hours)
-
-**Goal**: Convert templates to email-safe HTML
-
-**Tasks**:
-- [ ] Create `EmailExportService` in `packages/core/services/`
-- [ ] Implement CSS inlining:
-  - [ ] Parse CSS rules from style tags
-  - [ ] Apply styles as inline style attributes
-  - [ ] Handle CSS specificity correctly
-  - [ ] Preserve important declarations
-- [ ] Implement table-based layout conversion:
-  - [ ] Convert div-based layouts to tables
-  - [ ] Use proper table structure (tbody, tr, td)
-  - [ ] Add email-safe spacing (cellpadding, cellspacing)
-- [ ] Add Outlook conditional comments:
-  - [ ] `<!--[if mso]>` blocks for Outlook-specific fixes
-  - [ ] VML fallbacks for background images
-  - [ ] MSO-specific styles
-- [ ] Remove email-incompatible CSS:
-  - [ ] Strip flexbox, grid, position: absolute
-  - [ ] Remove CSS animations
-  - [ ] Filter unsupported properties
-- [ ] Add email structure optimizations:
-  - [ ] Proper DOCTYPE for email
-  - [ ] Meta tags (viewport, charset)
-  - [ ] Gmail/iOS fix classes
-- [ ] Generate production-ready email HTML
-
-**Output**: Service that transforms builder HTML → email-compatible HTML
-
-### Phase 1.5: Test Execution Flow (3 hours)
+### Phase 1.5: Test Execution Flow 🔄 NEXT UP (3 hours)
 
 **Goal**: Allow users to test templates with one click
 
@@ -187,14 +225,14 @@
 
 ## 📊 Progress Summary
 
-**Email Testing & Compatibility System: ~30% Complete** 🔵🔵🔵⚪⚪⚪⚪⚪⚪⚪
+**Email Testing & Compatibility System: ~40% Complete** 🔵🔵🔵🔵⚪⚪⚪⚪⚪⚪
 
-**Phase 1: External Testing Service Integration** (~60% done)
+**Phase 1: External Testing Service Integration** (~80% done)
 - ✅ Task 1.1: Service interface/abstraction (COMPLETE)
 - ✅ Task 1.2: API client implementations (COMPLETE)
 - ✅ Task 1.3: Settings UI (COMPLETE)
-- 🔄 Task 1.4: Email export enhancement (IN PROGRESS)
-- ⏸️ Task 1.5: Test execution flow (NEXT)
+- ✅ Task 1.4: Email export enhancement (COMPLETE)
+- 🔄 Task 1.5: Test execution flow (NEXT UP)
 
 **Phase 2: In-Builder Compatibility Guidance** (Not started)
 **Phase 3: Pre-Export Compatibility Checker** (Not started)
@@ -237,23 +275,58 @@
 
 ## 🚀 Next Session Goals
 
-1. **Complete Phase 1.4**: Email Export Service
-   - CSS inlining implementation
-   - Table-based layout conversion
-   - Outlook conditional comments
-   - Email-safe HTML generation
+1. **Complete Phase 1.5**: Test Execution Flow (3 hours) ⚡ **PRIORITY**
+   - Add "Test in Email Clients" button to TemplateToolbar
+   - Create TestConfigModal component:
+     - Select email clients to test (checkboxes for Outlook, Gmail, Apple Mail, etc.)
+     - Test name/description input fields
+     - Progress indicator during API call
+     - Cancel button
+   - Integrate with BuilderContext:
+     - Add `testTemplate` action
+     - Add `openEmailTestingSettings` action
+     - Load configuration from localStorage
+     - Create EmailTestingService instance from config
+   - Implement complete test workflow:
+     - Export template HTML using Builder.exportTemplate()
+     - Transform with EmailExportService.export() to get email-compatible HTML
+     - Submit to configured testing service via submitTest()
+     - Handle API responses (success/error)
+     - Show results modal with link to testing service
+   - Add settings integration:
+     - Settings button in toolbar (gear icon)
+     - Opens EmailTestingSettingsModal
+     - Saves config to localStorage
+   - Error handling:
+     - No testing service configured
+     - Invalid configuration
+     - API errors with user-friendly messages
+     - Network timeouts
 
-2. **Complete Phase 1.5**: Test Execution Flow
-   - Test button in toolbar
-   - Test configuration modal
-   - BuilderContext integration
-   - Results display
+2. **Test End-to-End Workflow** (1 hour):
+   - Configure Litmus/Email on Acid account in settings
+   - Create a test template with components
+   - Click "Test in Email Clients" button
+   - Verify HTML is exported and transformed correctly
+   - Confirm test appears in testing service account
+   - Test error scenarios
 
-3. **Update Documentation**:
-   - Mark Phase 1 as complete in TODO.md
+3. **Finalize Phase 1 Documentation**:
+   - Test complete workflow and document any issues
+   - Update TODO.md to mark Phase 1 as ✅ COMPLETE
    - Update NEXT_TASK.md with Phase 2 details
+   - Commit all work with comprehensive message
 
-**Estimated Time to Complete Phase 1**: 4-5 hours remaining
+4. **Plan Phase 2** (if time permits):
+   - Review in-builder compatibility guidance requirements
+   - Design CompatibilityModal component
+   - Plan compatibility data structure
+   - Identify key CSS properties to track
+
+**Estimated Time to Complete Phase 1**: 3-4 hours remaining
+
+**After Phase 1**: Email Testing System will be fully functional - users can configure external
+testing services, click a button to test templates, and receive results in their testing account!
 
 ---
 
@@ -268,5 +341,6 @@
 ---
 
 **Last Updated**: 2025-11-03
-**Status**: Phase 1 ~60% complete - EmailExportService in progress
-**Next Update**: After Phase 1.4 and 1.5 completion
+**Status**: Phase 1 ~80% complete - EmailExportService complete ✅
+**Next Up**: Phase 1.5 - Test Execution Flow
+**Next Update**: After Phase 1.5 completion

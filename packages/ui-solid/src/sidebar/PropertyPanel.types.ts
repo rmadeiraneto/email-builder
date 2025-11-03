@@ -55,6 +55,7 @@ export interface PropertyPanelProps {
 export type PropertyEditorType =
   | 'text'
   | 'textarea'
+  | 'richtext'
   | 'number'
   | 'color'
   | 'select'

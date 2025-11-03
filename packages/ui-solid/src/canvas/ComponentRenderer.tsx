@@ -119,8 +119,6 @@ const TextRenderer: Component<{ component: TextComponent }> = (props) => {
 
     return {
       'font-family': s.fontFamily || 'system-ui, -apple-system, sans-serif',
-      'font-size': s.fontSize ? `${s.fontSize.value}${s.fontSize.unit}` : '16px',
-      'font-weight': s.fontWeight || 400,
       'color': s.color || '#333333',
       'line-height': s.lineHeight ? `${s.lineHeight.value}${s.lineHeight.unit || ''}` : '1.5',
       'text-align': s.textAlign || 'left',

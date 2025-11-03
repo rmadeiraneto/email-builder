@@ -6,6 +6,7 @@ import type {
 } from './PropertyPanel.types';
 import type { ComponentPreset } from '@email-builder/core';
 import { PresetPreview, PresetManager } from '../modals';
+import { RichTextEditor } from '../editors';
 import styles from './PropertyPanel.module.scss';
 
 /**
@@ -286,9 +287,9 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
   ],
   text: [
     {
-      key: 'content.text',
+      key: 'content.html',
       label: 'Text Content',
-      type: 'textarea',
+      type: 'richtext',
       section: 'content',
       placeholder: 'Enter text content',
     },
@@ -1028,6 +1029,29 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               placeholder={property.placeholder}
               rows={4}
               onInput={(e) => handlePropertyChange(property, e.currentTarget.value)}
+            />
+            <Show when={property.description}>
+              <span class={styles.propertyDescription}>{property.description}</span>
+            </Show>
+          </div>
+        );
+
+      case 'richtext':
+        return (
+          <div class={styles.propertyField}>
+            <label class={styles.propertyLabel}>
+              {property.label}
+            </label>
+            <RichTextEditor
+              initialHtml={currentValue || ''}
+              initialEditorState={getNestedValue(props.selectedComponent, 'content.editorState')}
+              onChange={(html, editorState, plainText) => {
+                // Update all three content properties
+                props.onPropertyChange(props.selectedComponent!.id, 'content.html', html);
+                props.onPropertyChange(props.selectedComponent!.id, 'content.editorState', editorState);
+                props.onPropertyChange(props.selectedComponent!.id, 'content.plainText', plainText);
+              }}
+              placeholder={property.placeholder || 'Enter text content...'}
             />
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>

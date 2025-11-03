@@ -1,16 +1,22 @@
-# Next Task: Email Testing & Compatibility System - 🔄 IN PROGRESS
+# Next Task: In-Builder Compatibility Guidance - 🎯 READY TO START
 
 ## 📋 Current Status
 
-### 🔄 **IN PROGRESS** - Email Testing & Compatibility System
+### 🎯 **NEXT UP** - Phase 2: In-Builder Compatibility Guidance
 **Priority**: HIGH 🔴
-**Status**: ~40% Complete (Phase 1: 80% done)
-**Total Time**: 16-24 hours (estimated 8-9 hours completed)
-**Dependencies**: ✅ Builder + Template system
+**Status**: Ready to Start (Phase 1: ✅ Complete!)
+**Estimated Time**: 6-8 hours
+**Dependencies**: ✅ Builder + Template system + Email Testing Phase 1
 
 ---
 
-## 🎉 What Was Accomplished
+## 🎉 Phase 1 Complete!
+
+### ✅ Email Testing & Compatibility System - Phase 1: External Testing Service Integration
+
+**All tasks completed successfully!** Phase 1 is now 100% done with full end-to-end testing workflow.
+
+#### What Was Delivered
 
 ### Phase 1.1: EmailTestingService Interface & Abstraction ✅ COMPLETE (2-3 hours)
 
@@ -190,53 +196,71 @@ const result = service.export(html);
 2. ✅ `email-export.types.ts` - Type definitions for email export
 3. ✅ `EmailExportService.test.ts` - Comprehensive test suite (33 tests)
 
+### Phase 1.5: Test Execution Flow ✅ COMPLETE
+
+**Goal**: Allow users to test templates with one click
+
+**Delivered**:
+- ✅ Added "Test in Email Clients" button (🧪) to TemplateToolbar
+- ✅ Added "Settings" button (⚙️) to TemplateToolbar
+- ✅ Created TestConfigModal component (330+ lines):
+  - ✅ Email client selection with checkboxes (grouped by platform)
+  - ✅ Test name, subject, and description inputs
+  - ✅ Spam testing toggle
+  - ✅ Progress indicator during submission
+  - ✅ "Select All" and "Clear" buttons
+  - ✅ Professional, responsive design
+- ✅ BuilderContext integration:
+  - ✅ emailTestingConfig state
+  - ✅ loadEmailTestingConfig() action
+  - ✅ saveEmailTestingConfig() action
+  - ✅ testTemplate() action (complete workflow)
+  - ✅ localStorage persistence
+- ✅ Complete test workflow:
+  - ✅ Export template with Builder.exportTemplate()
+  - ✅ Transform with EmailExportService.export()
+  - ✅ Submit via testing service API
+  - ✅ Success/error handling
+  - ✅ Link to view results in testing service
+- ✅ Error handling for all edge cases
+
+**Files Created**:
+- `apps/dev/src/components/modals/TestConfigModal.tsx`
+- `apps/dev/src/components/modals/TestConfigModal.module.scss`
+
+**Files Modified**:
+- `packages/ui-solid/src/toolbar/TemplateToolbar.tsx`
+- `packages/ui-solid/src/toolbar/TemplateToolbar.types.ts`
+- `apps/dev/src/components/modals/index.ts`
+- `apps/dev/src/context/BuilderContext.tsx`
+- `apps/dev/src/pages/Builder.tsx`
+
 ---
 
 ## 🎯 What's Next
 
-### Phase 1.5: Test Execution Flow 🔄 NEXT UP (3 hours)
+### Phase 2: In-Builder Compatibility Guidance 🎯 NEXT UP (6-8 hours)
 
-**Goal**: Allow users to test templates with one click
+**Goal**: Help users understand email client support for every CSS property they use
 
-**Tasks**:
-- [ ] Add "Test in Email Clients" button to TemplateToolbar
-- [ ] Create TestConfigModal component:
-  - [ ] Select email clients to test (checkboxes)
-  - [ ] Test name/description input
-  - [ ] Progress indicator during API call
-  - [ ] Cancel option
-- [ ] Integrate with BuilderContext:
-  - [ ] Add `testTemplate` action
-  - [ ] Export HTML with EmailExportService
-  - [ ] Submit to configured testing service
-  - [ ] Handle API responses
-- [ ] Show results:
-  - [ ] Success modal with link to testing service
-  - [ ] Error handling with clear messages
-  - [ ] Optional: Test history tracking
-- [ ] Settings integration:
-  - [ ] Add settings button to toolbar
-  - [ ] Open EmailTestingSettingsModal
-  - [ ] Persist configuration in localStorage
-
-**Output**: Complete test workflow from builder → testing service
+This phase adds visual compatibility indicators throughout the builder UI, showing users which email clients support each CSS property. Users will be able to make informed decisions about styling choices before testing or exporting.
 
 ---
 
 ## 📊 Progress Summary
 
-**Email Testing & Compatibility System: ~40% Complete** 🔵🔵🔵🔵⚪⚪⚪⚪⚪⚪
+**Email Testing & Compatibility System: ~45% Complete** 🔵🔵🔵🔵🔵⚪⚪⚪⚪⚪
 
-**Phase 1: External Testing Service Integration** (~80% done)
+**Phase 1: External Testing Service Integration** ✅ 100% COMPLETE!
 - ✅ Task 1.1: Service interface/abstraction (COMPLETE)
 - ✅ Task 1.2: API client implementations (COMPLETE)
 - ✅ Task 1.3: Settings UI (COMPLETE)
 - ✅ Task 1.4: Email export enhancement (COMPLETE)
-- 🔄 Task 1.5: Test execution flow (NEXT UP)
+- ✅ Task 1.5: Test execution flow (COMPLETE)
 
-**Phase 2: In-Builder Compatibility Guidance** (Not started)
-**Phase 3: Pre-Export Compatibility Checker** (Not started)
-**Phase 4: Email Client Support Matrix** (Not started)
+**Phase 2: In-Builder Compatibility Guidance** 🎯 NEXT (6-8 hours)
+**Phase 3: Pre-Export Compatibility Checker** (Not started - 2-4 hours)
+**Phase 4: Email Client Support Matrix** (Not started - 2 hours)
 
 ---
 
@@ -275,58 +299,132 @@ const result = service.export(html);
 
 ## 🚀 Next Session Goals
 
-1. **Complete Phase 1.5**: Test Execution Flow (3 hours) ⚡ **PRIORITY**
-   - Add "Test in Email Clients" button to TemplateToolbar
-   - Create TestConfigModal component:
-     - Select email clients to test (checkboxes for Outlook, Gmail, Apple Mail, etc.)
-     - Test name/description input fields
-     - Progress indicator during API call
-     - Cancel button
-   - Integrate with BuilderContext:
-     - Add `testTemplate` action
-     - Add `openEmailTestingSettings` action
-     - Load configuration from localStorage
-     - Create EmailTestingService instance from config
-   - Implement complete test workflow:
-     - Export template HTML using Builder.exportTemplate()
-     - Transform with EmailExportService.export() to get email-compatible HTML
-     - Submit to configured testing service via submitTest()
-     - Handle API responses (success/error)
-     - Show results modal with link to testing service
-   - Add settings integration:
-     - Settings button in toolbar (gear icon)
-     - Opens EmailTestingSettingsModal
-     - Saves config to localStorage
-   - Error handling:
-     - No testing service configured
-     - Invalid configuration
-     - API errors with user-friendly messages
-     - Network timeouts
+### Priority 1: Phase 2 - Compatibility Data System (2-3 hours) ⚡
 
-2. **Test End-to-End Workflow** (1 hour):
-   - Configure Litmus/Email on Acid account in settings
-   - Create a test template with components
-   - Click "Test in Email Clients" button
-   - Verify HTML is exported and transformed correctly
-   - Confirm test appears in testing service account
-   - Test error scenarios
+**Goal**: Build the foundation for compatibility tracking
 
-3. **Finalize Phase 1 Documentation**:
-   - Test complete workflow and document any issues
-   - Update TODO.md to mark Phase 1 as ✅ COMPLETE
-   - Update NEXT_TASK.md with Phase 2 details
-   - Commit all work with comprehensive message
+**Tasks**:
 
-4. **Plan Phase 2** (if time permits):
-   - Review in-builder compatibility guidance requirements
-   - Design CompatibilityModal component
-   - Plan compatibility data structure
-   - Identify key CSS properties to track
+1. **Create Compatibility Data Structure** (1 hour):
+   - [ ] Create `packages/core/compatibility/compatibility.types.ts`:
+     - [ ] EmailClient type (Outlook, Gmail, Apple Mail, Yahoo, etc.)
+     - [ ] SupportLevel enum (full, partial, none, unknown)
+     - [ ] CompatibilityData interface (property → client support map)
+     - [ ] PropertySupport interface (support level, notes, workarounds)
+   - [ ] Create `packages/core/compatibility/compatibility-data.ts`:
+     - [ ] Initial data for 20+ common CSS properties
+     - [ ] Support data for 12+ email clients
+     - [ ] Based on caniemail.com research
+   - [ ] Properties to include:
+     - [ ] `border-radius` (partial support - Outlook issues)
+     - [ ] `box-shadow` (poor support)
+     - [ ] `background-image` (partial - Outlook blocks)
+     - [ ] `padding`, `margin` (good support with notes)
+     - [ ] `display: flex` (no support - use tables)
+     - [ ] `display: grid` (no support)
+     - [ ] `position: absolute/relative` (no support)
+     - [ ] `font-family` (good support with web fonts note)
+     - [ ] Text properties (color, text-align, etc.)
+     - [ ] More as needed
 
-**Estimated Time to Complete Phase 1**: 3-4 hours remaining
+2. **Create CompatibilityService** (1 hour):
+   - [ ] Create `packages/core/compatibility/CompatibilityService.ts`:
+     - [ ] `getPropertySupport(property, client?)` - Get support for property
+     - [ ] `getPropertyScore(property)` - Calculate overall support score
+     - [ ] `getClientSupport(client)` - Get all properties for a client
+     - [ ] `getWorkarounds(property)` - Get alternative solutions
+   - [ ] Export from `packages/core/compatibility/index.ts`
 
-**After Phase 1**: Email Testing System will be fully functional - users can configure external
-testing services, click a button to test templates, and receive results in their testing account!
+3. **Add to Builder Integration** (30 min):
+   - [ ] Add CompatibilityService to Builder class
+   - [ ] Expose via `builder.getCompatibilityService()`
+   - [ ] Load compatibility data on initialization
+
+### Priority 2: Property Compatibility Indicators (2-3 hours)
+
+**Goal**: Show compatibility status in PropertyPanel
+
+**Tasks**:
+
+1. **Create CompatibilityIcon Component** (1 hour):
+   - [ ] Create `packages/ui-solid/src/compatibility/CompatibilityIcon.tsx`:
+     - [ ] Props: propertyName, size, showLabel
+     - [ ] Calculate support score from CompatibilityService
+     - [ ] Display colored icon based on score:
+       - [ ] 🟢 Green: 90%+ support (10+ clients)
+       - [ ] 🟡 Yellow: 50-89% support (6-9 clients)
+       - [ ] 🔴 Red: <50% support (<6 clients)
+       - [ ] ⚪ Gray: Unknown/no data
+     - [ ] Tooltip on hover showing support summary
+     - [ ] Click opens CompatibilityModal
+
+2. **Integrate into PropertyPanel** (1 hour):
+   - [ ] Add CompatibilityIcon next to each property control
+   - [ ] Pass property name to icon
+   - [ ] Handle icon click to open modal
+   - [ ] Add "Show Compatibility" toggle to hide/show icons
+
+3. **Create CompatibilityModal** (1 hour):
+   - [ ] Create `packages/ui-solid/src/compatibility/CompatibilityModal.tsx`:
+     - [ ] Display property name and description
+     - [ ] Show support grid:
+       - [ ] Desktop clients (Outlook 2016-2021, Outlook 365, Apple Mail)
+       - [ ] Webmail (Gmail, Outlook.com, Yahoo, AOL)
+       - [ ] Mobile (Gmail iOS/Android, Apple Mail iOS, Samsung)
+     - [ ] Color-coded cells (green/yellow/red/gray)
+     - [ ] Support notes for each client
+     - [ ] Workarounds section
+     - [ ] Link to caniemail.com for details
+   - [ ] Professional modal styling with grid layout
+
+### Priority 3: Best Practices Tips (2 hours)
+
+**Goal**: Provide helpful guidance throughout the builder
+
+**Tasks**:
+
+1. **Create Tips System** (1 hour):
+   - [ ] Create `packages/core/tips/tips.types.ts`:
+     - [ ] TipCategory enum (general, layout, typography, images, etc.)
+     - [ ] TipSeverity enum (info, warning, critical)
+     - [ ] Tip interface (id, title, message, category, severity, learnMoreUrl)
+   - [ ] Create `packages/core/tips/tips-data.ts`:
+     - [ ] 20+ tips covering:
+       - [ ] Use tables for layout, not divs (email mode)
+       - [ ] Always add alt text to images
+       - [ ] Inline styles are safer than classes
+       - [ ] Test in Outlook 2016 (most restrictive)
+       - [ ] Avoid background images (Outlook blocks)
+       - [ ] Use web-safe fonts or fallbacks
+       - [ ] Keep email width 600px or less
+       - [ ] More tips based on common issues
+
+2. **Create TipDisplay Component** (1 hour):
+   - [ ] Create `packages/ui-solid/src/tips/TipBanner.tsx`:
+     - [ ] Displays tip with icon and message
+     - [ ] Dismissible (close button)
+     - [ ] Color-coded by severity
+   - [ ] Trigger tips contextually:
+     - [ ] When selecting "Email" preview mode
+     - [ ] When using properties with poor email support
+     - [ ] When exporting template
+     - [ ] Random "Did you know?" tips
+
+### Time Estimates:
+- **Compatibility Data System**: 2-3 hours
+- **Property Compatibility Indicators**: 2-3 hours  
+- **Best Practices Tips**: 2 hours
+- **Total**: 6-8 hours
+
+### Success Criteria:
+- ✅ Compatibility icons visible next to all PropertyPanel controls
+- ✅ CompatibilityModal shows accurate support data for major email clients
+- ✅ Tips display contextually based on user actions
+- ✅ No compilation errors, dev server running smoothly
+- ✅ All new code follows TypeScript strict mode
+- ✅ UI is polished and professional
+
+**After Phase 2**: Users will have complete visibility into email client compatibility for every style they apply, making informed design decisions easier!
 
 ---
 
@@ -341,6 +439,6 @@ testing services, click a button to test templates, and receive results in their
 ---
 
 **Last Updated**: 2025-11-03
-**Status**: Phase 1 ~80% complete - EmailExportService complete ✅
-**Next Up**: Phase 1.5 - Test Execution Flow
-**Next Update**: After Phase 1.5 completion
+**Status**: Phase 1 ✅ COMPLETE (100%) - All testing infrastructure operational!
+**Next Up**: Phase 2 - In-Builder Compatibility Guidance (6-8 hours)
+**Next Update**: After Phase 2 completion

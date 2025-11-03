@@ -57,4 +57,14 @@ export interface TemplateToolbarProps {
    * Callback when Preview button is clicked
    */
   onPreview?: () => void;
+
+  /**
+   * Callback when Test in Email Clients button is clicked
+   */
+  onTestEmailClients?: () => void;
+
+  /**
+   * Callback when Email Testing Settings button is clicked
+   */
+  onEmailTestingSettings?: () => void;
 }

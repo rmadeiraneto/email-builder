@@ -16,3 +16,6 @@ export type { PreviewModalProps } from './PreviewModal';
 
 export { EmailTestingSettingsModal } from './EmailTestingSettingsModal';
 export type { EmailTestingSettingsModalProps } from './EmailTestingSettingsModal';
+
+export { TestConfigModal } from './TestConfigModal';
+export type { TestConfigModalProps } from './TestConfigModal';

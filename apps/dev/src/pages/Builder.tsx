@@ -12,7 +12,9 @@ import { TemplateToolbar } from '@email-builder/ui-solid/toolbar';
 import { NewTemplateModal } from '../components/modals/NewTemplateModal';
 import { TemplatePickerModal } from '../components/modals/TemplatePickerModal';
 import { PreviewModal } from '../components/modals/PreviewModal';
-import type { ComponentDefinition } from '@email-builder/core';
+import { EmailTestingSettingsModal } from '../components/modals/EmailTestingSettingsModal';
+import { TestConfigModal } from '../components/modals/TestConfigModal';
+import type { ComponentDefinition, EmailTestingConfig, EmailTestRequest } from '@email-builder/core';
 import styles from './Builder.module.scss';
 
 const BuilderContent: Component = () => {
@@ -20,6 +22,8 @@ const BuilderContent: Component = () => {
   const [isNewTemplateModalOpen, setIsNewTemplateModalOpen] = createSignal(false);
   const [isTemplatePickerModalOpen, setIsTemplatePickerModalOpen] = createSignal(false);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = createSignal(false);
+  const [isEmailTestingSettingsModalOpen, setIsEmailTestingSettingsModalOpen] = createSignal(false);
+  const [isTestConfigModalOpen, setIsTestConfigModalOpen] = createSignal(false);
 
   // Get the selected component from the template
   const selectedComponent = createMemo(() => {
@@ -205,6 +209,48 @@ const BuilderContent: Component = () => {
     setIsPreviewModalOpen(true);
   };
 
+  const handleEmailTestingSettings = () => {
+    setIsEmailTestingSettingsModalOpen(true);
+  };
+
+  const handleSaveEmailTestingConfig = (config: EmailTestingConfig) => {
+    actions.saveEmailTestingConfig(config);
+    setIsEmailTestingSettingsModalOpen(false);
+    alert('Email testing configuration saved successfully!');
+  };
+
+  const handleTestEmailClients = () => {
+    // Check if email testing is configured
+    const config = actions.loadEmailTestingConfig();
+    if (!config) {
+      alert('Please configure email testing service first. Click the Settings button.');
+      setIsEmailTestingSettingsModalOpen(true);
+      return;
+    }
+
+    setIsTestConfigModalOpen(true);
+  };
+
+  const handleSubmitTest = async (testRequest: Omit<EmailTestRequest, 'htmlContent'>) => {
+    const result = await actions.testTemplate(testRequest);
+
+    if (result.success) {
+      setIsTestConfigModalOpen(false);
+      if (result.url) {
+        const openInNewTab = confirm(
+          `Test submitted successfully!\n\nTest ID: ${result.testId}\n\nWould you like to view the results in a new tab?`
+        );
+        if (openInNewTab && result.url) {
+          window.open(result.url, '_blank');
+        }
+      } else {
+        alert(`Test submitted successfully!\n\nTest ID: ${result.testId}\n\nCheck your testing service dashboard for results.`);
+      }
+    } else {
+      throw new Error(result.error || 'Failed to submit test');
+    }
+  };
+
   return (
     <>
       <div class={styles.builder}>
@@ -223,6 +269,8 @@ const BuilderContent: Component = () => {
               onRedo={actions.redo}
               onExport={handleExport}
               onPreview={handlePreview}
+              onTestEmailClients={handleTestEmailClients}
+              onEmailTestingSettings={handleEmailTestingSettings}
             />
           </Show>
         </header>
@@ -288,6 +336,19 @@ const BuilderContent: Component = () => {
         isOpen={isPreviewModalOpen()}
         template={state.template}
         onClose={() => setIsPreviewModalOpen(false)}
+      />
+
+      <EmailTestingSettingsModal
+        isOpen={isEmailTestingSettingsModalOpen()}
+        onClose={() => setIsEmailTestingSettingsModalOpen(false)}
+        onSave={handleSaveEmailTestingConfig}
+        initialConfig={state.emailTestingConfig ?? undefined}
+      />
+
+      <TestConfigModal
+        isOpen={isTestConfigModalOpen()}
+        onClose={() => setIsTestConfigModalOpen(false)}
+        onSubmit={handleSubmitTest}
       />
     </>
   );

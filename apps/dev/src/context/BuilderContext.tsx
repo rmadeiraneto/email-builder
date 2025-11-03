@@ -31,6 +31,10 @@ import {
   CreatePresetCommand,
   UpdatePresetCommand,
   DeletePresetCommand,
+  type EmailTestingConfig,
+  type EmailTestRequest,
+  createEmailTestingService,
+  EmailExportService,
 } from '@email-builder/core';
 
 export interface BuilderState {
@@ -40,6 +44,7 @@ export interface BuilderState {
   canUndo: boolean;
   canRedo: boolean;
   isInitialized: boolean;
+  emailTestingConfig: EmailTestingConfig | null;
 }
 
 export interface BuilderContextValue {
@@ -73,13 +78,17 @@ export interface BuilderContextValue {
     listPresets: (componentType?: ComponentType) => Promise<ComponentPreset[]>;
     exportPresets: () => Promise<void>;
     importPresets: (file: File) => Promise<void>;
+    loadEmailTestingConfig: () => EmailTestingConfig | null;
+    saveEmailTestingConfig: (config: EmailTestingConfig) => void;
+    testTemplate: (testRequest: Omit<EmailTestRequest, 'htmlContent'>) => Promise<{ success: boolean; testId?: string; url?: string; error?: string }>;
   };
 }
 
 const BuilderContext = createContext<BuilderContextValue>();
 
-// LocalStorage key for last loaded template
+// LocalStorage keys
 const LAST_TEMPLATE_ID_KEY = 'email-builder:last-template-id';
+const EMAIL_TESTING_CONFIG_KEY = 'email-builder:email-testing-config';
 
 export const BuilderProvider: ParentComponent = (props) => {
   // Initialize builder instance
@@ -102,6 +111,19 @@ export const BuilderProvider: ParentComponent = (props) => {
     debug: false,
   });
 
+  // Helper function to load email testing config from localStorage
+  const loadEmailTestingConfigFromStorage = (): EmailTestingConfig | null => {
+    try {
+      const stored = localStorage.getItem(EMAIL_TESTING_CONFIG_KEY);
+      if (stored) {
+        return JSON.parse(stored) as EmailTestingConfig;
+      }
+    } catch (error) {
+      console.warn('[BuilderContext] Failed to load email testing config:', error);
+    }
+    return null;
+  };
+
   // Create reactive state
   const [state, setState] = createStore<BuilderState>({
     template: null,
@@ -110,6 +132,7 @@ export const BuilderProvider: ParentComponent = (props) => {
     canUndo: false,
     canRedo: false,
     isInitialized: false,
+    emailTestingConfig: loadEmailTestingConfigFromStorage(),
   });
 
   // Initialize builder on mount
@@ -650,6 +673,85 @@ export const BuilderProvider: ParentComponent = (props) => {
       } catch (error) {
         console.error('[BuilderContext] Failed to import presets:', error);
         throw error;
+      }
+    },
+
+    loadEmailTestingConfig: () => {
+      return state.emailTestingConfig;
+    },
+
+    saveEmailTestingConfig: (config: EmailTestingConfig) => {
+      try {
+        localStorage.setItem(EMAIL_TESTING_CONFIG_KEY, JSON.stringify(config));
+        setState('emailTestingConfig', config);
+        console.log('[BuilderContext] Email testing config saved');
+      } catch (error) {
+        console.error('[BuilderContext] Failed to save email testing config:', error);
+        throw error;
+      }
+    },
+
+    testTemplate: async (testRequest: Omit<EmailTestRequest, 'htmlContent'>) => {
+      try {
+        // Validate template exists
+        if (!state.template) {
+          throw new Error('No template to test');
+        }
+
+        // Validate email testing config exists
+        if (!state.emailTestingConfig) {
+          throw new Error('Email testing service not configured. Please configure it in Settings.');
+        }
+
+        // Export template as HTML
+        const exporter = builder.getTemplateExporter();
+        const htmlContent = await exporter.toHTML(state.template);
+
+        // Transform HTML for email compatibility
+        const emailExportService = new EmailExportService({
+          inlineCSS: true,
+          useTableLayout: true,
+          addOutlookFixes: true,
+          removeIncompatibleCSS: true,
+          optimizeForEmail: true,
+        });
+
+        const exportResult = emailExportService.export(htmlContent);
+
+        // Create email testing service
+        const testingService = createEmailTestingService(state.emailTestingConfig);
+
+        // Test connection first
+        const connectionResult = await testingService.testConnection();
+        if (!connectionResult.success) {
+          throw new Error(connectionResult.error || 'Failed to connect to email testing service');
+        }
+
+        // Submit test
+        const fullTestRequest: EmailTestRequest = {
+          ...testRequest,
+          htmlContent: exportResult.html,
+        };
+
+        const testResult = await testingService.submitTest(fullTestRequest);
+
+        if (testResult.success) {
+          console.log('[BuilderContext] Test submitted successfully:', testResult.testId);
+          return {
+            success: true,
+            testId: testResult.testId,
+            url: testResult.url,
+          };
+        } else {
+          throw new Error(testResult.error || 'Failed to submit test');
+        }
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to test template';
+        console.error('[BuilderContext] Failed to test template:', error);
+        return {
+          success: false,
+          error: errorMessage,
+        };
       }
     },
   };

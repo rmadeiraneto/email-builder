@@ -37,6 +37,14 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
     props.onPreview?.();
   };
 
+  const handleTestEmailClients = () => {
+    props.onTestEmailClients?.();
+  };
+
+  const handleEmailTestingSettings = () => {
+    props.onEmailTestingSettings?.();
+  };
+
   return (
     <div class={styles.toolbar}>
       <div class={styles.toolbar__group}>
@@ -121,6 +129,31 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
         >
           <span class={styles.toolbar__icon}>👁️</span>
           <span class={styles.toolbar__label}>Preview</span>
+        </button>
+      </div>
+
+      <div class={styles.toolbar__separator} />
+
+      <div class={styles.toolbar__group}>
+        <button
+          class={styles.toolbar__button}
+          onClick={handleTestEmailClients}
+          disabled={!props.hasTemplate}
+          title="Test in Email Clients"
+          aria-label="Test in Email Clients"
+        >
+          <span class={styles.toolbar__icon}>🧪</span>
+          <span class={styles.toolbar__label}>Test</span>
+        </button>
+
+        <button
+          class={styles.toolbar__button}
+          onClick={handleEmailTestingSettings}
+          title="Email Testing Settings"
+          aria-label="Email Testing Settings"
+        >
+          <span class={styles.toolbar__icon}>⚙️</span>
+          <span class={styles.toolbar__label}>Settings</span>
         </button>
       </div>
 

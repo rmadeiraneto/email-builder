@@ -294,8 +294,158 @@ When no component is selected, show "General Styles" tab:
 - Template name display in modal header
 - Viewport size labels for user clarity
 
-### 7. Custom Components 🔧
-**Priority: Low** - REQUIREMENTS.md §2.2.3
+### 7. Email Testing & Compatibility System 📧
+**Priority**: High - REQUIREMENTS.md §3.4, §3.5
+**Estimated Time**: 16-24 hours total
+**Why**: Critical for ensuring emails render correctly across all email clients
+
+#### Phase 1: External Testing Service Integration (8-10 hours)
+**Goal**: Allow users to send templates to their email testing service accounts
+
+- [ ] **Testing Service Configuration** (3-4 hours)
+  - [ ] Create EmailTestingService interface/abstraction
+  - [ ] Implement Litmus API client
+  - [ ] Implement Email on Acid API client
+  - [ ] Implement Testi@ API client
+  - [ ] Support custom API endpoint configuration
+  - [ ] Create settings UI for service configuration:
+    - [ ] Service selection dropdown
+    - [ ] API endpoint input
+    - [ ] Authentication method selection (API key, OAuth, Bearer)
+    - [ ] Credential input fields
+    - [ ] Test connection button
+    - [ ] Save configuration securely
+  - [ ] Add connection status indicator
+  - [ ] Store credentials securely (encrypted in localStorage or backend)
+  
+- [ ] **Email Export Enhancement** (2-3 hours)
+  - [ ] Create EmailExportService
+  - [ ] Implement CSS inlining (convert style tags to inline styles)
+  - [ ] Implement table-based layout conversion for email mode
+  - [ ] Add Outlook conditional comments
+  - [ ] Remove email-incompatible CSS properties
+  - [ ] Optimize HTML structure for email clients
+  - [ ] Add MSO-specific fixes for Outlook
+  - [ ] Generate email-safe HTML output
+  
+- [ ] **Test Execution Flow** (3 hours)
+  - [ ] Add "Test in Email Clients" button to toolbar
+  - [ ] Create test configuration modal:
+    - [ ] Select email clients to test
+    - [ ] Test name/description input
+    - [ ] Progress indicator during API call
+  - [ ] Implement API call workflow:
+    - [ ] Export template with email optimizations
+    - [ ] Send to configured testing service
+    - [ ] Handle API responses and errors
+    - [ ] Show success/failure messages
+    - [ ] Provide link to view results in testing service
+  - [ ] Add test history tracking (optional)
+  - [ ] Error handling with user-friendly messages
+
+#### Phase 2: In-Builder Compatibility Guidance (6-8 hours)
+**Goal**: Help users understand email client support for every property they use
+
+- [ ] **Compatibility Data System** (2-3 hours)
+  - [ ] Create compatibility data structure/schema
+  - [ ] Build initial compatibility matrix based on caniemail.com:
+    - [ ] Outlook 2016-2021 (Windows)
+    - [ ] Outlook 365 (Windows, Web)
+    - [ ] Gmail (Webmail, iOS, Android)
+    - [ ] Apple Mail (macOS, iOS)
+    - [ ] Yahoo Mail
+    - [ ] Other major clients
+  - [ ] Create compatibility data for common CSS properties:
+    - [ ] border-radius, box-shadow, background-image
+    - [ ] flexbox, grid, position: absolute
+    - [ ] Custom fonts, CSS animations
+    - [ ] padding, margin, display properties
+  - [ ] Store compatibility data locally
+  - [ ] Add periodic update mechanism (fetch from remote source)
+  
+- [ ] **Property Compatibility Indicators** (2-3 hours)
+  - [ ] Add compatibility icon next to each property control in PropertyPanel
+  - [ ] Create CompatibilityModal component:
+    - [ ] Display property name
+    - [ ] Show support grid for major email clients
+    - [ ] Use color-coded indicators (green/yellow/red/gray)
+    - [ ] Show support notes and workarounds
+    - [ ] Link to caniemail.com for details
+  - [ ] Wire up compatibility icon clicks to open modal
+  - [ ] Show aggregated compatibility score (e.g., "Supported in 8/12 clients")
+  
+- [ ] **Best Practices Tips System** (2 hours)
+  - [ ] Create tips database with categories:
+    - [ ] General email best practices
+    - [ ] Component-specific tips
+    - [ ] Layout warnings
+    - [ ] Accessibility tips
+  - [ ] Add tip display mechanisms:
+    - [ ] Info icons with tooltips
+    - [ ] Warning banners for incompatible features
+    - [ ] Help panel with searchable tips
+    - [ ] Onboarding tutorial for first-time users
+  - [ ] Implement contextual tip triggers:
+    - [ ] When selecting "Email" or "Hybrid" mode
+    - [ ] When using properties with poor email support
+    - [ ] When exporting template
+    - [ ] Occasional "Did you know?" tips
+
+#### Phase 3: Pre-Export Compatibility Checker (2-4 hours)
+**Goal**: Validate templates before export/testing and suggest fixes
+
+- [ ] **Compatibility Validation Engine** (1-2 hours)
+  - [ ] Create CompatibilityChecker service
+  - [ ] Implement checks:
+    - [ ] Scan for email-incompatible CSS
+    - [ ] Detect unsupported HTML elements
+    - [ ] Validate image sizes and formats
+    - [ ] Check for missing alt text
+    - [ ] Identify accessibility issues
+    - [ ] Verify table structure (for email mode)
+    - [ ] Check inline styles vs. classes ratio
+  - [ ] Generate compatibility report with severity levels
+  
+- [ ] **Compatibility Report UI** (1-2 hours)
+  - [ ] Create CompatibilityReportModal component
+  - [ ] Display issues grouped by severity:
+    - [ ] Critical (will break in email clients)
+    - [ ] Warnings (might not work in some clients)
+    - [ ] Best practices (suggestions)
+  - [ ] Show fix suggestions for each issue
+  - [ ] Add "Auto-fix" buttons where possible:
+    - [ ] Convert classes to inline styles
+    - [ ] Add missing alt text placeholders
+    - [ ] Replace flexbox/grid with tables (suggest)
+    - [ ] Add Outlook conditional comments
+  - [ ] Add "Export anyway" and "Fix issues first" options
+  - [ ] Run checker automatically before export/testing
+
+#### Phase 4: Email Client Support Matrix UI (2 hours)
+**Goal**: Display clear information about which email clients are supported
+
+- [ ] Create EmailClientSupportMatrix component
+- [ ] Display tier-based support:
+  - [ ] Tier 1: Must Support (Outlook, Gmail, Apple Mail)
+  - [ ] Tier 2: Should Support (Yahoo, Outlook.com, AOL)
+  - [ ] Tier 3: Nice to Have (Thunderbird, Windows Mail, etc.)
+- [ ] Show support status for current template
+- [ ] Add to help/info section
+- [ ] Link to testing documentation
+
+**Deliverables Summary**:
+1. ✅ Configure external testing services (Litmus, Email on Acid, etc.)
+2. ✅ One-click testing: send template to testing service
+3. ✅ Enhanced HTML export with email optimizations
+4. ✅ Compatibility indicators on every property
+5. ✅ Compatibility modal with client support grid
+6. ✅ Best practices tips throughout the builder
+7. ✅ Pre-export compatibility checker
+8. ✅ Auto-fix suggestions for common issues
+9. ✅ Email client support matrix display
+
+### 8. Custom Components 🔧
+**Priority: Medium** - REQUIREMENTS.md §2.2.3
 
 - [ ] Create custom component builder UI
 - [ ] Save custom components to storage

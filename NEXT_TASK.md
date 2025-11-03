@@ -92,7 +92,23 @@
 
 With Preview Modes complete, the next recommended priorities are:
 
-### 1. Custom Components 🔧 **RECOMMENDED**
+### 1. Email Testing & Compatibility System � **HIGHLY RECOMMENDED**
+**Priority**: HIGH 🔴
+**Estimated Time**: 16-24 hours
+**Why**: Critical for ensuring emails render correctly across all email clients (REQUIREMENTS.md §3.4, §3.5)
+
+This is a comprehensive system that includes:
+- External testing service integration (Litmus, Email on Acid, Testi@)
+- In-builder compatibility guidance for every property
+- Pre-export compatibility checker with auto-fix
+- Best practices tips throughout the builder
+- Email client support matrix
+
+**Value**: Ensures users can create emails that actually work in Outlook, Gmail, Apple Mail, and other clients. This is essential for any professional email builder and addresses the biggest pain point in email development.
+
+**See TODO.md §7** for detailed breakdown of 4 phases.
+
+### 2. Custom Components 🔧
 **Priority**: MEDIUM 🟡
 **Estimated Time**: 8-12 hours
 **Why**: Adds flexibility for users to create reusable custom components (REQUIREMENTS.md §2.2.3)

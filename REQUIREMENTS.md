@@ -201,6 +201,187 @@ When in hybrid mode, display warnings for:
 - JavaScript restrictions
 - Font support issues
 
+### 3.4 Email Testing Integration
+
+#### 3.4.1 External Testing Service Configuration
+Users can configure external email testing services to validate rendering across email clients:
+
+**Supported Services**:
+- Litmus
+- Email on Acid
+- Testi@
+- Custom API endpoints
+
+**Configuration Requirements**:
+- API endpoint URL
+- Authentication method (API key, OAuth, Bearer token)
+- Test settings (email clients to test)
+- Configuration validation
+- Connection testing
+
+**Configuration UI**:
+- Settings modal/page for API configuration
+- Secure credential storage
+- Connection status indicator
+- Test connection button
+- Service-specific configuration options
+
+#### 3.4.2 Test Execution Workflow
+**User Flow**:
+1. User configures testing service in settings
+2. User builds template in builder
+3. User clicks "Test in Email Clients" button
+4. Builder exports HTML with email optimizations
+5. Builder sends HTML to configured testing service API
+6. Testing service creates test in user's account
+7. User receives confirmation with link to view results
+
+**Technical Requirements**:
+- Automatic HTML export with inline styles
+- API client abstraction for multiple services
+- Error handling and user feedback
+- Test history tracking (optional)
+- Progress indicators during API calls
+
+**Export Optimizations for Testing**:
+- CSS inlining
+- Table-based layout conversion
+- Outlook conditional comments
+- Remove unsupported CSS properties
+- Email-safe HTML structure
+
+#### 3.4.3 In-Builder Compatibility Guidance
+
+**Component Property Support Indicators**:
+For every style property in the PropertyPanel sidebar, display email client compatibility information:
+
+**Information Display**:
+- Compatibility icon/badge next to each property control
+- Click icon to open compatibility modal
+- Modal shows support across major email clients:
+  - Outlook 2016-2021 (Windows)
+  - Outlook 365 (Windows)
+  - Outlook.com (Webmail)
+  - Gmail (Webmail, iOS, Android)
+  - Apple Mail (macOS, iOS)
+  - Yahoo Mail
+  - Other popular clients
+
+**Compatibility Data**:
+- Green checkmark: Fully supported
+- Yellow warning: Partial support or requires fallback
+- Red cross: Not supported
+- Gray: Unknown/not tested
+
+**Data Source**:
+- Based on caniemail.com data
+- Regularly updated compatibility matrix
+- Stored locally with periodic updates
+- Fallback to built-in compatibility data
+
+**Example Properties to Track**:
+- `border-radius` (limited Outlook support)
+- `box-shadow` (no Outlook support)
+- `background-image` (limited support)
+- `flexbox` (no email client support)
+- `grid` (no email client support)
+- `position: absolute` (limited support)
+- Custom fonts (varies by client)
+- CSS animations (no support)
+
+#### 3.4.4 Best Practices and Tips System
+
+**In-Builder Guidance**:
+Display contextual tips and warnings to help users create email-compatible templates:
+
+**Tip Categories**:
+
+1. **General Email Best Practices**:
+   - Use table-based layouts for maximum compatibility
+   - Keep email width between 600-650px
+   - Use inline styles instead of CSS classes
+   - Test across multiple email clients before sending
+   - Use web-safe fonts or provide fallbacks
+   - Optimize images for email (size and format)
+
+2. **Component-Specific Tips**:
+   - **Images**: "Always include alt text for accessibility and when images are blocked"
+   - **Buttons**: "Use bulletproof button patterns for Outlook compatibility"
+   - **Backgrounds**: "Outlook 2016+ doesn't support background images - provide solid color fallback"
+   - **Spacing**: "Use padding and margins carefully - they render inconsistently across clients"
+
+3. **Layout Warnings**:
+   - Warn when using CSS Grid or Flexbox (not supported in email)
+   - Suggest alternatives for unsupported layouts
+   - Highlight properties that won't work in target mode
+
+**Tip Display Methods**:
+- Info icons with tooltips
+- Warning banners when incompatible features are used
+- Onboarding/tutorial for first-time users
+- Help panel with searchable tips
+- "Did you know?" occasional tips
+
+**Tip Triggers**:
+- When user selects "Email" or "Hybrid" rendering mode
+- When user adds a property with poor email support
+- When exporting template
+- When running email client tests
+
+#### 3.4.5 Compatibility Checker
+
+**Pre-Export Validation**:
+Before exporting or testing, run compatibility check:
+
+**Checks**:
+- Scan template for email-incompatible CSS
+- Check for unsupported HTML elements
+- Validate image sizes and formats
+- Check for missing alt text
+- Identify accessibility issues
+- Verify table structure
+- Check for inline styles vs. classes
+
+**Report Format**:
+- Critical issues (will break in email clients)
+- Warnings (might not work in some clients)
+- Best practice suggestions
+- Fix suggestions with auto-fix option where possible
+
+**Auto-Fix Options**:
+- Convert classes to inline styles
+- Replace flexbox/grid with table layouts
+- Add Outlook conditional comments
+- Add missing alt text placeholders
+- Optimize image sizes
+
+### 3.5 Email Client Support Matrix
+
+**Target Email Clients** (Priority Order):
+
+**Tier 1 - Must Support**:
+1. Outlook 2016-2021 (Windows)
+2. Outlook 365 (Windows, Web)
+3. Gmail (Webmail, iOS, Android)
+4. Apple Mail (macOS, iOS, iPadOS)
+
+**Tier 2 - Should Support**:
+5. Yahoo Mail (Webmail, iOS, Android)
+6. Outlook.com (Webmail)
+7. AOL Mail
+8. Samsung Email (Android)
+
+**Tier 3 - Nice to Have**:
+9. Thunderbird
+10. Windows Mail
+11. Fastmail
+12. ProtonMail
+
+**Testing Coverage**:
+- Tier 1: Test every release
+- Tier 2: Test major releases
+- Tier 3: Test quarterly or on demand
+
 ## 4. Command/Event System
 
 ### 4.1 Architecture

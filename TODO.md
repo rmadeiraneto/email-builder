@@ -192,21 +192,29 @@
 - [ ] Image selection/upload interface
 - [ ] List item management with drag-and-drop
 
-### 4. General Styles Tab 🎨
+### 4. General Styles Tab ✅ COMPLETE 🎨
 **Priority: Medium** - REQUIREMENTS.md §2.4.2
+**Status**: ✅ Dual-mode tab system with comprehensive canvas settings
 
 When no component is selected, show "General Styles" tab:
-- [ ] Canvas dimensions
-- [ ] Canvas background
-- [ ] Canvas border
-- [ ] Default component background
-- [ ] Default component border
-- [ ] Typography styles:
-  - [ ] General text
-  - [ ] Paragraph
-  - [ ] Heading 1, 2, 3, etc.
-- [ ] Default link styles
-- [ ] Default button styles
+- [x] Dual-mode tab system (Components/General Styles when no selection)
+- [x] Canvas dimensions (width, max width)
+- [x] Canvas background (color picker)
+- [x] Canvas border (width, style, color, radius)
+- [x] Default component background
+- [x] Default component border
+- [x] Typography styles:
+  - [x] Body text (font family, size, color, line height)
+  - [x] Paragraph (font size, color, line height)
+  - [x] Heading 1 (font size, color, weight)
+  - [x] Heading 2 (font size, color, weight)
+  - [x] Heading 3 (font size, color, weight)
+- [x] Default link styles (color, hover color)
+- [x] Default button styles (background, text color, border radius, padding)
+- [x] Nested property path support (e.g., generalStyles.typography.heading1)
+- [x] Connected to updateCanvasSetting action
+- [x] Auto-save to template state
+- [x] 30+ general style controls organized by category
 
 ### 5. Text Editor Integration (Lexical) 📝
 **Priority: Medium** - REQUIREMENTS.md §2.5

@@ -1,4 +1,4 @@
-import type { BaseComponent, ComponentPreset, ComponentType } from '@email-builder/core';
+import type { BaseComponent, ComponentPreset, ComponentType, Template } from '@email-builder/core';
 
 /**
  * Property Panel Props
@@ -10,9 +10,19 @@ export interface PropertyPanelProps {
   selectedComponent: BaseComponent | null;
 
   /**
+   * The current template (needed for general styles editing)
+   */
+  template?: Template | null;
+
+  /**
    * Callback when a property value changes
    */
   onPropertyChange: (componentId: string, property: string, value: any) => void;
+
+  /**
+   * Callback when a general style or canvas setting changes
+   */
+  onGeneralStyleChange?: (property: string, value: any) => void;
 
   /**
    * Callback when the delete button is clicked

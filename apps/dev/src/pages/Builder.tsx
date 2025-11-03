@@ -7,7 +7,7 @@
 import { type Component, Show, createSignal, createMemo, onMount, onCleanup } from 'solid-js';
 import { BuilderProvider, useBuilder } from '../context/BuilderContext';
 import { TemplateCanvas } from '@email-builder/ui-solid/canvas';
-import { ComponentPalette, PropertyPanel, CanvasSettings } from '@email-builder/ui-solid/sidebar';
+import { ComponentPalette, PropertyPanel } from '@email-builder/ui-solid/sidebar';
 import { TemplateToolbar } from '@email-builder/ui-solid/toolbar';
 import { NewTemplateModal } from '../components/modals/NewTemplateModal';
 import { TemplatePickerModal } from '../components/modals/TemplatePickerModal';
@@ -38,6 +38,10 @@ const BuilderContent: Component = () => {
   };
 
   const handleCanvasSettingChange = (path: string, value: any) => {
+    actions.updateCanvasSetting(path, value);
+  };
+
+  const handleGeneralStyleChange = (path: string, value: any) => {
     actions.updateCanvasSetting(path, value);
   };
 
@@ -238,13 +242,11 @@ const BuilderContent: Component = () => {
           </main>
 
           <aside class={styles.rightSidebar}>
-            <CanvasSettings
-              template={state.template}
-              onSettingChange={handleCanvasSettingChange}
-            />
             <PropertyPanel
               selectedComponent={selectedComponent()}
+              template={state.template}
               onPropertyChange={handlePropertyChange}
+              onGeneralStyleChange={handleGeneralStyleChange}
               onDelete={handleDelete}
               presetActions={{
                 applyPreset: actions.applyPreset,

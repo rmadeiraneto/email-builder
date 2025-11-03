@@ -9,6 +9,235 @@ import { PresetPreview, PresetManager } from '../modals';
 import styles from './PropertyPanel.module.scss';
 
 /**
+ * General styles property definitions
+ * These control canvas-wide and default component styles
+ */
+const GENERAL_STYLES_DEFINITIONS: PropertyDefinition[] = [
+  // Canvas Dimensions
+  {
+    key: 'settings.canvasDimensions.width',
+    label: 'Canvas Width',
+    type: 'number',
+    section: 'settings',
+    min: 200,
+    max: 1600,
+    description: 'Canvas width in pixels (email: typically 600px)',
+  },
+  {
+    key: 'settings.canvasDimensions.maxWidth',
+    label: 'Max Width',
+    type: 'number',
+    section: 'settings',
+    min: 200,
+    max: 1600,
+    description: 'Maximum width for responsive layouts',
+  },
+  // Canvas Appearance
+  {
+    key: 'generalStyles.canvasBackgroundColor',
+    label: 'Canvas Background',
+    type: 'color',
+    section: 'styles',
+  },
+  {
+    key: 'generalStyles.canvasBorder',
+    label: 'Canvas Border',
+    type: 'text',
+    section: 'styles',
+    placeholder: '1px solid #ddd',
+    description: 'CSS border shorthand (e.g., "1px solid #ddd")',
+  },
+  // Default Component Styles
+  {
+    key: 'generalStyles.defaultComponentBackgroundColor',
+    label: 'Default Component Background',
+    type: 'color',
+    section: 'styles',
+  },
+  {
+    key: 'generalStyles.defaultComponentBorder',
+    label: 'Default Component Border',
+    type: 'text',
+    section: 'styles',
+    placeholder: '1px solid #eee',
+    description: 'CSS border shorthand',
+  },
+  // Typography - Body
+  {
+    key: 'generalStyles.typography.body.styles.fontFamily',
+    label: 'Body Font Family',
+    type: 'select',
+    section: 'styles',
+    options: [
+      { label: 'Arial', value: 'Arial, sans-serif' },
+      { label: 'Georgia', value: 'Georgia, serif' },
+      { label: 'Helvetica', value: 'Helvetica, sans-serif' },
+      { label: 'Times New Roman', value: 'Times New Roman, serif' },
+      { label: 'Verdana', value: 'Verdana, sans-serif' },
+    ],
+  },
+  {
+    key: 'generalStyles.typography.body.styles.fontSize',
+    label: 'Body Font Size',
+    type: 'text',
+    section: 'styles',
+    placeholder: '16px',
+  },
+  {
+    key: 'generalStyles.typography.body.styles.color',
+    label: 'Body Text Color',
+    type: 'color',
+    section: 'styles',
+  },
+  {
+    key: 'generalStyles.typography.body.styles.lineHeight',
+    label: 'Body Line Height',
+    type: 'text',
+    section: 'styles',
+    placeholder: '1.5',
+  },
+  // Typography - Paragraph
+  {
+    key: 'generalStyles.typography.paragraph.styles.fontSize',
+    label: 'Paragraph Font Size',
+    type: 'text',
+    section: 'styles',
+    placeholder: '16px',
+  },
+  {
+    key: 'generalStyles.typography.paragraph.styles.color',
+    label: 'Paragraph Color',
+    type: 'color',
+    section: 'styles',
+  },
+  {
+    key: 'generalStyles.typography.paragraph.styles.lineHeight',
+    label: 'Paragraph Line Height',
+    type: 'text',
+    section: 'styles',
+    placeholder: '1.6',
+  },
+  // Typography - H1
+  {
+    key: 'generalStyles.typography.heading1.styles.fontSize',
+    label: 'H1 Font Size',
+    type: 'text',
+    section: 'styles',
+    placeholder: '32px',
+  },
+  {
+    key: 'generalStyles.typography.heading1.styles.color',
+    label: 'H1 Color',
+    type: 'color',
+    section: 'styles',
+  },
+  {
+    key: 'generalStyles.typography.heading1.styles.fontWeight',
+    label: 'H1 Weight',
+    type: 'select',
+    section: 'styles',
+    options: [
+      { label: 'Normal', value: 'normal' },
+      { label: 'Bold', value: 'bold' },
+      { label: '600', value: '600' },
+      { label: '700', value: '700' },
+    ],
+  },
+  // Typography - H2
+  {
+    key: 'generalStyles.typography.heading2.styles.fontSize',
+    label: 'H2 Font Size',
+    type: 'text',
+    section: 'styles',
+    placeholder: '24px',
+  },
+  {
+    key: 'generalStyles.typography.heading2.styles.color',
+    label: 'H2 Color',
+    type: 'color',
+    section: 'styles',
+  },
+  {
+    key: 'generalStyles.typography.heading2.styles.fontWeight',
+    label: 'H2 Weight',
+    type: 'select',
+    section: 'styles',
+    options: [
+      { label: 'Normal', value: 'normal' },
+      { label: 'Bold', value: 'bold' },
+      { label: '600', value: '600' },
+      { label: '700', value: '700' },
+    ],
+  },
+  // Typography - H3
+  {
+    key: 'generalStyles.typography.heading3.styles.fontSize',
+    label: 'H3 Font Size',
+    type: 'text',
+    section: 'styles',
+    placeholder: '20px',
+  },
+  {
+    key: 'generalStyles.typography.heading3.styles.color',
+    label: 'H3 Color',
+    type: 'color',
+    section: 'styles',
+  },
+  {
+    key: 'generalStyles.typography.heading3.styles.fontWeight',
+    label: 'H3 Weight',
+    type: 'select',
+    section: 'styles',
+    options: [
+      { label: 'Normal', value: 'normal' },
+      { label: 'Bold', value: 'bold' },
+      { label: '600', value: '600' },
+      { label: '700', value: '700' },
+    ],
+  },
+  // Link Styles
+  {
+    key: 'generalStyles.linkStyles.color',
+    label: 'Link Color',
+    type: 'color',
+    section: 'styles',
+  },
+  {
+    key: 'generalStyles.linkStyles.hoverColor',
+    label: 'Link Hover Color',
+    type: 'color',
+    section: 'styles',
+  },
+  // Button Styles
+  {
+    key: 'generalStyles.buttonStyles.backgroundColor',
+    label: 'Button Background',
+    type: 'color',
+    section: 'styles',
+  },
+  {
+    key: 'generalStyles.buttonStyles.color',
+    label: 'Button Text Color',
+    type: 'color',
+    section: 'styles',
+  },
+  {
+    key: 'generalStyles.buttonStyles.borderRadius',
+    label: 'Button Border Radius',
+    type: 'text',
+    section: 'styles',
+    placeholder: '4px',
+  },
+  {
+    key: 'generalStyles.buttonStyles.padding',
+    label: 'Button Padding',
+    type: 'text',
+    section: 'styles',
+    placeholder: '12px 24px',
+  },
+];
+
+/**
  * Property definitions for each component type
  */
 const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
@@ -534,9 +763,13 @@ function setNestedValue(obj: any, path: string, value: any): void {
  * Displays and manages properties of the selected component
  */
 export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
-  // Tab state
-  type TabType = 'content' | 'style';
-  const [activeTab, setActiveTab] = createSignal<TabType>('content');
+  // Tab state for component selected
+  type ComponentTabType = 'content' | 'style';
+  const [activeComponentTab, setActiveComponentTab] = createSignal<ComponentTabType>('content');
+
+  // Tab state for no component selected
+  type GeneralTabType = 'components' | 'general-styles';
+  const [activeGeneralTab, setActiveGeneralTab] = createSignal<GeneralTabType>('general-styles');
 
   // Preset state
   const [presets, setPresets] = createSignal<ComponentPreset[]>([]);
@@ -562,6 +795,43 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
 
     properties().forEach((prop) => {
       grouped[prop.section].push(prop);
+    });
+
+    return grouped;
+  });
+
+  // Group general styles by category
+  const groupedGeneralStyles = createMemo(() => {
+    const grouped: {
+      dimensions: PropertyDefinition[];
+      canvasAppearance: PropertyDefinition[];
+      defaultComponents: PropertyDefinition[];
+      typography: PropertyDefinition[];
+      links: PropertyDefinition[];
+      buttons: PropertyDefinition[];
+    } = {
+      dimensions: [],
+      canvasAppearance: [],
+      defaultComponents: [],
+      typography: [],
+      links: [],
+      buttons: [],
+    };
+
+    GENERAL_STYLES_DEFINITIONS.forEach((prop) => {
+      if (prop.key.includes('canvasDimensions')) {
+        grouped.dimensions.push(prop);
+      } else if (prop.key.includes('canvasBackground') || prop.key.includes('canvasBorder')) {
+        grouped.canvasAppearance.push(prop);
+      } else if (prop.key.includes('defaultComponent')) {
+        grouped.defaultComponents.push(prop);
+      } else if (prop.key.includes('typography')) {
+        grouped.typography.push(prop);
+      } else if (prop.key.includes('linkStyles')) {
+        grouped.links.push(prop);
+      } else if (prop.key.includes('buttonStyles')) {
+        grouped.buttons.push(prop);
+      }
     });
 
     return grouped;
@@ -708,6 +978,13 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
       property.key,
       value
     );
+  };
+
+  const handleGeneralStyleChange = (property: PropertyDefinition, value: any) => {
+    if (!props.template || !props.onGeneralStyleChange) return;
+
+    // Call the onChange callback for general styles
+    props.onGeneralStyleChange(property.key, value);
   };
 
   const renderPropertyEditor = (property: PropertyDefinition) => {
@@ -867,18 +1144,230 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
     }
   };
 
+  const renderGeneralStyleEditor = (property: PropertyDefinition) => {
+    if (!props.template) return null;
+
+    const currentValue = getNestedValue(props.template, property.key);
+    const inputId = `general-${property.key.replace(/\./g, '-')}`;
+
+    switch (property.type) {
+      case 'text':
+      case 'url':
+        return (
+          <div class={styles.propertyField}>
+            <label for={inputId} class={styles.propertyLabel}>
+              {property.label}
+            </label>
+            <input
+              id={inputId}
+              type="text"
+              class={styles.propertyInput}
+              value={currentValue || ''}
+              placeholder={property.placeholder}
+              onInput={(e) => handleGeneralStyleChange(property, e.currentTarget.value)}
+            />
+            <Show when={property.description}>
+              <span class={styles.propertyDescription}>{property.description}</span>
+            </Show>
+          </div>
+        );
+
+      case 'number':
+        return (
+          <div class={styles.propertyField}>
+            <label for={inputId} class={styles.propertyLabel}>
+              {property.label}
+            </label>
+            <input
+              id={inputId}
+              type="number"
+              class={styles.propertyInput}
+              value={currentValue || property.min || 0}
+              min={property.min}
+              max={property.max}
+              onInput={(e) =>
+                handleGeneralStyleChange(property, parseInt(e.currentTarget.value, 10))
+              }
+            />
+            <Show when={property.description}>
+              <span class={styles.propertyDescription}>{property.description}</span>
+            </Show>
+          </div>
+        );
+
+      case 'color':
+        return (
+          <div class={styles.propertyField}>
+            <label for={inputId} class={styles.propertyLabel}>
+              {property.label}
+            </label>
+            <input
+              id={inputId}
+              type="color"
+              class={styles.propertyColorInput}
+              value={currentValue || '#000000'}
+              onInput={(e) => handleGeneralStyleChange(property, e.currentTarget.value)}
+            />
+            <input
+              type="text"
+              class={styles.propertyInput}
+              value={currentValue || '#000000'}
+              onInput={(e) => handleGeneralStyleChange(property, e.currentTarget.value)}
+            />
+            <Show when={property.description}>
+              <span class={styles.propertyDescription}>{property.description}</span>
+            </Show>
+          </div>
+        );
+
+      case 'select':
+        return (
+          <div class={styles.propertyField}>
+            <label for={inputId} class={styles.propertyLabel}>
+              {property.label}
+            </label>
+            <select
+              id={inputId}
+              class={styles.propertySelect}
+              value={currentValue}
+              onChange={(e) => handleGeneralStyleChange(property, e.currentTarget.value)}
+            >
+              <For each={property.options}>
+                {(option) => (
+                  <option value={option.value}>{option.label}</option>
+                )}
+              </For>
+            </select>
+            <Show when={property.description}>
+              <span class={styles.propertyDescription}>{property.description}</span>
+            </Show>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
   return (
     <div class={`${styles.propertyPanel} ${props.class || ''}`}>
       <Show
         when={props.selectedComponent}
         fallback={
-          <div class={styles.emptyState}>
-            <div class={styles.emptyStateIcon}>🎨</div>
-            <h3 class={styles.emptyStateTitle}>No Component Selected</h3>
-            <p class={styles.emptyStateText}>
-              Select a component on the canvas to edit its properties
-            </p>
-          </div>
+          <>
+            <div class={styles.propertyPanelHeader}>
+              <h3 class={styles.propertyPanelTitle}>General Settings</h3>
+            </div>
+
+            {/* Tab Navigation for General Settings */}
+            <div class={styles.tabNavigation}>
+              <button
+                class={`${styles.tabButton} ${activeGeneralTab() === 'components' ? styles.tabButtonActive : ''}`}
+                onClick={() => setActiveGeneralTab('components')}
+                aria-label="Components tab"
+                aria-selected={activeGeneralTab() === 'components'}
+              >
+                Components
+              </button>
+              <button
+                class={`${styles.tabButton} ${activeGeneralTab() === 'general-styles' ? styles.tabButtonActive : ''}`}
+                onClick={() => setActiveGeneralTab('general-styles')}
+                aria-label="General Styles tab"
+                aria-selected={activeGeneralTab() === 'general-styles'}
+              >
+                General Styles
+              </button>
+            </div>
+
+            <div class={styles.propertyPanelContent}>
+              {/* Components Tab */}
+              <Show when={activeGeneralTab() === 'components'}>
+                <div class={styles.emptyState}>
+                  <div class={styles.emptyStateIcon}>📦</div>
+                  <h3 class={styles.emptyStateTitle}>Component Palette</h3>
+                  <p class={styles.emptyStateText}>
+                    Use the left sidebar to drag and drop components onto the canvas
+                  </p>
+                </div>
+              </Show>
+
+              {/* General Styles Tab */}
+              <Show when={activeGeneralTab() === 'general-styles'}>
+                <Show
+                  when={props.template}
+                  fallback={
+                    <div class={styles.emptyState}>
+                      <div class={styles.emptyStateIcon}>⚙️</div>
+                      <h3 class={styles.emptyStateTitle}>No Template</h3>
+                      <p class={styles.emptyStateText}>
+                        Create or load a template to configure general styles
+                      </p>
+                    </div>
+                  }
+                >
+                  {/* Canvas Dimensions */}
+                  <Show when={groupedGeneralStyles().dimensions?.length > 0}>
+                    <div class={styles.propertySection}>
+                      <h4 class={styles.propertySectionTitle}>Canvas Dimensions</h4>
+                      <For each={groupedGeneralStyles().dimensions || []}>
+                        {(property) => renderGeneralStyleEditor(property)}
+                      </For>
+                    </div>
+                  </Show>
+
+                  {/* Canvas Appearance */}
+                  <Show when={groupedGeneralStyles().canvasAppearance?.length > 0}>
+                    <div class={styles.propertySection}>
+                      <h4 class={styles.propertySectionTitle}>Canvas Appearance</h4>
+                      <For each={groupedGeneralStyles().canvasAppearance || []}>
+                        {(property) => renderGeneralStyleEditor(property)}
+                      </For>
+                    </div>
+                  </Show>
+
+                  {/* Default Components */}
+                  <Show when={groupedGeneralStyles().defaultComponents?.length > 0}>
+                    <div class={styles.propertySection}>
+                      <h4 class={styles.propertySectionTitle}>Default Component Styles</h4>
+                      <For each={groupedGeneralStyles().defaultComponents || []}>
+                        {(property) => renderGeneralStyleEditor(property)}
+                      </For>
+                    </div>
+                  </Show>
+
+                  {/* Typography */}
+                  <Show when={groupedGeneralStyles().typography?.length > 0}>
+                    <div class={styles.propertySection}>
+                      <h4 class={styles.propertySectionTitle}>Typography</h4>
+                      <For each={groupedGeneralStyles().typography || []}>
+                        {(property) => renderGeneralStyleEditor(property)}
+                      </For>
+                    </div>
+                  </Show>
+
+                  {/* Links */}
+                  <Show when={groupedGeneralStyles().links?.length > 0}>
+                    <div class={styles.propertySection}>
+                      <h4 class={styles.propertySectionTitle}>Default Link Styles</h4>
+                      <For each={groupedGeneralStyles().links || []}>
+                        {(property) => renderGeneralStyleEditor(property)}
+                      </For>
+                    </div>
+                  </Show>
+
+                  {/* Buttons */}
+                  <Show when={groupedGeneralStyles().buttons?.length > 0}>
+                    <div class={styles.propertySection}>
+                      <h4 class={styles.propertySectionTitle}>Default Button Styles</h4>
+                      <For each={groupedGeneralStyles().buttons || []}>
+                        {(property) => renderGeneralStyleEditor(property)}
+                      </For>
+                    </div>
+                  </Show>
+                </Show>
+              </Show>
+            </div>
+          </>
         }
       >
         <div class={styles.propertyPanelHeader}>
@@ -903,18 +1392,18 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
         {/* Tab Navigation */}
         <div class={styles.tabNavigation}>
           <button
-            class={`${styles.tabButton} ${activeTab() === 'content' ? styles.tabButtonActive : ''}`}
-            onClick={() => setActiveTab('content')}
+            class={`${styles.tabButton} ${activeComponentTab() === 'content' ? styles.tabButtonActive : ''}`}
+            onClick={() => setActiveComponentTab('content')}
             aria-label="Content tab"
-            aria-selected={activeTab() === 'content'}
+            aria-selected={activeComponentTab() === 'content'}
           >
             Content
           </button>
           <button
-            class={`${styles.tabButton} ${activeTab() === 'style' ? styles.tabButtonActive : ''}`}
-            onClick={() => setActiveTab('style')}
+            class={`${styles.tabButton} ${activeComponentTab() === 'style' ? styles.tabButtonActive : ''}`}
+            onClick={() => setActiveComponentTab('style')}
             aria-label="Style tab"
-            aria-selected={activeTab() === 'style'}
+            aria-selected={activeComponentTab() === 'style'}
           >
             Style
           </button>
@@ -922,7 +1411,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
 
         <div class={styles.propertyPanelContent}>
           {/* Presets Section - Only show in Style tab */}
-          <Show when={activeTab() === 'style' && props.presetActions && presets().length > 0}>
+          <Show when={activeComponentTab() === 'style' && props.presetActions && presets().length > 0}>
             <div class={styles.propertySection}>
               <h4 class={styles.propertySectionTitle}>Style Presets</h4>
 
@@ -1058,7 +1547,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
           </Show>
 
           {/* Content Section - Only show in Content tab */}
-          <Show when={activeTab() === 'content' && groupedProperties().content.length > 0}>
+          <Show when={activeComponentTab() === 'content' && groupedProperties().content.length > 0}>
             <div class={styles.propertySection}>
               <h4 class={styles.propertySectionTitle}>Content</h4>
               <For each={groupedProperties().content}>
@@ -1068,7 +1557,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
           </Show>
 
           {/* Styles Section - Only show in Style tab */}
-          <Show when={activeTab() === 'style' && groupedProperties().styles.length > 0}>
+          <Show when={activeComponentTab() === 'style' && groupedProperties().styles.length > 0}>
             <div class={styles.propertySection}>
               <h4 class={styles.propertySectionTitle}>Styles</h4>
               <For each={groupedProperties().styles}>

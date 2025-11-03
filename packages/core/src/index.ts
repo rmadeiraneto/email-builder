@@ -32,3 +32,6 @@ export * from '../template';
 export { ComponentRegistry, RegistryEvent, RegistryError } from '../components/ComponentRegistry';
 export type { ComponentFilter } from '../components/ComponentRegistry';
 export * from '../components/definitions/registry-init';
+
+// Export email testing integration
+export * from '../email-testing';

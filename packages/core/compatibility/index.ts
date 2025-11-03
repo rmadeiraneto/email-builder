@@ -16,8 +16,20 @@
  * @module compatibility
  */
 
-// Service
+// Services
 export { CompatibilityService } from './CompatibilityService';
+export { CompatibilityChecker } from './CompatibilityChecker';
+
+// Compatibility Checker Types
+export type {
+  CompatibilityIssue,
+  CompatibilityReport,
+} from './CompatibilityChecker';
+
+export {
+  IssueSeverity,
+  IssueCategory,
+} from './CompatibilityChecker';
 
 // Types
 export type {

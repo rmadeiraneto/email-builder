@@ -19,3 +19,6 @@ export type { EmailTestingSettingsModalProps } from './EmailTestingSettingsModal
 
 export { TestConfigModal } from './TestConfigModal';
 export type { TestConfigModalProps } from './TestConfigModal';
+
+export { CompatibilityReportModal } from './CompatibilityReportModal';
+export type { CompatibilityReportModalProps } from './CompatibilityReportModal';

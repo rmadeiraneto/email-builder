@@ -43,7 +43,8 @@ import { ComponentRegistry } from '../components/ComponentRegistry';
 import { createDefaultRegistry } from '../components/definitions/registry-init';
 import { PresetStorage } from '../preset/PresetStorage';
 import { PresetManager } from '../preset/PresetManager';
-import { CompatibilityService } from '../compatibility';
+import { CompatibilityService, CompatibilityChecker } from '../compatibility';
+import type { CompatibilityReport } from '../compatibility';
 
 interface NormalizedConfig extends BuilderConfig {
   locale: string;
@@ -61,6 +62,7 @@ export class Builder {
   private templateManager: TemplateManager;
   private presetManager: PresetManager;
   private compatibilityService: CompatibilityService;
+  private compatibilityChecker: CompatibilityChecker;
   private storageAdapter: StorageAdapter;
   private initialized: boolean = false;
   private state: Record<string, unknown> = {};
@@ -92,6 +94,9 @@ export class Builder {
 
     // Initialize compatibility service
     this.compatibilityService = new CompatibilityService();
+
+    // Initialize compatibility checker
+    this.compatibilityChecker = new CompatibilityChecker(this.compatibilityService);
   }
 
   /**
@@ -241,6 +246,51 @@ export class Builder {
    */
   public getCompatibilityService(): CompatibilityService {
     return this.compatibilityService;
+  }
+
+  /**
+   * Checks template for email compatibility issues
+   *
+   * Validates the current template for CSS properties, HTML structure,
+   * and content that may not be compatible with email clients.
+   *
+   * @returns Detailed compatibility report with issues grouped by severity
+   *
+   * @example
+   * ```ts
+   * const report = builder.checkCompatibility();
+   *
+   * if (!report.safeToExport) {
+   *   console.log(`Found ${report.issues.critical.length} critical issues`);
+   *   report.issues.critical.forEach(issue => {
+   *     console.log(`- ${issue.message}`);
+   *   });
+   * }
+   * ```
+   */
+  public checkCompatibility(): CompatibilityReport {
+    this.ensureInitialized();
+
+    // Get current template
+    const template = this.state['template'] as Template | undefined;
+    if (!template || !template.components) {
+      // Return empty report if no template
+      return {
+        overallScore: 100,
+        totalIssues: 0,
+        issues: {
+          critical: [],
+          warnings: [],
+          suggestions: [],
+        },
+        componentsChecked: 0,
+        timestamp: new Date(),
+        safeToExport: true,
+      };
+    }
+
+    // Check template compatibility
+    return this.compatibilityChecker.checkTemplate(template.components);
   }
 
   /**

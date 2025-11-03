@@ -37,6 +37,7 @@ import {
   EmailExportService,
   tips,
   type Tip,
+  type CompatibilityReport,
 } from '@email-builder/core';
 
 export interface BuilderState {
@@ -74,6 +75,7 @@ export interface BuilderContextValue {
     listTemplates: () => Promise<TemplateListItem[]>;
     deleteTemplate: (id: string) => Promise<void>;
     exportTemplate: (format: 'html' | 'json') => Promise<void>;
+    checkCompatibility: () => CompatibilityReport | null;
     applyPreset: (componentId: string, presetId: string) => Promise<void>;
     createPreset: (componentId: string, name: string, description?: string) => Promise<ComponentPreset | undefined>;
     updatePreset: (componentType: ComponentType, presetId: string, updates: { name?: string; description?: string; styles?: any }) => Promise<void>;
@@ -481,6 +483,15 @@ export const BuilderProvider: ParentComponent = (props) => {
       } catch (error) {
         console.error('[BuilderContext] Failed to export template:', error);
         throw error;
+      }
+    },
+
+    checkCompatibility: () => {
+      try {
+        return builder.checkCompatibility();
+      } catch (error) {
+        console.error('[BuilderContext] Failed to check compatibility:', error);
+        return null;
       }
     },
 

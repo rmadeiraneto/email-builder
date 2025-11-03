@@ -7,6 +7,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "builder", "commands", "components", "services", "template", "types"],
+  "include": ["src", "builder", "commands", "compatibility", "components", "services", "template", "tips", "types"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]
 }

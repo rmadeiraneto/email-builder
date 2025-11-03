@@ -1,11 +1,11 @@
-# Next Task: In-Builder Compatibility Guidance - 🎯 READY TO START
+# Next Task: Complete Phase 2 Integration - 🔄 IN PROGRESS
 
 ## 📋 Current Status
 
-### 🎯 **NEXT UP** - Phase 2: In-Builder Compatibility Guidance
+### 🔄 **IN PROGRESS** - Phase 2: In-Builder Compatibility Guidance
 **Priority**: HIGH 🔴
-**Status**: Ready to Start (Phase 1: ✅ Complete!)
-**Estimated Time**: 6-8 hours
+**Status**: ~75% Complete (5-6 hours completed, 2-3 hours remaining)
+**Estimated Time Remaining**: 2-3 hours
 **Dependencies**: ✅ Builder + Template system + Email Testing Phase 1
 
 ---
@@ -249,7 +249,7 @@ This phase adds visual compatibility indicators throughout the builder UI, showi
 
 ## 📊 Progress Summary
 
-**Email Testing & Compatibility System: ~45% Complete** 🔵🔵🔵🔵🔵⚪⚪⚪⚪⚪
+**Email Testing & Compatibility System: ~65% Complete** 🔵🔵🔵🔵🔵🔵🔵⚪⚪⚪
 
 **Phase 1: External Testing Service Integration** ✅ 100% COMPLETE!
 - ✅ Task 1.1: Service interface/abstraction (COMPLETE)
@@ -258,7 +258,11 @@ This phase adds visual compatibility indicators throughout the builder UI, showi
 - ✅ Task 1.4: Email export enhancement (COMPLETE)
 - ✅ Task 1.5: Test execution flow (COMPLETE)
 
-**Phase 2: In-Builder Compatibility Guidance** 🎯 NEXT (6-8 hours)
+**Phase 2: In-Builder Compatibility Guidance** 🔄 ~75% COMPLETE (2-3 hours remaining)
+- ✅ Compatibility Data System (100% complete)
+- ✅ UI Components (85% complete - needs PropertyPanel integration)
+- ✅ Tips System (100% complete - needs display logic)
+
 **Phase 3: Pre-Export Compatibility Checker** (Not started - 2-4 hours)
 **Phase 4: Email Client Support Matrix** (Not started - 2 hours)
 
@@ -297,134 +301,325 @@ This phase adds visual compatibility indicators throughout the builder UI, showi
 
 ---
 
-## 🚀 Next Session Goals
+## 🎉 What Was Accomplished This Session
 
-### Priority 1: Phase 2 - Compatibility Data System (2-3 hours) ⚡
+### ✅ Priority 1: Compatibility Data System (100% COMPLETE)
 
-**Goal**: Build the foundation for compatibility tracking
+**Created comprehensive type system and data:**
+- `packages/core/compatibility/compatibility.types.ts` (150+ lines)
+  - EmailClient type with 19 major email clients
+  - SupportLevel enum (full, partial, none, unknown)
+  - PropertySupport interface (level, notes, workarounds)
+  - CompatibilityData type mapping properties to client support
+  
+- `packages/core/compatibility/compatibility-data.ts` (800+ lines)
+  - Support data for 20+ CSS properties × 19 email clients
+  - Properties covered:
+    - Layout: padding, margin, width, height, max-width, display
+    - Colors: color, background-color, background-image
+    - Borders: border, border-radius, border-width, border-style, border-color
+    - Visual effects: box-shadow, text-shadow, opacity
+    - Modern CSS: flexbox, grid, position
+    - Typography: font-family, font-size, font-weight, line-height, text-align
+    - Advanced: transform, animation, transition
+  - Each property includes detailed notes and workarounds
+  
+- `packages/core/compatibility/CompatibilityService.ts` (300+ lines)
+  - Query methods:
+    - `getPropertySupport(property, client?)` - Get support for specific property
+    - `getPropertyScore(property)` - Calculate overall support percentage
+    - `getSupportLevel(property)` - Get aggregated support level
+    - `getClientSupport(client)` - Get all properties for a client
+    - `getAllClients()` - List all email clients
+    - `getAllProperties()` - List all tracked properties
+  - Comprehensive test suite with 20+ tests
+  
+- `packages/core/builder/Builder.ts` (modified)
+  - Added CompatibilityService integration
+  - Exposed via `builder.getCompatibilityService()`
 
-**Tasks**:
+### ✅ Priority 2: UI Components (85% COMPLETE)
 
-1. **Create Compatibility Data Structure** (1 hour):
-   - [ ] Create `packages/core/compatibility/compatibility.types.ts`:
-     - [ ] EmailClient type (Outlook, Gmail, Apple Mail, Yahoo, etc.)
-     - [ ] SupportLevel enum (full, partial, none, unknown)
-     - [ ] CompatibilityData interface (property → client support map)
-     - [ ] PropertySupport interface (support level, notes, workarounds)
-   - [ ] Create `packages/core/compatibility/compatibility-data.ts`:
-     - [ ] Initial data for 20+ common CSS properties
-     - [ ] Support data for 12+ email clients
-     - [ ] Based on caniemail.com research
-   - [ ] Properties to include:
-     - [ ] `border-radius` (partial support - Outlook issues)
-     - [ ] `box-shadow` (poor support)
-     - [ ] `background-image` (partial - Outlook blocks)
-     - [ ] `padding`, `margin` (good support with notes)
-     - [ ] `display: flex` (no support - use tables)
-     - [ ] `display: grid` (no support)
-     - [ ] `position: absolute/relative` (no support)
-     - [ ] `font-family` (good support with web fonts note)
-     - [ ] Text properties (color, text-align, etc.)
-     - [ ] More as needed
+**Created professional UI components:**
+- `packages/ui-solid/src/compatibility/CompatibilityIcon.tsx` (150+ lines)
+  - Color-coded indicators:
+    - 🟢 Green (90%+): Excellent support
+    - 🟡 Yellow (50-89%): Moderate support
+    - 🔴 Red (<50%): Poor support
+  - Tooltip on hover with support summary
+  - Click handler to open CompatibilityModal
+  - Props: propertyName, size, showLabel, onClick
+  - Smooth animations and transitions
+  
+- `packages/ui-solid/src/compatibility/CompatibilityIcon.module.scss` (100+ lines)
+  - Professional icon styling
+  - Color variants
+  - Hover effects
+  - Animation keyframes
+  
+- `packages/ui-solid/src/compatibility/CompatibilityModal.tsx` (400+ lines)
+  - Property name and description
+  - Overall support score with color-coded badge
+  - Support statistics (X/19 clients supported)
+  - Detailed support grid grouped by platform:
+    - Desktop: Outlook, Apple Mail, Thunderbird
+    - Webmail: Gmail, Outlook.com, Yahoo, AOL
+    - Mobile: Gmail iOS/Android, Apple Mail iOS, Samsung
+  - Color-coded cells showing support level
+  - Support notes for each client
+  - Workarounds and best practices section
+  - Link to caniemail.com
+  
+- `packages/ui-solid/src/compatibility/CompatibilityModal.module.scss` (300+ lines)
+  - Professional modal styling
+  - Responsive grid layout
+  - Color-coded support indicators
+  - Smooth animations
+  - Badge styles for support levels
 
-2. **Create CompatibilityService** (1 hour):
-   - [ ] Create `packages/core/compatibility/CompatibilityService.ts`:
-     - [ ] `getPropertySupport(property, client?)` - Get support for property
-     - [ ] `getPropertyScore(property)` - Calculate overall support score
-     - [ ] `getClientSupport(client)` - Get all properties for a client
-     - [ ] `getWorkarounds(property)` - Get alternative solutions
-   - [ ] Export from `packages/core/compatibility/index.ts`
+**⚠️ Remaining**: PropertyPanel integration (see next section)
 
-3. **Add to Builder Integration** (30 min):
-   - [ ] Add CompatibilityService to Builder class
-   - [ ] Expose via `builder.getCompatibilityService()`
-   - [ ] Load compatibility data on initialization
+### ✅ Priority 3: Tips System (100% COMPLETE)
 
-### Priority 2: Property Compatibility Indicators (2-3 hours)
+**Created comprehensive tips database:**
+- `packages/core/tips/tips.types.ts` (50+ lines)
+  - TipCategory enum (general, layout, typography, images, compatibility)
+  - TipSeverity enum (info, warning, critical)
+  - Tip interface with all metadata
+  
+- `packages/core/tips/tips-data.ts` (500+ lines)
+  - 25+ helpful tips covering:
+    - General best practices (10 tips)
+    - Layout guidance (5 tips)
+    - Typography recommendations (3 tips)
+    - Image optimization (4 tips)
+    - Compatibility warnings (3 tips)
+  - Each tip includes title, message, category, severity, learn more URL
+  
+- `packages/ui-solid/src/tips/TipBanner.tsx` (150+ lines)
+  - Severity-based styling (info/warning/critical)
+  - Icon display based on severity
+  - Dismissible with close button
+  - Optional "Learn More" link
+  - Smooth animations
+  
+- `packages/ui-solid/src/tips/TipBanner.module.scss` (150+ lines)
+  - Color-coded by severity:
+    - Blue for info
+    - Yellow for warning
+    - Red for critical
+  - Professional banner design
+  - Responsive layout
 
-**Goal**: Show compatibility status in PropertyPanel
+**⚠️ Remaining**: Display logic and triggers (see next section)
 
-**Tasks**:
+### 📂 All Files Created (16 files, ~3,500 lines)
 
-1. **Create CompatibilityIcon Component** (1 hour):
-   - [ ] Create `packages/ui-solid/src/compatibility/CompatibilityIcon.tsx`:
-     - [ ] Props: propertyName, size, showLabel
-     - [ ] Calculate support score from CompatibilityService
-     - [ ] Display colored icon based on score:
-       - [ ] 🟢 Green: 90%+ support (10+ clients)
-       - [ ] 🟡 Yellow: 50-89% support (6-9 clients)
-       - [ ] 🔴 Red: <50% support (<6 clients)
-       - [ ] ⚪ Gray: Unknown/no data
-     - [ ] Tooltip on hover showing support summary
-     - [ ] Click opens CompatibilityModal
+**Core Package** (`packages/core/compatibility/`):
+1. ✅ `compatibility.types.ts` - Type definitions
+2. ✅ `compatibility-data.ts` - Support data for 20+ properties × 19 clients
+3. ✅ `CompatibilityService.ts` - Service with query methods
+4. ✅ `CompatibilityService.test.ts` - Test suite
+5. ✅ `index.ts` - Public exports
 
-2. **Integrate into PropertyPanel** (1 hour):
-   - [ ] Add CompatibilityIcon next to each property control
-   - [ ] Pass property name to icon
-   - [ ] Handle icon click to open modal
-   - [ ] Add "Show Compatibility" toggle to hide/show icons
+**Core Package** (`packages/core/tips/`):
+1. ✅ `tips.types.ts` - Type definitions
+2. ✅ `tips-data.ts` - Database of 25+ tips
+3. ✅ `index.ts` - Public exports
 
-3. **Create CompatibilityModal** (1 hour):
-   - [ ] Create `packages/ui-solid/src/compatibility/CompatibilityModal.tsx`:
-     - [ ] Display property name and description
-     - [ ] Show support grid:
-       - [ ] Desktop clients (Outlook 2016-2021, Outlook 365, Apple Mail)
-       - [ ] Webmail (Gmail, Outlook.com, Yahoo, AOL)
-       - [ ] Mobile (Gmail iOS/Android, Apple Mail iOS, Samsung)
-     - [ ] Color-coded cells (green/yellow/red/gray)
-     - [ ] Support notes for each client
-     - [ ] Workarounds section
-     - [ ] Link to caniemail.com for details
-   - [ ] Professional modal styling with grid layout
+**UI Package** (`packages/ui-solid/src/compatibility/`):
+1. ✅ `CompatibilityIcon.tsx` - Icon component
+2. ✅ `CompatibilityIcon.module.scss` - Icon styling
+3. ✅ `CompatibilityModal.tsx` - Modal component
+4. ✅ `CompatibilityModal.module.scss` - Modal styling
+5. ✅ `index.ts` - Public exports
 
-### Priority 3: Best Practices Tips (2 hours)
+**UI Package** (`packages/ui-solid/src/tips/`):
+1. ✅ `TipBanner.tsx` - Tip display component
+2. ✅ `TipBanner.module.scss` - Tip styling
+3. ✅ `index.ts` - Public exports
 
-**Goal**: Provide helpful guidance throughout the builder
+**Files Modified**:
+1. ✅ `packages/core/builder/Builder.ts` - Added CompatibilityService
+2. ✅ `packages/core/tsconfig.json` - Updated paths
 
-**Tasks**:
+---
 
-1. **Create Tips System** (1 hour):
-   - [ ] Create `packages/core/tips/tips.types.ts`:
-     - [ ] TipCategory enum (general, layout, typography, images, etc.)
-     - [ ] TipSeverity enum (info, warning, critical)
-     - [ ] Tip interface (id, title, message, category, severity, learnMoreUrl)
-   - [ ] Create `packages/core/tips/tips-data.ts`:
-     - [ ] 20+ tips covering:
-       - [ ] Use tables for layout, not divs (email mode)
-       - [ ] Always add alt text to images
-       - [ ] Inline styles are safer than classes
-       - [ ] Test in Outlook 2016 (most restrictive)
-       - [ ] Avoid background images (Outlook blocks)
-       - [ ] Use web-safe fonts or fallbacks
-       - [ ] Keep email width 600px or less
-       - [ ] More tips based on common issues
+## 🚀 Next Session Goals (2-3 hours remaining)
 
-2. **Create TipDisplay Component** (1 hour):
-   - [ ] Create `packages/ui-solid/src/tips/TipBanner.tsx`:
-     - [ ] Displays tip with icon and message
-     - [ ] Dismissible (close button)
-     - [ ] Color-coded by severity
-   - [ ] Trigger tips contextually:
-     - [ ] When selecting "Email" preview mode
-     - [ ] When using properties with poor email support
-     - [ ] When exporting template
-     - [ ] Random "Did you know?" tips
+### Priority 1: PropertyPanel Integration (1-2 hours) ⚡ **CRITICAL**
 
-### Time Estimates:
-- **Compatibility Data System**: 2-3 hours
-- **Property Compatibility Indicators**: 2-3 hours  
-- **Best Practices Tips**: 2 hours
-- **Total**: 6-8 hours
+**Goal**: Add compatibility indicators to all property controls
 
-### Success Criteria:
+**Detailed Steps**:
+
+1. **Import CompatibilityIcon** (5 min):
+   - Open `packages/ui-solid/src/properties/PropertyPanel.tsx`
+   - Import: `import { CompatibilityIcon } from '../compatibility';`
+   - Import useState for modal: `import { createSignal } from 'solid-js';`
+
+2. **Add Modal State** (5 min):
+   ```typescript
+   const [compatibilityModalOpen, setCompatibilityModalOpen] = createSignal(false);
+   const [selectedProperty, setSelectedProperty] = createSignal<string>('');
+   ```
+
+3. **Add Icon to Property Inputs** (45 min):
+   - For each property input in PropertyPanel render methods
+   - Add CompatibilityIcon next to the input label
+   - Example for ColorPicker:
+   ```tsx
+   <div class={styles.propertyControl}>
+     <label class={styles.propertyLabel}>
+       {property.label}
+       <CompatibilityIcon
+         propertyName={property.name}
+         size="small"
+         onClick={() => {
+           setSelectedProperty(property.name);
+           setCompatibilityModalOpen(true);
+         }}
+       />
+     </label>
+     <ColorPicker {...} />
+   </div>
+   ```
+   - Apply to all property types:
+     - ColorPicker (color, background-color, border-color)
+     - NumberInput (padding, margin, font-size, border-width)
+     - SelectInput (font-family, display, text-align)
+     - etc.
+
+4. **Add CompatibilityModal** (15 min):
+   - Import: `import { CompatibilityModal } from '../compatibility';`
+   - Add at end of PropertyPanel component:
+   ```tsx
+   <CompatibilityModal
+     isOpen={compatibilityModalOpen()}
+     propertyName={selectedProperty()}
+     onClose={() => setCompatibilityModalOpen(false)}
+   />
+   ```
+
+5. **Test Integration** (15 min):
+   - Click icon next to any property
+   - Verify modal opens with correct property
+   - Check support grid displays correctly
+   - Verify close button works
+   - Test multiple properties
+
+### Priority 2: Tips Display Logic (1 hour) ⚡ **CRITICAL**
+
+**Goal**: Show contextual tips throughout the builder
+
+**Detailed Steps**:
+
+1. **Add Tips State to BuilderContext** (15 min):
+   - Open `apps/dev/src/context/BuilderContext.tsx`
+   - Import tips: `import { tips, type Tip } from '@email-builder/core';`
+   - Add state:
+   ```typescript
+   const [activeTips, setActiveTips] = createSignal<Tip[]>([]);
+   const [dismissedTips, setDismissedTips] = createSignal<string[]>([]);
+   ```
+   - Load dismissed tips from localStorage on init:
+   ```typescript
+   const dismissed = localStorage.getItem('email-builder:dismissed-tips');
+   if (dismissed) setDismissedTips(JSON.parse(dismissed));
+   ```
+
+2. **Add Tip Actions** (20 min):
+   ```typescript
+   const showTip = (tipId: string) => {
+     const tip = tips.find(t => t.id === tipId);
+     if (tip && !dismissedTips().includes(tipId)) {
+       setActiveTips([...activeTips(), tip]);
+     }
+   };
+   
+   const dismissTip = (tipId: string) => {
+     setActiveTips(activeTips().filter(t => t.id !== tipId));
+     const newDismissed = [...dismissedTips(), tipId];
+     setDismissedTips(newDismissed);
+     localStorage.setItem('email-builder:dismissed-tips', JSON.stringify(newDismissed));
+   };
+   ```
+
+3. **Add Tip Triggers** (20 min):
+   - On preview mode change (in previewTemplate action):
+   ```typescript
+   if (mode === 'email') {
+     showTip('email-mode-tables'); // Use tables for layout
+   }
+   ```
+   - On component selection (in selectComponent action):
+   ```typescript
+   // Random "Did you know?" tip (10% chance)
+   if (Math.random() < 0.1) {
+     const randomTip = tips.filter(t => t.category === 'general')[Math.floor(Math.random() * 10)];
+     if (randomTip) showTip(randomTip.id);
+   }
+   ```
+   - On export/test (in exportTemplate/testTemplate actions):
+   ```typescript
+   showTip('test-outlook-first'); // Test in Outlook 2016 first
+   ```
+
+4. **Display Tips in Builder UI** (5 min):
+   - Open `apps/dev/src/pages/Builder.tsx`
+   - Import: `import { TipBanner } from '@email-builder/ui-solid';`
+   - Add tip display area above or below canvas:
+   ```tsx
+   <div class={styles.tipsContainer}>
+     <For each={builderState.activeTips}>
+       {(tip) => (
+         <TipBanner
+           tip={tip}
+           onDismiss={() => builderState.dismissTip(tip.id)}
+         />
+       )}
+     </For>
+   </div>
+   ```
+
+### Priority 3: Test & Polish (30 min)
+
+**End-to-End Testing**:
+- [ ] Click compatibility icon next to a property
+- [ ] Verify modal shows correct support data
+- [ ] Test with multiple properties (padding, border-radius, flexbox)
+- [ ] Change to Email preview mode → verify tip appears
+- [ ] Dismiss tip → verify it doesn't reappear
+- [ ] Select components → verify random tips appear occasionally
+- [ ] Export template → verify export tip appears
+- [ ] Close and reopen builder → verify dismissed tips stay dismissed
+
+**UI Polish**:
+- [ ] Check icon sizes and spacing in PropertyPanel
+- [ ] Verify modal animations are smooth
+- [ ] Check tip banner styling across different severities
+- [ ] Test responsiveness on smaller screens
+- [ ] Verify no console errors
+
+**Performance Check**:
+- [ ] Verify no lag when clicking icons
+- [ ] Check modal open/close performance
+- [ ] Verify tip display doesn't impact builder performance
+
+---
+
+## ✅ Success Criteria
+
+After completing these tasks, Phase 2 will be 100% done:
 - ✅ Compatibility icons visible next to all PropertyPanel controls
-- ✅ CompatibilityModal shows accurate support data for major email clients
+- ✅ CompatibilityModal shows accurate support data for 19 email clients
 - ✅ Tips display contextually based on user actions
+- ✅ Dismissed tips persist across sessions
 - ✅ No compilation errors, dev server running smoothly
 - ✅ All new code follows TypeScript strict mode
 - ✅ UI is polished and professional
 
-**After Phase 2**: Users will have complete visibility into email client compatibility for every style they apply, making informed design decisions easier!
+**After Phase 2**: Users will have complete visibility into email client compatibility for every style they apply, with helpful tips guiding them toward email-safe design patterns!
 
 ---
 
@@ -439,6 +634,6 @@ This phase adds visual compatibility indicators throughout the builder UI, showi
 ---
 
 **Last Updated**: 2025-11-03
-**Status**: Phase 1 ✅ COMPLETE (100%) - All testing infrastructure operational!
-**Next Up**: Phase 2 - In-Builder Compatibility Guidance (6-8 hours)
+**Status**: Phase 2 ~75% COMPLETE - Compatibility system built, needs integration!
+**Next Up**: Complete PropertyPanel integration & Tips display (2-3 hours)
 **Next Update**: After Phase 2 completion

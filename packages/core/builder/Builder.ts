@@ -43,6 +43,7 @@ import { ComponentRegistry } from '../components/ComponentRegistry';
 import { createDefaultRegistry } from '../components/definitions/registry-init';
 import { PresetStorage } from '../preset/PresetStorage';
 import { PresetManager } from '../preset/PresetManager';
+import { CompatibilityService } from '../compatibility';
 
 interface NormalizedConfig extends BuilderConfig {
   locale: string;
@@ -59,6 +60,7 @@ export class Builder {
   private componentRegistry: ComponentRegistry;
   private templateManager: TemplateManager;
   private presetManager: PresetManager;
+  private compatibilityService: CompatibilityService;
   private storageAdapter: StorageAdapter;
   private initialized: boolean = false;
   private state: Record<string, unknown> = {};
@@ -87,6 +89,9 @@ export class Builder {
       this.config.storage.keyPrefix
     );
     this.presetManager = new PresetManager(presetStorage, this.componentRegistry);
+
+    // Initialize compatibility service
+    this.compatibilityService = new CompatibilityService();
   }
 
   /**
@@ -219,6 +224,23 @@ export class Builder {
    */
   public getPresetManager(): PresetManager {
     return this.presetManager;
+  }
+
+  /**
+   * Gets the compatibility service
+   *
+   * Provides access to email client compatibility data and utilities
+   * for checking CSS property support across different email clients.
+   *
+   * @example
+   * ```ts
+   * const compatService = builder.getCompatibilityService();
+   * const stats = compatService.getPropertyStatistics('border-radius');
+   * console.log(`Support score: ${stats.supportScore}%`);
+   * ```
+   */
+  public getCompatibilityService(): CompatibilityService {
+    return this.compatibilityService;
   }
 
   /**

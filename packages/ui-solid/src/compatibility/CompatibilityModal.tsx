@@ -29,7 +29,7 @@ export interface CompatibilityModalProps {
   /**
    * CompatibilityService instance
    */
-  compatibilityService: CompatibilityService;
+  compatibilityService?: CompatibilityService;
 
   /**
    * Whether modal is open
@@ -63,14 +63,17 @@ export interface CompatibilityModalProps {
  */
 export const CompatibilityModal: Component<CompatibilityModalProps> = (props) => {
   const info = createMemo(() => {
+    if (!props.compatibilityService) return undefined;
     return props.compatibilityService.getPropertyInfo(props.property);
   });
 
   const stats = createMemo(() => {
+    if (!props.compatibilityService) return undefined;
     return props.compatibilityService.getPropertyStatistics(props.property);
   });
 
   const workarounds = createMemo(() => {
+    if (!props.compatibilityService) return [];
     return props.compatibilityService.getWorkarounds(props.property);
   });
 

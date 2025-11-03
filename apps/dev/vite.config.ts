@@ -8,6 +8,8 @@ export default defineConfig({
     alias: {
       '@': resolve(__dirname, 'src'),
       '@tokens': resolve(__dirname, '../../packages/tokens/build/scss/_variables.scss'),
+      '@email-builder/core/tips': resolve(__dirname, '../../packages/core/tips'),
+      '@email-builder/core/compatibility': resolve(__dirname, '../../packages/core/compatibility'),
       '@email-builder/core': resolve(__dirname, '../../packages/core/src'),
       '@email-builder/ui-solid': resolve(__dirname, '../../packages/ui-solid/src'),
       '@email-builder/ui-solid/canvas': resolve(__dirname, '../../packages/ui-solid/src/canvas'),

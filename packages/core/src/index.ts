@@ -23,7 +23,16 @@ export * from '../builder';
 export * from '../commands';
 
 // Export services
-export { EventEmitter, LocalStorageAdapter } from '../services';
+export { EventEmitter, LocalStorageAdapter, EmailExportService } from '../services';
+export type {
+  EmailExportOptions,
+  EmailExportResult,
+  EmailExportWarning,
+  EmailExportWarningType,
+  CSSCompatibility,
+  CSSRule,
+  TableConversionContext,
+} from '../services';
 
 // Export template management
 export * from '../template';
@@ -35,3 +44,9 @@ export * from '../components/definitions/registry-init';
 
 // Export email testing integration
 export * from '../email-testing';
+
+// Export tips
+export * from '../tips';
+
+// Export compatibility
+export * from '../compatibility';

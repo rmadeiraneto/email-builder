@@ -63,7 +63,7 @@ export function createHeader(
     content: {
       layout: 'image-left',
       image: {
-        src: 'https://via.placeholder.com/200x60',
+        src: 'https://placehold.co/200x60',
         alt: 'Company Logo',
         title: 'Logo',
       },
@@ -223,7 +223,7 @@ export function createHero(
     content: {
       layout: 'image-top',
       image: {
-        src: 'https://via.placeholder.com/1200x600',
+        src: 'https://placehold.co/1200x600',
         alt: 'Hero image',
         title: 'Hero',
       },
@@ -302,7 +302,7 @@ export function createList(
         {
           id: generateId('list-item'),
           image: {
-            src: 'https://via.placeholder.com/400x300',
+            src: 'https://placehold.co/400x300',
             alt: 'Item 1',
           },
           title: {
@@ -324,7 +324,7 @@ export function createList(
         {
           id: generateId('list-item'),
           image: {
-            src: 'https://via.placeholder.com/400x300',
+            src: 'https://placehold.co/400x300',
             alt: 'Item 2',
           },
           title: {
@@ -346,7 +346,7 @@ export function createList(
         {
           id: generateId('list-item'),
           image: {
-            src: 'https://via.placeholder.com/400x300',
+            src: 'https://placehold.co/400x300',
             alt: 'Item 3',
           },
           title: {

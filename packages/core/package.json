@@ -26,6 +26,16 @@
     "./types": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/types/index.js"
+    },
+    "./tips": {
+      "types": "./dist/tips/index.d.ts",
+      "import": "./dist/tips/index.js",
+      "development": "./tips/index.ts"
+    },
+    "./compatibility": {
+      "types": "./dist/compatibility/index.d.ts",
+      "import": "./dist/compatibility/index.js",
+      "development": "./compatibility/index.ts"
     }
   },
   "files": ["dist", "src"],

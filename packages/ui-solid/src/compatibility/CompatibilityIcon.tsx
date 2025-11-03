@@ -19,7 +19,7 @@ export interface CompatibilityIconProps {
   /**
    * CompatibilityService instance
    */
-  compatibilityService: CompatibilityService;
+  compatibilityService?: CompatibilityService;
 
   /**
    * Size of the icon in pixels
@@ -64,6 +64,7 @@ export interface CompatibilityIconProps {
  */
 export const CompatibilityIcon: Component<CompatibilityIconProps> = (props) => {
   const stats = createMemo(() => {
+    if (!props.compatibilityService) return undefined;
     return props.compatibilityService.getPropertyStatistics(props.property);
   });
 
@@ -88,9 +89,6 @@ export const CompatibilityIcon: Component<CompatibilityIconProps> = (props) => {
       class={`${styles.compatibilityIcon} ${styles[`compatibilityIcon--${supportColor()}`]} ${props.class ?? ''}`}
       onClick={props.onClick}
       title={supportText()}
-      style={{
-        '--icon-size': `${iconSize()}px`,
-      }}
     >
       <svg
         width={iconSize()}
@@ -98,6 +96,13 @@ export const CompatibilityIcon: Component<CompatibilityIconProps> = (props) => {
         viewBox="0 0 16 16"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        style={{
+          display: 'block',
+          width: `${iconSize()}px`,
+          height: `${iconSize()}px`,
+          'max-width': `${iconSize()}px`,
+          'max-height': `${iconSize()}px`
+        }}
       >
         <circle cx="8" cy="8" r="7" fill="currentColor" opacity="0.2" />
         <circle cx="8" cy="8" r="5" fill="currentColor" />

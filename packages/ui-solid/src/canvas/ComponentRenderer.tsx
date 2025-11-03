@@ -152,7 +152,7 @@ const ImageRenderer: Component<{ component: ImageComponent }> = (props) => {
   return (
     <div class={styles.imageContainer}>
       <img
-        src={props.component.content?.src || 'https://via.placeholder.com/600x400'}
+        src={props.component.content?.src || 'https://placehold.co/600x400'}
         alt={props.component.content?.alt || 'Image'}
         title={props.component.content?.title}
         loading={props.component.content?.lazy ? 'lazy' : 'eager'}
@@ -258,7 +258,7 @@ const HeaderRenderer: Component<{ component: HeaderComponent }> = (props) => {
     <header class={styles.header} style={getHeaderStyles()}>
       <div class={styles.headerLogo}>
         <img
-          src={props.component.content?.image?.src || 'https://via.placeholder.com/200x80'}
+          src={props.component.content?.image?.src || 'https://placehold.co/200x80'}
           alt={props.component.content?.image?.alt || 'Logo'}
           style={getImageStyles()}
         />

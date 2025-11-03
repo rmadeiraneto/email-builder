@@ -152,7 +152,7 @@ export function createImage(
       display: 'block',
     },
     content: {
-      src: 'https://via.placeholder.com/600x400',
+      src: 'https://placehold.co/600x400',
       alt: 'Placeholder image',
       title: 'Image',
       lazy: true,

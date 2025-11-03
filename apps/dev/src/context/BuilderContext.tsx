@@ -35,7 +35,7 @@ import {
   type EmailTestRequest,
   createEmailTestingService,
   EmailExportService,
-  tips,
+  TIPS_DATABASE,
   type Tip,
   type CompatibilityReport,
 } from '@email-builder/core';
@@ -789,7 +789,7 @@ export const BuilderProvider: ParentComponent = (props) => {
     },
 
     showTip: (tipId: string) => {
-      const tip = tips.find(t => t.id === tipId);
+      const tip = TIPS_DATABASE.find(t => t.id === tipId);
       if (tip && !state.dismissedTips.includes(tipId)) {
         // Check if tip is already active
         const isAlreadyActive = state.activeTips.some(t => t.id === tipId);

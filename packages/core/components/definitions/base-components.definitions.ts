@@ -420,7 +420,7 @@ export const imageDefinition: ComponentDefinition = {
     tags: ['image', 'media', 'photo'],
   },
   defaultContent: {
-    src: 'https://via.placeholder.com/600x400',
+    src: 'https://placehold.co/600x400',
     alt: 'Placeholder image',
     title: 'Image',
     lazy: true,

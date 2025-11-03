@@ -40,7 +40,7 @@ export const headerDefinition: ComponentDefinition = {
   defaultContent: {
     layout: 'image-left',
     image: {
-      src: 'https://via.placeholder.com/200x60',
+      src: 'https://placehold.co/200x60',
       alt: 'Company Logo',
       title: 'Logo',
     },
@@ -258,7 +258,7 @@ export const heroDefinition: ComponentDefinition = {
   defaultContent: {
     layout: 'image-top',
     image: {
-      src: 'https://via.placeholder.com/1200x600',
+      src: 'https://placehold.co/1200x600',
       alt: 'Hero image',
       title: 'Hero',
     },

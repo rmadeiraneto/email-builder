@@ -52,4 +52,9 @@ export interface TemplateToolbarProps {
    * Callback when Export button is clicked
    */
   onExport?: () => void;
+
+  /**
+   * Callback when Preview button is clicked
+   */
+  onPreview?: () => void;
 }

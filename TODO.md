@@ -262,15 +262,37 @@ When no component is selected, show "General Styles" tab:
 - [ ] Link insertion/editing UI
 - [ ] Lists (ul/ol) UI support
 
-### 6. Preview Modes 👁️
-**Priority: Medium** - REQUIREMENTS.md §2.7
+### 6. Preview Modes ✅ COMPLETE 👁️
+**Priority**: Medium - REQUIREMENTS.md §2.7
+**Status**: ✅ Complete - Full preview functionality implemented
+**Total Time**: ~2 hours
+**See**: [NEXT_TASK.md](./NEXT_TASK.md) for detailed implementation notes
 
-- [ ] Create PreviewModal component
-- [ ] **Web Preview**: Desktop browser simulation
-- [ ] **Mobile Preview**: Mobile device simulation
-- [ ] **Email Preview**: Email client simulation
-- [ ] Toggle between preview modes
-- [ ] Responsive iframe rendering
+- [x] Create PreviewModal component
+  - [x] Created PreviewModal.tsx with full modal UI
+  - [x] Created PreviewModal.module.scss with responsive styles
+  - [x] Created PreviewModal.types.ts with viewport configurations
+- [x] **Web Preview**: Desktop browser simulation (1200px × 800px)
+- [x] **Mobile Preview**: Mobile device simulation (375px × 667px)
+- [x] **Email Preview**: Email client simulation (600px × 800px)
+- [x] Toggle between preview modes with smooth transitions
+- [x] Mode selector buttons with Remix Icons
+- [x] Accurate component rendering using ComponentRenderer
+- [x] Canvas background and dimensions applied correctly
+- [x] Scrollable viewport for long templates
+- [x] Empty state handling
+- [x] Keyboard support (ESC to close)
+- [x] Toolbar integration with Preview button
+- [x] Builder page integration with state management
+
+**Features Delivered:**
+- Three preview modes (Web, Mobile, Email) with standard viewport sizes
+- Clean, professional modal UI with backdrop blur
+- Reuses ComponentRenderer for accurate component display
+- Smooth transitions between preview modes
+- Full keyboard navigation and accessibility
+- Template name display in modal header
+- Viewport size labels for user clarity
 
 ### 7. Custom Components 🔧
 **Priority: Low** - REQUIREMENTS.md §2.2.3

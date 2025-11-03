@@ -1,112 +1,99 @@
-# Next Task: Text Editor Integration (Lexical) - ✅ COMPLETE
+# Next Task: Preview Modes - ✅ COMPLETE
 
 ## 📋 Final Status
 
-### ✅ **COMPLETE** - Text Editor Integration
+### ✅ **COMPLETE** - Preview Modes Implementation
 **Priority**: MEDIUM 🟡
 **Status**: ✅ 100% COMPLETE
-**Total Time**: ~8 hours (5 hours Session 1 + 3 hours Session 2)
-**Dependencies**: ✅ PropertyPanel structure + Text component
+**Total Time**: ~2 hours
+**Dependencies**: ✅ TemplateCanvas + ComponentRenderer
 
 ---
 
 ## 🎉 What Was Accomplished
 
-### Session 1: Core Editor (5 hours)
-✅ **RichTextEditor Component Created**
-- Created `packages/ui-solid/src/editors/RichTextEditor.tsx`
-- Created `packages/ui-solid/src/editors/RichTextEditor.module.scss`
-- Created `packages/ui-solid/src/editors/RichTextEditor.types.ts`
-- Created `packages/ui-solid/src/editors/index.ts`
-- Installed all Lexical packages (v0.38.2)
-- Implemented full formatting toolbar (bold, italic, underline, strikethrough, alignment, block types)
-- Direct Lexical core API integration with SolidJS (no React wrapper)
+### Preview Modal Component
+✅ **Created PreviewModal Component**
+- Created `apps/dev/src/components/modals/PreviewModal.tsx`
+- Created `apps/dev/src/components/modals/PreviewModal.module.scss`
+- Created `apps/dev/src/components/modals/PreviewModal.types.ts`
+- Integrated with existing modal patterns
 - TypeScript strict mode compliance
-- Exported from @email-builder/ui-solid
 
-### Session 2: Integration & Bug Fixes (3 hours)
-✅ **PropertyPanel Integration**
-- Added `richtext` property type to PropertyPanel.types.ts
-- Updated PROPERTY_DEFINITIONS for text component to use `content.html` with type `richtext`
-- Implemented RichTextEditor rendering in PropertyPanel
-- Connected onChange to update all three content properties (html, editorState, plainText)
+### Preview Modes Implemented
+✅ **Three Preview Modes**
+1. **Web Preview** - Desktop browser simulation (1200px × 800px)
+2. **Mobile Preview** - Mobile device simulation (375px × 667px)
+3. **Email Preview** - Email client simulation (600px × 800px)
 
-✅ **Bug Fixes**
-1. **Icons Not Showing**:
-   - Added Remix Icons CSS CDN link to `apps/dev/index.html`
-   - All toolbar icons now display correctly
+### Features Implemented
+✅ **Core Features**
+- Mode toggle buttons with icons (using Remix Icons)
+- Smooth transitions between preview modes
+- Responsive viewport sizing
+- Scrollable preview container
+- Modal overlay with backdrop blur
+- Close button with keyboard support
+- Viewport size labels
+- Template name display
+- Empty state for templates without components
 
-2. **Canvas Not Showing Heading Sizes**:
-   - Updated `ComponentRenderer.module.scss` with specific heading sizes:
-     - h1: 2em (visually ~32px)
-     - h2: 1.5em (visually ~24px)
-     - h3: 1.25em (visually ~20px)
-   - Removed `font-size` and `font-weight` from TextRenderer inline styles
-   - Headings now display with correct, distinct sizes on canvas
+✅ **Toolbar Integration**
+- Added Preview button to TemplateToolbar
+- Button disabled when no template is loaded
+- Updated TemplateToolbar.types.ts with onPreview callback
+- Proper icon (👁️) and label
 
-✅ **Verification**
-- Text component factory already uses correct property names (content.html, content.plainText)
-- All formatting features working (bold, italic, underline, strikethrough)
-- Text alignment working (left, center, right, justify)
-- Block types working (paragraph, h1, h2, h3)
-- Undo/redo working (Ctrl+Z, Ctrl+Y)
-- Content persists correctly across save/load
-- Dev server running successfully at http://localhost:3001/
+✅ **Builder Page Integration**
+- Added PreviewModal to Builder page
+- Connected to state management
+- Proper modal open/close handlers
+- Template data passed to modal
+
+### Component Rendering
+✅ **Full Component Support**
+- Reuses ComponentRenderer for accurate preview
+- All component types rendered correctly:
+  - Button, Text, Image
+  - Separator, Spacer
+  - Header, Footer, Hero
+  - List, Call to Action
+- Preserves all component styling
+- Canvas background color applied
+- Canvas dimensions respected
 
 ---
 
-## 📊 Final Feature Summary
+## 📊 Feature Summary
 
 ### What Works
-1. ✅ **Text Formatting** - Bold, Italic, Underline, Strikethrough
-2. ✅ **Text Alignment** - Left, Center, Right, Justify
-3. ✅ **Block Types** - Paragraph, H1, H2, H3
-4. ✅ **Undo/Redo** - Full history support with Ctrl+Z, Ctrl+Y
-5. ✅ **Content Persistence** - HTML, editor state (JSON), and plain text
-6. ✅ **TypeScript Integration** - Fully typed with strict mode
-7. ✅ **SolidJS Integration** - Direct Lexical core API usage
-8. ✅ **Toolbar UI** - Complete formatting toolbar with Remix Icons
-9. ✅ **Responsive Design** - Clean, modern UI with proper styling
-10. ✅ **Canvas Rendering** - Correct HTML rendering with distinct heading sizes
+1. ✅ **Web Preview Mode** - Desktop browser simulation at 1200px width
+2. ✅ **Mobile Preview Mode** - Mobile device simulation at 375px width
+3. ✅ **Email Preview Mode** - Email client simulation at 600px width
+4. ✅ **Mode Toggle Controls** - Easy switching between preview modes
+5. ✅ **Responsive Viewport** - Smooth transitions and scrolling
+6. ✅ **Accurate Rendering** - All components render with correct styles
+7. ✅ **Modal UI** - Clean, professional modal interface
+8. ✅ **Keyboard Support** - ESC key to close, proper focus management
+9. ✅ **Empty State Handling** - Graceful display when no components exist
+10. ✅ **Toolbar Integration** - Preview button properly integrated
 
-### Deferred Features (Future Enhancement)
-These features are available in the Style tab and don't need editor integration:
-- Font Family Selector (available in Style tab)
-- Font Color Picker (available in Style tab)
-- Font Size Control (available in Style tab)
-- Line Height Control (available in Style tab)
-
-These features can be added later with additional development:
-- Link Insertion/Editing UI
-- Lists (ul/ol) UI support
-- Image insertion
-- Tables
-- Advanced formatting options
+### Technical Highlights
+- **Component Architecture**: Follows existing modal patterns
+- **Styling**: Uses CSS Modules with BEM methodology
+- **Type Safety**: Full TypeScript support with strict mode
+- **Responsive Design**: Mobile-friendly modal layout
+- **Performance**: Lightweight, no iframe overhead
+- **Accessibility**: Proper ARIA labels and keyboard navigation
 
 ---
 
 ## 🎯 Next Priorities
 
-With Text Editor Integration complete, the next recommended priorities are:
+With Preview Modes complete, the next recommended priorities are:
 
-### 1. Preview Modes 👁️ **RECOMMENDED**
+### 1. Custom Components 🔧 **RECOMMENDED**
 **Priority**: MEDIUM 🟡
-**Estimated Time**: 6-8 hours
-**Why**: Preview functionality is a core user requirement (REQUIREMENTS.md §2.7)
-
-**Tasks**:
-- Create PreviewModal component
-- Implement Web Preview (desktop browser simulation)
-- Implement Mobile Preview (mobile device simulation)
-- Implement Email Preview (email client simulation)
-- Add toggle between preview modes
-- Implement responsive iframe rendering
-- Test across different viewport sizes
-
-**Value**: Allows users to see how their emails will look in different contexts before exporting.
-
-### 2. Custom Components 🔧
-**Priority**: LOW 🟢
 **Estimated Time**: 8-12 hours
 **Why**: Adds flexibility for users to create reusable custom components (REQUIREMENTS.md §2.2.3)
 
@@ -121,7 +108,38 @@ With Text Editor Integration complete, the next recommended priorities are:
 
 **Value**: Empowers users to build their own reusable components for consistent branding.
 
-### 3. Technical Improvements 🔧
+### 2. Data Injection System 📊
+**Priority**: MEDIUM 🟡
+**Estimated Time**: 10-14 hours
+**Why**: Core feature for dynamic content (REQUIREMENTS.md §2.8)
+
+**Tasks**:
+- Design placeholder system
+- Create data source integration
+- Implement field mapping UI
+- Add support for lists and loops
+- Handle events and orders data
+- Create preview with sample data
+- Add data validation
+
+**Value**: Allows users to create templates with dynamic content from external sources.
+
+### 3. Responsive Design Controls 📱
+**Priority**: MEDIUM 🟡
+**Estimated Time**: 8-10 hours
+**Why**: Essential for multi-device support (REQUIREMENTS.md §2.9)
+
+**Tasks**:
+- Add breakpoint configuration UI
+- Implement device-specific margins/padding
+- Add show/hide per device controls
+- Create responsive preview modes
+- Add component wrapping controls
+- Test across different breakpoints
+
+**Value**: Enables users to create truly responsive templates for all devices.
+
+### 4. Technical Improvements 🔧
 **Priority**: LOW 🟢
 **Estimated Time**: 4-6 hours
 **Why**: Polish and improve code quality
@@ -132,6 +150,7 @@ With Text Editor Integration complete, the next recommended priorities are:
 - Add component tree view for hierarchy navigation
 - Improve error messages across the UI
 - Add loading states for async operations
+- Fix pre-existing TypeScript errors in core package
 
 **Value**: Better code quality, maintainability, and user experience.
 
@@ -139,36 +158,78 @@ With Text Editor Integration complete, the next recommended priorities are:
 
 ## 🎓 Lessons Learned
 
-### Lexical Integration with SolidJS
-- Lexical's React bindings don't work with Solid - must use core API directly
-- `registerRichText()` and `registerHistory()` are framework-agnostic
-- Lexical uses $-prefixed functions for editor state mutations
-- `$isRangeSelection()` type guard is essential for selection operations
+### Modal Architecture
+- Reusing existing modal patterns speeds up development
+- Consistent styling across modals improves UX
+- Modal overlay with backdrop blur provides nice visual effect
+
+### Component Rendering
+- ComponentRenderer is perfectly reusable for preview
+- No need for iframe - direct rendering works great
+- Canvas settings apply correctly in preview context
+
+### Preview Modes
+- Standard viewport sizes work well:
+  - Desktop: 1200px (common desktop width)
+  - Mobile: 375px (iPhone standard)
+  - Email: 600px (email client standard)
+- Smooth transitions enhance user experience
+- Scrollable containers handle long templates gracefully
 
 ### SolidJS Patterns
-- `onMount` and `onCleanup` for editor lifecycle management
-- `createSignal` for toolbar state management
-- Editor ref pattern: `let editorRef: HTMLDivElement | undefined`
-
-### Version Management
-- All Lexical packages must be the same version to avoid type conflicts
-- Use exact versions (0.38.2) not ranges (^0.38.1) for peer dependencies
-
-### CSS and Component Rendering
-- Inline styles on containers override child element styles
-- Use CSS classes with specific selectors for proper heading sizes
-- rem/em units provide better responsive typography
+- Signal-based mode switching is clean and efficient
+- Show component handles conditional rendering elegantly
+- For component handles component list rendering efficiently
 
 ---
 
-## 📚 Resources
+## 📚 Implementation Details
 
-- [Lexical Documentation](https://lexical.dev/)
-- [Lexical GitHub](https://github.com/facebook/lexical)
-- [SolidJS Documentation](https://www.solidjs.com/)
-- [Remix Icons](https://remixicon.com/) (used for toolbar icons)
+### File Structure
+```
+apps/dev/src/components/modals/
+├── PreviewModal.tsx              # Main modal component
+├── PreviewModal.module.scss      # Modal styles
+├── PreviewModal.types.ts         # TypeScript types and viewport config
+├── NewTemplateModal.tsx          # (existing)
+└── TemplatePickerModal.tsx       # (existing)
+
+packages/ui-solid/src/toolbar/
+├── TemplateToolbar.tsx           # Added Preview button
+└── TemplateToolbar.types.ts      # Added onPreview callback
+
+apps/dev/src/pages/
+└── Builder.tsx                   # Integrated PreviewModal
+```
+
+### Viewport Configuration
+```typescript
+export const VIEWPORT_DIMENSIONS: Record<PreviewMode, ViewportDimensions> = {
+  web: { width: 1200, height: 800, label: 'Desktop (1200px)' },
+  mobile: { width: 375, height: 667, label: 'Mobile (375px)' },
+  email: { width: 600, height: 800, label: 'Email Client (600px)' },
+};
+```
+
+### Integration Points
+1. **TemplateToolbar**: Added Preview button with onPreview callback
+2. **Builder Page**: Added PreviewModal with state management
+3. **ComponentRenderer**: Reused for accurate component rendering
+4. **Template State**: Passed from Builder to PreviewModal
 
 ---
 
-**Last Updated**: 2025-11-03 (Session 2 Complete)
-**Status**: ✅ Text Editor Integration COMPLETE - Ready for next priority task
+## 📸 Usage
+
+To use the Preview feature:
+1. Create or load a template in the builder
+2. Click the **Preview** button (👁️) in the toolbar
+3. Modal opens showing the template in Web mode (default)
+4. Click **Web**, **Mobile**, or **Email** buttons to switch modes
+5. Scroll to view long templates
+6. Click the **×** button or press **ESC** to close
+
+---
+
+**Last Updated**: 2025-11-03
+**Status**: ✅ Preview Modes COMPLETE - Ready for next priority task

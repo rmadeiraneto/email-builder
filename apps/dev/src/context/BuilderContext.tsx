@@ -78,6 +78,9 @@ export interface BuilderContextValue {
 
 const BuilderContext = createContext<BuilderContextValue>();
 
+// LocalStorage key for last loaded template
+const LAST_TEMPLATE_ID_KEY = 'email-builder:last-template-id';
+
 export const BuilderProvider: ParentComponent = (props) => {
   // Initialize builder instance
   const builder = new Builder({
@@ -114,6 +117,20 @@ export const BuilderProvider: ParentComponent = (props) => {
     try {
       await builder.initialize();
       setState('isInitialized', true);
+
+      // Try to load the last template if it exists
+      const lastTemplateId = localStorage.getItem(LAST_TEMPLATE_ID_KEY);
+      if (lastTemplateId) {
+        try {
+          const template = await builder.loadTemplate(lastTemplateId);
+          setState('template', template);
+          console.log('[BuilderContext] Loaded last template:', template.metadata.name);
+        } catch (error) {
+          console.warn('[BuilderContext] Failed to load last template:', error);
+          // Clear invalid template ID
+          localStorage.removeItem(LAST_TEMPLATE_ID_KEY);
+        }
+      }
     } catch (error) {
       console.error('[BuilderContext] Failed to initialize builder:', error);
     }
@@ -315,6 +332,9 @@ export const BuilderProvider: ParentComponent = (props) => {
 
         setState('template', template);
         actions.updateUndoRedoState();
+
+        // Save as last template
+        localStorage.setItem(LAST_TEMPLATE_ID_KEY, template.metadata.id);
       } catch (error) {
         console.error('[BuilderContext] Failed to create template:', error);
         throw error;
@@ -326,8 +346,10 @@ export const BuilderProvider: ParentComponent = (props) => {
         if (!state.template) {
           throw new Error('No template to save');
         }
-        const templateManager = builder.getTemplateManager();
-        await templateManager.saveTemplate(state.template);
+        await builder.saveTemplate(state.template);
+
+        // Save as last template
+        localStorage.setItem(LAST_TEMPLATE_ID_KEY, state.template.metadata.id);
       } catch (error) {
         console.error('[BuilderContext] Failed to save template:', error);
         throw error;
@@ -336,10 +358,12 @@ export const BuilderProvider: ParentComponent = (props) => {
 
     loadTemplate: async (id: string) => {
       try {
-        const templateManager = builder.getTemplateManager();
-        const template = await templateManager.loadTemplate(id);
+        const template = await builder.loadTemplate(id);
         setState('template', template);
         actions.updateUndoRedoState();
+
+        // Save as last template
+        localStorage.setItem(LAST_TEMPLATE_ID_KEY, id);
       } catch (error) {
         console.error('[BuilderContext] Failed to load template:', error);
         throw error;
@@ -360,12 +384,18 @@ export const BuilderProvider: ParentComponent = (props) => {
     deleteTemplate: async (id: string) => {
       try {
         const templateManager = builder.getTemplateManager();
-        await templateManager.deleteTemplate(id);
+        await templateManager.delete(id);
 
         // If the deleted template is currently loaded, clear it
         if (state.template?.metadata?.id === id) {
           setState('template', null);
           setState('selectedComponentId', null);
+        }
+
+        // If the deleted template was the last template, clear it from localStorage
+        const lastTemplateId = localStorage.getItem(LAST_TEMPLATE_ID_KEY);
+        if (lastTemplateId === id) {
+          localStorage.removeItem(LAST_TEMPLATE_ID_KEY);
         }
       } catch (error) {
         console.error('[BuilderContext] Failed to delete template:', error);

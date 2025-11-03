@@ -33,6 +33,10 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
     props.onExport?.();
   };
 
+  const handlePreview = () => {
+    props.onPreview?.();
+  };
+
   return (
     <div class={styles.toolbar}>
       <div class={styles.toolbar__group}>
@@ -106,6 +110,17 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
         >
           <span class={styles.toolbar__icon}>⬇️</span>
           <span class={styles.toolbar__label}>Export</span>
+        </button>
+
+        <button
+          class={styles.toolbar__button}
+          onClick={handlePreview}
+          disabled={!props.hasTemplate}
+          title="Preview template"
+          aria-label="Preview template"
+        >
+          <span class={styles.toolbar__icon}>👁️</span>
+          <span class={styles.toolbar__label}>Preview</span>
         </button>
       </div>
 

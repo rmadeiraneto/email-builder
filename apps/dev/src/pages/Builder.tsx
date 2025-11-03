@@ -11,6 +11,7 @@ import { ComponentPalette, PropertyPanel } from '@email-builder/ui-solid/sidebar
 import { TemplateToolbar } from '@email-builder/ui-solid/toolbar';
 import { NewTemplateModal } from '../components/modals/NewTemplateModal';
 import { TemplatePickerModal } from '../components/modals/TemplatePickerModal';
+import { PreviewModal } from '../components/modals/PreviewModal';
 import type { ComponentDefinition } from '@email-builder/core';
 import styles from './Builder.module.scss';
 
@@ -18,6 +19,7 @@ const BuilderContent: Component = () => {
   const { state, actions, componentDefinitions } = useBuilder();
   const [isNewTemplateModalOpen, setIsNewTemplateModalOpen] = createSignal(false);
   const [isTemplatePickerModalOpen, setIsTemplatePickerModalOpen] = createSignal(false);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = createSignal(false);
 
   // Get the selected component from the template
   const selectedComponent = createMemo(() => {
@@ -199,6 +201,10 @@ const BuilderContent: Component = () => {
     }
   };
 
+  const handlePreview = () => {
+    setIsPreviewModalOpen(true);
+  };
+
   return (
     <>
       <div class={styles.builder}>
@@ -216,6 +222,7 @@ const BuilderContent: Component = () => {
               onUndo={actions.undo}
               onRedo={actions.redo}
               onExport={handleExport}
+              onPreview={handlePreview}
             />
           </Show>
         </header>
@@ -275,6 +282,12 @@ const BuilderContent: Component = () => {
         onLoadTemplate={handleTemplateLoad}
         onDeleteTemplate={handleTemplateDelete}
         onListTemplates={handleListTemplates}
+      />
+
+      <PreviewModal
+        isOpen={isPreviewModalOpen()}
+        template={state.template}
+        onClose={() => setIsPreviewModalOpen(false)}
       />
     </>
   );

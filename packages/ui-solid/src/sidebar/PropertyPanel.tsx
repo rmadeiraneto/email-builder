@@ -7,6 +7,7 @@ import type {
 import type { ComponentPreset } from '@email-builder/core';
 import { PresetPreview, PresetManager } from '../modals';
 import { RichTextEditor } from '../editors';
+import { CompatibilityIcon, CompatibilityModal } from '../compatibility';
 import styles from './PropertyPanel.module.scss';
 
 /**
@@ -760,6 +761,54 @@ function setNestedValue(obj: any, path: string, value: any): void {
 }
 
 /**
+ * Map property key to CSS property name for compatibility checking
+ */
+function getCssPropertyName(propertyKey: string): string | null {
+  // Extract the last part of the key after 'styles.'
+  const parts = propertyKey.split('.');
+  const lastPart = parts[parts.length - 1];
+
+  // Map common property names to CSS properties
+  const propertyMap: Record<string, string> = {
+    backgroundColor: 'background-color',
+    textColor: 'color',
+    borderRadius: 'border-radius',
+    padding: 'padding',
+    margin: 'margin',
+    fontFamily: 'font-family',
+    fontSize: 'font-size',
+    fontWeight: 'font-weight',
+    lineHeight: 'line-height',
+    color: 'color',
+    textAlign: 'text-align',
+    width: 'width',
+    height: 'height',
+    maxWidth: 'max-width',
+    border: 'border',
+    borderWidth: 'border-width',
+    borderStyle: 'border-style',
+    borderColor: 'border-color',
+    boxShadow: 'box-shadow',
+    textShadow: 'text-shadow',
+    opacity: 'opacity',
+    display: 'display',
+    position: 'position',
+    transform: 'transform',
+    animation: 'animation',
+    transition: 'transition',
+    socialIconColor: 'color', // Social icons use color
+    linkColor: 'color', // Links use color
+    hoverColor: 'color', // Hover states use color
+    canvasBackgroundColor: 'background-color',
+    canvasBorder: 'border',
+    defaultComponentBackgroundColor: 'background-color',
+    defaultComponentBorder: 'border',
+  };
+
+  return propertyMap[lastPart] || null;
+}
+
+/**
  * PropertyPanel component
  * Displays and manages properties of the selected component
  */
@@ -780,6 +829,10 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
   const [showPresetManagerModal, setShowPresetManagerModal] = createSignal(false);
   const [newPresetName, setNewPresetName] = createSignal('');
   const [newPresetDescription, setNewPresetDescription] = createSignal('');
+
+  // Compatibility modal state
+  const [compatibilityModalOpen, setCompatibilityModalOpen] = createSignal(false);
+  const [selectedProperty, setSelectedProperty] = createSignal<string>('');
 
   const properties = createMemo(() => {
     if (!props.selectedComponent) return [];
@@ -997,10 +1050,21 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
     switch (property.type) {
       case 'text':
       case 'url':
+        const textCssProp = getCssPropertyName(property.key);
         return (
           <div class={styles.propertyField}>
             <label for={inputId} class={styles.propertyLabel}>
               {property.label}
+              <Show when={textCssProp}>
+                <CompatibilityIcon
+                  propertyName={textCssProp!}
+                  size="small"
+                  onClick={() => {
+                    setSelectedProperty(textCssProp!);
+                    setCompatibilityModalOpen(true);
+                  }}
+                />
+              </Show>
             </label>
             <input
               id={inputId}
@@ -1060,10 +1124,21 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
         );
 
       case 'number':
+        const numberCssProp = getCssPropertyName(property.key);
         return (
           <div class={styles.propertyField}>
             <label for={inputId} class={styles.propertyLabel}>
               {property.label}
+              <Show when={numberCssProp}>
+                <CompatibilityIcon
+                  propertyName={numberCssProp!}
+                  size="small"
+                  onClick={() => {
+                    setSelectedProperty(numberCssProp!);
+                    setCompatibilityModalOpen(true);
+                  }}
+                />
+              </Show>
             </label>
             <input
               id={inputId}
@@ -1083,10 +1158,21 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
         );
 
       case 'color':
+        const colorCssProp = getCssPropertyName(property.key);
         return (
           <div class={styles.propertyField}>
             <label for={inputId} class={styles.propertyLabel}>
               {property.label}
+              <Show when={colorCssProp}>
+                <CompatibilityIcon
+                  propertyName={colorCssProp!}
+                  size="small"
+                  onClick={() => {
+                    setSelectedProperty(colorCssProp!);
+                    setCompatibilityModalOpen(true);
+                  }}
+                />
+              </Show>
             </label>
             <input
               id={inputId}
@@ -1108,10 +1194,21 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
         );
 
       case 'select':
+        const selectCssProp = getCssPropertyName(property.key);
         return (
           <div class={styles.propertyField}>
             <label for={inputId} class={styles.propertyLabel}>
               {property.label}
+              <Show when={selectCssProp}>
+                <CompatibilityIcon
+                  propertyName={selectCssProp!}
+                  size="small"
+                  onClick={() => {
+                    setSelectedProperty(selectCssProp!);
+                    setCompatibilityModalOpen(true);
+                  }}
+                />
+              </Show>
             </label>
             <select
               id={inputId}
@@ -1177,10 +1274,21 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
     switch (property.type) {
       case 'text':
       case 'url':
+        const generalTextCssProp = getCssPropertyName(property.key);
         return (
           <div class={styles.propertyField}>
             <label for={inputId} class={styles.propertyLabel}>
               {property.label}
+              <Show when={generalTextCssProp}>
+                <CompatibilityIcon
+                  propertyName={generalTextCssProp!}
+                  size="small"
+                  onClick={() => {
+                    setSelectedProperty(generalTextCssProp!);
+                    setCompatibilityModalOpen(true);
+                  }}
+                />
+              </Show>
             </label>
             <input
               id={inputId}
@@ -1197,10 +1305,21 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
         );
 
       case 'number':
+        const generalNumberCssProp = getCssPropertyName(property.key);
         return (
           <div class={styles.propertyField}>
             <label for={inputId} class={styles.propertyLabel}>
               {property.label}
+              <Show when={generalNumberCssProp}>
+                <CompatibilityIcon
+                  propertyName={generalNumberCssProp!}
+                  size="small"
+                  onClick={() => {
+                    setSelectedProperty(generalNumberCssProp!);
+                    setCompatibilityModalOpen(true);
+                  }}
+                />
+              </Show>
             </label>
             <input
               id={inputId}
@@ -1220,10 +1339,21 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
         );
 
       case 'color':
+        const generalColorCssProp = getCssPropertyName(property.key);
         return (
           <div class={styles.propertyField}>
             <label for={inputId} class={styles.propertyLabel}>
               {property.label}
+              <Show when={generalColorCssProp}>
+                <CompatibilityIcon
+                  propertyName={generalColorCssProp!}
+                  size="small"
+                  onClick={() => {
+                    setSelectedProperty(generalColorCssProp!);
+                    setCompatibilityModalOpen(true);
+                  }}
+                />
+              </Show>
             </label>
             <input
               id={inputId}
@@ -1245,10 +1375,21 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
         );
 
       case 'select':
+        const generalSelectCssProp = getCssPropertyName(property.key);
         return (
           <div class={styles.propertyField}>
             <label for={inputId} class={styles.propertyLabel}>
               {property.label}
+              <Show when={generalSelectCssProp}>
+                <CompatibilityIcon
+                  propertyName={generalSelectCssProp!}
+                  size="small"
+                  onClick={() => {
+                    setSelectedProperty(generalSelectCssProp!);
+                    setCompatibilityModalOpen(true);
+                  }}
+                />
+              </Show>
             </label>
             <select
               id={inputId}
@@ -1630,6 +1771,13 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
           onImportPresets={handleImportPresets}
         />
       </Show>
+
+      {/* Compatibility Modal */}
+      <CompatibilityModal
+        isOpen={compatibilityModalOpen()}
+        propertyName={selectedProperty()}
+        onClose={() => setCompatibilityModalOpen(false)}
+      />
     </div>
   );
 };

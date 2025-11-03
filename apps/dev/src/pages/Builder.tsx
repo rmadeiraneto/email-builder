@@ -4,11 +4,12 @@
  * Main page for the email/template builder application
  */
 
-import { type Component, Show, createSignal, createMemo, onMount, onCleanup } from 'solid-js';
+import { type Component, Show, For, createSignal, createMemo, onMount, onCleanup } from 'solid-js';
 import { BuilderProvider, useBuilder } from '../context/BuilderContext';
 import { TemplateCanvas } from '@email-builder/ui-solid/canvas';
 import { ComponentPalette, PropertyPanel } from '@email-builder/ui-solid/sidebar';
 import { TemplateToolbar } from '@email-builder/ui-solid/toolbar';
+import { TipBanner } from '@email-builder/ui-solid/tips';
 import { NewTemplateModal } from '../components/modals/NewTemplateModal';
 import { TemplatePickerModal } from '../components/modals/TemplatePickerModal';
 import { PreviewModal } from '../components/modals/PreviewModal';
@@ -274,6 +275,20 @@ const BuilderContent: Component = () => {
             />
           </Show>
         </header>
+
+        {/* Tips Display Area */}
+        <Show when={state.activeTips.length > 0}>
+          <div class={styles.tipsContainer}>
+            <For each={state.activeTips}>
+              {(tip) => (
+                <TipBanner
+                  tip={tip}
+                  onDismiss={() => actions.dismissTip(tip.id)}
+                />
+              )}
+            </For>
+          </div>
+        </Show>
 
         <div class={styles.container}>
           <aside class={styles.leftSidebar}>

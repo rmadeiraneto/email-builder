@@ -35,6 +35,8 @@ import {
   type EmailTestRequest,
   createEmailTestingService,
   EmailExportService,
+  tips,
+  type Tip,
 } from '@email-builder/core';
 
 export interface BuilderState {
@@ -45,6 +47,8 @@ export interface BuilderState {
   canRedo: boolean;
   isInitialized: boolean;
   emailTestingConfig: EmailTestingConfig | null;
+  activeTips: Tip[];
+  dismissedTips: string[];
 }
 
 export interface BuilderContextValue {
@@ -81,6 +85,8 @@ export interface BuilderContextValue {
     loadEmailTestingConfig: () => EmailTestingConfig | null;
     saveEmailTestingConfig: (config: EmailTestingConfig) => void;
     testTemplate: (testRequest: Omit<EmailTestRequest, 'htmlContent'>) => Promise<{ success: boolean; testId?: string; url?: string; error?: string }>;
+    showTip: (tipId: string) => void;
+    dismissTip: (tipId: string) => void;
   };
 }
 
@@ -89,6 +95,7 @@ const BuilderContext = createContext<BuilderContextValue>();
 // LocalStorage keys
 const LAST_TEMPLATE_ID_KEY = 'email-builder:last-template-id';
 const EMAIL_TESTING_CONFIG_KEY = 'email-builder:email-testing-config';
+const DISMISSED_TIPS_KEY = 'email-builder:dismissed-tips';
 
 export const BuilderProvider: ParentComponent = (props) => {
   // Initialize builder instance
@@ -124,6 +131,19 @@ export const BuilderProvider: ParentComponent = (props) => {
     return null;
   };
 
+  // Helper function to load dismissed tips from localStorage
+  const loadDismissedTipsFromStorage = (): string[] => {
+    try {
+      const stored = localStorage.getItem(DISMISSED_TIPS_KEY);
+      if (stored) {
+        return JSON.parse(stored) as string[];
+      }
+    } catch (error) {
+      console.warn('[BuilderContext] Failed to load dismissed tips:', error);
+    }
+    return [];
+  };
+
   // Create reactive state
   const [state, setState] = createStore<BuilderState>({
     template: null,
@@ -133,6 +153,8 @@ export const BuilderProvider: ParentComponent = (props) => {
     canRedo: false,
     isInitialized: false,
     emailTestingConfig: loadEmailTestingConfigFromStorage(),
+    activeTips: [],
+    dismissedTips: loadDismissedTipsFromStorage(),
   });
 
   // Initialize builder on mount
@@ -752,6 +774,33 @@ export const BuilderProvider: ParentComponent = (props) => {
           success: false,
           error: errorMessage,
         };
+      }
+    },
+
+    showTip: (tipId: string) => {
+      const tip = tips.find(t => t.id === tipId);
+      if (tip && !state.dismissedTips.includes(tipId)) {
+        // Check if tip is already active
+        const isAlreadyActive = state.activeTips.some(t => t.id === tipId);
+        if (!isAlreadyActive) {
+          setState('activeTips', [...state.activeTips, tip]);
+        }
+      }
+    },
+
+    dismissTip: (tipId: string) => {
+      // Remove from active tips
+      setState('activeTips', state.activeTips.filter(t => t.id !== tipId));
+
+      // Add to dismissed tips
+      const newDismissedTips = [...state.dismissedTips, tipId];
+      setState('dismissedTips', newDismissedTips);
+
+      // Persist to localStorage
+      try {
+        localStorage.setItem(DISMISSED_TIPS_KEY, JSON.stringify(newDismissedTips));
+      } catch (error) {
+        console.error('[BuilderContext] Failed to save dismissed tips:', error);
       }
     },
   };

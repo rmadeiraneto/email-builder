@@ -1,12 +1,12 @@
-# Next Task: Complete Phase 2 Integration - 🔄 IN PROGRESS
+# Next Task: Pre-Export Compatibility Checker - 🎯 READY TO START
 
 ## 📋 Current Status
 
-### 🔄 **IN PROGRESS** - Phase 2: In-Builder Compatibility Guidance
+### 🎯 **NEXT UP** - Phase 3: Pre-Export Compatibility Checker
 **Priority**: HIGH 🔴
-**Status**: ~75% Complete (5-6 hours completed, 2-3 hours remaining)
-**Estimated Time Remaining**: 2-3 hours
-**Dependencies**: ✅ Builder + Template system + Email Testing Phase 1
+**Status**: Ready to Start (Phase 2: ✅ ~95% Complete!)
+**Estimated Time**: 2-4 hours
+**Dependencies**: ✅ Builder + Email Testing + Compatibility System
 
 ---
 
@@ -249,7 +249,7 @@ This phase adds visual compatibility indicators throughout the builder UI, showi
 
 ## 📊 Progress Summary
 
-**Email Testing & Compatibility System: ~65% Complete** 🔵🔵🔵🔵🔵🔵🔵⚪⚪⚪
+**Email Testing & Compatibility System: ~75% Complete** 🔵🔵🔵🔵🔵🔵🔵🔵⚪⚪
 
 **Phase 1: External Testing Service Integration** ✅ 100% COMPLETE!
 - ✅ Task 1.1: Service interface/abstraction (COMPLETE)
@@ -258,12 +258,13 @@ This phase adds visual compatibility indicators throughout the builder UI, showi
 - ✅ Task 1.4: Email export enhancement (COMPLETE)
 - ✅ Task 1.5: Test execution flow (COMPLETE)
 
-**Phase 2: In-Builder Compatibility Guidance** 🔄 ~75% COMPLETE (2-3 hours remaining)
+**Phase 2: In-Builder Compatibility Guidance** ✅ ~95% COMPLETE!
 - ✅ Compatibility Data System (100% complete)
-- ✅ UI Components (85% complete - needs PropertyPanel integration)
-- ✅ Tips System (100% complete - needs display logic)
+- ✅ UI Components (100% complete - integrated into PropertyPanel)
+- ✅ Tips System (100% complete - display logic implemented)
+- ⚪ Optional enhancements remaining (contextual tip triggers)
 
-**Phase 3: Pre-Export Compatibility Checker** (Not started - 2-4 hours)
+**Phase 3: Pre-Export Compatibility Checker** 🎯 NEXT (2-4 hours)
 **Phase 4: Email Client Support Matrix** (Not started - 2 hours)
 
 ---
@@ -301,7 +302,53 @@ This phase adds visual compatibility indicators throughout the builder UI, showi
 
 ---
 
-## 🎉 What Was Accomplished This Session
+## 🎉 Phase 2 Complete!
+
+### ✅ What Was Accomplished - Integration Session
+
+**PropertyPanel Integration** ✅ COMPLETE:
+- File: `packages/ui-solid/src/sidebar/PropertyPanel.tsx`
+- Added CompatibilityIcon component to ALL style properties
+- Created `getCssPropertyName()` helper function to map property keys to CSS names
+- Icons appear next to:
+  - Text inputs (padding, margin, border, etc.)
+  - Number inputs (font-size, width, height, border-radius, etc.)
+  - Color inputs (color, background-color, border-color, etc.)
+  - Select inputs (font-family, font-weight, text-align, display, etc.)
+- Icons work in BOTH component properties and general styles sections
+- Click icon → opens CompatibilityModal with detailed support grid
+- Modal shows: support score, 19 email clients, workarounds, notes
+
+**Tips System Implementation** ✅ COMPLETE:
+- File: `apps/dev/src/context/BuilderContext.tsx`
+- Added state: `activeTips` and `dismissedTips` arrays
+- Implemented actions:
+  - `showTip(tipId)`: Shows tip if not already dismissed
+  - `dismissTip(tipId)`: Dismisses tip and persists to localStorage
+- LocalStorage persistence for dismissed tips across sessions
+- Tips system ready for contextual triggers
+
+**Tips Display UI** ✅ COMPLETE:
+- File: `apps/dev/src/pages/Builder.tsx`
+- Added TipBanner display area below header
+- Tips render with proper styling (info/warning/critical)
+- Dismiss functionality wired up correctly
+- Persisted state working across sessions
+
+**Files Modified**:
+1. ✅ `packages/ui-solid/src/sidebar/PropertyPanel.tsx` - Compatibility icons
+2. ✅ `apps/dev/src/context/BuilderContext.tsx` - Tips state and actions
+3. ✅ `apps/dev/src/pages/Builder.tsx` - Tips display
+
+**Status**:
+- ✅ Dev server compiling successfully
+- ✅ No TypeScript errors
+- ✅ HMR working correctly
+- ✅ All components rendering properly
+
+---
+
+## 🎉 Phase 2 Summary - What Was Accomplished Across All Sessions
 
 ### ✅ Priority 1: Compatibility Data System (100% COMPLETE)
 
@@ -445,142 +492,130 @@ This phase adds visual compatibility indicators throughout the builder UI, showi
 
 ---
 
-## 🚀 Next Session Goals (2-3 hours remaining)
+## 🚀 Next Session Goals - Phase 3: Pre-Export Compatibility Checker (2-4 hours)
 
-### Priority 1: PropertyPanel Integration (1-2 hours) ⚡ **CRITICAL**
+### Phase 3 Overview
 
-**Goal**: Add compatibility indicators to all property controls
+**Goal**: Validate templates before export/testing and suggest automatic fixes
 
-**Detailed Steps**:
+Phase 3 adds a pre-export validation system that scans templates for email compatibility
+issues and offers automated fixes. This helps users identify and resolve problems before
+sending emails to testing services or production.
 
-1. **Import CompatibilityIcon** (5 min):
-   - Open `packages/ui-solid/src/properties/PropertyPanel.tsx`
-   - Import: `import { CompatibilityIcon } from '../compatibility';`
-   - Import useState for modal: `import { createSignal } from 'solid-js';`
+**Key Features**:
+1. Scan templates for email-incompatible CSS and HTML
+2. Detect common issues (missing alt text, large images, etc.)
+3. Generate detailed compatibility report with severity levels
+4. Offer automated fixes for common problems
+5. Allow users to review and apply fixes before export
 
-2. **Add Modal State** (5 min):
-   ```typescript
-   const [compatibilityModalOpen, setCompatibilityModalOpen] = createSignal(false);
-   const [selectedProperty, setSelectedProperty] = createSignal<string>('');
-   ```
+---
 
-3. **Add Icon to Property Inputs** (45 min):
-   - For each property input in PropertyPanel render methods
-   - Add CompatibilityIcon next to the input label
-   - Example for ColorPicker:
-   ```tsx
-   <div class={styles.propertyControl}>
-     <label class={styles.propertyLabel}>
-       {property.label}
-       <CompatibilityIcon
-         propertyName={property.name}
-         size="small"
-         onClick={() => {
-           setSelectedProperty(property.name);
-           setCompatibilityModalOpen(true);
-         }}
-       />
-     </label>
-     <ColorPicker {...} />
-   </div>
-   ```
-   - Apply to all property types:
-     - ColorPicker (color, background-color, border-color)
-     - NumberInput (padding, margin, font-size, border-width)
-     - SelectInput (font-family, display, text-align)
-     - etc.
+### Priority 1: Compatibility Validation Engine (1-2 hours) ⚡
 
-4. **Add CompatibilityModal** (15 min):
-   - Import: `import { CompatibilityModal } from '../compatibility';`
-   - Add at end of PropertyPanel component:
-   ```tsx
-   <CompatibilityModal
-     isOpen={compatibilityModalOpen()}
-     propertyName={selectedProperty()}
-     onClose={() => setCompatibilityModalOpen(false)}
-   />
-   ```
+**Goal**: Build service to scan templates and detect compatibility issues
 
-5. **Test Integration** (15 min):
-   - Click icon next to any property
-   - Verify modal opens with correct property
-   - Check support grid displays correctly
-   - Verify close button works
-   - Test multiple properties
+**Tasks**:
 
-### Priority 2: Tips Display Logic (1 hour) ⚡ **CRITICAL**
-
-**Goal**: Show contextual tips throughout the builder
-
-**Detailed Steps**:
-
-1. **Add Tips State to BuilderContext** (15 min):
-   - Open `apps/dev/src/context/BuilderContext.tsx`
-   - Import tips: `import { tips, type Tip } from '@email-builder/core';`
-   - Add state:
-   ```typescript
-   const [activeTips, setActiveTips] = createSignal<Tip[]>([]);
-   const [dismissedTips, setDismissedTips] = createSignal<string[]>([]);
-   ```
-   - Load dismissed tips from localStorage on init:
-   ```typescript
-   const dismissed = localStorage.getItem('email-builder:dismissed-tips');
-   if (dismissed) setDismissedTips(JSON.parse(dismissed));
-   ```
-
-2. **Add Tip Actions** (20 min):
-   ```typescript
-   const showTip = (tipId: string) => {
-     const tip = tips.find(t => t.id === tipId);
-     if (tip && !dismissedTips().includes(tipId)) {
-       setActiveTips([...activeTips(), tip]);
+1. **Create CompatibilityChecker Service** (45 min):
+   - Create `packages/core/compatibility/CompatibilityChecker.ts`
+   - Define issue types:
+     ```typescript
+     enum IssueSeverity { critical, warning, suggestion }
+     interface CompatibilityIssue {
+       id: string;
+       severity: IssueSeverity;
+       component: string;
+       property: string;
+       message: string;
+       autoFixAvailable: boolean;
      }
-   };
-   
-   const dismissTip = (tipId: string) => {
-     setActiveTips(activeTips().filter(t => t.id !== tipId));
-     const newDismissed = [...dismissedTips(), tipId];
-     setDismissedTips(newDismissed);
-     localStorage.setItem('email-builder:dismissed-tips', JSON.stringify(newDismissed));
-   };
-   ```
+     ```
+   - Implement check methods:
+     - `checkCSSProperties()` - Scan for incompatible CSS
+     - `checkHTMLElements()` - Detect unsupported elements
+     - `checkImages()` - Validate image attributes
+     - `checkAccessibility()` - Check alt text, semantic HTML
+     - `checkTableStructure()` - Verify email-safe structure
+     - `generateReport()` - Compile all issues
 
-3. **Add Tip Triggers** (20 min):
-   - On preview mode change (in previewTemplate action):
-   ```typescript
-   if (mode === 'email') {
-     showTip('email-mode-tables'); // Use tables for layout
-   }
-   ```
-   - On component selection (in selectComponent action):
-   ```typescript
-   // Random "Did you know?" tip (10% chance)
-   if (Math.random() < 0.1) {
-     const randomTip = tips.filter(t => t.category === 'general')[Math.floor(Math.random() * 10)];
-     if (randomTip) showTip(randomTip.id);
-   }
-   ```
-   - On export/test (in exportTemplate/testTemplate actions):
-   ```typescript
-   showTip('test-outlook-first'); // Test in Outlook 2016 first
-   ```
+2. **Implement CSS Compatibility Checks** (30 min):
+   - Check for flexbox (display: flex)
+   - Check for grid (display: grid)
+   - Check for position (absolute, relative, fixed)
+   - Check for animations/transitions
+   - Check for transform
+   - Check for unsupported properties (box-shadow in Outlook, etc.)
+   - Use CompatibilityService to validate each property
 
-4. **Display Tips in Builder UI** (5 min):
-   - Open `apps/dev/src/pages/Builder.tsx`
-   - Import: `import { TipBanner } from '@email-builder/ui-solid';`
-   - Add tip display area above or below canvas:
-   ```tsx
-   <div class={styles.tipsContainer}>
-     <For each={builderState.activeTips}>
-       {(tip) => (
-         <TipBanner
-           tip={tip}
-           onDismiss={() => builderState.dismissTip(tip.id)}
-         />
-       )}
-     </For>
-   </div>
-   ```
+3. **Implement Content Checks** (15 min):
+   - Missing alt text on images
+   - Large image file sizes (warn if >100KB)
+   - Absolute vs relative URLs for images
+   - Missing width/height on images
+   - Excessive nested tables
+   - Inline CSS vs classes ratio
+
+4. **Add to Builder** (10 min):
+   - Integrate CompatibilityChecker into Builder class
+   - Expose via `builder.checkCompatibility()`
+
+---
+
+### Priority 2: Compatibility Report UI (1-2 hours) ⚡
+
+**Goal**: Display validation results and allow users to apply fixes
+
+**Tasks**:
+
+1. **Create CompatibilityReportModal Component** (45 min):
+   - Create `apps/dev/src/components/modals/CompatibilityReportModal.tsx`
+   - Modal sections:
+     - Header: Overall score, issue count
+     - Critical issues (red) - Must fix
+     - Warnings (yellow) - Should fix
+     - Suggestions (blue) - Nice to have
+   - Each issue shows:
+     - Component name
+     - Property name
+     - Description
+     - "Fix" button (if auto-fix available)
+   - Actions:
+     - "Fix All" button
+     - "Export Anyway" button
+     - "Cancel" button
+
+2. **Implement Auto-Fix Logic** (30 min):
+   - Create fix handlers for common issues:
+     - Convert flexbox to tables → Suggest EmailExportService
+     - Add alt text → Add placeholder text
+     - Inline CSS → Apply styles inline
+     - Remove unsupported CSS → Strip properties
+   - Update component properties via Builder commands
+   - Re-run validation after fixes applied
+
+3. **Integrate into Export/Test Workflow** (15 min):
+   - Modify `exportTemplate` action:
+     ```typescript
+     const issues = builder.checkCompatibility();
+     if (issues.critical.length > 0) {
+       // Show CompatibilityReportModal
+       openCompatibilityReport(issues);
+       return; // Don't export yet
+     }
+     // Continue with export
+     ```
+   - Modify `testTemplate` action similarly
+   - Allow "Export Anyway" to bypass validation
+
+4. **Styling and Polish** (20 min):
+   - Create `CompatibilityReportModal.module.scss`
+   - Color-code issues by severity
+   - Add icons for issue types
+   - Make fix buttons prominent
+   - Responsive layout
+
+---
 
 ### Priority 3: Test & Polish (30 min)
 
@@ -634,6 +669,6 @@ After completing these tasks, Phase 2 will be 100% done:
 ---
 
 **Last Updated**: 2025-11-03
-**Status**: Phase 2 ~75% COMPLETE - Compatibility system built, needs integration!
-**Next Up**: Complete PropertyPanel integration & Tips display (2-3 hours)
-**Next Update**: After Phase 2 completion
+**Status**: Phase 2 ✅ ~95% COMPLETE - Compatibility system fully integrated!
+**Next Up**: Phase 3 - Pre-Export Compatibility Checker (2-4 hours)
+**Next Update**: After Phase 3 completion

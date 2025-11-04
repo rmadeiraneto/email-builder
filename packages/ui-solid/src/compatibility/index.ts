@@ -11,3 +11,9 @@ export type { CompatibilityIconProps } from './CompatibilityIcon';
 
 export { CompatibilityModal } from './CompatibilityModal';
 export type { CompatibilityModalProps } from './CompatibilityModal';
+
+export { EmailClientSupportMatrix } from './EmailClientSupportMatrix';
+export type {
+  EmailClientSupportMatrixProps,
+  EmailClientInfo,
+} from './EmailClientSupportMatrix';

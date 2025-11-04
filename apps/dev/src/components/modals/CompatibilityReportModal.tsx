@@ -17,6 +17,7 @@ export interface CompatibilityReportModalProps {
   onFixIssue?: (issueId: string) => Promise<void>;
   onFixAll?: () => Promise<void>;
   onExportAnyway?: () => void;
+  onViewSupportMatrix?: () => void;
 }
 
 export const CompatibilityReportModal: Component<CompatibilityReportModalProps> = (props) => {
@@ -202,6 +203,18 @@ export const CompatibilityReportModal: Component<CompatibilityReportModalProps> 
             </Show>
           </div>
         </div>
+
+        {/* Support Matrix Link */}
+        <Show when={props.onViewSupportMatrix}>
+          <div class={styles.helpSection}>
+            <button class={styles.supportMatrixLink} onClick={props.onViewSupportMatrix}>
+              📊 View Full Email Client Support Matrix
+            </button>
+            <p class={styles.helpText}>
+              Learn which email clients support specific CSS properties
+            </p>
+          </div>
+        </Show>
 
         {/* Issues List */}
         <div class={styles.content}>

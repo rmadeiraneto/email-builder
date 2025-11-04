@@ -8,7 +8,9 @@
     "noPropertyAccessFromIndexSignature": false,
     "paths": {
       "@/*": ["./src/*"],
-      "@tokens": ["../tokens/build/ts"]
+      "@tokens": ["../tokens/build/ts"],
+      "@email-builder/core/compatibility": ["../core/compatibility/index.ts"],
+      "@email-builder/core/tips": ["../core/tips/index.ts"]
     }
   },
   "include": ["src"],

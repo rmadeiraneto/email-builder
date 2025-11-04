@@ -22,3 +22,6 @@ export type { TestConfigModalProps } from './TestConfigModal';
 
 export { CompatibilityReportModal } from './CompatibilityReportModal';
 export type { CompatibilityReportModalProps } from './CompatibilityReportModal';
+
+export { SupportMatrixModal } from './SupportMatrixModal';
+export type { SupportMatrixModalProps } from './SupportMatrixModal';

@@ -1775,7 +1775,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
       {/* Compatibility Modal */}
       <CompatibilityModal
         isOpen={compatibilityModalOpen()}
-        propertyName={selectedProperty()}
+        property={selectedProperty() || ''}
         onClose={() => setCompatibilityModalOpen(false)}
       />
     </div>

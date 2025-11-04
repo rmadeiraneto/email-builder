@@ -40,6 +40,11 @@ export interface CompatibilityModalProps {
    * Close handler
    */
   onClose: () => void;
+
+  /**
+   * Optional callback to view full support matrix
+   */
+  onViewSupportMatrix?: () => void;
 }
 
 /**
@@ -250,6 +255,14 @@ export const CompatibilityModal: Component<CompatibilityModalProps> = (props) =>
 
                   {/* Learn More */}
                   <div class={styles.section}>
+                    <Show when={props.onViewSupportMatrix}>
+                      <button
+                        class={styles.supportMatrixButton}
+                        onClick={props.onViewSupportMatrix}
+                      >
+                        📊 View Full Email Client Support Matrix
+                      </button>
+                    </Show>
                     <a
                       href={`https://www.caniemail.com/search/?s=${encodeURIComponent(props.property)}`}
                       target="_blank"

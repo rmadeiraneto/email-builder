@@ -13,6 +13,7 @@ import { SpacingTokens } from '../components/styleguide/SpacingTokens';
 import { BorderTokens } from '../components/styleguide/BorderTokens';
 import { ShadowTokens } from '../components/styleguide/ShadowTokens';
 import { ComponentShowcase } from '../components/styleguide/ComponentShowcase';
+import { ComponentTokens } from '../components/styleguide/ComponentTokens';
 import { TokenEditor } from '../components/styleguide-builder/TokenEditor';
 import { tokenStorage, type CustomTokens } from '../utils/tokenStorage';
 import { applyCustomTokens, removeCustomTokens, TokenExporter } from '../utils/tokenApplier';
@@ -30,6 +31,15 @@ import defaultSpacingData from '@email-builder/tokens/spacing/scale';
 import defaultBorderRadius from '@email-builder/tokens/border/radius';
 import defaultBorderWidth from '@email-builder/tokens/border/width';
 import defaultElevation from '@email-builder/tokens/shadow/elevation';
+import defaultButtonTokens from '@email-builder/tokens/components/button';
+import defaultModalTokens from '@email-builder/tokens/components/modal';
+import defaultInputTokens from '@email-builder/tokens/components/input';
+import defaultDropdownTokens from '@email-builder/tokens/components/dropdown';
+import defaultCardTokens from '@email-builder/tokens/components/card';
+import defaultTooltipTokens from '@email-builder/tokens/components/tooltip';
+import defaultBadgeTokens from '@email-builder/tokens/components/badge';
+import defaultDividerTokens from '@email-builder/tokens/components/divider';
+import defaultPanelTokens from '@email-builder/tokens/components/panel';
 
 type Section = 'colors' | 'typography' | 'spacing' | 'border' | 'shadow' | 'animation' | 'breakpoints' | 'components';
 
@@ -215,6 +225,21 @@ const StyleguideBuilder: Component = () => {
     return mergeTokens(defaultElevation, customTokens());
   };
 
+  const getMergedComponentTokens = () => {
+    const custom = customTokens();
+    return {
+      buttonTokens: mergeTokens(defaultButtonTokens, custom),
+      modalTokens: mergeTokens(defaultModalTokens, custom),
+      inputTokens: mergeTokens(defaultInputTokens, custom),
+      dropdownTokens: mergeTokens(defaultDropdownTokens, custom),
+      cardTokens: mergeTokens(defaultCardTokens, custom),
+      tooltipTokens: mergeTokens(defaultTooltipTokens, custom),
+      badgeTokens: mergeTokens(defaultBadgeTokens, custom),
+      dividerTokens: mergeTokens(defaultDividerTokens, custom),
+      panelTokens: mergeTokens(defaultPanelTokens, custom),
+    };
+  };
+
   return (
     <div class={styles.styleguideBuilder}>
       {/* Header */}
@@ -313,9 +338,15 @@ const StyleguideBuilder: Component = () => {
               />
             </Show>
             <Show when={activeSection() === 'components'}>
-              <ComponentShowcase
-                onTokenClick={(tokenPath) => handleNavigateToToken('colors', tokenPath)}
-              />
+              <div style={{ display: 'flex', 'flex-direction': 'column', gap: '2rem' }}>
+                <ComponentShowcase
+                  onTokenClick={(tokenPath) => handleNavigateToToken('components', tokenPath)}
+                />
+                <ComponentTokens
+                  {...getMergedComponentTokens()}
+                  onTokenClick={(tokenPath) => handleNavigateToToken('components', tokenPath)}
+                />
+              </div>
             </Show>
             <Show when={activeSection() === 'animation' || activeSection() === 'breakpoints'}>
               <div class={styles.comingSoon}>

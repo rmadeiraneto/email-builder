@@ -20,7 +20,15 @@
     "./typography/sizes": "./src/typography/sizes.json",
     "./typography/weights": "./src/typography/weights.json",
     "./typography/line-heights": "./src/typography/line-heights.json",
-    "./spacing/scale": "./src/spacing/scale.json"
+    "./typography/letter-spacing": "./src/typography/letter-spacing.json",
+    "./spacing/scale": "./src/spacing/scale.json",
+    "./sizing/scale": "./src/sizing/scale.json",
+    "./border/radius": "./src/border/radius.json",
+    "./border/width": "./src/border/width.json",
+    "./shadow/elevation": "./src/shadow/elevation.json",
+    "./animation/duration": "./src/animation/duration.json",
+    "./animation/easing": "./src/animation/easing.json",
+    "./breakpoints/devices": "./src/breakpoints/devices.json"
   },
   "files": ["build", "src"],
   "scripts": {

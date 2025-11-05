@@ -1,0 +1,182 @@
+.tokenEditor {
+  height: 100%;
+  overflow-y: auto;
+  padding: tokens.$spacing-4;
+}
+
+.categoryTitle {
+  font-size: tokens.$typography-font-size-xl;
+  font-weight: tokens.$typography-font-weight-semibold;
+  color: var(--color-ui-text-primary);
+  margin: 0 0 tokens.$spacing-4 0;
+  padding-bottom: tokens.$spacing-3;
+  border-bottom: 1px solid var(--color-ui-border-default);
+}
+
+.tokenList {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$spacing-2;
+}
+
+.tokenGroup {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$spacing-1;
+}
+
+.groupHeader {
+  display: flex;
+  align-items: center;
+  gap: tokens.$spacing-2;
+  padding: tokens.$spacing-2 tokens.$spacing-3;
+  background: var(--color-ui-surface-secondary);
+  border: 1px solid var(--color-ui-border-subtle);
+  border-radius: tokens.$border-radius-md;
+  cursor: pointer;
+  transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: var(--color-ui-text-primary);
+  text-align: left;
+  width: 100%;
+
+  &:hover {
+    background: var(--color-ui-surface-tertiary);
+    border-color: var(--color-ui-border-default);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.expandIcon {
+  font-size: 10px;
+  color: var(--color-ui-text-tertiary);
+  transition: transform tokens.$animation-duration-fast tokens.$animation-easing-ease;
+}
+
+.groupName {
+  flex: 1;
+  text-transform: capitalize;
+}
+
+.groupContent {
+  padding-left: tokens.$spacing-4;
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$spacing-2;
+}
+
+.tokenValue {
+  padding: tokens.$spacing-3;
+  background: var(--color-ui-surface-default);
+  border: 1px solid var(--color-ui-border-subtle);
+  border-radius: tokens.$border-radius-md;
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$spacing-2;
+  transition: border-color tokens.$animation-duration-fast tokens.$animation-easing-ease;
+
+  &:hover {
+    border-color: var(--color-ui-border-default);
+  }
+}
+
+.tokenInfo {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$spacing-1;
+}
+
+.tokenLabel {
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: var(--color-ui-text-primary);
+  text-transform: capitalize;
+}
+
+.tokenDescription {
+  font-size: tokens.$typography-font-size-xs;
+  color: var(--color-ui-text-secondary);
+  font-style: italic;
+}
+
+.tokenInput {
+  display: flex;
+  align-items: center;
+}
+
+.textInput {
+  flex: 1;
+  padding: tokens.$spacing-2 tokens.$spacing-3;
+  border: 1px solid var(--color-ui-border-default);
+  border-radius: tokens.$border-radius-sm;
+  font-size: tokens.$typography-font-size-sm;
+  color: var(--color-ui-text-primary);
+  background: var(--color-ui-surface-default);
+  transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-brand-primary-500);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  &::placeholder {
+    color: var(--color-ui-text-tertiary);
+  }
+}
+
+.colorInput {
+  display: flex;
+  gap: tokens.$spacing-2;
+  align-items: center;
+  flex: 1;
+}
+
+.colorPicker {
+  width: 48px;
+  height: 36px;
+  border: 1px solid var(--color-ui-border-default);
+  border-radius: tokens.$border-radius-sm;
+  cursor: pointer;
+  transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
+
+  &:hover {
+    border-color: var(--color-brand-primary-500);
+  }
+
+  &::-webkit-color-swatch-wrapper {
+    padding: 2px;
+  }
+
+  &::-webkit-color-swatch {
+    border-radius: tokens.$border-radius-sm;
+    border: none;
+  }
+
+  &::-moz-color-swatch {
+    border-radius: tokens.$border-radius-sm;
+    border: none;
+  }
+}
+
+.colorText {
+  flex: 1;
+  padding: tokens.$spacing-2 tokens.$spacing-3;
+  border: 1px solid var(--color-ui-border-default);
+  border-radius: tokens.$border-radius-sm;
+  font-size: tokens.$typography-font-size-sm;
+  font-family: tokens.$typography-font-family-mono;
+  color: var(--color-ui-text-primary);
+  background: var(--color-ui-surface-default);
+  transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-brand-primary-500);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+}

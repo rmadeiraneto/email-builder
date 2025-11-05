@@ -1,11 +1,12 @@
 /**
- * GridSelector component styles
+ * GridSelector Component Styles
+ * Design tokens are automatically imported via Vite configuration
  *
- * Supports responsive grid layout with configurable columns and breakpoints
- * Uses CSS custom properties for dynamic configuration
+ * A responsive grid selector with configurable columns and breakpoints.
+ * Uses CSS custom properties for dynamic configuration.
  */
 
-// CSS Custom Properties (defaults)
+// CSS Custom Properties (defaults using design tokens)
 :root {
 	// Column counts for different breakpoints
 	--grid-columns: 4;
@@ -14,23 +15,23 @@
 	--grid-columns-sm: 1;
 
 	// Breakpoints
-	--grid-breakpoint-lg: 992px;
-	--grid-breakpoint-md: 768px;
-	--grid-breakpoint-sm: 480px;
+	--grid-breakpoint-lg: tokens.$breakpoint-lg;
+	--grid-breakpoint-md: tokens.$breakpoint-md;
+	--grid-breakpoint-sm: tokens.$breakpoint-sm;
 
 	// Item styling
 	--grid-selector-card-min-height: auto;
-	--grid-selector-gap: 1rem;
-	--grid-selector-item-padding: 1rem;
-	--grid-selector-item-border-radius: 0.5rem;
-	--grid-selector-item-border-width: 2px;
-	--grid-selector-item-border-color: #e5e7eb;
-	--grid-selector-item-bg: #ffffff;
-	--grid-selector-item-bg-hover: #f9fafb;
-	--grid-selector-item-bg-selected: #eff6ff;
-	--grid-selector-item-border-selected: #3b82f6;
-	--grid-selector-item-text-color: #374151;
-	--grid-selector-item-text-selected: #1e40af;
+	--grid-selector-gap: tokens.$spacing-4;
+	--grid-selector-item-padding: tokens.$spacing-4;
+	--grid-selector-item-border-radius: tokens.$border-radius-lg;
+	--grid-selector-item-border-width: tokens.$border-width-2;
+	--grid-selector-item-border-color: tokens.$color-ui-border-base;
+	--grid-selector-item-bg: tokens.$color-ui-background-primary;
+	--grid-selector-item-bg-hover: tokens.$color-ui-background-secondary;
+	--grid-selector-item-bg-selected: tokens.$color-brand-primary-50;
+	--grid-selector-item-border-selected: tokens.$color-brand-primary-500;
+	--grid-selector-item-text-color: tokens.$color-ui-text-primary;
+	--grid-selector-item-text-selected: tokens.$color-brand-primary-800;
 }
 
 .grid-selector {
@@ -77,7 +78,7 @@
 		text-align: center;
 
 		// Animation
-		transition: all 0.2s ease;
+		transition: all tokens.$animation-duration-normal tokens.$animation-easing-ease;
 
 		// Cursor (only when user-enabled)
 		&--user-enabled {
@@ -103,7 +104,7 @@
 			background-color: var(--grid-selector-item-bg-selected);
 			border-color: var(--grid-selector-item-border-selected);
 			color: var(--grid-selector-item-text-selected);
-			font-weight: 500;
+			font-weight: tokens.$typography-font-weight-medium;
 		}
 
 		// Disabled state (when user interaction is disabled)

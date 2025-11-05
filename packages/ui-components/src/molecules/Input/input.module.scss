@@ -1,40 +1,43 @@
 /**
  * Input Component Styles
- * Basic input field with customizable height
+ * Design tokens are automatically imported via Vite configuration
+ *
+ * A basic input field with customizable height and focus states.
  */
 
 .input {
   // Base input styles
   display: block;
   width: 100%;
-  height: var(--input-height, 36px);
-  padding: 8px 12px;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #333;
-  background-color: #fff;
+  height: var(--input-height, tokens.$sizing-9);
+  padding: tokens.$spacing-2 tokens.$spacing-3;
+  font-size: tokens.$typography-font-size-sm;
+  line-height: tokens.$typography-line-height-normal;
+  color: tokens.$color-ui-text-primary;
+  background-color: tokens.$color-ui-background-primary;
   background-clip: padding-box;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  border: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  border-radius: tokens.$border-radius-base;
+  transition: border-color tokens.$animation-duration-normal tokens.$animation-easing-ease-in-out,
+              box-shadow tokens.$animation-duration-normal tokens.$animation-easing-ease-in-out;
 
   // Focus state
   &:focus {
     outline: 0;
-    border-color: #66afe9;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    border-color: tokens.$color-ui-border-focus;
+    box-shadow: 0 0 0 tokens.$spacing-0-5 rgba(59, 130, 246, 0.25);
   }
 
   // Disabled state
   &:disabled {
-    background-color: #e9ecef;
+    background-color: tokens.$color-ui-background-tertiary;
     opacity: 0.6;
     cursor: not-allowed;
   }
 
   // Placeholder
   &::placeholder {
-    color: #999;
+    color: tokens.$color-ui-text-tertiary;
     opacity: 1;
   }
 }

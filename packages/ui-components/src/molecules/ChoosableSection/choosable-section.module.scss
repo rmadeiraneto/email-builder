@@ -1,19 +1,23 @@
 /**
- * ChoosableSection styles
+ * ChoosableSection Component Styles
+ * Design tokens are automatically imported via Vite configuration
+ *
+ * A section with a label and dropdown toggle for choosing options.
+ * Includes label wrapper and content area.
  */
 
 .choosable-section {
   &__label-wrapper {
     align-items: center;
     display: flex;
-    gap: 12px;
+    gap: tokens.$spacing-3;
     justify-content: space-between;
   }
 
   &__dropdown-label-wrapper {
     align-items: center;
     display: flex;
-    gap: 8px;
+    gap: tokens.$spacing-2;
   }
 
   &__label {

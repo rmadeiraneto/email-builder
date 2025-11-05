@@ -1,12 +1,15 @@
 /**
  * EditableField Component Styles
- * BEM methodology: .editable-field
+ * Design tokens are automatically imported via Vite configuration
+ *
+ * An editable field that switches between view and edit modes.
+ * Users can click to edit, save, or discard changes.
  */
 
 .editable-field {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: tokens.$spacing-2;
 
   // Content wrapper (contains label or input)
   &__content {
@@ -18,9 +21,9 @@
   // Buttons wrapper (contains action buttons)
   &__buttons {
     display: flex;
-    gap: 0.25rem;
+    gap: tokens.$spacing-1;
     align-items: center;
-    transition: opacity 0.2s ease;
+    transition: opacity tokens.$animation-duration-normal tokens.$animation-easing-ease;
 
     &--hidden {
       opacity: 0;
@@ -33,9 +36,9 @@
   // Label in view mode
   &__label {
     flex: 1;
-    padding: 0.5rem;
-    border-radius: 0.25rem;
-    transition: background-color 0.2s ease;
+    padding: tokens.$spacing-2;
+    border-radius: tokens.$border-radius-base;
+    transition: background-color tokens.$animation-duration-normal tokens.$animation-easing-ease;
     cursor: default;
     white-space: pre-wrap;
     word-break: break-word;

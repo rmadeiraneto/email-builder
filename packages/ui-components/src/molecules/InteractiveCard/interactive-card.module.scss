@@ -1,3 +1,11 @@
+/**
+ * InteractiveCard Component Styles
+ * Design tokens are automatically imported via Vite configuration
+ *
+ * A card with hover overlay and action buttons.
+ * Actions appear when the card is active.
+ */
+
 .interactive-card {
   position: relative;
 
@@ -13,7 +21,7 @@
     opacity: 0;
     position: absolute;
     top: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity tokens.$animation-duration-slow tokens.$animation-easing-ease;
     width: 100%;
   }
 
@@ -27,13 +35,13 @@
 
   &__action {
     cursor: pointer;
-    padding: 8px 16px;
-    border: 1px solid white;
+    padding: tokens.$spacing-2 tokens.$spacing-4;
+    border: tokens.$border-width-base solid tokens.$color-ui-background-primary;
     background: rgba(255, 255, 255, 0.9);
-    border-radius: 4px;
+    border-radius: tokens.$border-radius-base;
 
     &-label {
-      margin-left: 4px;
+      margin-left: tokens.$spacing-1;
     }
   }
 
@@ -45,7 +53,7 @@
 
     .interactive-card__actions {
       display: flex;
-      gap: 8px;
+      gap: tokens.$spacing-2;
     }
   }
 }

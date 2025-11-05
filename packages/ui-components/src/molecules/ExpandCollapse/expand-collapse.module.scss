@@ -1,8 +1,13 @@
-// ExpandCollapse Component Styles
-// BEM Methodology with CSS Modules
+/**
+ * ExpandCollapse Component Styles
+ * Design tokens are automatically imported via Vite configuration
+ *
+ * A component that expands/collapses content with absolute positioning.
+ * Supports left (default) or right alignment.
+ */
 
 .expandCollapse {
-  --expandable-gap: 4px;
+  --expandable-gap: tokens.$spacing-1;
 
   position: relative;
 

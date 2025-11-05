@@ -9,6 +9,7 @@ import styles from './ComponentShowcase.module.scss';
 
 interface ComponentShowcaseProps {
   onTokenClick?: (tokenPath: string[]) => void;
+  onComponentClick?: (componentId: string) => void;
 }
 
 export const ComponentShowcase: Component<ComponentShowcaseProps> = (props) => {
@@ -28,7 +29,16 @@ export const ComponentShowcase: Component<ComponentShowcaseProps> = (props) => {
 
         {/* Button */}
         <div class={styles.componentSection}>
-          <h4 class={styles.componentTitle}>Button</h4>
+          <div class={styles.componentHeader}>
+            <h4 class={styles.componentTitle}>Button</h4>
+            <button
+              class={styles.editButton}
+              onClick={() => props.onComponentClick?.('button')}
+              title="Edit button properties"
+            >
+              ✏️ Edit
+            </button>
+          </div>
           <div class={styles.componentDemo}>
             <button class={styles.demoButton}>Default Button</button>
             <button class={`${styles.demoButton} ${styles.primary}`}>Primary Button</button>
@@ -45,7 +55,16 @@ export const ComponentShowcase: Component<ComponentShowcaseProps> = (props) => {
 
         {/* Input */}
         <div class={styles.componentSection}>
-          <h4 class={styles.componentTitle}>Input</h4>
+          <div class={styles.componentHeader}>
+            <h4 class={styles.componentTitle}>Input</h4>
+            <button
+              class={styles.editButton}
+              onClick={() => props.onComponentClick?.('input')}
+              title="Edit input properties"
+            >
+              ✏️ Edit
+            </button>
+          </div>
           <div class={styles.componentDemo}>
             <input type="text" placeholder="Default input" class={styles.demoInput} />
             <input type="text" placeholder="Disabled input" class={styles.demoInput} disabled />
@@ -70,7 +89,16 @@ export const ComponentShowcase: Component<ComponentShowcaseProps> = (props) => {
 
         {/* Modal */}
         <div class={styles.componentSection}>
-          <h4 class={styles.componentTitle}>Modal</h4>
+          <div class={styles.componentHeader}>
+            <h4 class={styles.componentTitle}>Modal</h4>
+            <button
+              class={styles.editButton}
+              onClick={() => props.onComponentClick?.('modal')}
+              title="Edit modal properties"
+            >
+              ✏️ Edit
+            </button>
+          </div>
           <div class={styles.componentDemo}>
             <button
               class={`${styles.demoButton} ${styles.primary}`}
@@ -124,7 +152,16 @@ export const ComponentShowcase: Component<ComponentShowcaseProps> = (props) => {
 
         {/* Dropdown */}
         <div class={styles.componentSection}>
-          <h4 class={styles.componentTitle}>Dropdown</h4>
+          <div class={styles.componentHeader}>
+            <h4 class={styles.componentTitle}>Dropdown</h4>
+            <button
+              class={styles.editButton}
+              onClick={() => props.onComponentClick?.('dropdown')}
+              title="Edit dropdown properties"
+            >
+              ✏️ Edit
+            </button>
+          </div>
           <div class={styles.componentDemo}>
             <button class={`${styles.demoButton} ${styles.secondary}`}>
               Select Option ▼
@@ -326,7 +363,16 @@ popup.on('close', (popup) => {
 
         {/* Tooltip */}
         <div class={styles.componentSection}>
-          <h4 class={styles.componentTitle}>Tooltip</h4>
+          <div class={styles.componentHeader}>
+            <h4 class={styles.componentTitle}>Tooltip</h4>
+            <button
+              class={styles.editButton}
+              onClick={() => props.onComponentClick?.('tooltip')}
+              title="Edit tooltip properties"
+            >
+              ✏️ Edit
+            </button>
+          </div>
           <div class={styles.componentDemo}>
             <div style={{ display: 'flex', gap: '2rem', 'align-items': 'center', 'flex-wrap': 'wrap' }}>
               <div style={{ display: 'flex', 'align-items': 'center', gap: '0.5rem' }}>

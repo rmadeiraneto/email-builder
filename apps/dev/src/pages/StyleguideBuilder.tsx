@@ -139,13 +139,32 @@ const StyleguideBuilder: Component = () => {
   };
 
   // Handle section navigation from preview clicks
-  const handleNavigateToSection = (section: Section) => {
+  const handleNavigateToToken = (section: Section, tokenPath: string[]) => {
+    // Switch to the correct tab
     setActiveSection(section);
-    // Scroll editor panel to top for better UX
-    const editorPanel = document.querySelector(`.${styles.editorPanel}`);
-    if (editorPanel) {
-      editorPanel.scrollTop = 0;
-    }
+
+    // Wait for DOM to update, then scroll to the specific token
+    setTimeout(() => {
+      const editorPanel = document.querySelector(`.${styles.editorPanel}`);
+      if (!editorPanel) return;
+
+      // Create a data-path selector from the token path
+      const pathSelector = tokenPath.join('-');
+      const tokenElement = editorPanel.querySelector(`[data-token-path="${pathSelector}"]`);
+
+      if (tokenElement) {
+        tokenElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // Add a temporary highlight effect
+        tokenElement.classList.add(styles.highlightToken);
+        setTimeout(() => {
+          tokenElement.classList.remove(styles.highlightToken);
+        }, 2000);
+      } else {
+        // Fallback: just scroll to top if token not found
+        editorPanel.scrollTop = 0;
+      }
+    }, 100);
   };
 
   // Get the current category tokens for the editor
@@ -266,36 +285,36 @@ const StyleguideBuilder: Component = () => {
             <Show when={activeSection() === 'colors'}>
               <ColorTokens
                 {...getMergedColorTokens()}
-                onSectionClick={() => handleNavigateToSection('colors')}
+                onTokenClick={(tokenPath) => handleNavigateToToken('colors', tokenPath)}
               />
             </Show>
             <Show when={activeSection() === 'typography'}>
               <TypographyTokens
                 {...getMergedTypographyTokens()}
-                onSectionClick={() => handleNavigateToSection('typography')}
+                onTokenClick={(tokenPath) => handleNavigateToToken('typography', tokenPath)}
               />
             </Show>
             <Show when={activeSection() === 'spacing'}>
               <SpacingTokens
                 spacingData={getMergedSpacingTokens()}
-                onSectionClick={() => handleNavigateToSection('spacing')}
+                onTokenClick={(tokenPath) => handleNavigateToToken('spacing', tokenPath)}
               />
             </Show>
             <Show when={activeSection() === 'border'}>
               <BorderTokens
                 {...getMergedBorderTokens()}
-                onSectionClick={() => handleNavigateToSection('border')}
+                onTokenClick={(tokenPath) => handleNavigateToToken('border', tokenPath)}
               />
             </Show>
             <Show when={activeSection() === 'shadow'}>
               <ShadowTokens
                 elevation={getMergedShadowTokens()}
-                onSectionClick={() => handleNavigateToSection('shadow')}
+                onTokenClick={(tokenPath) => handleNavigateToToken('shadow', tokenPath)}
               />
             </Show>
             <Show when={activeSection() === 'components'}>
               <ComponentShowcase
-                onSectionClick={() => handleNavigateToSection('colors')}
+                onTokenClick={(tokenPath) => handleNavigateToToken('colors', tokenPath)}
               />
             </Show>
             <Show when={activeSection() === 'animation' || activeSection() === 'breakpoints'}>

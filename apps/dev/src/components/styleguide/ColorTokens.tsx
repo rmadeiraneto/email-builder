@@ -14,6 +14,7 @@ interface ColorToken {
   name: string;
   value: string;
   description: string;
+  path: string[];
 }
 
 interface ColorScale {
@@ -25,7 +26,7 @@ interface ColorTokensProps {
   brandColors?: any;
   semanticColors?: any;
   uiColors?: any;
-  onSectionClick?: () => void;
+  onTokenClick?: (tokenPath: string[]) => void;
 }
 
 export const ColorTokens: Component<ColorTokensProps> = (props) => {
@@ -42,6 +43,7 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
           name: `${scaleName}-${shade}`,
           value: token.$value,
           description: token.$description || '',
+          path: ['color', 'brand', scaleName, shade],
         }));
       return {
         name: scaleName.charAt(0).toUpperCase() + scaleName.slice(1),
@@ -58,6 +60,7 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
           name: `${scaleName}-${shade}`,
           value: token.$value,
           description: token.$description || '',
+          path: ['color', 'semantic', scaleName, shade],
         }));
       return {
         name: scaleName.charAt(0).toUpperCase() + scaleName.slice(1),
@@ -75,6 +78,7 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
             name: `${category}-${name}`,
             value: token.$value,
             description: token.$description || '',
+            path: ['color', 'ui', category, name],
           }));
         return {
           name: category.charAt(0).toUpperCase() + category.slice(1),
@@ -90,6 +94,7 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
           name: `neutral-${shade}`,
           value: (token as any).$value,
           description: (token as any).$description || '',
+          path: ['color', 'neutral', shade],
         })),
     },
   ]);
@@ -99,12 +104,7 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
   };
 
   return (
-    <div
-      class={styles.section}
-      classList={{ [styles.clickableSection]: !!props.onSectionClick }}
-      onClick={props.onSectionClick}
-      title={props.onSectionClick ? 'Click to edit color tokens' : undefined}
-    >
+    <div class={styles.section}>
       <h2 class={styles.sectionTitle}>Colors</h2>
       <p class={styles.sectionDescription}>
         Our color palette includes brand colors, semantic colors for UI states, and general UI colors.
@@ -122,11 +122,16 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
                   {(color) => (
                     <div
                       class={styles.colorCard}
+                      classList={{ [styles.clickableCard]: !!props.onTokenClick }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        copyToClipboard(color.value);
+                        if (props.onTokenClick) {
+                          props.onTokenClick(color.path);
+                        } else {
+                          copyToClipboard(color.value);
+                        }
                       }}
-                      title="Click to copy"
+                      title={props.onTokenClick ? 'Click to edit this token' : 'Click to copy'}
                     >
                       <div
                         class={styles.colorSwatch}
@@ -163,11 +168,16 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
                   {(color) => (
                     <div
                       class={styles.colorCard}
+                      classList={{ [styles.clickableCard]: !!props.onTokenClick }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        copyToClipboard(color.value);
+                        if (props.onTokenClick) {
+                          props.onTokenClick(color.path);
+                        } else {
+                          copyToClipboard(color.value);
+                        }
                       }}
-                      title="Click to copy"
+                      title={props.onTokenClick ? 'Click to edit this token' : 'Click to copy'}
                     >
                       <div
                         class={styles.colorSwatch}
@@ -204,11 +214,16 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
                   {(color) => (
                     <div
                       class={styles.colorCard}
+                      classList={{ [styles.clickableCard]: !!props.onTokenClick }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        copyToClipboard(color.value);
+                        if (props.onTokenClick) {
+                          props.onTokenClick(color.path);
+                        } else {
+                          copyToClipboard(color.value);
+                        }
                       }}
-                      title="Click to copy"
+                      title={props.onTokenClick ? 'Click to edit this token' : 'Click to copy'}
                     >
                       <div
                         class={styles.colorSwatch}

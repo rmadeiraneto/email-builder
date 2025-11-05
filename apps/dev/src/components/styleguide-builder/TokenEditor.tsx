@@ -126,7 +126,7 @@ function TokenValueEditor(props: TokenValueEditorProps) {
   };
 
   return (
-    <div class={styles.tokenValue}>
+    <div class={styles.tokenValue} data-token-path={tokenName()}>
       <div class={styles.tokenInfo}>
         <label class={styles.tokenLabel} for={tokenName()}>
           {props.path[props.path.length - 1]}

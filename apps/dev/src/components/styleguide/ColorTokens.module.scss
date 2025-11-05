@@ -82,6 +82,18 @@
   }
 }
 
+.clickableCard {
+  &:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px -1px rgba(59, 130, 246, 0.3);
+    transform: translateY(-3px);
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
+}
+
 .colorSwatch {
   height: 100px;
   width: 100%;

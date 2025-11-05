@@ -3,7 +3,7 @@
  * Displays border radius and width tokens
  */
 
-import { For, Component } from 'solid-js';
+import { For, type Component } from 'solid-js';
 import styles from './BorderTokens.module.scss';
 import defaultBorderRadius from '@email-builder/tokens/border/radius';
 import defaultBorderWidth from '@email-builder/tokens/border/width';

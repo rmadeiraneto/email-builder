@@ -3,7 +3,7 @@
  * Displays shadow elevation tokens
  */
 
-import { For, type Component } from 'solid-js';
+import { For, Component, createMemo } from 'solid-js';
 import styles from './ShadowTokens.module.scss';
 import defaultElevation from '@email-builder/tokens/shadow/elevation';
 
@@ -14,9 +14,9 @@ interface ShadowTokensProps {
 export const ShadowTokens: Component<ShadowTokensProps> = (props) => {
   const elevation = () => props.elevation || defaultElevation;
 
-  const shadowTokens = Object.entries(elevation().shadow).filter(
+  const shadowTokens = createMemo(() => Object.entries(elevation().shadow).filter(
     ([key]) => !key.startsWith('$')
-  );
+  ));
 
   return (
     <div class={styles.shadowTokens}>
@@ -26,7 +26,7 @@ export const ShadowTokens: Component<ShadowTokensProps> = (props) => {
           Layered shadow system for creating depth and hierarchy
         </p>
         <div class={styles.tokenGrid}>
-          <For each={shadowTokens}>
+          <For each={shadowTokens()}>
             {([name, token]: [string, any]) => (
               <div class={styles.tokenCard}>
                 <div class={styles.shadowPreview}>

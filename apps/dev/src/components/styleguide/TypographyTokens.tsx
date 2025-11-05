@@ -4,7 +4,7 @@
  * Displays all typography tokens from the design system
  */
 
-import { type Component, For } from 'solid-js';
+import { type Component, For, createMemo } from 'solid-js';
 import styles from './TypographyTokens.module.scss';
 import defaultFonts from '@email-builder/tokens/typography/fonts';
 import defaultSizes from '@email-builder/tokens/typography/sizes';
@@ -31,40 +31,40 @@ export const TypographyTokens: Component<TypographyTokensProps> = (props) => {
   const lineHeights = () => props.lineHeights || defaultLineHeights;
 
   // Parse font families
-  const fontFamilies: TypographyToken[] = Object.entries(fonts().typography['font-family'])
+  const fontFamilies = createMemo(() => Object.entries(fonts().typography['font-family'])
     .filter(([key]) => key !== '$type')
     .map(([name, token]: [string, any]) => ({
       name,
       value: Array.isArray(token.$value) ? token.$value.join(', ') : token.$value,
       description: token.$description || '',
-    }));
+    })));
 
   // Parse font sizes
-  const fontSizes: TypographyToken[] = Object.entries(sizes().typography['font-size'])
+  const fontSizes = createMemo(() => Object.entries(sizes().typography['font-size'])
     .filter(([key]) => key !== '$type')
     .map(([name, token]: [string, any]) => ({
       name,
       value: token.$value,
       description: token.$description || '',
-    }));
+    })));
 
   // Parse font weights
-  const fontWeights: TypographyToken[] = Object.entries(weights().typography['font-weight'])
+  const fontWeights = createMemo(() => Object.entries(weights().typography['font-weight'])
     .filter(([key]) => key !== '$type')
     .map(([name, token]: [string, any]) => ({
       name,
       value: String(token.$value),
       description: token.$description || '',
-    }));
+    })));
 
   // Parse line heights
-  const lineHeightsList: TypographyToken[] = Object.entries(lineHeights().typography['line-height'])
+  const lineHeightsList = createMemo(() => Object.entries(lineHeights().typography['line-height'])
     .filter(([key]) => key !== '$type')
     .map(([name, token]: [string, any]) => ({
       name,
       value: String(token.$value),
       description: token.$description || '',
-    }));
+    })));
 
   return (
     <div class={styles.section}>
@@ -77,7 +77,7 @@ export const TypographyTokens: Component<TypographyTokensProps> = (props) => {
       <div class={styles.subsection}>
         <h3 class={styles.subsectionTitle}>Font Families</h3>
         <div class={styles.tokenList}>
-          <For each={fontFamilies}>
+          <For each={fontFamilies()}>
             {(token) => (
               <div class={styles.tokenCard}>
                 <div class={styles.tokenLabel}>
@@ -100,7 +100,7 @@ export const TypographyTokens: Component<TypographyTokensProps> = (props) => {
       <div class={styles.subsection}>
         <h3 class={styles.subsectionTitle}>Font Sizes</h3>
         <div class={styles.tokenList}>
-          <For each={fontSizes}>
+          <For each={fontSizes()}>
             {(token) => (
               <div class={styles.tokenCard}>
                 <div class={styles.tokenLabel}>
@@ -123,7 +123,7 @@ export const TypographyTokens: Component<TypographyTokensProps> = (props) => {
       <div class={styles.subsection}>
         <h3 class={styles.subsectionTitle}>Font Weights</h3>
         <div class={styles.tokenList}>
-          <For each={fontWeights}>
+          <For each={fontWeights()}>
             {(token) => (
               <div class={styles.tokenCard}>
                 <div class={styles.tokenLabel}>
@@ -146,7 +146,7 @@ export const TypographyTokens: Component<TypographyTokensProps> = (props) => {
       <div class={styles.subsection}>
         <h3 class={styles.subsectionTitle}>Line Heights</h3>
         <div class={styles.tokenList}>
-          <For each={lineHeightsList}>
+          <For each={lineHeightsList()}>
             {(token) => (
               <div class={styles.tokenCard}>
                 <div class={styles.tokenLabel}>

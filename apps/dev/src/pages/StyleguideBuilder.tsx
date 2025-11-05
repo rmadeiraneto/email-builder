@@ -36,7 +36,6 @@ type Section = 'colors' | 'typography' | 'spacing' | 'border' | 'shadow' | 'anim
 const StyleguideBuilder: Component = () => {
   const [activeSection, setActiveSection] = createSignal<Section>('colors');
   const [customTokens, setCustomTokens] = createSignal<CustomTokens>({});
-  const [previewContainerId] = createSignal('styleguide-preview-' + Math.random().toString(36).substr(2, 9));
   const [isSaving, setIsSaving] = createSignal(false);
   const [saveStatus, setSaveStatus] = createSignal<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
@@ -67,10 +66,9 @@ const StyleguideBuilder: Component = () => {
   createEffect(() => {
     const tokens = customTokens();
     if (Object.keys(tokens).length > 0) {
-      const previewElement = document.getElementById(previewContainerId());
-      if (previewElement) {
-        applyCustomTokens(tokens, previewElement);
-      }
+      applyCustomTokens(tokens);
+    } else {
+      removeCustomTokens();
     }
   });
 
@@ -253,7 +251,7 @@ const StyleguideBuilder: Component = () => {
       {/* Main Content - Side by Side */}
       <div class={styles.mainContent}>
         {/* Preview Panel */}
-        <div class={styles.previewPanel} id={previewContainerId()}>
+        <div class={styles.previewPanel}>
           <div class={styles.previewContent}>
             <Show when={activeSection() === 'colors'}>
               <ColorTokens {...getMergedColorTokens()} />

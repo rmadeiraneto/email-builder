@@ -4,7 +4,7 @@
  * Displays all color tokens from the design system
  */
 
-import { type Component, For } from 'solid-js';
+import { type Component, For, createMemo } from 'solid-js';
 import styles from './ColorTokens.module.scss';
 import defaultBrandColors from '@email-builder/tokens/colors/brand';
 import defaultSemanticColors from '@email-builder/tokens/colors/semantic';
@@ -33,7 +33,7 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
   const uiColors = () => props.uiColors || defaultUiColors;
 
   // Parse brand colors (primary, secondary, accent with 50-900 shades)
-  const brandScales: ColorScale[] = Object.entries(brandColors().color.brand)
+  const brandScales = createMemo(() => Object.entries(brandColors().color.brand)
     .filter(([key]) => key !== '$type')
     .map(([scaleName, scale]) => {
       const colors: ColorToken[] = Object.entries(scale as Record<string, any>)
@@ -46,10 +46,10 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
         name: scaleName.charAt(0).toUpperCase() + scaleName.slice(1),
         colors,
       };
-    });
+    }));
 
   // Parse semantic colors (success, error, warning, info with light/base/dark)
-  const semanticScales: ColorScale[] = Object.entries(semanticColors().color.semantic)
+  const semanticScales = createMemo(() => Object.entries(semanticColors().color.semantic)
     .filter(([key]) => key !== '$type')
     .map(([scaleName, scale]) => {
       const colors: ColorToken[] = Object.entries(scale as Record<string, any>)
@@ -62,10 +62,10 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
         name: scaleName.charAt(0).toUpperCase() + scaleName.slice(1),
         colors,
       };
-    });
+    }));
 
   // Parse UI colors (background, surface, border, text, icon, interactive)
-  const uiScales: ColorScale[] = [
+  const uiScales = createMemo(() => [
     ...Object.entries(uiColors().color.ui)
       .filter(([key]) => key !== '$type')
       .map(([category, tokens]) => {
@@ -91,7 +91,7 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
           description: (token as any).$description || '',
         })),
     },
-  ];
+  ]);
 
   const copyToClipboard = (value: string) => {
     navigator.clipboard.writeText(value);
@@ -107,7 +107,7 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
       {/* Brand Colors */}
       <div class={styles.subsection}>
         <h3 class={styles.subsectionTitle}>Brand Colors</h3>
-        <For each={brandScales}>
+        <For each={brandScales()}>
           {(scale) => (
             <div class={styles.colorScale}>
               <h4 class={styles.scaleTitle}>{scale.name}</h4>
@@ -145,7 +145,7 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
         <p class={styles.subsectionDescription}>
           Colors that convey meaning and UI states
         </p>
-        <For each={semanticScales}>
+        <For each={semanticScales()}>
           {(scale) => (
             <div class={styles.colorScale}>
               <h4 class={styles.scaleTitle}>{scale.name}</h4>
@@ -183,7 +183,7 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
         <p class={styles.subsectionDescription}>
           General interface colors for backgrounds, borders, text, and icons
         </p>
-        <For each={uiScales}>
+        <For each={uiScales()}>
           {(scale) => (
             <div class={styles.colorScale}>
               <h4 class={styles.scaleTitle}>{scale.name}</h4>

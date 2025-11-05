@@ -3,7 +3,7 @@
  * Displays border radius and width tokens
  */
 
-import { For, type Component } from 'solid-js';
+import { For, Component, createMemo } from 'solid-js';
 import styles from './BorderTokens.module.scss';
 import defaultBorderRadius from '@email-builder/tokens/border/radius';
 import defaultBorderWidth from '@email-builder/tokens/border/width';
@@ -17,13 +17,13 @@ export const BorderTokens: Component<BorderTokensProps> = (props) => {
   const borderRadius = () => props.borderRadius || defaultBorderRadius;
   const borderWidth = () => props.borderWidth || defaultBorderWidth;
 
-  const radiusTokens = Object.entries(borderRadius().border.radius).filter(
+  const radiusTokens = createMemo(() => Object.entries(borderRadius().border.radius).filter(
     ([key]) => !key.startsWith('$')
-  );
+  ));
 
-  const widthTokens = Object.entries(borderWidth().border.width).filter(
+  const widthTokens = createMemo(() => Object.entries(borderWidth().border.width).filter(
     ([key]) => !key.startsWith('$')
-  );
+  ));
 
   return (
     <div class={styles.borderTokens}>
@@ -34,7 +34,7 @@ export const BorderTokens: Component<BorderTokensProps> = (props) => {
           Consistent border radius values for rounded corners
         </p>
         <div class={styles.tokenGrid}>
-          <For each={radiusTokens}>
+          <For each={radiusTokens()}>
             {([name, token]: [string, any]) => (
               <div class={styles.tokenCard}>
                 <div class={styles.radiusPreview} style={{ 'border-radius': token.$value }}>
@@ -60,7 +60,7 @@ export const BorderTokens: Component<BorderTokensProps> = (props) => {
           Consistent border width values for strokes and outlines
         </p>
         <div class={styles.tokenGrid}>
-          <For each={widthTokens}>
+          <For each={widthTokens()}>
             {([name, token]: [string, any]) => (
               <div class={styles.tokenCard}>
                 <div class={styles.widthPreview}>

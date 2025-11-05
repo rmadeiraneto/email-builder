@@ -15,6 +15,8 @@ import { ShadowTokens } from '../components/styleguide/ShadowTokens';
 import { ComponentShowcase } from '../components/styleguide/ComponentShowcase';
 import { ComponentTokens } from '../components/styleguide/ComponentTokens';
 import { TokenEditor } from '../components/styleguide-builder/TokenEditor';
+import { ComponentPropertyEditor } from '../components/styleguide-builder/ComponentPropertyEditor';
+import { componentPropertyMappings } from '../utils/componentPropertyMappings';
 import { tokenStorage, type CustomTokens } from '../utils/tokenStorage';
 import { applyCustomTokens, removeCustomTokens, TokenExporter } from '../utils/tokenApplier';
 import { getDefaultTokens, mergeTokens, getAllTokensFlat } from '../utils/tokenLoader';
@@ -48,6 +50,7 @@ const StyleguideBuilder: Component = () => {
   const [customTokens, setCustomTokens] = createSignal<CustomTokens>({});
   const [isSaving, setIsSaving] = createSignal(false);
   const [saveStatus, setSaveStatus] = createSignal<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [selectedComponent, setSelectedComponent] = createSignal<string | null>(null);
 
   const sections: { id: Section; label: string }[] = [
     { id: 'colors', label: 'Colors' },
@@ -105,6 +108,17 @@ const StyleguideBuilder: Component = () => {
 
       return updated;
     });
+  };
+
+  // Handle component selection
+  const handleComponentClick = (componentId: string) => {
+    setSelectedComponent(componentId);
+  };
+
+  // Get the selected component's property map
+  const getSelectedComponentMap = () => {
+    const id = selectedComponent();
+    return id ? componentPropertyMappings[id] : null;
   };
 
   // Save tokens to IndexedDB
@@ -341,6 +355,7 @@ const StyleguideBuilder: Component = () => {
               <div style={{ display: 'flex', 'flex-direction': 'column', gap: '2rem' }}>
                 <ComponentShowcase
                   onTokenClick={(tokenPath) => handleNavigateToToken('components', tokenPath)}
+                  onComponentClick={handleComponentClick}
                 />
                 <ComponentTokens
                   {...getMergedComponentTokens()}
@@ -359,11 +374,23 @@ const StyleguideBuilder: Component = () => {
 
         {/* Editor Panel */}
         <div class={styles.editorPanel}>
-          <TokenEditor
-            category={sections.find(s => s.id === activeSection())?.label || ''}
-            tokens={getCurrentCategoryTokens()}
-            onTokenChange={handleTokenChange}
-          />
+          <Show
+            when={activeSection() === 'components'}
+            fallback={
+              <TokenEditor
+                category={sections.find(s => s.id === activeSection())?.label || ''}
+                tokens={getCurrentCategoryTokens()}
+                onTokenChange={handleTokenChange}
+              />
+            }
+          >
+            <ComponentPropertyEditor
+              component={getSelectedComponentMap()}
+              allTokens={getAllTokensFlat()}
+              currentValues={customTokens()}
+              onPropertyChange={handleTokenChange}
+            />
+          </Show>
         </div>
       </div>
     </div>

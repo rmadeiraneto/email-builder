@@ -956,7 +956,7 @@ When no component is selected, show "General Styles" tab:
 ## 🔨 Technical Improvements
 
 ### Code Quality
-- [ ] Fix LinkedInputs edge case (1 failing test)
+- [x] Fix LinkedInputs edge case (1 failing test) ✅ COMPLETE (Nov 5, 2025)
 - [ ] Re-enable DTS plugin for production builds
 - [ ] Add component tree view for hierarchy navigation
 - [ ] Improve error messages across the UI

@@ -1,8 +1,37 @@
 {
   "component": {
     "button": {
-      "$type": "dimension",
+      "background": {
+        "$type": "color",
+        "default": { "$value": "{color.ui.surface.base}", "$description": "Default button background" },
+        "default-hover": { "$value": "{color.ui.background.secondary}", "$description": "Default button hover background" },
+        "primary": { "$value": "{color.brand.primary.500}", "$description": "Primary button background" },
+        "primary-hover": { "$value": "{color.brand.primary.600}", "$description": "Primary button hover background" },
+        "secondary": { "$value": "{color.brand.secondary.500}", "$description": "Secondary button background" },
+        "secondary-hover": { "$value": "{color.brand.secondary.600}", "$description": "Secondary button hover background" },
+        "ghost": { "$value": "transparent", "$description": "Ghost button background" },
+        "ghost-hover": { "$value": "{color.ui.background.secondary}", "$description": "Ghost button hover background" }
+      },
+      "text": {
+        "$type": "color",
+        "default": { "$value": "{color.ui.text.primary}", "$description": "Default button text color" },
+        "primary": { "$value": "{color.ui.text.inverse}", "$description": "Primary button text color" },
+        "secondary": { "$value": "{color.ui.text.inverse}", "$description": "Secondary button text color" },
+        "ghost": { "$value": "{color.ui.text.primary}", "$description": "Ghost button text color" }
+      },
+      "border": {
+        "$type": "color",
+        "default": { "$value": "{color.ui.border.base}", "$description": "Default button border color" },
+        "default-hover": { "$value": "{color.ui.border.strong}", "$description": "Default button hover border color" },
+        "primary": { "$value": "{color.brand.primary.500}", "$description": "Primary button border color" },
+        "primary-hover": { "$value": "{color.brand.primary.600}", "$description": "Primary button hover border color" },
+        "secondary": { "$value": "{color.brand.secondary.500}", "$description": "Secondary button border color" },
+        "secondary-hover": { "$value": "{color.brand.secondary.600}", "$description": "Secondary button hover border color" },
+        "ghost": { "$value": "transparent", "$description": "Ghost button border color" },
+        "ghost-hover": { "$value": "transparent", "$description": "Ghost button hover border color" }
+      },
       "padding": {
+        "$type": "dimension",
         "x": {
           "sm": { "$value": "{spacing.3}", "$description": "Small button horizontal padding" },
           "md": { "$value": "{spacing.4}", "$description": "Medium button horizontal padding" },

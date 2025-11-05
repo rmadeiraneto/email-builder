@@ -350,7 +350,7 @@ describe('LinkedInputs', () => {
       // Trigger change on second input
       const secondInputEl = inputs[1].getElement().querySelector('input') as HTMLInputElement;
       secondInputEl.value = '99';
-      secondInputEl.dispatchEvent(new Event('input'));
+      secondInputEl.dispatchEvent(new Event('change'));
 
       // Alpha should still be first input (auto disabled)
       expect(linkedInputs.getAlphaInput()).toBe(inputs[0]);
@@ -411,7 +411,7 @@ describe('LinkedInputs', () => {
       // Simulate user input on second input
       const secondInputEl = inputs[1].getElement().querySelector('input') as HTMLInputElement;
       secondInputEl.value = '50';
-      secondInputEl.dispatchEvent(new Event('input'));
+      secondInputEl.dispatchEvent(new Event('change'));
 
       // Wait for sync
       await new Promise((resolve) => setTimeout(resolve, 10));
@@ -437,7 +437,7 @@ describe('LinkedInputs', () => {
       // Even after user interaction, should stay first input
       const secondInputEl = inputs[1].getElement().querySelector('input') as HTMLInputElement;
       secondInputEl.value = '99';
-      secondInputEl.dispatchEvent(new Event('input'));
+      secondInputEl.dispatchEvent(new Event('change'));
 
       expect(linkedInputs.getAlphaInput()).toBe(inputs[0]);
     });

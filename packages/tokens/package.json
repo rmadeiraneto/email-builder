@@ -28,7 +28,16 @@
     "./shadow/elevation": "./src/shadow/elevation.json",
     "./animation/duration": "./src/animation/duration.json",
     "./animation/easing": "./src/animation/easing.json",
-    "./breakpoints/devices": "./src/breakpoints/devices.json"
+    "./breakpoints/devices": "./src/breakpoints/devices.json",
+    "./components/button": "./src/components/button.json",
+    "./components/modal": "./src/components/modal.json",
+    "./components/input": "./src/components/input.json",
+    "./components/dropdown": "./src/components/dropdown.json",
+    "./components/card": "./src/components/card.json",
+    "./components/tooltip": "./src/components/tooltip.json",
+    "./components/badge": "./src/components/badge.json",
+    "./components/divider": "./src/components/divider.json",
+    "./components/panel": "./src/components/panel.json"
   },
   "files": ["build", "src"],
   "scripts": {

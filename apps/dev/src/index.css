@@ -2,6 +2,9 @@
  * Global styles for the development sandbox
  */
 
+/* Import design token CSS variables */
+@import '@email-builder/tokens/css';
+
 *,
 *::before,
 *::after {

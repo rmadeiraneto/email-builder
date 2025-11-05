@@ -125,18 +125,19 @@
 
 // Demo components styling
 .demoButton {
-  padding: var(--spacing-2, 0.5rem) var(--spacing-4, 1rem);
-  border: var(--border-width-base, 1px) solid var(--color-ui-border-default, #cbd5e1);
-  border-radius: var(--border-radius-md, 0.375rem);
-  background: var(--color-ui-surface-default, white);
+  // Use component tokens with base token fallbacks
+  padding: var(--component-button-padding-y-md, 0.625rem) var(--component-button-padding-x-md, 1rem);
+  border: var(--component-button-border-width, 1px) solid var(--color-ui-border-base, #cbd5e1);
+  border-radius: var(--component-button-border-radius-md, 0.375rem);
+  background: var(--color-ui-surface-base, white);
   color: var(--color-ui-text-primary, #1e293b);
-  font-size: var(--typography-font-size-sm, 0.875rem);
-  font-weight: var(--typography-font-weight-medium, 500);
+  font-size: var(--component-button-font-size-md, 0.875rem);
+  font-weight: var(--component-button-font-weight, 500);
   cursor: pointer;
   transition: all var(--animation-duration-normal, 0.2s);
 
   &:hover:not(:disabled) {
-    background: var(--color-ui-surface-secondary, #f8fafc);
+    background: var(--color-ui-background-secondary, #f8fafc);
     border-color: var(--color-ui-border-strong, #94a3b8);
   }
 
@@ -172,22 +173,29 @@
     border-color: transparent;
 
     &:hover {
-      background: var(--color-ui-surface-secondary, #f1f5f9);
+      background: var(--color-ui-background-secondary, #f1f5f9);
     }
   }
 }
 
 .demoInput {
-  padding: var(--spacing-2, 0.5rem) var(--spacing-3, 0.75rem);
-  border: var(--border-width-base, 1px) solid var(--color-ui-border-default, #cbd5e1);
-  border-radius: var(--border-radius-md, 0.375rem);
-  font-size: var(--typography-font-size-sm, 0.875rem);
+  // Use component tokens with base token fallbacks
+  padding: var(--component-input-padding-y-md, 0.5rem) var(--component-input-padding-x-md, 0.75rem);
+  border: var(--component-input-border-width, 1px) solid var(--component-input-border-color-default, #cbd5e1);
+  border-radius: var(--component-input-border-radius-md, 0.375rem);
+  background: var(--component-input-background-default, white);
+  color: var(--component-input-text-color-default, #1e293b);
+  font-size: var(--component-input-font-size-md, 0.875rem);
   width: 200px;
   transition: all var(--animation-duration-normal, 0.2s);
 
+  &::placeholder {
+    color: var(--component-input-text-color-placeholder, #94a3b8);
+  }
+
   &:focus {
     outline: none;
-    border-color: var(--color-brand-primary-500, #3b82f6);
+    border-color: var(--component-input-border-color-focus, #3b82f6);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   }
 

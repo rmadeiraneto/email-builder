@@ -5,30 +5,52 @@
         "$type": "color",
         "default": { "$value": "{color.ui.surface.base}", "$description": "Default button background" },
         "default-hover": { "$value": "{color.ui.background.secondary}", "$description": "Default button hover background" },
+        "default-active": { "$value": "{color.ui.background.tertiary}", "$description": "Default button active background" },
+        "default-disabled": { "$value": "{color.ui.background.secondary}", "$description": "Default button disabled background" },
         "primary": { "$value": "{color.brand.primary.500}", "$description": "Primary button background" },
         "primary-hover": { "$value": "{color.brand.primary.600}", "$description": "Primary button hover background" },
+        "primary-active": { "$value": "{color.brand.primary.700}", "$description": "Primary button active background" },
+        "primary-disabled": { "$value": "{color.brand.primary.300}", "$description": "Primary button disabled background" },
         "secondary": { "$value": "{color.brand.secondary.500}", "$description": "Secondary button background" },
         "secondary-hover": { "$value": "{color.brand.secondary.600}", "$description": "Secondary button hover background" },
+        "secondary-active": { "$value": "{color.brand.secondary.700}", "$description": "Secondary button active background" },
+        "secondary-disabled": { "$value": "{color.brand.secondary.300}", "$description": "Secondary button disabled background" },
         "ghost": { "$value": "transparent", "$description": "Ghost button background" },
-        "ghost-hover": { "$value": "{color.ui.background.secondary}", "$description": "Ghost button hover background" }
+        "ghost-hover": { "$value": "{color.ui.background.secondary}", "$description": "Ghost button hover background" },
+        "ghost-active": { "$value": "{color.ui.background.tertiary}", "$description": "Ghost button active background" }
       },
       "text": {
         "$type": "color",
         "default": { "$value": "{color.ui.text.primary}", "$description": "Default button text color" },
+        "default-disabled": { "$value": "{color.ui.text.disabled}", "$description": "Default button disabled text color" },
         "primary": { "$value": "{color.ui.text.inverse}", "$description": "Primary button text color" },
+        "primary-disabled": { "$value": "{color.ui.text.inverse}", "$description": "Primary button disabled text color" },
         "secondary": { "$value": "{color.ui.text.inverse}", "$description": "Secondary button text color" },
-        "ghost": { "$value": "{color.ui.text.primary}", "$description": "Ghost button text color" }
+        "secondary-disabled": { "$value": "{color.ui.text.inverse}", "$description": "Secondary button disabled text color" },
+        "ghost": { "$value": "{color.ui.text.primary}", "$description": "Ghost button text color" },
+        "ghost-disabled": { "$value": "{color.ui.text.disabled}", "$description": "Ghost button disabled text color" }
       },
       "border": {
         "$type": "color",
         "default": { "$value": "{color.ui.border.base}", "$description": "Default button border color" },
         "default-hover": { "$value": "{color.ui.border.strong}", "$description": "Default button hover border color" },
+        "default-active": { "$value": "{color.ui.border.strong}", "$description": "Default button active border color" },
+        "default-focus": { "$value": "{color.ui.border.focus}", "$description": "Default button focus border color" },
+        "default-disabled": { "$value": "{color.ui.border.subtle}", "$description": "Default button disabled border color" },
         "primary": { "$value": "{color.brand.primary.500}", "$description": "Primary button border color" },
         "primary-hover": { "$value": "{color.brand.primary.600}", "$description": "Primary button hover border color" },
+        "primary-active": { "$value": "{color.brand.primary.700}", "$description": "Primary button active border color" },
+        "primary-focus": { "$value": "{color.brand.primary.500}", "$description": "Primary button focus border color" },
+        "primary-disabled": { "$value": "{color.brand.primary.300}", "$description": "Primary button disabled border color" },
         "secondary": { "$value": "{color.brand.secondary.500}", "$description": "Secondary button border color" },
         "secondary-hover": { "$value": "{color.brand.secondary.600}", "$description": "Secondary button hover border color" },
+        "secondary-active": { "$value": "{color.brand.secondary.700}", "$description": "Secondary button active border color" },
+        "secondary-focus": { "$value": "{color.brand.secondary.500}", "$description": "Secondary button focus border color" },
+        "secondary-disabled": { "$value": "{color.brand.secondary.300}", "$description": "Secondary button disabled border color" },
         "ghost": { "$value": "transparent", "$description": "Ghost button border color" },
-        "ghost-hover": { "$value": "transparent", "$description": "Ghost button hover border color" }
+        "ghost-hover": { "$value": "transparent", "$description": "Ghost button hover border color" },
+        "ghost-active": { "$value": "transparent", "$description": "Ghost button active border color" },
+        "ghost-focus": { "$value": "{color.ui.border.focus}", "$description": "Ghost button focus border color" }
       },
       "padding": {
         "$type": "dimension",
@@ -64,6 +86,16 @@
       "font-weight": {
         "$value": "{typography.font-weight.medium}",
         "$description": "Button font weight"
+      },
+      "opacity": {
+        "$type": "dimension",
+        "disabled": { "$value": "0.5", "$description": "Button disabled opacity" }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "color": { "$value": "{color.ui.border.focus}", "$description": "Focus ring color" },
+        "width": { "$value": "3px", "$description": "Focus ring width" },
+        "offset": { "$value": "2px", "$description": "Focus ring offset from button" }
       }
     }
   }

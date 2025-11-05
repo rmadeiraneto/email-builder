@@ -32,6 +32,18 @@ export const componentPropertyMappings: Record<string, ComponentPropertyMap> = {
         tokenType: 'color',
       },
       {
+        label: 'Default Hover Background',
+        description: 'Background color when hovering default button',
+        tokenPath: ['component', 'button', 'background', 'default-hover'],
+        tokenType: 'color',
+      },
+      {
+        label: 'Default Active Background',
+        description: 'Background color when pressing default button',
+        tokenPath: ['component', 'button', 'background', 'default-active'],
+        tokenType: 'color',
+      },
+      {
         label: 'Default Text Color',
         description: 'Text color for default button',
         tokenPath: ['component', 'button', 'text', 'default'],
@@ -39,32 +51,68 @@ export const componentPropertyMappings: Record<string, ComponentPropertyMap> = {
       },
       {
         label: 'Primary Background',
-        description: 'Background color for primary button variant',
+        description: 'Background color for primary button',
         tokenPath: ['component', 'button', 'background', 'primary'],
         tokenType: 'color',
       },
       {
+        label: 'Primary Hover Background',
+        description: 'Background color when hovering primary button',
+        tokenPath: ['component', 'button', 'background', 'primary-hover'],
+        tokenType: 'color',
+      },
+      {
+        label: 'Primary Active Background',
+        description: 'Background color when pressing primary button',
+        tokenPath: ['component', 'button', 'background', 'primary-active'],
+        tokenType: 'color',
+      },
+      {
         label: 'Primary Text Color',
-        description: 'Text color for primary button variant',
+        description: 'Text color for primary button',
         tokenPath: ['component', 'button', 'text', 'primary'],
         tokenType: 'color',
       },
       {
         label: 'Secondary Background',
-        description: 'Background color for secondary button variant',
+        description: 'Background color for secondary button',
         tokenPath: ['component', 'button', 'background', 'secondary'],
         tokenType: 'color',
       },
       {
+        label: 'Secondary Hover Background',
+        description: 'Background color when hovering secondary button',
+        tokenPath: ['component', 'button', 'background', 'secondary-hover'],
+        tokenType: 'color',
+      },
+      {
+        label: 'Secondary Active Background',
+        description: 'Background color when pressing secondary button',
+        tokenPath: ['component', 'button', 'background', 'secondary-active'],
+        tokenType: 'color',
+      },
+      {
         label: 'Secondary Text Color',
-        description: 'Text color for secondary button variant',
+        description: 'Text color for secondary button',
         tokenPath: ['component', 'button', 'text', 'secondary'],
         tokenType: 'color',
       },
       {
         label: 'Ghost Text Color',
-        description: 'Text color for ghost button variant',
+        description: 'Text color for ghost button',
         tokenPath: ['component', 'button', 'text', 'ghost'],
+        tokenType: 'color',
+      },
+      {
+        label: 'Disabled Opacity',
+        description: 'Opacity for disabled buttons',
+        tokenPath: ['component', 'button', 'opacity', 'disabled'],
+        tokenType: 'dimension',
+      },
+      {
+        label: 'Focus Ring Color',
+        description: 'Color of the focus ring around button',
+        tokenPath: ['component', 'button', 'focus-ring', 'color'],
         tokenType: 'color',
       },
       {
@@ -321,12 +369,13 @@ export function getAvailableTokensForType(tokenType: TokenType, allTokens: any):
 
       if (value && typeof value === 'object' && '$value' in value) {
         // This is a token
-        const type = value.$type || inferType(value.$value);
+        const tokenObj = value as { $value: any; $type?: string };
+        const type = tokenObj.$type || inferType(tokenObj.$value);
         if (type === tokenType) {
           tokens.push({
             label: currentPath.join(' › '),
             path: currentPath,
-            value: value.$value,
+            value: String(tokenObj.$value),
           });
         }
       } else if (value && typeof value === 'object') {

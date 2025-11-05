@@ -55,6 +55,20 @@
   }
 }
 
+.clickableCard {
+  cursor: pointer;
+
+  &:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px -1px rgba(59, 130, 246, 0.3);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
+}
+
 .spacingInfo {
   flex: 1;
 }

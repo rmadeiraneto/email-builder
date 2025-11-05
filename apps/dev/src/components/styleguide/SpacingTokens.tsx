@@ -12,11 +12,12 @@ interface SpacingToken {
   name: string;
   value: string;
   description: string;
+  path: string[];
 }
 
 interface SpacingTokensProps {
   spacingData?: any;
-  onSectionClick?: () => void;
+  onTokenClick?: (tokenPath: string[]) => void;
 }
 
 export const SpacingTokens: Component<SpacingTokensProps> = (props) => {
@@ -29,15 +30,11 @@ export const SpacingTokens: Component<SpacingTokensProps> = (props) => {
       name,
       value: token.$value,
       description: token.$description || '',
+      path: ['spacing', name],
     })));
 
   return (
-    <div
-      class={styles.section}
-      classList={{ [styles.clickableSection]: !!props.onSectionClick }}
-      onClick={props.onSectionClick}
-      title={props.onSectionClick ? 'Click to edit spacing tokens' : undefined}
-    >
+    <div class={styles.section}>
       <h2 class={styles.sectionTitle}>Spacing</h2>
       <p class={styles.sectionDescription}>
         Consistent spacing scale used throughout the design system for margins, padding, and gaps.
@@ -46,7 +43,12 @@ export const SpacingTokens: Component<SpacingTokensProps> = (props) => {
       <div class={styles.spacingList}>
         <For each={spacingTokens()}>
           {(token) => (
-            <div class={styles.spacingCard}>
+            <div
+              class={styles.spacingCard}
+              classList={{ [styles.clickableCard]: !!props.onTokenClick }}
+              onClick={() => props.onTokenClick?.(token.path)}
+              title={props.onTokenClick ? 'Click to edit this token' : undefined}
+            >
               <div class={styles.spacingInfo}>
                 <div class={styles.spacingLabel}>
                   <span class={styles.spacingName}>{token.name}</span>

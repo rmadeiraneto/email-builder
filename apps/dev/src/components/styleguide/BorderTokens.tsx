@@ -11,28 +11,33 @@ import defaultBorderWidth from '@email-builder/tokens/border/width';
 interface BorderTokensProps {
   borderRadius?: any;
   borderWidth?: any;
-  onSectionClick?: () => void;
+  onTokenClick?: (tokenPath: string[]) => void;
 }
 
 export const BorderTokens: Component<BorderTokensProps> = (props) => {
   const borderRadius = () => props.borderRadius || defaultBorderRadius;
   const borderWidth = () => props.borderWidth || defaultBorderWidth;
 
-  const radiusTokens = createMemo(() => Object.entries(borderRadius().border.radius).filter(
-    ([key]) => !key.startsWith('$')
-  ));
+  const radiusTokens = createMemo(() => Object.entries(borderRadius().border.radius)
+    .filter(([key]) => !key.startsWith('$'))
+    .map(([name, token]) => ({
+      name,
+      token,
+      path: ['border', 'radius', name],
+    }))
+  );
 
-  const widthTokens = createMemo(() => Object.entries(borderWidth().border.width).filter(
-    ([key]) => !key.startsWith('$')
-  ));
+  const widthTokens = createMemo(() => Object.entries(borderWidth().border.width)
+    .filter(([key]) => !key.startsWith('$'))
+    .map(([name, token]) => ({
+      name,
+      token,
+      path: ['border', 'width', name],
+    }))
+  );
 
   return (
-    <div
-      class={styles.borderTokens}
-      classList={{ [styles.clickableSection]: !!props.onSectionClick }}
-      onClick={props.onSectionClick}
-      title={props.onSectionClick ? 'Click to edit border tokens' : undefined}
-    >
+    <div class={styles.borderTokens}>
       {/* Border Radius */}
       <section class={styles.section}>
         <h2 class={styles.sectionTitle}>Border Radius</h2>
@@ -41,16 +46,21 @@ export const BorderTokens: Component<BorderTokensProps> = (props) => {
         </p>
         <div class={styles.tokenGrid}>
           <For each={radiusTokens()}>
-            {([name, token]: [string, any]) => (
-              <div class={styles.tokenCard}>
-                <div class={styles.radiusPreview} style={{ 'border-radius': token.$value }}>
+            {(item) => (
+              <div
+                class={styles.tokenCard}
+                classList={{ [styles.clickableCard]: !!props.onTokenClick }}
+                onClick={() => props.onTokenClick?.(item.path)}
+                title={props.onTokenClick ? 'Click to edit this token' : undefined}
+              >
+                <div class={styles.radiusPreview} style={{ 'border-radius': item.token.$value }}>
                   <div class={styles.radiusInner} />
                 </div>
                 <div class={styles.tokenInfo}>
-                  <code class={styles.tokenName}>border-radius-{name}</code>
-                  <span class={styles.tokenValue}>{token.$value}</span>
-                  {token.$description && (
-                    <span class={styles.tokenDescription}>{token.$description}</span>
+                  <code class={styles.tokenName}>border-radius-{item.name}</code>
+                  <span class={styles.tokenValue}>{item.token.$value}</span>
+                  {item.token.$description && (
+                    <span class={styles.tokenDescription}>{item.token.$description}</span>
                   )}
                 </div>
               </div>
@@ -67,16 +77,21 @@ export const BorderTokens: Component<BorderTokensProps> = (props) => {
         </p>
         <div class={styles.tokenGrid}>
           <For each={widthTokens()}>
-            {([name, token]: [string, any]) => (
-              <div class={styles.tokenCard}>
+            {(item) => (
+              <div
+                class={styles.tokenCard}
+                classList={{ [styles.clickableCard]: !!props.onTokenClick }}
+                onClick={() => props.onTokenClick?.(item.path)}
+                title={props.onTokenClick ? 'Click to edit this token' : undefined}
+              >
                 <div class={styles.widthPreview}>
-                  <div class={styles.widthLine} style={{ 'border-top-width': token.$value }} />
+                  <div class={styles.widthLine} style={{ 'border-top-width': item.token.$value }} />
                 </div>
                 <div class={styles.tokenInfo}>
-                  <code class={styles.tokenName}>border-width-{name}</code>
-                  <span class={styles.tokenValue}>{token.$value}</span>
-                  {token.$description && (
-                    <span class={styles.tokenDescription}>{token.$description}</span>
+                  <code class={styles.tokenName}>border-width-{item.name}</code>
+                  <span class={styles.tokenValue}>{item.token.$value}</span>
+                  {item.token.$description && (
+                    <span class={styles.tokenDescription}>{item.token.$description}</span>
                   )}
                 </div>
               </div>

@@ -9,23 +9,23 @@ import defaultElevation from '@email-builder/tokens/shadow/elevation';
 
 interface ShadowTokensProps {
   elevation?: any;
-  onSectionClick?: () => void;
+  onTokenClick?: (tokenPath: string[]) => void;
 }
 
 export const ShadowTokens: Component<ShadowTokensProps> = (props) => {
   const elevation = () => props.elevation || defaultElevation;
 
-  const shadowTokens = createMemo(() => Object.entries(elevation().shadow).filter(
-    ([key]) => !key.startsWith('$')
-  ));
+  const shadowTokens = createMemo(() => Object.entries(elevation().shadow)
+    .filter(([key]) => !key.startsWith('$'))
+    .map(([name, token]) => ({
+      name,
+      token,
+      path: ['shadow', name],
+    }))
+  );
 
   return (
-    <div
-      class={styles.shadowTokens}
-      classList={{ [styles.clickableSection]: !!props.onSectionClick }}
-      onClick={props.onSectionClick}
-      title={props.onSectionClick ? 'Click to edit shadow tokens' : undefined}
-    >
+    <div class={styles.shadowTokens}>
       <section class={styles.section}>
         <h2 class={styles.sectionTitle}>Elevation Shadows</h2>
         <p class={styles.sectionDescription}>
@@ -33,16 +33,21 @@ export const ShadowTokens: Component<ShadowTokensProps> = (props) => {
         </p>
         <div class={styles.tokenGrid}>
           <For each={shadowTokens()}>
-            {([name, token]: [string, any]) => (
-              <div class={styles.tokenCard}>
+            {(item) => (
+              <div
+                class={styles.tokenCard}
+                classList={{ [styles.clickableCard]: !!props.onTokenClick }}
+                onClick={() => props.onTokenClick?.(item.path)}
+                title={props.onTokenClick ? 'Click to edit this token' : undefined}
+              >
                 <div class={styles.shadowPreview}>
-                  <div class={styles.shadowBox} style={{ 'box-shadow': token.$value }} />
+                  <div class={styles.shadowBox} style={{ 'box-shadow': item.token.$value }} />
                 </div>
                 <div class={styles.tokenInfo}>
-                  <code class={styles.tokenName}>shadow-elevation-{name}</code>
-                  <span class={styles.tokenValue}>{token.$value}</span>
-                  {token.$description && (
-                    <span class={styles.tokenDescription}>{token.$description}</span>
+                  <code class={styles.tokenName}>shadow-elevation-{item.name}</code>
+                  <span class={styles.tokenValue}>{item.token.$value}</span>
+                  {item.token.$description && (
+                    <span class={styles.tokenDescription}>{item.token.$description}</span>
                   )}
                 </div>
               </div>

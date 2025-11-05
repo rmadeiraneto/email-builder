@@ -1,5 +1,6 @@
 /**
  * Preset Preview Modal Styles
+ * Design tokens are automatically imported via Vite configuration
  */
 
 .modal {
@@ -19,14 +20,14 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: tokens.$color-ui-background-overlay;
     backdrop-filter: blur(2px);
   }
 
   &__content {
     position: relative;
-    background: #fff;
-    border-radius: 0.5rem;
+    background: tokens.$color-ui-background-primary;
+    border-radius: tokens.$border-radius-lg;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
       0 10px 10px -5px rgba(0, 0, 0, 0.04);
     width: 90%;
@@ -40,57 +41,57 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    padding: 1.5rem;
-    border-bottom: 1px solid #e5e7eb;
+    padding: tokens.$spacing-6;
+    border-bottom: tokens.$border-width-base solid tokens.$color-ui-border-base;
   }
 
   &__title {
     margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #111827;
+    font-size: tokens.$typography-font-size-xl;
+    font-weight: tokens.$typography-font-weight-semibold;
+    color: tokens.$color-ui-text-primary;
   }
 
   &__subtitle {
-    margin: 0.25rem 0 0;
-    font-size: 0.875rem;
-    color: #6b7280;
+    margin: tokens.$spacing-1 0 0;
+    font-size: tokens.$typography-font-size-sm;
+    color: tokens.$color-ui-text-secondary;
   }
 
   &__close {
     background: none;
     border: none;
-    font-size: 2rem;
-    line-height: 1;
-    color: #6b7280;
+    font-size: tokens.$typography-font-size-4xl;
+    line-height: tokens.$typography-line-height-none;
+    color: tokens.$color-ui-text-secondary;
     cursor: pointer;
     padding: 0;
-    width: 2rem;
-    height: 2rem;
+    width: tokens.$spacing-8;
+    height: tokens.$spacing-8;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 0.25rem;
-    transition: all 0.15s ease;
+    border-radius: tokens.$border-radius-sm;
+    transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
     flex-shrink: 0;
 
     &:hover {
-      background: #f3f4f6;
-      color: #111827;
+      background: tokens.$color-ui-background-tertiary;
+      color: tokens.$color-ui-text-primary;
     }
 
     &:focus-visible {
-      outline: 2px solid #3b82f6;
-      outline-offset: 2px;
+      outline: tokens.$border-width-2 solid tokens.$color-brand-primary-500;
+      outline-offset: tokens.$border-width-2;
     }
   }
 
   &__body {
-    padding: 1.5rem;
+    padding: tokens.$spacing-6;
   }
 
   &__section {
-    margin-bottom: 1.5rem;
+    margin-bottom: tokens.$spacing-6;
 
     &:last-child {
       margin-bottom: 0;
@@ -98,26 +99,26 @@
   }
 
   &__sectionTitle {
-    margin: 0 0 0.75rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #374151;
+    margin: 0 0 tokens.$spacing-3;
+    font-size: tokens.$typography-font-size-sm;
+    font-weight: tokens.$typography-font-weight-semibold;
+    color: tokens.$color-neutral-700;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: tokens.$typography-letter-spacing-wide;
   }
 
   &__description {
     margin: 0;
-    font-size: 0.9375rem;
-    color: #4b5563;
-    line-height: 1.6;
+    font-size: tokens.$typography-font-size-sm;
+    color: tokens.$color-neutral-600;
+    line-height: tokens.$typography-line-height-relaxed;
   }
 
   &__stylesList {
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.375rem;
-    padding: 0.75rem;
+    background: tokens.$color-ui-background-secondary;
+    border: tokens.$border-width-base solid tokens.$color-ui-border-base;
+    border-radius: tokens.$border-radius-md;
+    padding: tokens.$spacing-3;
     max-height: 300px;
     overflow-y: auto;
   }
@@ -126,12 +127,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 0.75rem;
-    margin-bottom: 0.25rem;
-    background: #fff;
-    border-radius: 0.25rem;
-    font-size: 0.8125rem;
-    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+    padding: tokens.$spacing-2 tokens.$spacing-3;
+    margin-bottom: tokens.$spacing-1;
+    background: tokens.$color-ui-background-primary;
+    border-radius: tokens.$border-radius-sm;
+    font-size: tokens.$typography-font-size-xs;
+    font-family: tokens.$typography-font-family-mono;
 
     &:last-child {
       margin-bottom: 0;
@@ -139,91 +140,91 @@
   }
 
   &__styleKey {
-    color: #6b7280;
-    font-weight: 500;
-    margin-right: 1rem;
+    color: tokens.$color-ui-text-secondary;
+    font-weight: tokens.$typography-font-weight-medium;
+    margin-right: tokens.$spacing-4;
   }
 
   &__styleValue {
-    color: #111827;
-    font-weight: 600;
+    color: tokens.$color-ui-text-primary;
+    font-weight: tokens.$typography-font-weight-semibold;
     text-align: right;
     word-break: break-word;
   }
 
   &__emptyState {
     margin: 0;
-    padding: 2rem;
+    padding: tokens.$spacing-8;
     text-align: center;
-    color: #9ca3af;
-    font-size: 0.875rem;
+    color: tokens.$color-neutral-400;
+    font-size: tokens.$typography-font-size-sm;
   }
 
   &__badge {
     display: inline-flex;
     align-items: center;
-    padding: 0.375rem 0.75rem;
-    background: #dbeafe;
-    border-radius: 9999px;
-    margin-top: 1rem;
+    padding: tokens.$spacing-1-5 tokens.$spacing-3;
+    background: tokens.$color-brand-primary-100;
+    border-radius: tokens.$border-radius-full;
+    margin-top: tokens.$spacing-4;
   }
 
   &__badgeText {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #1e40af;
+    font-size: tokens.$typography-font-size-xs;
+    font-weight: tokens.$typography-font-weight-semibold;
+    color: tokens.$color-brand-primary-700;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: tokens.$typography-letter-spacing-wide;
   }
 
   &__actions {
     display: flex;
-    gap: 0.75rem;
+    gap: tokens.$spacing-3;
     justify-content: flex-end;
-    padding: 1.5rem;
-    border-top: 1px solid #e5e7eb;
+    padding: tokens.$spacing-6;
+    border-top: tokens.$border-width-base solid tokens.$color-ui-border-base;
   }
 
   &__button {
-    padding: 0.625rem 1.25rem;
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-    font-weight: 500;
+    padding: tokens.$spacing-2-5 tokens.$spacing-5;
+    border-radius: tokens.$border-radius-md;
+    font-size: tokens.$typography-font-size-sm;
+    font-weight: tokens.$typography-font-weight-medium;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
     border: none;
 
     &--secondary {
-      background: #fff;
-      color: #374151;
-      border: 1px solid #d1d5db;
+      background: tokens.$color-ui-background-primary;
+      color: tokens.$color-neutral-700;
+      border: tokens.$border-width-base solid tokens.$color-ui-border-base;
 
       &:hover {
-        background: #f9fafb;
-        border-color: #9ca3af;
+        background: tokens.$color-ui-background-secondary;
+        border-color: tokens.$color-ui-border-strong;
       }
 
       &:focus-visible {
-        outline: 2px solid #3b82f6;
-        outline-offset: 2px;
+        outline: tokens.$border-width-2 solid tokens.$color-brand-primary-500;
+        outline-offset: tokens.$border-width-2;
       }
     }
 
     &--primary {
-      background: #3b82f6;
-      color: #fff;
+      background: tokens.$color-brand-primary-500;
+      color: tokens.$color-ui-text-inverse;
 
       &:hover {
-        background: #2563eb;
+        background: tokens.$color-brand-primary-600;
       }
 
       &:active {
-        background: #1d4ed8;
+        background: tokens.$color-brand-primary-700;
       }
 
       &:focus-visible {
-        outline: 2px solid #3b82f6;
-        outline-offset: 2px;
+        outline: tokens.$border-width-2 solid tokens.$color-brand-primary-500;
+        outline-offset: tokens.$border-width-2;
       }
     }
   }

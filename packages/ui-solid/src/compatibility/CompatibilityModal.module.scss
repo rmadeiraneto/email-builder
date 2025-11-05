@@ -1,4 +1,7 @@
-// Compatibility Modal Styles
+/**
+ * Compatibility Modal Styles
+ * Design tokens are automatically imported via Vite configuration
+ */
 
 .modalOverlay {
   position: fixed;
@@ -6,13 +9,13 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: tokens.$color-ui-background-overlay;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
-  animation: fadeIn 0.2s ease-out;
+  padding: tokens.$spacing-5;
+  animation: fadeIn tokens.$animation-duration-normal tokens.$animation-easing-ease-out;
 }
 
 @keyframes fadeIn {
@@ -25,15 +28,15 @@
 }
 
 .modal {
-  background: white;
-  border-radius: 12px;
+  background: tokens.$color-ui-background-primary;
+  border-radius: tokens.$border-radius-xl;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   max-width: 900px;
   width: 100%;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  animation: slideUp 0.3s ease-out;
+  animation: slideUp tokens.$animation-duration-slow tokens.$animation-easing-ease-out;
 }
 
 @keyframes slideUp {
@@ -51,58 +54,58 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 24px 24px 20px;
-  border-bottom: 1px solid #e5e7eb;
+  padding: tokens.$spacing-6 tokens.$spacing-6 tokens.$spacing-5;
+  border-bottom: tokens.$border-width-base solid tokens.$color-ui-border-base;
 }
 
 .modal__title {
-  font-size: 20px;
-  font-weight: 600;
-  color: #111827;
-  margin: 0 0 8px;
+  font-size: tokens.$typography-font-size-xl;
+  font-weight: tokens.$typography-font-weight-semibold;
+  color: tokens.$color-ui-text-primary;
+  margin: 0 0 tokens.$spacing-2;
 }
 
 .modal__propertyName {
   code {
-    font-family: 'JetBrains Mono', 'Courier New', monospace;
-    font-size: 14px;
-    color: #6366f1;
-    background-color: #eef2ff;
-    padding: 4px 8px;
-    border-radius: 4px;
+    font-family: tokens.$typography-font-family-mono;
+    font-size: tokens.$typography-font-size-sm;
+    color: tokens.$color-brand-primary-600;
+    background-color: tokens.$color-brand-primary-50;
+    padding: tokens.$spacing-1 tokens.$spacing-2;
+    border-radius: tokens.$border-radius-sm;
   }
 }
 
 .modal__closeButton {
   background: none;
   border: none;
-  color: #6b7280;
+  color: tokens.$color-ui-text-secondary;
   cursor: pointer;
-  padding: 4px;
+  padding: tokens.$spacing-1;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
-  transition: background-color 0.15s, color 0.15s;
+  border-radius: tokens.$border-radius-md;
+  transition: background-color tokens.$animation-duration-fast, color tokens.$animation-duration-fast;
 
   &:hover {
-    background-color: #f3f4f6;
-    color: #111827;
+    background-color: tokens.$color-ui-background-tertiary;
+    color: tokens.$color-ui-text-primary;
   }
 
   &:active {
-    background-color: #e5e7eb;
+    background-color: tokens.$color-ui-border-base;
   }
 }
 
 .modal__content {
-  padding: 20px 24px 24px;
+  padding: tokens.$spacing-5 tokens.$spacing-6 tokens.$spacing-6;
   overflow-y: auto;
   flex: 1;
 }
 
 .section {
-  margin-bottom: 24px;
+  margin-bottom: tokens.$spacing-6;
 
   &:last-child {
     margin-bottom: 0;
@@ -110,28 +113,28 @@
 }
 
 .description {
-  font-size: 14px;
-  color: #6b7280;
+  font-size: tokens.$typography-font-size-sm;
+  color: tokens.$color-ui-text-secondary;
   margin: 0;
-  line-height: 1.6;
+  line-height: tokens.$typography-line-height-relaxed;
 }
 
 .sectionTitle {
-  font-size: 16px;
-  font-weight: 600;
-  color: #111827;
-  margin: 0 0 12px;
+  font-size: tokens.$typography-font-size-base;
+  font-weight: tokens.$typography-font-weight-semibold;
+  color: tokens.$color-ui-text-primary;
+  margin: 0 0 tokens.$spacing-3;
 }
 
 // Statistics Card
 .statsCard {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 16px;
-  padding: 16px;
-  background-color: #f9fafb;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  gap: tokens.$spacing-4;
+  padding: tokens.$spacing-4;
+  background-color: tokens.$color-ui-background-secondary;
+  border-radius: tokens.$border-radius-lg;
+  border: tokens.$border-width-base solid tokens.$color-ui-border-base;
 }
 
 .stat {
@@ -139,50 +142,50 @@
 }
 
 .stat__value {
-  font-size: 28px;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 4px;
+  font-size: tokens.$typography-font-size-4xl;
+  font-weight: tokens.$typography-font-weight-bold;
+  color: tokens.$color-ui-text-primary;
+  margin-bottom: tokens.$spacing-1;
 }
 
 .stat__label {
-  font-size: 12px;
-  color: #6b7280;
+  font-size: tokens.$typography-font-size-xs;
+  color: tokens.$color-ui-text-secondary;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 500;
+  letter-spacing: tokens.$typography-letter-spacing-wide;
+  font-weight: tokens.$typography-font-weight-medium;
 }
 
 // Platform Groups
 .platformGroups {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: tokens.$spacing-5;
 }
 
 .platformGroup {
   &__title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #374151;
-    margin: 0 0 12px;
+    font-size: tokens.$typography-font-size-sm;
+    font-weight: tokens.$typography-font-weight-semibold;
+    color: tokens.$color-neutral-700;
+    margin: 0 0 tokens.$spacing-3;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: tokens.$typography-letter-spacing-wide;
   }
 }
 
 .clientList {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 12px;
+  gap: tokens.$spacing-3;
 }
 
 // Client Item
 .clientItem {
-  padding: 12px;
-  border-radius: 6px;
-  border: 2px solid;
-  transition: box-shadow 0.15s, transform 0.15s;
+  padding: tokens.$spacing-3;
+  border-radius: tokens.$border-radius-md;
+  border: tokens.$border-width-2 solid;
+  transition: box-shadow tokens.$animation-duration-fast, transform tokens.$animation-duration-fast;
 
   &:hover {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -190,23 +193,23 @@
   }
 
   &--green {
-    border-color: #d1fae5;
-    background-color: #f0fdf4;
+    border-color: tokens.$color-semantic-success-light;
+    background-color: tokens.$color-semantic-success-light;
   }
 
   &--yellow {
-    border-color: #fef3c7;
-    background-color: #fffbeb;
+    border-color: tokens.$color-semantic-warning-light;
+    background-color: tokens.$color-semantic-warning-light;
   }
 
   &--red {
-    border-color: #fecaca;
-    background-color: #fef2f2;
+    border-color: tokens.$color-semantic-error-light;
+    background-color: tokens.$color-semantic-error-light;
   }
 
   &--gray {
-    border-color: #e5e7eb;
-    background-color: #f9fafb;
+    border-color: tokens.$color-ui-border-base;
+    background-color: tokens.$color-ui-background-secondary;
   }
 }
 
@@ -214,53 +217,53 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: tokens.$spacing-2;
 }
 
 .clientItem__name {
-  font-size: 14px;
-  font-weight: 600;
-  color: #111827;
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-semibold;
+  color: tokens.$color-ui-text-primary;
 }
 
 .clientItem__badge {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 12px;
+  font-size: tokens.$typography-font-size-xs;
+  font-weight: tokens.$typography-font-weight-semibold;
+  padding: tokens.$spacing-0-5 tokens.$spacing-2;
+  border-radius: tokens.$border-radius-xl;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: tokens.$typography-letter-spacing-wide;
 
   &.badge--green {
-    background-color: #d1fae5;
-    color: #065f46;
+    background-color: tokens.$color-semantic-success-light;
+    color: tokens.$color-semantic-success-dark;
   }
 
   &.badge--yellow {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: tokens.$color-semantic-warning-light;
+    color: tokens.$color-semantic-warning-dark;
   }
 
   &.badge--red {
-    background-color: #fecaca;
-    color: #991b1b;
+    background-color: tokens.$color-semantic-error-light;
+    color: tokens.$color-semantic-error-dark;
   }
 
   &.badge--gray {
-    background-color: #e5e7eb;
-    color: #374151;
+    background-color: tokens.$color-ui-border-base;
+    color: tokens.$color-neutral-700;
   }
 }
 
 .clientItem__notes {
   margin: 0;
-  padding-left: 20px;
-  font-size: 13px;
-  color: #6b7280;
-  line-height: 1.5;
+  padding-left: tokens.$spacing-5;
+  font-size: tokens.$typography-font-size-xs;
+  color: tokens.$color-ui-text-secondary;
+  line-height: tokens.$typography-line-height-normal;
 
   li {
-    margin-bottom: 4px;
+    margin-bottom: tokens.$spacing-1;
 
     &:last-child {
       margin-bottom: 0;
@@ -272,13 +275,13 @@
 .notesList,
 .workaroundsList {
   margin: 0;
-  padding-left: 20px;
-  font-size: 14px;
-  color: #374151;
-  line-height: 1.6;
+  padding-left: tokens.$spacing-5;
+  font-size: tokens.$typography-font-size-sm;
+  color: tokens.$color-neutral-700;
+  line-height: tokens.$typography-line-height-relaxed;
 
   li {
-    margin-bottom: 8px;
+    margin-bottom: tokens.$spacing-2;
 
     &:last-child {
       margin-bottom: 0;
@@ -288,11 +291,11 @@
 
 .workaroundsList {
   li {
-    font-weight: 500;
-    color: #111827;
+    font-weight: tokens.$typography-font-weight-medium;
+    color: tokens.$color-ui-text-primary;
 
     &::marker {
-      color: #6366f1;
+      color: tokens.$color-brand-primary-600;
     }
   }
 }
@@ -301,23 +304,23 @@
 .supportMatrixButton {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: #ffffff;
+  gap: tokens.$spacing-2;
+  padding: tokens.$spacing-3 tokens.$spacing-5;
+  background: linear-gradient(135deg, tokens.$color-brand-primary-500 0%, tokens.$color-brand-primary-600 100%);
+  color: tokens.$color-ui-text-inverse;
   border: none;
-  font-size: 14px;
-  font-weight: 600;
-  border-radius: 8px;
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-semibold;
+  border-radius: tokens.$border-radius-lg;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all tokens.$animation-duration-normal;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-  margin-bottom: 12px;
+  margin-bottom: tokens.$spacing-3;
   width: 100%;
   justify-content: center;
 
   &:hover {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    background: linear-gradient(135deg, tokens.$color-brand-primary-600 0%, tokens.$color-brand-primary-700 100%);
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
     transform: translateY(-1px);
   }
@@ -332,34 +335,34 @@
 .learnMoreLink {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 10px 16px;
-  background-color: #eef2ff;
-  color: #4f46e5;
+  gap: tokens.$spacing-1-5;
+  padding: tokens.$spacing-2-5 tokens.$spacing-4;
+  background-color: tokens.$color-brand-primary-50;
+  color: tokens.$color-brand-primary-600;
   text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: 6px;
-  transition: background-color 0.15s, color 0.15s;
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-medium;
+  border-radius: tokens.$border-radius-md;
+  transition: background-color tokens.$animation-duration-fast, color tokens.$animation-duration-fast;
 
   &:hover {
-    background-color: #e0e7ff;
-    color: #4338ca;
+    background-color: tokens.$color-brand-primary-100;
+    color: tokens.$color-brand-primary-700;
   }
 
   &:active {
-    background-color: #ddd6fe;
+    background-color: tokens.$color-brand-primary-200;
   }
 }
 
 // No Data State
 .noData {
-  padding: 40px 20px;
+  padding: tokens.$spacing-10 tokens.$spacing-5;
   text-align: center;
 
   p {
-    font-size: 14px;
-    color: #6b7280;
+    font-size: tokens.$typography-font-size-sm;
+    color: tokens.$color-ui-text-secondary;
     margin: 0;
   }
 }

@@ -1,56 +1,53 @@
 /**
  * Email Client Support Matrix Styles
+ * Design tokens are automatically imported via Vite configuration
  */
-
-@use '@tokens/colors' as colors;
-@use '@tokens/spacing' as spacing;
-@use '@tokens/typography' as typography;
 
 // Main container
 .supportMatrix {
   display: flex;
   flex-direction: column;
-  gap: spacing.$lg;
-  padding: spacing.$lg;
-  background: colors.$gray-50;
-  border-radius: spacing.$radius-lg;
+  gap: tokens.$spacing-6;
+  padding: tokens.$spacing-6;
+  background: tokens.$color-ui-background-secondary;
+  border-radius: tokens.$border-radius-lg;
   max-width: 100%;
   overflow: hidden;
 
   &__header {
     text-align: center;
-    margin-bottom: spacing.$md;
+    margin-bottom: tokens.$spacing-4;
   }
 
   &__title {
-    font-size: typography.$font-size-2xl;
-    font-weight: typography.$font-weight-bold;
-    color: colors.$gray-900;
-    margin: 0 0 spacing.$xs 0;
+    font-size: tokens.$typography-font-size-2xl;
+    font-weight: tokens.$typography-font-weight-bold;
+    color: tokens.$color-ui-text-primary;
+    margin: 0 0 tokens.$spacing-1 0;
   }
 
   &__subtitle {
-    font-size: typography.$font-size-base;
-    color: colors.$gray-600;
+    font-size: tokens.$typography-font-size-base;
+    color: tokens.$color-ui-text-secondary;
     margin: 0;
   }
 
   &__footer {
     text-align: center;
-    padding: spacing.$md;
-    background: colors.$white;
-    border-radius: spacing.$radius-md;
-    font-size: typography.$font-size-sm;
-    color: colors.$gray-600;
+    padding: tokens.$spacing-4;
+    background: tokens.$color-ui-background-primary;
+    border-radius: tokens.$border-radius-md;
+    font-size: tokens.$typography-font-size-sm;
+    color: tokens.$color-ui-text-secondary;
 
     p {
-      margin: spacing.$xs 0;
+      margin: tokens.$spacing-1 0;
     }
 
     a {
-      color: colors.$primary-600;
+      color: tokens.$color-brand-primary-600;
       text-decoration: none;
-      font-weight: typography.$font-weight-medium;
+      font-weight: tokens.$typography-font-weight-medium;
 
       &:hover {
         text-decoration: underline;
@@ -63,29 +60,29 @@
 .supportMatrix__stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: spacing.$md;
-  margin-bottom: spacing.$md;
+  gap: tokens.$spacing-4;
+  margin-bottom: tokens.$spacing-4;
 }
 
 .stat {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: spacing.$md;
-  background: colors.$white;
-  border-radius: spacing.$radius-md;
+  padding: tokens.$spacing-4;
+  background: tokens.$color-ui-background-primary;
+  border-radius: tokens.$border-radius-md;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
   &__value {
-    font-size: typography.$font-size-3xl;
-    font-weight: typography.$font-weight-bold;
-    color: colors.$primary-600;
-    margin-bottom: spacing.$xs;
+    font-size: tokens.$typography-font-size-3xl;
+    font-weight: tokens.$typography-font-weight-bold;
+    color: tokens.$color-brand-primary-600;
+    margin-bottom: tokens.$spacing-1;
   }
 
   &__label {
-    font-size: typography.$font-size-sm;
-    color: colors.$gray-600;
+    font-size: tokens.$typography-font-size-sm;
+    color: tokens.$color-ui-text-secondary;
     text-align: center;
   }
 }
@@ -94,12 +91,12 @@
 .tierSections {
   display: flex;
   flex-direction: column;
-  gap: spacing.$md;
+  gap: tokens.$spacing-4;
 }
 
 .tierSection {
-  background: colors.$white;
-  border-radius: spacing.$radius-md;
+  background: tokens.$color-ui-background-primary;
+  border-radius: tokens.$border-radius-md;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
@@ -108,26 +105,26 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding: spacing.$md spacing.$lg;
-    background: colors.$white;
+    padding: tokens.$spacing-4 tokens.$spacing-6;
+    background: tokens.$color-ui-background-primary;
     border: none;
     cursor: pointer;
     transition: background-color 0.2s;
 
     &:hover {
-      background: colors.$gray-50;
+      background: tokens.$color-ui-background-secondary;
     }
 
     &--expanded {
-      background: colors.$gray-50;
-      border-bottom: 1px solid colors.$gray-200;
+      background: tokens.$color-ui-background-secondary;
+      border-bottom: 1px solid tokens.$color-ui-border-base;
     }
   }
 
   &__headerContent {
     display: flex;
     align-items: center;
-    gap: spacing.$md;
+    gap: tokens.$spacing-4;
     flex: 1;
   }
 
@@ -136,27 +133,27 @@
     align-items: center;
     justify-content: center;
     min-width: 60px;
-    padding: spacing.$xs spacing.$sm;
-    border-radius: spacing.$radius-full;
-    font-size: typography.$font-size-sm;
-    font-weight: typography.$font-weight-bold;
-    color: colors.$white;
+    padding: tokens.$spacing-1 tokens.$spacing-2;
+    border-radius: tokens.$border-radius-full;
+    font-size: tokens.$typography-font-size-sm;
+    font-weight: tokens.$typography-font-weight-bold;
+    color: tokens.$color-ui-background-primary;
 
     &.tier-1 {
       background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-      color: colors.$gray-900;
+      color: tokens.$color-ui-text-primary;
       box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
     }
 
     &.tier-2 {
       background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%);
-      color: colors.$gray-900;
+      color: tokens.$color-ui-text-primary;
       box-shadow: 0 2px 4px rgba(192, 192, 192, 0.3);
     }
 
     &.tier-3 {
       background: linear-gradient(135deg, #cd7f32 0%, #e9a96b 100%);
-      color: colors.$white;
+      color: tokens.$color-ui-background-primary;
       box-shadow: 0 2px 4px rgba(205, 127, 50, 0.3);
     }
   }
@@ -165,28 +162,28 @@
     flex: 1;
 
     h3 {
-      margin: 0 0 spacing.$xs 0;
-      font-size: typography.$font-size-lg;
-      font-weight: typography.$font-weight-semibold;
-      color: colors.$gray-900;
+      margin: 0 0 tokens.$spacing-1 0;
+      font-size: tokens.$typography-font-size-lg;
+      font-weight: tokens.$typography-font-weight-semibold;
+      color: tokens.$color-ui-text-primary;
     }
   }
 
   &__description {
     margin: 0;
-    font-size: typography.$font-size-sm;
-    color: colors.$gray-600;
+    font-size: tokens.$typography-font-size-sm;
+    color: tokens.$color-ui-text-secondary;
   }
 
   &__toggle {
-    font-size: typography.$font-size-lg;
-    color: colors.$gray-400;
+    font-size: tokens.$typography-font-size-lg;
+    color: tokens.$color-ui-text-tertiary;
     transition: transform 0.2s;
   }
 
   &__content {
-    padding: spacing.$lg;
-    background: colors.$gray-50;
+    padding: tokens.$spacing-6;
+    background: tokens.$color-ui-background-secondary;
     animation: slideDown 0.3s ease-out;
   }
 }
@@ -206,18 +203,18 @@
 .clientGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: spacing.$md;
+  gap: tokens.$spacing-4;
 }
 
 // Client card
 .clientCard {
   display: flex;
   flex-direction: column;
-  gap: spacing.$sm;
-  padding: spacing.$md;
-  background: colors.$white;
-  border: 1px solid colors.$gray-200;
-  border-radius: spacing.$radius-md;
+  gap: tokens.$spacing-2;
+  padding: tokens.$spacing-4;
+  background: tokens.$color-ui-background-primary;
+  border: 1px solid tokens.$color-ui-border-base;
+  border-radius: tokens.$border-radius-md;
   transition: transform 0.2s, box-shadow 0.2s;
 
   &:hover {
@@ -228,30 +225,30 @@
   &__header {
     display: flex;
     flex-direction: column;
-    gap: spacing.$xs;
+    gap: tokens.$spacing-1;
   }
 
   &__title {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: spacing.$sm;
+    gap: tokens.$spacing-2;
   }
 
   &__name {
     margin: 0;
-    font-size: typography.$font-size-base;
-    font-weight: typography.$font-weight-semibold;
-    color: colors.$gray-900;
+    font-size: tokens.$typography-font-size-base;
+    font-weight: tokens.$typography-font-weight-semibold;
+    color: tokens.$color-ui-text-primary;
   }
 
   &__tier {
     display: inline-flex;
     align-items: center;
-    padding: 2px spacing.$xs;
-    border-radius: spacing.$radius-sm;
-    font-size: typography.$font-size-xs;
-    font-weight: typography.$font-weight-bold;
+    padding: 2px tokens.$spacing-1;
+    border-radius: tokens.$border-radius-base;
+    font-size: tokens.$typography-font-size-xs;
+    font-weight: tokens.$typography-font-weight-bold;
     white-space: nowrap;
 
     &.tier-1 {
@@ -273,66 +270,66 @@
   &__platform {
     display: inline-flex;
     align-items: center;
-    font-size: typography.$font-size-xs;
-    color: colors.$gray-500;
+    font-size: tokens.$typography-font-size-xs;
+    color: tokens.$color-ui-icon-secondary;
     text-transform: capitalize;
   }
 
   &__marketShare {
     display: flex;
     align-items: center;
-    gap: spacing.$xs;
-    padding: spacing.$xs 0;
-    border-top: 1px solid colors.$gray-100;
-    border-bottom: 1px solid colors.$gray-100;
-    font-size: typography.$font-size-sm;
+    gap: tokens.$spacing-1;
+    padding: tokens.$spacing-1 0;
+    border-top: 1px solid tokens.$color-ui-background-tertiary;
+    border-bottom: 1px solid tokens.$color-ui-background-tertiary;
+    font-size: tokens.$typography-font-size-sm;
   }
 
   &__label {
-    color: colors.$gray-600;
-    font-weight: typography.$font-weight-medium;
+    color: tokens.$color-ui-text-secondary;
+    font-weight: tokens.$typography-font-weight-medium;
   }
 
   &__value {
-    color: colors.$primary-600;
-    font-weight: typography.$font-weight-semibold;
+    color: tokens.$color-brand-primary-600;
+    font-weight: tokens.$typography-font-weight-semibold;
   }
 
   &__description {
     margin: 0;
-    font-size: typography.$font-size-sm;
-    color: colors.$gray-600;
+    font-size: tokens.$typography-font-size-sm;
+    color: tokens.$color-ui-text-secondary;
     line-height: 1.5;
   }
 
   &__footer {
     display: flex;
     flex-direction: column;
-    gap: spacing.$sm;
+    gap: tokens.$spacing-2;
     margin-top: auto;
-    padding-top: spacing.$sm;
+    padding-top: tokens.$spacing-2;
   }
 
   &__testable {
-    font-size: typography.$font-size-xs;
-    color: colors.$success-600;
-    font-weight: typography.$font-weight-medium;
+    font-size: tokens.$typography-font-size-xs;
+    color: tokens.$color-semantic-success-base;
+    font-weight: tokens.$typography-font-weight-medium;
   }
 
   &__detailsBtn {
-    padding: spacing.$xs spacing.$sm;
-    background: colors.$primary-50;
-    color: colors.$primary-700;
-    border: 1px solid colors.$primary-200;
-    border-radius: spacing.$radius-sm;
-    font-size: typography.$font-size-sm;
-    font-weight: typography.$font-weight-medium;
+    padding: tokens.$spacing-1 tokens.$spacing-2;
+    background: tokens.$color-brand-primary-50;
+    color: tokens.$color-brand-primary-700;
+    border: 1px solid tokens.$color-brand-primary-200;
+    border-radius: tokens.$border-radius-base;
+    font-size: tokens.$typography-font-size-sm;
+    font-weight: tokens.$typography-font-weight-medium;
     cursor: pointer;
     transition: all 0.2s;
 
     &:hover {
-      background: colors.$primary-100;
-      border-color: colors.$primary-300;
+      background: tokens.$color-brand-primary-100;
+      border-color: tokens.$color-brand-primary-300;
     }
 
     &:active {
@@ -343,26 +340,26 @@
 
 // Feature matrix
 .featureMatrix {
-  background: colors.$white;
-  border-radius: spacing.$radius-md;
-  padding: spacing.$lg;
+  background: tokens.$color-ui-background-primary;
+  border-radius: tokens.$border-radius-md;
+  padding: tokens.$spacing-6;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
   &__header {
-    margin-bottom: spacing.$md;
+    margin-bottom: tokens.$spacing-4;
     text-align: center;
 
     h3 {
-      margin: 0 0 spacing.$xs 0;
-      font-size: typography.$font-size-xl;
-      font-weight: typography.$font-weight-bold;
-      color: colors.$gray-900;
+      margin: 0 0 tokens.$spacing-1 0;
+      font-size: tokens.$typography-font-size-xl;
+      font-weight: tokens.$typography-font-weight-bold;
+      color: tokens.$color-ui-text-primary;
     }
 
     p {
       margin: 0;
-      font-size: typography.$font-size-sm;
-      color: colors.$gray-600;
+      font-size: tokens.$typography-font-size-sm;
+      color: tokens.$color-ui-text-secondary;
     }
   }
 }
@@ -370,9 +367,9 @@
 // Matrix table
 .matrixTable {
   overflow-x: auto;
-  margin-bottom: spacing.$md;
-  border: 1px solid colors.$gray-200;
-  border-radius: spacing.$radius-md;
+  margin-bottom: tokens.$spacing-4;
+  border: 1px solid tokens.$color-ui-border-base;
+  border-radius: tokens.$border-radius-md;
 
   &__scroll {
     min-width: 800px;
@@ -381,21 +378,21 @@
   table {
     width: 100%;
     border-collapse: collapse;
-    background: colors.$white;
+    background: tokens.$color-ui-background-primary;
   }
 
   thead {
-    background: colors.$gray-50;
-    border-bottom: 2px solid colors.$gray-200;
+    background: tokens.$color-ui-background-secondary;
+    border-bottom: 2px solid tokens.$color-ui-border-base;
   }
 
   th {
-    padding: spacing.$sm;
-    font-size: typography.$font-size-xs;
-    font-weight: typography.$font-weight-semibold;
+    padding: tokens.$spacing-2;
+    font-size: tokens.$typography-font-size-xs;
+    font-weight: tokens.$typography-font-weight-semibold;
     text-align: center;
-    color: colors.$gray-700;
-    border-right: 1px solid colors.$gray-200;
+    color: tokens.$color-ui-icon-primary;
+    border-right: 1px solid tokens.$color-ui-border-base;
 
     &:last-child {
       border-right: none;
@@ -407,7 +404,7 @@
     min-width: 120px;
     position: sticky;
     left: 0;
-    background: colors.$gray-50;
+    background: tokens.$color-ui-background-secondary;
     z-index: 2;
   }
 
@@ -423,7 +420,7 @@
     gap: 2px;
 
     span:first-child {
-      font-size: typography.$font-size-xs;
+      font-size: tokens.$typography-font-size-xs;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -437,9 +434,9 @@
     justify-content: center;
     width: 20px;
     height: 16px;
-    border-radius: spacing.$radius-sm;
+    border-radius: tokens.$border-radius-base;
     font-size: 9px;
-    font-weight: typography.$font-weight-bold;
+    font-weight: tokens.$typography-font-weight-bold;
 
     &.tier-1 {
       background: rgba(255, 215, 0, 0.3);
@@ -458,17 +455,17 @@
   }
 
   tbody tr {
-    border-bottom: 1px solid colors.$gray-100;
+    border-bottom: 1px solid tokens.$color-ui-background-tertiary;
 
     &:hover {
-      background: colors.$gray-50;
+      background: tokens.$color-ui-background-secondary;
     }
   }
 
   td {
-    padding: spacing.$sm;
+    padding: tokens.$spacing-2;
     text-align: center;
-    border-right: 1px solid colors.$gray-100;
+    border-right: 1px solid tokens.$color-ui-background-tertiary;
 
     &:last-child {
       border-right: none;
@@ -479,39 +476,39 @@
     text-align: left !important;
     position: sticky;
     left: 0;
-    background: colors.$white;
+    background: tokens.$color-ui-background-primary;
     z-index: 1;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: spacing.$xs;
+    gap: tokens.$spacing-1;
 
     tr:hover & {
-      background: colors.$gray-50;
+      background: tokens.$color-ui-background-secondary;
     }
   }
 
   &__propertyBtn {
     flex: 1;
     text-align: left;
-    padding: spacing.$xs;
+    padding: tokens.$spacing-1;
     background: none;
     border: none;
-    font-size: typography.$font-size-sm;
-    font-family: typography.$font-family-mono;
-    color: colors.$gray-900;
+    font-size: tokens.$typography-font-size-sm;
+    font-family: tokens.$typography-font-family-mono;
+    color: tokens.$color-ui-text-primary;
     cursor: pointer;
     transition: color 0.2s;
 
     &:hover {
-      color: colors.$primary-600;
+      color: tokens.$color-brand-primary-600;
     }
   }
 
   &__propertyScore {
-    font-size: typography.$font-size-xs;
-    font-weight: typography.$font-weight-semibold;
-    color: colors.$gray-500;
+    font-size: tokens.$typography-font-size-xs;
+    font-weight: tokens.$typography-font-weight-semibold;
+    color: tokens.$color-ui-icon-secondary;
     white-space: nowrap;
   }
 
@@ -535,23 +532,23 @@
 
 // Support level colors
 .support-full .matrixTable__supportIndicator {
-  background: colors.$success-500;
-  box-shadow: 0 0 0 2px colors.$success-100;
+  background: tokens.$color-semantic-success-base;
+  box-shadow: 0 0 0 2px tokens.$color-semantic-success-light;
 }
 
 .support-partial .matrixTable__supportIndicator {
-  background: colors.$warning-500;
-  box-shadow: 0 0 0 2px colors.$warning-100;
+  background: tokens.$color-semantic-warning-base;
+  box-shadow: 0 0 0 2px tokens.$color-semantic-warning-light;
 }
 
 .support-none .matrixTable__supportIndicator {
-  background: colors.$error-500;
-  box-shadow: 0 0 0 2px colors.$error-100;
+  background: tokens.$color-semantic-error-base;
+  box-shadow: 0 0 0 2px tokens.$color-semantic-error-light;
 }
 
 .support-unknown .matrixTable__supportIndicator {
-  background: colors.$gray-300;
-  box-shadow: 0 0 0 2px colors.$gray-100;
+  background: tokens.$color-ui-text-disabled;
+  box-shadow: 0 0 0 2px tokens.$color-ui-background-tertiary;
 }
 
 // Matrix legend
@@ -559,29 +556,29 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: spacing.$md;
-  padding: spacing.$md;
-  background: colors.$gray-50;
-  border-radius: spacing.$radius-md;
-  font-size: typography.$font-size-sm;
+  gap: tokens.$spacing-4;
+  padding: tokens.$spacing-4;
+  background: tokens.$color-ui-background-secondary;
+  border-radius: tokens.$border-radius-md;
+  font-size: tokens.$typography-font-size-sm;
 
   &__title {
-    font-weight: typography.$font-weight-semibold;
-    color: colors.$gray-700;
-    margin-right: spacing.$xs;
+    font-weight: tokens.$typography-font-weight-semibold;
+    color: tokens.$color-ui-icon-primary;
+    margin-right: tokens.$spacing-1;
   }
 
   &__items {
     display: flex;
-    gap: spacing.$md;
+    gap: tokens.$spacing-4;
     flex-wrap: wrap;
   }
 
   &__item {
     display: flex;
     align-items: center;
-    gap: spacing.$xs;
-    color: colors.$gray-700;
+    gap: tokens.$spacing-1;
+    color: tokens.$color-ui-icon-primary;
   }
 
   &__indicator {
@@ -591,19 +588,19 @@
     border-radius: 50%;
 
     &.support-full {
-      background: colors.$success-500;
+      background: tokens.$color-semantic-success-base;
     }
 
     &.support-partial {
-      background: colors.$warning-500;
+      background: tokens.$color-semantic-warning-base;
     }
 
     &.support-none {
-      background: colors.$error-500;
+      background: tokens.$color-semantic-error-base;
     }
 
     &.support-unknown {
-      background: colors.$gray-300;
+      background: tokens.$color-ui-text-disabled;
     }
   }
 }
@@ -611,7 +608,7 @@
 // Responsive
 @media (max-width: 768px) {
   .supportMatrix {
-    padding: spacing.$md;
+    padding: tokens.$spacing-4;
   }
 
   .clientGrid {
@@ -623,6 +620,6 @@
   }
 
   .matrixTable {
-    font-size: typography.$font-size-xs;
+    font-size: tokens.$typography-font-size-xs;
   }
 }

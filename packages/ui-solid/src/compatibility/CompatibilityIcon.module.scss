@@ -1,11 +1,15 @@
-// Compatibility Icon Styles
+/**
+ * Compatibility Icon Styles
+ * Design tokens are automatically imported via Vite configuration
+ */
 
 .compatibilityIcon {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: tokens.$spacing-1;
   cursor: pointer;
-  transition: transform 0.15s ease, opacity 0.15s ease;
+  transition: transform tokens.$animation-duration-fast tokens.$animation-easing-ease,
+              opacity tokens.$animation-duration-fast tokens.$animation-easing-ease;
 
   &:hover {
     transform: scale(1.1);
@@ -17,34 +21,34 @@
 
   // Color variants
   &--green {
-    color: #10b981; // green-500
+    color: tokens.$color-semantic-success-base;
 
     &:hover {
-      color: #059669; // green-600
+      color: tokens.$color-semantic-success-dark;
     }
   }
 
   &--yellow {
-    color: #f59e0b; // yellow-500
+    color: tokens.$color-semantic-warning-base;
 
     &:hover {
-      color: #d97706; // yellow-600
+      color: tokens.$color-semantic-warning-dark;
     }
   }
 
   &--red {
-    color: #ef4444; // red-500
+    color: tokens.$color-semantic-error-base;
 
     &:hover {
-      color: #dc2626; // red-600
+      color: tokens.$color-semantic-error-dark;
     }
   }
 
   &--gray {
-    color: #9ca3af; // gray-400
+    color: tokens.$color-neutral-400;
 
     &:hover {
-      color: #6b7280; // gray-500
+      color: tokens.$color-neutral-500;
     }
   }
 
@@ -54,8 +58,8 @@
 }
 
 .compatibilityIcon__label {
-  font-size: 12px;
-  font-weight: 500;
+  font-size: tokens.$typography-font-size-xs;
+  font-weight: tokens.$typography-font-weight-medium;
   white-space: nowrap;
-  color: #374151; // gray-700
+  color: tokens.$color-neutral-700;
 }

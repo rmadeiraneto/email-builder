@@ -1,5 +1,6 @@
 /**
  * ToggleButton Component Styles
+ * Design tokens are automatically imported via Vite configuration
  * Toggle button with active and disabled states using data attributes
  */
 
@@ -7,32 +8,32 @@
   // Base toggle button styles
   display: inline-block;
   position: relative;
-  width: 44px;
-  height: 24px;
-  background-color: #ccc;
-  border-radius: 12px;
+  width: tokens.$sizing-11;
+  height: tokens.$sizing-6;
+  background-color: tokens.$color-neutral-300;
+  border-radius: tokens.$border-radius-full;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color tokens.$animation-duration-slow tokens.$animation-easing-ease;
 
   // Toggle indicator (sliding circle)
   &::before {
     content: '';
     position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 20px;
-    height: 20px;
-    background-color: #fff;
-    border-radius: 50%;
-    transition: transform 0.3s ease;
+    top: tokens.$border-width-2;
+    left: tokens.$border-width-2;
+    width: tokens.$sizing-5;
+    height: tokens.$sizing-5;
+    background-color: tokens.$color-ui-background-primary;
+    border-radius: tokens.$border-radius-full;
+    transition: transform tokens.$animation-duration-slow tokens.$animation-easing-ease;
   }
 
   // Active state (toggled on)
   &[data-toggled='true'] {
-    background-color: #4caf50;
+    background-color: tokens.$color-semantic-success-base;
 
     &::before {
-      transform: translateX(20px);
+      transform: translateX(tokens.$sizing-5);
     }
   }
 

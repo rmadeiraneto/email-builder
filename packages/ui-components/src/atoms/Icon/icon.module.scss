@@ -1,5 +1,6 @@
 /**
  * Icon component styles
+ * Design tokens are automatically imported via Vite configuration
  */
 
 .icon {
@@ -8,7 +9,7 @@
   justify-content: center;
   vertical-align: middle;
   user-select: none;
-  line-height: 1;
+  line-height: tokens.$typography-line-height-none;
 
   &--clickable {
     cursor: pointer;

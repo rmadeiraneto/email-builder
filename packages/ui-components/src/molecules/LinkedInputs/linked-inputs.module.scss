@@ -1,3 +1,11 @@
+/**
+ * LinkedInputs Component Styles
+ * Design tokens are automatically imported via Vite configuration
+ *
+ * A group of linked input fields that can be connected/unconnected.
+ * Includes link button to toggle value synchronization.
+ */
+
 .linked-inputs {
   align-items: flex-end;
   display: flex;
@@ -10,23 +18,23 @@
   &__item-wrapper {
     display: inline-flex;
     flex-direction: column;
-    gap: 4px;
+    gap: tokens.$spacing-1;
   }
 
   &__item {
     // First item gets left border radius
     &:first-child {
       :global(.input-number__input) {
-        border-radius: 6px 0 0 6px;
+        border-radius: tokens.$border-radius-md 0 0 tokens.$border-radius-md;
       }
     }
   }
 
   &__label {
-    color: var(--DT-Gray-04, #7e8299);
-    font-size: 10px;
-    font-weight: 500;
-    line-height: 140%;
+    color: tokens.$color-ui-text-secondary;
+    font-size: tokens.$typography-font-size-xs;
+    font-weight: tokens.$typography-font-weight-medium;
+    line-height: 1.4;
   }
 
   &__input {
@@ -35,16 +43,16 @@
   }
 
   &__link {
-    border-radius: 0 6px 6px 0;
-    height: 28px; // Match input height
-    min-width: 32px;
+    border-radius: 0 tokens.$border-radius-md tokens.$border-radius-md 0;
+    height: tokens.$sizing-7; // Match input height
+    min-width: tokens.$sizing-8;
 
     &--active {
-      background-color: var(--color-primary-500, #3b82f6);
-      color: white;
+      background-color: tokens.$color-brand-primary-500;
+      color: tokens.$color-ui-background-primary;
 
       &:hover {
-        background-color: var(--color-primary-600, #2563eb);
+        background-color: tokens.$color-brand-primary-600;
       }
     }
   }

@@ -1,17 +1,22 @@
-// ToggleableSection Component Styles
-// BEM Methodology with CSS Modules
+/**
+ * ToggleableSection Component Styles
+ * Design tokens are automatically imported via Vite configuration
+ *
+ * A section with expandable/collapsible content.
+ * Includes label, toggle button, and content area.
+ */
 
 .toggleableSection {
   // TODO: Specify this in a layout stylesheet
   &:where(:not(:first-child)) {
-    margin-top: 12px;
+    margin-top: tokens.$spacing-3;
   }
 
   // Label element
   &__label {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: tokens.$spacing-1-5;
   }
 
   // Wrapper for label and toggle button (when toggleable)
@@ -23,7 +28,7 @@
 
   // Content element
   &__content {
-    margin-top: 6px;
+    margin-top: tokens.$spacing-1-5;
 
     // Hide content when section is not open
     &:not(.toggleableSection--open > &) {
@@ -35,7 +40,7 @@
   &__toggleLabelWrapper {
     align-items: center;
     display: inline-flex;
-    gap: 6px;
+    gap: tokens.$spacing-1-5;
     justify-content: flex-end;
   }
 

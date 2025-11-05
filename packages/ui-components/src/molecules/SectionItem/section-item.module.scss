@@ -1,28 +1,33 @@
-// SectionItem Component Styles
-// BEM Methodology with CSS Modules
+/**
+ * SectionItem Component Styles
+ * Design tokens are automatically imported via Vite configuration
+ *
+ * A section item with label and content areas.
+ * Provides consistent spacing and typography.
+ */
 
 .sectionItem {
   // Spacing between consecutive section items
   & + & {
-    margin-top: 12px;
+    margin-top: tokens.$spacing-3;
   }
 
   // Element: Label
   &__label {
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin-bottom: 6px;
-    color: #7e8299;
-    font-size: 14px;
-    font-weight: 500;
+    gap: tokens.$spacing-1-5;
+    margin-bottom: tokens.$spacing-1-5;
+    color: tokens.$color-ui-text-secondary;
+    font-size: tokens.$typography-font-size-sm;
+    font-weight: tokens.$typography-font-weight-medium;
   }
 
   // Element: Content
   &__content {
     // Content after label gets top margin
     .sectionItem__label + & {
-      margin-top: 16px;
+      margin-top: tokens.$spacing-4;
     }
   }
 }

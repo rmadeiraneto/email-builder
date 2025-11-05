@@ -371,7 +371,8 @@ export class CompatibilityChecker {
     const props = component.content || {};
 
     // Check for alt text
-    if (!props.alt || props.alt.trim() === '') {
+    const alt = props['alt'];
+    if (!alt || (typeof alt === 'string' && alt.trim() === '')) {
       issues.push(this.createIssue({
         severity: IssueSeverity.WARNING,
         category: IssueCategory.ACCESSIBILITY,
@@ -386,7 +387,7 @@ export class CompatibilityChecker {
     }
 
     // Check for width and height
-    if (!props.width) {
+    if (!props['width']) {
       issues.push(this.createIssue({
         severity: IssueSeverity.SUGGESTION,
         category: IssueCategory.IMAGES,
@@ -400,7 +401,7 @@ export class CompatibilityChecker {
       }));
     }
 
-    if (!props.height) {
+    if (!props['height']) {
       issues.push(this.createIssue({
         severity: IssueSeverity.SUGGESTION,
         category: IssueCategory.IMAGES,
@@ -415,14 +416,15 @@ export class CompatibilityChecker {
     }
 
     // Check for relative URLs
-    if (props.src && !props.src.startsWith('http://') && !props.src.startsWith('https://')) {
+    const src = props['src'];
+    if (src && typeof src === 'string' && !src.startsWith('http://') && !src.startsWith('https://')) {
       issues.push(this.createIssue({
         severity: IssueSeverity.CRITICAL,
         category: IssueCategory.IMAGES,
         componentId: component.id,
         componentType: component.type,
         property: 'src',
-        value: props.src,
+        value: src,
         message: 'Image uses relative URL instead of absolute URL',
         details: 'Email clients require absolute URLs (starting with http:// or https://) for images to display correctly.',
         autoFixAvailable: false,
@@ -441,7 +443,7 @@ export class CompatibilityChecker {
     const props = component.content || {};
 
     // Check buttons and links for accessible text
-    if ((component.type === 'button' || component.type === 'link') && !props.text && !props.children) {
+    if ((component.type === 'button' || component.type === 'link') && !props['text'] && !props['children']) {
       issues.push(this.createIssue({
         severity: IssueSeverity.WARNING,
         category: IssueCategory.ACCESSIBILITY,
@@ -465,8 +467,8 @@ export class CompatibilityChecker {
     const props = component.content || {};
 
     // Check for very long text content
-    if (component.type === 'text' && props.content) {
-      const content = String(props.content);
+    if (component.type === 'text' && props['content']) {
+      const content = String(props['content']);
       if (content.length > 1000) {
         issues.push(this.createIssue({
           severity: IssueSeverity.SUGGESTION,

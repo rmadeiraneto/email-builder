@@ -274,7 +274,7 @@ export const buttonDefinition: ComponentDefinition = {
 
     return {
       valid: errors.length === 0,
-      errors: errors.length > 0 ? errors : undefined,
+      errors: errors.length > 0 ? errors : [],
     };
   },
 };
@@ -402,7 +402,7 @@ export const textDefinition: ComponentDefinition = {
 
     return {
       valid: errors.length === 0,
-      errors: errors.length > 0 ? errors : undefined,
+      errors: errors.length > 0 ? errors : [],
     };
   },
 };
@@ -539,7 +539,7 @@ export const imageDefinition: ComponentDefinition = {
 
     return {
       valid: errors.length === 0,
-      errors: errors.length > 0 ? errors : undefined,
+      errors: errors.length > 0 ? errors : [],
     };
   },
 };
@@ -578,7 +578,7 @@ export const separatorDefinition: ComponentDefinition = {
 
     return {
       valid: errors.length === 0,
-      errors: errors.length > 0 ? errors : undefined,
+      errors: errors.length > 0 ? errors : [],
     };
   },
 };
@@ -610,7 +610,7 @@ export const spacerDefinition: ComponentDefinition = {
 
     return {
       valid: errors.length === 0,
-      errors: errors.length > 0 ? errors : undefined,
+      errors: errors.length > 0 ? errors : [],
     };
   },
 };

@@ -133,7 +133,7 @@ export const headerDefinition: ComponentDefinition = {
 
     return {
       valid: errors.length === 0,
-      errors: errors.length > 0 ? errors : undefined,
+      errors: errors.length > 0 ? errors : [],
     };
   },
 };
@@ -238,7 +238,7 @@ export const footerDefinition: ComponentDefinition = {
 
     return {
       valid: errors.length === 0,
-      errors: errors.length > 0 ? errors : undefined,
+      errors: errors.length > 0 ? errors : [],
     };
   },
 };
@@ -389,7 +389,7 @@ export const heroDefinition: ComponentDefinition = {
 
     return {
       valid: errors.length === 0,
-      errors: errors.length > 0 ? errors : undefined,
+      errors: errors.length > 0 ? errors : [],
     };
   },
 };
@@ -509,7 +509,7 @@ export const listDefinition: ComponentDefinition = {
 
     return {
       valid: errors.length === 0,
-      errors: errors.length > 0 ? errors : undefined,
+      errors: errors.length > 0 ? errors : [],
     };
   },
 };
@@ -665,7 +665,7 @@ export const ctaDefinition: ComponentDefinition = {
 
     return {
       valid: errors.length === 0,
-      errors: errors.length > 0 ? errors : undefined,
+      errors: errors.length > 0 ? errors : [],
     };
   },
 };

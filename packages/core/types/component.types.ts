@@ -145,6 +145,52 @@ export interface BaseStyles {
    * Custom inline styles (for advanced users)
    */
   customStyles?: Record<string, string>;
+
+  /**
+   * Font family
+   */
+  fontFamily?: string;
+
+  /**
+   * Font size
+   */
+  fontSize?: CSSValue;
+
+  /**
+   * Font weight
+   */
+  fontWeight?: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 'normal' | 'bold';
+
+  /**
+   * Display mode
+   */
+  display?: 'block' | 'inline' | 'inline-block' | 'flex' | 'grid' | 'none';
+
+  /**
+   * Object fit for images
+   */
+  objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
+
+  /**
+   * Link styles configuration
+   */
+  linkStyles?: {
+    color?: string;
+    textDecoration?: string;
+    hover?: {
+      color?: string;
+      textDecoration?: string;
+    };
+  };
+
+  /**
+   * Text styles configuration
+   */
+  textStyles?: {
+    fontSize?: string;
+    lineHeight?: string;
+    color?: string;
+  };
 }
 
 /**

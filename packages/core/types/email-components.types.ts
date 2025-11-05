@@ -69,6 +69,11 @@ export interface HeaderContent {
    * Show navigation
    */
   showNavigation: boolean;
+
+  /**
+   * Allow additional properties for extensibility
+   */
+  [key: string]: unknown;
 }
 
 /**
@@ -200,6 +205,11 @@ export interface FooterContent {
    * Copyright text
    */
   copyrightText?: string;
+
+  /**
+   * Allow additional properties for extensibility
+   */
+  [key: string]: unknown;
 }
 
 /**
@@ -292,6 +302,11 @@ export interface HeroContent {
    * Show button
    */
   showButton: boolean;
+
+  /**
+   * Allow additional properties for extensibility
+   */
+  [key: string]: unknown;
 }
 
 /**
@@ -424,6 +439,11 @@ export interface ListContent {
    * Columns (for horizontal layout)
    */
   columns?: number;
+
+  /**
+   * Allow additional properties for extensibility
+   */
+  [key: string]: unknown;
 }
 
 /**
@@ -531,6 +551,11 @@ export interface CTAContent {
    * Show description
    */
   showDescription: boolean;
+
+  /**
+   * Allow additional properties for extensibility
+   */
+  [key: string]: unknown;
 }
 
 /**

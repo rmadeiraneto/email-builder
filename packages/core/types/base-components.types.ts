@@ -79,6 +79,11 @@ export interface ButtonContent {
    * Icon position
    */
   iconPosition?: 'left' | 'right';
+
+  /**
+   * Allow additional properties for extensibility
+   */
+  [key: string]: unknown;
 }
 
 /**
@@ -145,6 +150,11 @@ export interface TextContent {
    * Lexical editor state (for editing)
    */
   editorState?: string;
+
+  /**
+   * Allow additional properties for extensibility
+   */
+  [key: string]: unknown;
 }
 
 /**
@@ -196,6 +206,11 @@ export interface ImageContent {
    * Lazy loading
    */
   lazy?: boolean;
+
+  /**
+   * Allow additional properties for extensibility
+   */
+  [key: string]: unknown;
 }
 
 /**
@@ -257,6 +272,11 @@ export interface SeparatorContent {
    * Separator style
    */
   style: 'solid' | 'dashed' | 'dotted' | 'double';
+
+  /**
+   * Allow additional properties for extensibility
+   */
+  [key: string]: unknown;
 }
 
 /**
@@ -283,6 +303,11 @@ export interface SpacerContent {
    * Spacer width (for vertical spacing)
    */
   width?: CSSValue;
+
+  /**
+   * Allow additional properties for extensibility
+   */
+  [key: string]: unknown;
 }
 
 /**

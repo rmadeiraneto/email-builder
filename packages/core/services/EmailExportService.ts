@@ -14,7 +14,6 @@ import type {
   EmailExportResult,
   EmailExportWarning,
   CSSRule,
-  TableConversionContext,
   CSSCompatibility,
 } from './email-export.types';
 
@@ -316,9 +315,6 @@ export class EmailExportService {
       const classMatch = rule.selector.match(/^\.([a-zA-Z0-9_-]+)$/);
       if (classMatch) {
         const className = classMatch[1];
-        const styleString = Object.entries(rule.properties)
-          .map(([prop, value]) => `${prop}: ${value}`)
-          .join('; ');
 
         // Find all elements with this class
         const classRegex = new RegExp(
@@ -326,7 +322,7 @@ export class EmailExportService {
           'gi'
         );
 
-        processedHTML = processedHTML.replace(classRegex, (match, before, styleAttr, existingStyle, after) => {
+        processedHTML = processedHTML.replace(classRegex, (_match, before, _styleAttr, existingStyle, after) => {
           const existingProps = this.parseInlineStyle(existingStyle || '');
           const mergedProps = { ...rule.properties, ...existingProps };
           const newStyle = Object.entries(mergedProps)
@@ -371,7 +367,7 @@ export class EmailExportService {
 
     // Clean inline styles
     const styleRegex = /(<[^>]+)style=["']([^"']*)["']([^>]*>)/gi;
-    processedHTML = processedHTML.replace(styleRegex, (match, before, styleText, after) => {
+    processedHTML = processedHTML.replace(styleRegex, (_match, before, styleText, after) => {
       const properties = this.parseInlineStyle(styleText);
 
       // Filter out unsafe properties
@@ -413,7 +409,7 @@ export class EmailExportService {
     // Convert layout divs to tables
     const layoutDivRegex = /<div\s+([^>]*(?:data-layout|class=["'][^"']*(?:container|row|column)[^"']*["'])[^>]*)>([\s\S]*?)<\/div>/gi;
 
-    processedHTML = processedHTML.replace(layoutDivRegex, (match, attributes, content) => {
+    processedHTML = processedHTML.replace(layoutDivRegex, (_match, attributes, content) => {
       // Extract style attribute
       const styleMatch = attributes.match(/style=["']([^"']*)["']/);
       const styleText = styleMatch ? styleMatch[1] : '';
@@ -422,7 +418,7 @@ export class EmailExportService {
       // Extract context
       const align = this.extractAlign(properties);
       const valign = this.extractVAlign(properties);
-      const width = properties.width || this.options.maxWidth.toString();
+      const width = properties['width'] || this.options.maxWidth.toString();
       const bgcolor = properties['background-color'];
 
       // Build table

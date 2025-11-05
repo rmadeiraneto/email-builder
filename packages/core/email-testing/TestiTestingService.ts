@@ -11,7 +11,6 @@ import type {
   EmailClient,
   EmailTestRequest,
   EmailTestResponse,
-  COMMON_EMAIL_CLIENTS,
   TestStatus,
 } from './email-testing.types';
 

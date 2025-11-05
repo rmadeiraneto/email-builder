@@ -3,7 +3,7 @@
  * Displays shadow elevation tokens
  */
 
-import { For, Component, createMemo } from 'solid-js';
+import { For, type Component, createMemo } from 'solid-js';
 import styles from './ShadowTokens.module.scss';
 import defaultElevation from '@email-builder/tokens/shadow/elevation';
 

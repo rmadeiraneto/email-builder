@@ -18,6 +18,19 @@ import { tokenStorage, type CustomTokens } from '../utils/tokenStorage';
 import { applyCustomTokens, removeCustomTokens, TokenExporter } from '../utils/tokenApplier';
 import { getDefaultTokens, mergeTokens, getAllTokensFlat } from '../utils/tokenLoader';
 
+// Import default tokens
+import defaultBrandColors from '@email-builder/tokens/colors/brand';
+import defaultSemanticColors from '@email-builder/tokens/colors/semantic';
+import defaultUiColors from '@email-builder/tokens/colors/ui';
+import defaultFonts from '@email-builder/tokens/typography/fonts';
+import defaultSizes from '@email-builder/tokens/typography/sizes';
+import defaultWeights from '@email-builder/tokens/typography/weights';
+import defaultLineHeights from '@email-builder/tokens/typography/line-heights';
+import defaultSpacingData from '@email-builder/tokens/spacing/scale';
+import defaultBorderRadius from '@email-builder/tokens/border/radius';
+import defaultBorderWidth from '@email-builder/tokens/border/width';
+import defaultElevation from '@email-builder/tokens/shadow/elevation';
+
 type Section = 'colors' | 'typography' | 'spacing' | 'border' | 'shadow' | 'animation' | 'breakpoints' | 'components';
 
 const StyleguideBuilder: Component = () => {
@@ -139,6 +152,42 @@ const StyleguideBuilder: Component = () => {
     return mergeTokens(category.tokens, customTokens());
   };
 
+  // Helper functions to get merged tokens for specific components
+  const getMergedColorTokens = () => {
+    const custom = customTokens();
+    return {
+      brandColors: mergeTokens(defaultBrandColors, custom),
+      semanticColors: mergeTokens(defaultSemanticColors, custom),
+      uiColors: mergeTokens(defaultUiColors, custom),
+    };
+  };
+
+  const getMergedTypographyTokens = () => {
+    const custom = customTokens();
+    return {
+      fonts: mergeTokens(defaultFonts, custom),
+      sizes: mergeTokens(defaultSizes, custom),
+      weights: mergeTokens(defaultWeights, custom),
+      lineHeights: mergeTokens(defaultLineHeights, custom),
+    };
+  };
+
+  const getMergedSpacingTokens = () => {
+    return mergeTokens(defaultSpacingData, customTokens());
+  };
+
+  const getMergedBorderTokens = () => {
+    const custom = customTokens();
+    return {
+      borderRadius: mergeTokens(defaultBorderRadius, custom),
+      borderWidth: mergeTokens(defaultBorderWidth, custom),
+    };
+  };
+
+  const getMergedShadowTokens = () => {
+    return mergeTokens(defaultElevation, customTokens());
+  };
+
   return (
     <div class={styles.styleguideBuilder}>
       {/* Header */}
@@ -207,19 +256,19 @@ const StyleguideBuilder: Component = () => {
         <div class={styles.previewPanel} id={previewContainerId()}>
           <div class={styles.previewContent}>
             <Show when={activeSection() === 'colors'}>
-              <ColorTokens />
+              <ColorTokens {...getMergedColorTokens()} />
             </Show>
             <Show when={activeSection() === 'typography'}>
-              <TypographyTokens />
+              <TypographyTokens {...getMergedTypographyTokens()} />
             </Show>
             <Show when={activeSection() === 'spacing'}>
-              <SpacingTokens />
+              <SpacingTokens spacingData={getMergedSpacingTokens()} />
             </Show>
             <Show when={activeSection() === 'border'}>
-              <BorderTokens />
+              <BorderTokens {...getMergedBorderTokens()} />
             </Show>
             <Show when={activeSection() === 'shadow'}>
-              <ShadowTokens />
+              <ShadowTokens elevation={getMergedShadowTokens()} />
             </Show>
             <Show when={activeSection() === 'components'}>
               <ComponentShowcase />

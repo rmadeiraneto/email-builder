@@ -6,10 +6,10 @@
 
 import { type Component, For } from 'solid-js';
 import styles from './TypographyTokens.module.scss';
-import fonts from '@email-builder/tokens/typography/fonts';
-import sizes from '@email-builder/tokens/typography/sizes';
-import weights from '@email-builder/tokens/typography/weights';
-import lineHeights from '@email-builder/tokens/typography/line-heights';
+import defaultFonts from '@email-builder/tokens/typography/fonts';
+import defaultSizes from '@email-builder/tokens/typography/sizes';
+import defaultWeights from '@email-builder/tokens/typography/weights';
+import defaultLineHeights from '@email-builder/tokens/typography/line-heights';
 
 interface TypographyToken {
   name: string;
@@ -17,9 +17,21 @@ interface TypographyToken {
   description: string;
 }
 
-export const TypographyTokens: Component = () => {
+interface TypographyTokensProps {
+  fonts?: any;
+  sizes?: any;
+  weights?: any;
+  lineHeights?: any;
+}
+
+export const TypographyTokens: Component<TypographyTokensProps> = (props) => {
+  const fonts = () => props.fonts || defaultFonts;
+  const sizes = () => props.sizes || defaultSizes;
+  const weights = () => props.weights || defaultWeights;
+  const lineHeights = () => props.lineHeights || defaultLineHeights;
+
   // Parse font families
-  const fontFamilies: TypographyToken[] = Object.entries(fonts.typography['font-family'])
+  const fontFamilies: TypographyToken[] = Object.entries(fonts().typography['font-family'])
     .filter(([key]) => key !== '$type')
     .map(([name, token]: [string, any]) => ({
       name,
@@ -28,7 +40,7 @@ export const TypographyTokens: Component = () => {
     }));
 
   // Parse font sizes
-  const fontSizes: TypographyToken[] = Object.entries(sizes.typography['font-size'])
+  const fontSizes: TypographyToken[] = Object.entries(sizes().typography['font-size'])
     .filter(([key]) => key !== '$type')
     .map(([name, token]: [string, any]) => ({
       name,
@@ -37,7 +49,7 @@ export const TypographyTokens: Component = () => {
     }));
 
   // Parse font weights
-  const fontWeights: TypographyToken[] = Object.entries(weights.typography['font-weight'])
+  const fontWeights: TypographyToken[] = Object.entries(weights().typography['font-weight'])
     .filter(([key]) => key !== '$type')
     .map(([name, token]: [string, any]) => ({
       name,
@@ -46,7 +58,7 @@ export const TypographyTokens: Component = () => {
     }));
 
   // Parse line heights
-  const lineHeightsList: TypographyToken[] = Object.entries(lineHeights.typography['line-height'])
+  const lineHeightsList: TypographyToken[] = Object.entries(lineHeights().typography['line-height'])
     .filter(([key]) => key !== '$type')
     .map(([name, token]: [string, any]) => ({
       name,

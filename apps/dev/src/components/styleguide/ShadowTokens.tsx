@@ -3,12 +3,18 @@
  * Displays shadow elevation tokens
  */
 
-import { For } from 'solid-js';
+import { For, Component } from 'solid-js';
 import styles from './ShadowTokens.module.scss';
-import elevation from '@email-builder/tokens/shadow/elevation';
+import defaultElevation from '@email-builder/tokens/shadow/elevation';
 
-export function ShadowTokens() {
-  const shadowTokens = Object.entries(elevation.shadow).filter(
+interface ShadowTokensProps {
+  elevation?: any;
+}
+
+export const ShadowTokens: Component<ShadowTokensProps> = (props) => {
+  const elevation = () => props.elevation || defaultElevation;
+
+  const shadowTokens = Object.entries(elevation().shadow).filter(
     ([key]) => !key.startsWith('$')
   );
 

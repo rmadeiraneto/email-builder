@@ -3,17 +3,25 @@
  * Displays border radius and width tokens
  */
 
-import { For } from 'solid-js';
+import { For, Component } from 'solid-js';
 import styles from './BorderTokens.module.scss';
-import borderRadius from '@email-builder/tokens/border/radius';
-import borderWidth from '@email-builder/tokens/border/width';
+import defaultBorderRadius from '@email-builder/tokens/border/radius';
+import defaultBorderWidth from '@email-builder/tokens/border/width';
 
-export function BorderTokens() {
-  const radiusTokens = Object.entries(borderRadius.border.radius).filter(
+interface BorderTokensProps {
+  borderRadius?: any;
+  borderWidth?: any;
+}
+
+export const BorderTokens: Component<BorderTokensProps> = (props) => {
+  const borderRadius = () => props.borderRadius || defaultBorderRadius;
+  const borderWidth = () => props.borderWidth || defaultBorderWidth;
+
+  const radiusTokens = Object.entries(borderRadius().border.radius).filter(
     ([key]) => !key.startsWith('$')
   );
 
-  const widthTokens = Object.entries(borderWidth.border.width).filter(
+  const widthTokens = Object.entries(borderWidth().border.width).filter(
     ([key]) => !key.startsWith('$')
   );
 

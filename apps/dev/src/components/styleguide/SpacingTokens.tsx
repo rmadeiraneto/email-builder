@@ -6,7 +6,7 @@
 
 import { type Component, For } from 'solid-js';
 import styles from './SpacingTokens.module.scss';
-import spacingData from '@email-builder/tokens/spacing/scale';
+import defaultSpacingData from '@email-builder/tokens/spacing/scale';
 
 interface SpacingToken {
   name: string;
@@ -14,9 +14,15 @@ interface SpacingToken {
   description: string;
 }
 
-export const SpacingTokens: Component = () => {
+interface SpacingTokensProps {
+  spacingData?: any;
+}
+
+export const SpacingTokens: Component<SpacingTokensProps> = (props) => {
+  const spacingData = () => props.spacingData || defaultSpacingData;
+
   // Parse spacing tokens
-  const spacingTokens: SpacingToken[] = Object.entries(spacingData.spacing)
+  const spacingTokens: SpacingToken[] = Object.entries(spacingData().spacing)
     .filter(([key]) => key !== '$type')
     .map(([name, token]) => ({
       name,

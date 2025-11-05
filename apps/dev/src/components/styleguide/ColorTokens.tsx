@@ -6,9 +6,9 @@
 
 import { type Component, For } from 'solid-js';
 import styles from './ColorTokens.module.scss';
-import brandColors from '@email-builder/tokens/colors/brand';
-import semanticColors from '@email-builder/tokens/colors/semantic';
-import uiColors from '@email-builder/tokens/colors/ui';
+import defaultBrandColors from '@email-builder/tokens/colors/brand';
+import defaultSemanticColors from '@email-builder/tokens/colors/semantic';
+import defaultUiColors from '@email-builder/tokens/colors/ui';
 
 interface ColorToken {
   name: string;
@@ -21,9 +21,19 @@ interface ColorScale {
   colors: ColorToken[];
 }
 
-export const ColorTokens: Component = () => {
+interface ColorTokensProps {
+  brandColors?: any;
+  semanticColors?: any;
+  uiColors?: any;
+}
+
+export const ColorTokens: Component<ColorTokensProps> = (props) => {
+  const brandColors = () => props.brandColors || defaultBrandColors;
+  const semanticColors = () => props.semanticColors || defaultSemanticColors;
+  const uiColors = () => props.uiColors || defaultUiColors;
+
   // Parse brand colors (primary, secondary, accent with 50-900 shades)
-  const brandScales: ColorScale[] = Object.entries(brandColors.color.brand)
+  const brandScales: ColorScale[] = Object.entries(brandColors().color.brand)
     .filter(([key]) => key !== '$type')
     .map(([scaleName, scale]) => {
       const colors: ColorToken[] = Object.entries(scale as Record<string, any>)
@@ -39,7 +49,7 @@ export const ColorTokens: Component = () => {
     });
 
   // Parse semantic colors (success, error, warning, info with light/base/dark)
-  const semanticScales: ColorScale[] = Object.entries(semanticColors.color.semantic)
+  const semanticScales: ColorScale[] = Object.entries(semanticColors().color.semantic)
     .filter(([key]) => key !== '$type')
     .map(([scaleName, scale]) => {
       const colors: ColorToken[] = Object.entries(scale as Record<string, any>)
@@ -56,7 +66,7 @@ export const ColorTokens: Component = () => {
 
   // Parse UI colors (background, surface, border, text, icon, interactive)
   const uiScales: ColorScale[] = [
-    ...Object.entries(uiColors.color.ui)
+    ...Object.entries(uiColors().color.ui)
       .filter(([key]) => key !== '$type')
       .map(([category, tokens]) => {
         const colors: ColorToken[] = Object.entries(tokens as Record<string, any>)
@@ -73,7 +83,7 @@ export const ColorTokens: Component = () => {
     // Add neutral colors
     {
       name: 'Neutral',
-      colors: Object.entries(uiColors.color.neutral)
+      colors: Object.entries(uiColors().color.neutral)
         .filter(([key]) => key !== '$type')
         .map(([shade, token]) => ({
           name: `neutral-${shade}`,

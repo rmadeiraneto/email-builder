@@ -26,7 +26,19 @@ export const componentPropertyMappings: Record<string, ComponentPropertyMap> = {
     description: 'Interactive button component',
     properties: [
       {
-        label: 'Primary Background Color',
+        label: 'Default Background',
+        description: 'Background color for default button',
+        tokenPath: ['component', 'button', 'background', 'default'],
+        tokenType: 'color',
+      },
+      {
+        label: 'Default Text Color',
+        description: 'Text color for default button',
+        tokenPath: ['component', 'button', 'text', 'default'],
+        tokenType: 'color',
+      },
+      {
+        label: 'Primary Background',
         description: 'Background color for primary button variant',
         tokenPath: ['component', 'button', 'background', 'primary'],
         tokenType: 'color',
@@ -35,6 +47,24 @@ export const componentPropertyMappings: Record<string, ComponentPropertyMap> = {
         label: 'Primary Text Color',
         description: 'Text color for primary button variant',
         tokenPath: ['component', 'button', 'text', 'primary'],
+        tokenType: 'color',
+      },
+      {
+        label: 'Secondary Background',
+        description: 'Background color for secondary button variant',
+        tokenPath: ['component', 'button', 'background', 'secondary'],
+        tokenType: 'color',
+      },
+      {
+        label: 'Secondary Text Color',
+        description: 'Text color for secondary button variant',
+        tokenPath: ['component', 'button', 'text', 'secondary'],
+        tokenType: 'color',
+      },
+      {
+        label: 'Ghost Text Color',
+        description: 'Text color for ghost button variant',
+        tokenPath: ['component', 'button', 'text', 'ghost'],
         tokenType: 'color',
       },
       {

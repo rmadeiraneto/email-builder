@@ -23,11 +23,11 @@
     transition: color tokens.$animation-duration-normal tokens.$animation-easing-ease;
 
     &:hover {
-      color: tokens.$color-brand-accent-base;
+      color: tokens.$color-brand-accent-500;
     }
 
     &--active {
-      color: tokens.$color-brand-accent-base;
+      color: tokens.$color-brand-accent-500;
       font-weight: tokens.$typography-font-weight-semibold;
       position: relative;
 

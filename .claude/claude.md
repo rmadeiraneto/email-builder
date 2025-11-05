@@ -618,27 +618,49 @@ import styles from './button.module.scss';
 
 ### Design Token Integration
 
-**Always use design tokens, never hardcode values:**
+**CRITICAL**: Always use design tokens. Never hardcode design values.
+
+**Status**: ✅ 100% Complete - All 40 SCSS files use design tokens
 
 ```scss
-// ❌ Bad
+/**
+ * Component Styles
+ * Design tokens are automatically imported via Vite configuration
+ */
+
+// ❌ Bad - Hardcoded values
 .button {
   padding: 12px 24px;
   background: #3b82f6;
   border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
 }
 
-// ✅ Good
-@use '@tokens/spacing' as spacing;
-@use '@tokens/colors' as colors;
-@use '@tokens/border' as border;
-
+// ✅ Good - Design tokens
 .button {
-  padding: spacing.$button-padding-y spacing.$button-padding-x;
-  background: colors.$primary-500;
-  border-radius: border.$radius-md;
+  padding: tokens.$spacing-3 tokens.$spacing-6;
+  background: tokens.$color-brand-primary-500;
+  border-radius: tokens.$border-radius-lg;
+  font-size: tokens.$typography-font-size-sm;
+  transition: all tokens.$animation-duration-normal tokens.$animation-easing-ease;
+
+  &:hover {
+    background: tokens.$color-brand-primary-600;
+  }
 }
 ```
+
+**Key Rules:**
+1. **Always** use tokens for colors, spacing, typography, borders, animations
+2. **Never** manually import tokens (auto-imported via Vite)
+3. All tokens use the `tokens.$` prefix
+4. See [DESIGN_TOKENS_GUIDE.md](../DESIGN_TOKENS_GUIDE.md) for complete reference
+
+**Exceptions** (intentionally hardcoded):
+- CSS property values: `opacity: 0.6`, `display: flex`, `z-index: 1000`
+- Context-specific overlays: `rgba(0, 0, 0, 0.2)` for specific hover effects
+- Box shadows (temporarily): Token system outputs `[object Object]`
 
 ### Responsive Design
 
@@ -1391,27 +1413,51 @@ packages/tokens/
 
 ### Using Tokens in SCSS
 
+**IMPORTANT**: Design tokens are automatically imported via Vite configuration. No manual imports needed!
+
 ```scss
-// Import tokens
-@use '@tokens/colors' as colors;
-@use '@tokens/spacing' as spacing;
-@use '@tokens/typography' as typography;
+/**
+ * Component Styles
+ * Design tokens are automatically imported via Vite configuration
+ */
 
 .component {
   // Colors
-  background-color: colors.$brand-primary-500;
-  color: colors.$semantic-success;
+  background-color: tokens.$color-brand-primary-500;
+  color: tokens.$color-semantic-success-base;
 
   // Spacing
-  padding: spacing.$md;
-  margin-bottom: spacing.$lg;
+  padding: tokens.$spacing-4;
+  margin-bottom: tokens.$spacing-6;
+  gap: tokens.$spacing-2;
 
   // Typography
-  font-family: typography.$font-family-sans;
-  font-size: typography.$font-size-base;
-  line-height: typography.$line-height-normal;
+  font-family: tokens.$typography-font-family-sans;
+  font-size: tokens.$typography-font-size-base;
+  font-weight: tokens.$typography-font-weight-medium;
+  line-height: tokens.$typography-line-height-normal;
+
+  // Borders
+  border-radius: tokens.$border-radius-md;
+  border-width: tokens.$border-width-base;
+  border-color: tokens.$color-ui-border-base;
+
+  // Animation
+  transition: all tokens.$animation-duration-normal tokens.$animation-easing-ease;
+
+  &:hover {
+    background-color: tokens.$color-brand-primary-600;
+  }
 }
 ```
+
+**Key Points:**
+- All tokens use the `tokens.$` prefix (auto-imported namespace)
+- No need for `@use` or `@import` statements
+- Token names are verbose and self-documenting
+- Always use tokens instead of hardcoded values
+
+**For detailed migration guide and all available tokens**, see [DESIGN_TOKENS_GUIDE.md](../DESIGN_TOKENS_GUIDE.md)
 
 ### Using Tokens in JavaScript/TypeScript
 

@@ -1,35 +1,40 @@
+/**
+ * Template Canvas Styles
+ * Design tokens are automatically imported via Vite configuration
+ */
+
 .canvas {
   width: 100%;
   min-height: 100%;
-  padding: var(--spacing-lg, 1.5rem);
+  padding: tokens.$spacing-6;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  transition: background-color 0.2s ease;
+  transition: background-color tokens.$animation-duration-normal tokens.$animation-easing-ease;
 
   &.draggingOver {
     background-color: rgba(79, 70, 229, 0.05);
 
     .templateContainer {
-      border-color: var(--color-primary-500, #6366f1);
+      border-color: tokens.$color-brand-primary-500;
       box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
     }
 
     .dropZone {
-      border-color: var(--color-primary-500, #6366f1);
-      background: var(--color-primary-100, #e0e7ff);
-      border-width: 3px;
+      border-color: tokens.$color-brand-primary-500;
+      background: tokens.$color-brand-primary-100;
+      border-width: tokens.$border-width-4;
     }
   }
 }
 
 .templateContainer {
-  background: #ffffff;
-  border: 1px solid var(--color-neutral-300, #d1d5db);
-  border-radius: var(--border-radius-md, 0.5rem);
+  background: tokens.$color-ui-background-primary;
+  border: tokens.$border-width-base solid tokens.$color-neutral-300;
+  border-radius: tokens.$border-radius-md;
   min-height: 400px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.2s ease;
+  transition: box-shadow tokens.$animation-duration-normal tokens.$animation-easing-ease;
 
   &:hover {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -46,18 +51,18 @@
 
 .emptyStateContent {
   text-align: center;
-  color: var(--color-neutral-500, #6b7280);
+  color: tokens.$color-neutral-500;
 
   h3 {
-    margin: 0 0 var(--spacing-sm, 0.5rem) 0;
-    font-size: var(--font-size-lg, 1.125rem);
-    font-weight: var(--font-weight-semibold, 600);
-    color: var(--color-neutral-700, #374151);
+    margin: 0 0 tokens.$spacing-2 0;
+    font-size: tokens.$typography-font-size-lg;
+    font-weight: tokens.$typography-font-weight-semibold;
+    color: tokens.$color-neutral-700;
   }
 
   p {
     margin: 0;
-    font-size: var(--font-size-sm, 0.875rem);
+    font-size: tokens.$typography-font-size-sm;
   }
 }
 
@@ -66,34 +71,34 @@
   align-items: center;
   justify-content: center;
   min-height: 200px;
-  margin: var(--spacing-xl, 2rem);
-  border: 2px dashed var(--color-neutral-300, #d1d5db);
-  border-radius: var(--border-radius-md, 0.5rem);
-  background: var(--color-neutral-50, #f9fafb);
-  transition: all 0.2s ease;
+  margin: tokens.$spacing-8;
+  border: tokens.$border-width-2 dashed tokens.$color-neutral-300;
+  border-radius: tokens.$border-radius-md;
+  background: tokens.$color-neutral-50;
+  transition: all tokens.$animation-duration-normal tokens.$animation-easing-ease;
 
   p {
     margin: 0;
-    color: var(--color-neutral-500, #6b7280);
-    font-size: var(--font-size-sm, 0.875rem);
+    color: tokens.$color-neutral-500;
+    font-size: tokens.$typography-font-size-sm;
   }
 
   &:hover {
-    border-color: var(--color-primary-400, #818cf8);
-    background: var(--color-primary-50, #eef2ff);
+    border-color: tokens.$color-brand-primary-400;
+    background: tokens.$color-brand-primary-50;
   }
 }
 
 .component {
   position: relative;
-  margin: var(--spacing-md, 1rem);
-  border: 2px solid transparent;
-  border-radius: var(--border-radius-sm, 0.25rem);
-  transition: all 0.2s ease;
+  margin: tokens.$spacing-4;
+  border: tokens.$border-width-2 solid transparent;
+  border-radius: tokens.$border-radius-sm;
+  transition: all tokens.$animation-duration-normal tokens.$animation-easing-ease;
   cursor: pointer;
 
   &:hover {
-    border-color: var(--color-primary-300, #a5b4fc);
+    border-color: tokens.$color-brand-primary-300;
 
     .componentOverlay {
       opacity: 1;
@@ -105,7 +110,7 @@
   }
 
   &.selected {
-    border-color: var(--color-primary-600, #4f46e5);
+    border-color: tokens.$color-brand-primary-600;
     box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 
     .componentOverlay {
@@ -129,7 +134,7 @@
   top: 0;
   right: 0;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity tokens.$animation-duration-normal tokens.$animation-easing-ease;
   z-index: 10;
   pointer-events: none;
 }
@@ -138,43 +143,43 @@
   position: absolute;
   left: 0;
   top: 0;
-  padding: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.5rem);
-  background: var(--color-neutral-600, #4b5563);
-  color: white;
-  font-size: var(--font-size-sm, 0.875rem);
-  font-weight: var(--font-weight-bold, 700);
-  border-radius: var(--border-radius-sm, 0.25rem) 0 var(--border-radius-sm, 0.25rem) 0;
+  padding: tokens.$spacing-1 tokens.$spacing-2;
+  background: tokens.$color-neutral-600;
+  color: tokens.$color-ui-text-inverse;
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-bold;
+  border-radius: tokens.$border-radius-sm 0 tokens.$border-radius-sm 0;
   cursor: move;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity tokens.$animation-duration-normal tokens.$animation-easing-ease;
   pointer-events: auto;
   user-select: none;
 
   &:hover {
-    background: var(--color-neutral-700, #374151);
+    background: tokens.$color-neutral-700;
   }
 }
 
 .componentLabel {
   display: inline-block;
-  padding: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.5rem);
-  background: var(--color-primary-600, #4f46e5);
-  color: white;
-  font-size: var(--font-size-xs, 0.75rem);
-  font-weight: var(--font-weight-medium, 500);
-  border-radius: 0 var(--border-radius-sm, 0.25rem) 0 var(--border-radius-sm, 0.25rem);
+  padding: tokens.$spacing-1 tokens.$spacing-2;
+  background: tokens.$color-brand-primary-600;
+  color: tokens.$color-ui-text-inverse;
+  font-size: tokens.$typography-font-size-xs;
+  font-weight: tokens.$typography-font-weight-medium;
+  border-radius: 0 tokens.$border-radius-sm 0 tokens.$border-radius-sm;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-left: 2rem;
+  letter-spacing: tokens.$typography-letter-spacing-wide;
+  margin-left: tokens.$spacing-8;
 }
 
 .dropIndicator {
   height: 4px;
-  background: var(--color-primary-500, #6366f1);
-  margin: var(--spacing-xs, 0.25rem) var(--spacing-md, 1rem);
-  border-radius: var(--border-radius-full, 9999px);
+  background: tokens.$color-brand-primary-500;
+  margin: tokens.$spacing-1 tokens.$spacing-4;
+  border-radius: tokens.$border-radius-full;
   box-shadow: 0 0 8px rgba(79, 70, 229, 0.5);
-  animation: pulse 1s ease-in-out infinite;
+  animation: pulse 1s tokens.$animation-easing-ease-in-out infinite;
   position: relative;
 
   &::before {
@@ -185,7 +190,7 @@
     transform: translateY(-50%);
     width: 12px;
     height: 12px;
-    background: var(--color-primary-500, #6366f1);
+    background: tokens.$color-brand-primary-500;
     border-radius: 50%;
     box-shadow: 0 0 8px rgba(79, 70, 229, 0.5);
   }
@@ -198,7 +203,7 @@
     transform: translateY(-50%);
     width: 12px;
     height: 12px;
-    background: var(--color-primary-500, #6366f1);
+    background: tokens.$color-brand-primary-500;
     border-radius: 50%;
     box-shadow: 0 0 8px rgba(79, 70, 229, 0.5);
   }
@@ -214,25 +219,25 @@
 }
 
 .componentContent {
-  padding: var(--spacing-md, 1rem);
+  padding: tokens.$spacing-4;
 }
 
 .preview {
   strong {
     display: block;
-    margin-bottom: var(--spacing-sm, 0.5rem);
-    color: var(--color-neutral-900, #111827);
-    font-size: var(--font-size-base, 1rem);
+    margin-bottom: tokens.$spacing-2;
+    color: tokens.$color-neutral-900;
+    font-size: tokens.$typography-font-size-base;
   }
 }
 
 .previewContent {
-  padding: var(--spacing-sm, 0.5rem);
-  background: var(--color-neutral-50, #f9fafb);
-  border-radius: var(--border-radius-sm, 0.25rem);
-  font-family: monospace;
-  font-size: var(--font-size-xs, 0.75rem);
-  color: var(--color-neutral-700, #374151);
+  padding: tokens.$spacing-2;
+  background: tokens.$color-neutral-50;
+  border-radius: tokens.$border-radius-sm;
+  font-family: tokens.$typography-font-family-mono;
+  font-size: tokens.$typography-font-size-xs;
+  color: tokens.$color-neutral-700;
   max-height: 200px;
   overflow: auto;
   white-space: pre-wrap;

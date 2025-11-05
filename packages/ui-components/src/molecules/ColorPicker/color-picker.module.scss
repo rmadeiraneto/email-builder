@@ -1,146 +1,144 @@
 /**
  * ColorPicker Styles
+ * Design tokens are automatically imported via Vite configuration
  *
  * Styling for the ColorPicker component with Alwan integration.
  * Uses CSS Modules with BEM methodology.
  */
 
-// Import Alwan styles (if available)
-// @import 'alwan/dist/css/alwan.min.css';
-
 .color-picker-input {
-	--swatch-size: 24px;
-	--picker-input-height: 32px;
+  --swatch-size: #{tokens.$sizing-6};
+  --picker-input-height: #{tokens.$sizing-8};
 
-	position: relative;
+  position: relative;
 
-	// Input field
-	&__input:is(input) {
-		background: var(--white, #fff);
-		border: 1px solid var(--dt-gray-02, #eaedf2);
-		border-radius: 6px;
-		height: var(--picker-input-height);
-		padding: calc((var(--picker-input-height) - var(--swatch-size)) / 2) 8px
-			calc((var(--picker-input-height) - var(--swatch-size)) / 2) 12px;
-		width: 100%;
-		font-size: 14px;
-		font-family: inherit;
-		cursor: pointer;
+  // Input field
+  &__input:is(input) {
+    background: tokens.$color-ui-background-primary;
+    border: tokens.$border-width-base solid tokens.$color-neutral-200;
+    border-radius: tokens.$border-radius-md;
+    height: var(--picker-input-height);
+    padding: calc((var(--picker-input-height) - var(--swatch-size)) / 2) tokens.$spacing-2
+      calc((var(--picker-input-height) - var(--swatch-size)) / 2) tokens.$spacing-3;
+    width: 100%;
+    font-size: tokens.$typography-font-size-sm;
+    font-family: inherit;
+    cursor: pointer;
 
-		&:focus {
-			outline: none;
-			border-color: var(--primary, #3b82f6);
-		}
-	}
+    &:focus {
+      outline: none;
+      border-color: tokens.$color-brand-primary-500;
+    }
+  }
 
-	// Reset button
-	&__reset-btn {
-		align-items: center;
-		color: #eaedf2;
-		cursor: pointer;
-		display: flex;
-		position: absolute;
-		right: 40px;
-		top: 50%;
-		transform: translateY(-50%);
-		z-index: 2;
-		transition: color 0.2s ease;
+  // Reset button
+  &__reset-btn {
+    align-items: center;
+    color: tokens.$color-neutral-200;
+    cursor: pointer;
+    display: flex;
+    position: absolute;
+    right: tokens.$spacing-10;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    transition: color tokens.$animation-duration-normal tokens.$animation-easing-ease;
 
-		&:hover {
-			color: var(--primary, #3b82f6);
-		}
+    &:hover {
+      color: tokens.$color-brand-primary-500;
+    }
 
-		i {
-			font-size: 18px;
-		}
-	}
+    i {
+      font-size: tokens.$typography-font-size-lg;
+    }
+  }
 
-	// Color swatch
-	&__swatch {
-		background-color: var(--white, #fff);
-		border: 1px solid var(--dt-gray-02, #eaedf2);
-		border-radius: 6px;
-		height: var(--swatch-size);
-		overflow: hidden;
-		position: absolute;
-		right: 8px;
-		top: 50%;
-		transform: translateY(-50%);
-		width: var(--swatch-size);
-		z-index: 1;
-		cursor: pointer;
+  // Color swatch
+  &__swatch {
+    background-color: tokens.$color-ui-background-primary;
+    border: tokens.$border-width-base solid tokens.$color-neutral-200;
+    border-radius: tokens.$border-radius-md;
+    height: var(--swatch-size);
+    overflow: hidden;
+    position: absolute;
+    right: tokens.$spacing-2;
+    top: 50%;
+    transform: translateY(-50%);
+    width: var(--swatch-size);
+    z-index: 1;
+    cursor: pointer;
 
-		// Checkerboard background for transparency visualization
-		&::before {
-			--mesh-size: 25%;
-			background: repeating-conic-gradient(
-					#808080 0% 25%,
-					transparent 0% 50%
-				)
-				50% / calc(var(--mesh-size) * 2) calc(var(--mesh-size) * 2);
-			content: '';
-			display: inline-block;
-			height: 100%;
-			left: 0;
-			position: absolute;
-			width: 100%;
-		}
+    // Checkerboard background for transparency visualization
+    &::before {
+      --mesh-size: 25%;
+      background: repeating-conic-gradient(
+          tokens.$color-neutral-500 0% 25%,
+          transparent 0% 50%
+        )
+        50% / calc(var(--mesh-size) * 2) calc(var(--mesh-size) * 2);
+      content: '';
+      display: inline-block;
+      height: 100%;
+      left: 0;
+      position: absolute;
+      width: 100%;
+    }
 
-		// Actual color overlay
-		&::after {
-			background-color: var(--alwan-color, transparent);
-			content: '';
-			display: inline-block;
-			height: 100%;
-			left: 0;
-			position: absolute;
-			width: 100%;
-		}
-	}
+    // Actual color overlay
+    &::after {
+      background-color: var(--alwan-color, transparent);
+      content: '';
+      display: inline-block;
+      height: 100%;
+      left: 0;
+      position: absolute;
+      width: 100%;
+    }
+  }
 
-	// Transparent indicator (hidden by default)
-	&__transparent-sign {
-		display: none;
-	}
+  // Transparent indicator (hidden by default)
+  &__transparent-sign {
+    display: none;
+  }
 
-	// Transparent state modifier
-	&--transparent {
-		.color-picker-input__swatch {
-			&::before {
-				background: red;
-				// Diagonal line indicating transparency
-				clip-path: polygon(
-					calc(100% - 1px) 0,
-					100% 1px,
-					1px 100%,
-					0 calc(100% - 1px),
-					calc(100% - 1px) 0
-				);
-			}
-		}
-	}
+  // Transparent state modifier
+  &--transparent {
+    .color-picker-input__swatch {
+      &::before {
+        background: tokens.$color-semantic-error-base;
+        // Diagonal line indicating transparency
+        clip-path: polygon(
+          calc(100% - 1px) 0,
+          100% 1px,
+          1px 100%,
+          0 calc(100% - 1px),
+          calc(100% - 1px) 0
+        );
+      }
+    }
+  }
 
-	// No input mode (swatch only)
-	&--no-input {
-		background: var(--white, #fff);
-		border: 1px solid var(--dt-gray-02, #eaedf2);
-		border-radius: 6px;
-		cursor: pointer;
-		height: var(--picker-input-height);
-		padding: calc((var(--picker-input-height) - var(--swatch-size)) / 2);
-		width: fit-content;
-		min-width: var(--picker-input-height);
-		transition: border-color 0.2s ease;
+  // No input mode (swatch only)
+  &--no-input {
+    background: tokens.$color-ui-background-primary;
+    border: tokens.$border-width-base solid tokens.$color-neutral-200;
+    border-radius: tokens.$border-radius-md;
+    cursor: pointer;
+    height: var(--picker-input-height);
+    padding: calc((var(--picker-input-height) - var(--swatch-size)) / 2);
+    width: fit-content;
+    min-width: var(--picker-input-height);
+    transition: border-color tokens.$animation-duration-normal tokens.$animation-easing-ease;
 
-		&:hover {
-			border-color: var(--primary, #3b82f6);
-		}
+    &:hover {
+      border-color: tokens.$color-brand-primary-500;
+    }
 
-		.color-picker-input__swatch {
-			left: 0;
-			position: relative;
-			top: 0;
-			transform: none;
-		}
-	}
+    .color-picker-input__swatch {
+      left: 0;
+      position: relative;
+      top: 0;
+      transform: none;
+    }
+  }
 }

@@ -1,37 +1,38 @@
 /**
  * Rich Text Editor Styles
+ * Design tokens are automatically imported via Vite configuration
  */
 
 .richTextEditor {
   display: flex;
   flex-direction: column;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  background: #ffffff;
+  border: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  border-radius: tokens.$border-radius-md;
+  background: tokens.$color-ui-background-primary;
   overflow: hidden;
 }
 
 .toolbar {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px;
-  border-bottom: 1px solid #e5e7eb;
-  background: #f9fafb;
+  gap: tokens.$spacing-2;
+  padding: tokens.$spacing-2;
+  border-bottom: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  background: tokens.$color-ui-background-secondary;
   flex-wrap: wrap;
 }
 
 .toolbarGroup {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: tokens.$spacing-1;
 }
 
 .toolbarDivider {
-  width: 1px;
+  width: tokens.$border-width-base;
   height: 24px;
-  background: #d1d5db;
-  margin: 0 4px;
+  background: tokens.$color-ui-border-base;
+  margin: 0 tokens.$spacing-1;
 }
 
 .toolbarButton {
@@ -41,27 +42,27 @@
   width: 32px;
   height: 32px;
   padding: 0;
-  border: 1px solid transparent;
-  border-radius: 4px;
+  border: tokens.$border-width-base solid transparent;
+  border-radius: tokens.$border-radius-sm;
   background: transparent;
-  color: #374151;
+  color: tokens.$color-neutral-700;
   font-size: 16px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
 
   &:hover:not(:disabled) {
-    background: #e5e7eb;
-    border-color: #d1d5db;
+    background: tokens.$color-ui-border-base;
+    border-color: tokens.$color-ui-border-base;
   }
 
   &:active:not(:disabled) {
-    background: #d1d5db;
+    background: tokens.$color-ui-border-base;
   }
 
   &.active {
-    background: #e0e7ff;
-    border-color: #c7d2fe;
-    color: #4f46e5;
+    background: tokens.$color-brand-primary-100;
+    border-color: tokens.$color-brand-primary-200;
+    color: tokens.$color-brand-primary-600;
   }
 
   &:disabled {
@@ -71,18 +72,18 @@
 
   i {
     font-size: 16px;
-    line-height: 1;
+    line-height: tokens.$typography-line-height-none;
   }
 }
 
 .editorContainer {
   flex: 1;
   min-height: 200px;
-  padding: 12px;
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 14px;
-  line-height: 1.6;
-  color: #1f2937;
+  padding: tokens.$spacing-3;
+  font-family: tokens.$typography-font-family-sans;
+  font-size: tokens.$typography-font-size-sm;
+  line-height: tokens.$typography-line-height-relaxed;
+  color: tokens.$color-neutral-800;
   overflow-y: auto;
   outline: none;
 
@@ -93,7 +94,7 @@
   // Placeholder
   &[data-placeholder]:empty:before {
     content: attr(data-placeholder);
-    color: #9ca3af;
+    color: tokens.$color-neutral-400;
     pointer-events: none;
     position: absolute;
   }
@@ -101,7 +102,7 @@
 
 // Editor text formatting
 .editorBold {
-  font-weight: bold;
+  font-weight: tokens.$typography-font-weight-bold;
 }
 
 .editorItalic {
@@ -118,7 +119,7 @@
 
 // Editor block elements
 .editorParagraph {
-  margin: 0 0 12px 0;
+  margin: 0 0 tokens.$spacing-3 0;
 
   &:last-child {
     margin-bottom: 0;
@@ -126,11 +127,11 @@
 }
 
 .editorH1 {
-  font-size: 32px;
-  font-weight: 700;
-  line-height: 1.2;
-  margin: 0 0 16px 0;
-  color: #1a1a1a;
+  font-size: tokens.$typography-font-size-4xl;
+  font-weight: tokens.$typography-font-weight-bold;
+  line-height: tokens.$typography-line-height-tight;
+  margin: 0 0 tokens.$spacing-4 0;
+  color: tokens.$color-neutral-900;
 
   &:last-child {
     margin-bottom: 0;
@@ -138,11 +139,11 @@
 }
 
 .editorH2 {
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 1.3;
-  margin: 0 0 12px 0;
-  color: #1a1a1a;
+  font-size: tokens.$typography-font-size-2xl;
+  font-weight: tokens.$typography-font-weight-semibold;
+  line-height: tokens.$typography-line-height-snug;
+  margin: 0 0 tokens.$spacing-3 0;
+  color: tokens.$color-neutral-900;
 
   &:last-child {
     margin-bottom: 0;
@@ -150,11 +151,11 @@
 }
 
 .editorH3 {
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.4;
-  margin: 0 0 8px 0;
-  color: #1a1a1a;
+  font-size: tokens.$typography-font-size-xl;
+  font-weight: tokens.$typography-font-weight-semibold;
+  line-height: tokens.$typography-line-height-snug;
+  margin: 0 0 tokens.$spacing-2 0;
+  color: tokens.$color-neutral-900;
 
   &:last-child {
     margin-bottom: 0;
@@ -162,16 +163,16 @@
 }
 
 .editorLink {
-  color: #3b82f6;
+  color: tokens.$color-brand-primary-500;
   text-decoration: underline;
   cursor: pointer;
 
   &:hover {
-    color: #2563eb;
+    color: tokens.$color-brand-primary-600;
   }
 }
 
 // Selection highlighting
 .editorContainer ::selection {
-  background: #bfdbfe;
+  background: tokens.$color-brand-primary-200;
 }

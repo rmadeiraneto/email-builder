@@ -1,35 +1,40 @@
+/**
+ * Tabs Component Styles
+ * Design tokens are automatically imported via Vite configuration
+ */
+
 .tabs {
   display: flex;
   flex-direction: column;
 
   &__tabs {
     align-items: center;
-    border-bottom: 1px solid #eaedf2;
+    border-bottom: tokens.$border-width-base solid tokens.$color-neutral-200;
     display: flex;
     justify-content: space-around;
   }
 
   &__tabItem {
     cursor: pointer;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 8px 24px;
+    font-size: tokens.$typography-font-size-xs;
+    font-weight: tokens.$typography-font-weight-medium;
+    padding: tokens.$spacing-2 tokens.$spacing-6;
     text-transform: uppercase;
-    transition: color 0.2s ease;
+    transition: color tokens.$animation-duration-normal tokens.$animation-easing-ease;
 
     &:hover {
-      color: #f35625;
+      color: tokens.$color-brand-accent-base;
     }
 
     &--active {
-      color: #f35625;
-      font-weight: 600;
+      color: tokens.$color-brand-accent-base;
+      font-weight: tokens.$typography-font-weight-semibold;
       position: relative;
 
       &::after {
         background-color: currentColor;
         content: '';
-        height: 2px;
+        height: tokens.$border-width-2;
         left: 0;
         position: absolute;
         top: calc(100% - 0.5px);

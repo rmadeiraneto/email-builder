@@ -1,13 +1,16 @@
-// Tip Banner Styles
+/**
+ * Tip Banner Styles
+ * Design tokens are automatically imported via Vite configuration
+ */
 
 .tipBanner {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 12px 16px;
-  border-radius: 8px;
-  border-left: 4px solid;
-  animation: slideIn 0.3s ease-out;
+  gap: tokens.$spacing-3;
+  padding: tokens.$spacing-3 tokens.$spacing-4;
+  border-radius: tokens.$border-radius-lg;
+  border-left: tokens.$border-width-4 solid;
+  animation: slideIn tokens.$animation-duration-slow tokens.$animation-easing-ease-out;
 
   @keyframes slideIn {
     from {
@@ -22,103 +25,103 @@
 
   // Severity variants
   &--info {
-    background-color: #eff6ff; // blue-50
-    border-color: #3b82f6; // blue-500
+    background-color: tokens.$color-brand-primary-50;
+    border-color: tokens.$color-brand-primary-500;
 
     .tipBanner__icon {
-      color: #3b82f6; // blue-500
+      color: tokens.$color-brand-primary-500;
     }
 
     .tipBanner__title {
-      color: #1e40af; // blue-800
+      color: tokens.$color-brand-primary-800;
     }
 
     .tipBanner__message {
-      color: #1e3a8a; // blue-900
+      color: tokens.$color-brand-primary-900;
     }
 
     .tipBanner__learnMore {
-      color: #2563eb; // blue-600
+      color: tokens.$color-brand-primary-600;
 
       &:hover {
-        color: #1d4ed8; // blue-700
+        color: tokens.$color-brand-primary-700;
       }
     }
 
     .tipBanner__dismissButton {
-      color: #60a5fa; // blue-400
+      color: tokens.$color-brand-primary-400;
 
       &:hover {
-        background-color: #dbeafe; // blue-100
-        color: #3b82f6; // blue-500
+        background-color: tokens.$color-brand-primary-100;
+        color: tokens.$color-brand-primary-500;
       }
     }
   }
 
   &--warning {
-    background-color: #fffbeb; // amber-50
-    border-color: #f59e0b; // amber-500
+    background-color: tokens.$color-semantic-warning-light;
+    border-color: tokens.$color-semantic-warning-base;
 
     .tipBanner__icon {
-      color: #f59e0b; // amber-500
+      color: tokens.$color-semantic-warning-base;
     }
 
     .tipBanner__title {
-      color: #92400e; // amber-800
+      color: tokens.$color-semantic-warning-dark;
     }
 
     .tipBanner__message {
-      color: #78350f; // amber-900
+      color: tokens.$color-semantic-warning-dark;
     }
 
     .tipBanner__learnMore {
-      color: #d97706; // amber-600
+      color: tokens.$color-semantic-warning-dark;
 
       &:hover {
-        color: #b45309; // amber-700
+        color: tokens.$color-semantic-warning-dark;
       }
     }
 
     .tipBanner__dismissButton {
-      color: #fbbf24; // amber-400
+      color: tokens.$color-semantic-warning-base;
 
       &:hover {
-        background-color: #fef3c7; // amber-100
-        color: #f59e0b; // amber-500
+        background-color: tokens.$color-semantic-warning-light;
+        color: tokens.$color-semantic-warning-base;
       }
     }
   }
 
   &--critical {
-    background-color: #fef2f2; // red-50
-    border-color: #ef4444; // red-500
+    background-color: tokens.$color-semantic-error-light;
+    border-color: tokens.$color-semantic-error-base;
 
     .tipBanner__icon {
-      color: #ef4444; // red-500
+      color: tokens.$color-semantic-error-base;
     }
 
     .tipBanner__title {
-      color: #991b1b; // red-800
+      color: tokens.$color-semantic-error-dark;
     }
 
     .tipBanner__message {
-      color: #7f1d1d; // red-900
+      color: tokens.$color-semantic-error-dark;
     }
 
     .tipBanner__learnMore {
-      color: #dc2626; // red-600
+      color: tokens.$color-semantic-error-dark;
 
       &:hover {
-        color: #b91c1c; // red-700
+        color: tokens.$color-semantic-error-dark;
       }
     }
 
     .tipBanner__dismissButton {
-      color: #fca5a5; // red-400
+      color: tokens.$color-semantic-error-base;
 
       &:hover {
-        background-color: #fee2e2; // red-100
-        color: #ef4444; // red-500
+        background-color: tokens.$color-semantic-error-light;
+        color: tokens.$color-semantic-error-base;
       }
     }
   }
@@ -126,7 +129,7 @@
 
 .tipBanner__icon {
   flex-shrink: 0;
-  margin-top: 2px;
+  margin-top: tokens.$border-width-2;
 }
 
 .tipBanner__content {
@@ -135,27 +138,27 @@
 }
 
 .tipBanner__title {
-  font-size: 14px;
-  font-weight: 600;
-  margin: 0 0 4px;
-  line-height: 1.4;
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-semibold;
+  margin: 0 0 tokens.$spacing-1;
+  line-height: tokens.$typography-line-height-snug;
 }
 
 .tipBanner__message {
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: tokens.$typography-font-size-xs;
+  line-height: tokens.$typography-line-height-normal;
   margin: 0;
 }
 
 .tipBanner__learnMore {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-size: 13px;
-  font-weight: 500;
+  gap: tokens.$spacing-1;
+  font-size: tokens.$typography-font-size-xs;
+  font-weight: tokens.$typography-font-weight-medium;
   text-decoration: none;
-  margin-top: 8px;
-  transition: color 0.15s;
+  margin-top: tokens.$spacing-2;
+  transition: color tokens.$animation-duration-fast;
 
   &:hover {
     text-decoration: underline;
@@ -166,10 +169,10 @@
   flex-shrink: 0;
   background: none;
   border: none;
-  padding: 4px;
+  padding: tokens.$spacing-1;
   cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.15s, color 0.15s;
+  border-radius: tokens.$border-radius-sm;
+  transition: background-color tokens.$animation-duration-fast, color tokens.$animation-duration-fast;
   display: flex;
   align-items: center;
   justify-content: center;

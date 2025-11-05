@@ -1,5 +1,6 @@
 /**
  * Section Component Styles
+ * Design tokens are automatically imported via Vite configuration
  * Generic section wrapper with optional label and content
  */
 
@@ -11,8 +12,8 @@
   // Label element
   &__label {
     display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
+    margin-bottom: tokens.$spacing-2;
+    font-weight: tokens.$typography-font-weight-medium;
   }
 
   // Content container

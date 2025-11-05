@@ -1,13 +1,17 @@
-// Alert Component Styles
+/**
+ * Alert Component Styles
+ * Design tokens are automatically imported via Vite configuration
+ */
 
 .alert {
   display: flex;
-  gap: 12px;
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: 1px solid transparent;
-  background-color: #f8f9fa;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  gap: tokens.$spacing-3;
+  padding: tokens.$spacing-3 tokens.$spacing-4;
+  border-radius: tokens.$border-radius-lg;
+  border: tokens.$border-width-base solid transparent;
+  background-color: tokens.$color-ui-background-secondary;
+  transition: opacity tokens.$animation-duration-normal tokens.$animation-easing-ease,
+              transform tokens.$animation-duration-normal tokens.$animation-easing-ease;
 
   // Layout
   &__left {
@@ -19,7 +23,7 @@
   &__right {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: tokens.$spacing-1;
     flex: 1;
     min-width: 0;
   }
@@ -28,10 +32,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
-    font-size: 20px;
-    line-height: 1;
+    width: tokens.$sizing-5;
+    height: tokens.$sizing-5;
+    font-size: tokens.$typography-font-size-xl;
+    line-height: tokens.$typography-line-height-none;
 
     i {
       font-size: inherit;
@@ -39,85 +43,85 @@
   }
 
   &__title {
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.4;
-    color: #1a1a1a;
+    font-size: tokens.$typography-font-size-sm;
+    font-weight: tokens.$typography-font-weight-semibold;
+    line-height: tokens.$typography-line-height-snug;
+    color: tokens.$color-ui-text-primary;
   }
 
   &__description {
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #4a4a4a;
+    font-size: tokens.$typography-font-size-xs;
+    font-weight: tokens.$typography-font-weight-normal;
+    line-height: tokens.$typography-line-height-normal;
+    color: tokens.$color-ui-text-secondary;
   }
 
   // Type variants
   &--info {
-    background-color: #e3f2fd;
-    border-color: #90caf9;
+    background-color: tokens.$color-semantic-info-light;
+    border-color: tokens.$color-semantic-info-base;
 
     .alert__icon {
-      color: #1976d2;
+      color: tokens.$color-semantic-info-base;
     }
 
     .alert__title {
-      color: #0d47a1;
+      color: tokens.$color-semantic-info-dark;
     }
 
     .alert__description {
-      color: #1565c0;
+      color: tokens.$color-semantic-info-dark;
     }
   }
 
   &--success {
-    background-color: #e8f5e9;
-    border-color: #81c784;
+    background-color: tokens.$color-semantic-success-light;
+    border-color: tokens.$color-semantic-success-base;
 
     .alert__icon {
-      color: #388e3c;
+      color: tokens.$color-semantic-success-base;
     }
 
     .alert__title {
-      color: #1b5e20;
+      color: tokens.$color-semantic-success-dark;
     }
 
     .alert__description {
-      color: #2e7d32;
+      color: tokens.$color-semantic-success-dark;
     }
   }
 
   &--warning {
-    background-color: #fff3e0;
-    border-color: #ffb74d;
+    background-color: tokens.$color-semantic-warning-light;
+    border-color: tokens.$color-semantic-warning-base;
 
     .alert__icon {
-      color: #f57c00;
+      color: tokens.$color-semantic-warning-base;
     }
 
     .alert__title {
-      color: #e65100;
+      color: tokens.$color-semantic-warning-dark;
     }
 
     .alert__description {
-      color: #ef6c00;
+      color: tokens.$color-semantic-warning-dark;
     }
   }
 
   &--error {
-    background-color: #ffebee;
-    border-color: #e57373;
+    background-color: tokens.$color-semantic-error-light;
+    border-color: tokens.$color-semantic-error-base;
 
     .alert__icon {
-      color: #d32f2f;
+      color: tokens.$color-semantic-error-base;
     }
 
     .alert__title {
-      color: #b71c1c;
+      color: tokens.$color-semantic-error-dark;
     }
 
     .alert__description {
-      color: #c62828;
+      color: tokens.$color-semantic-error-dark;
     }
   }
 

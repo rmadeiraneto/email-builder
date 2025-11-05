@@ -1,16 +1,21 @@
+/**
+ * Accordion Component Styles
+ * Design tokens are automatically imported via Vite configuration
+ */
+
 .accordion {
   width: 100%;
 
   &__control {
     align-items: center;
-    background-color: #f35625;
-    color: #ffffff;
+    background-color: tokens.$color-brand-accent-base;
+    color: tokens.$color-ui-text-inverse;
     cursor: pointer;
     display: flex;
-    font-weight: 500;
+    font-weight: tokens.$typography-font-weight-medium;
     justify-content: space-between;
-    padding: 8px 14px 8px 10px;
-    transition: background-color 0.2s ease;
+    padding: tokens.$spacing-2 tokens.$spacing-3-5 tokens.$spacing-2 tokens.$spacing-2-5;
+    transition: background-color tokens.$animation-duration-normal tokens.$animation-easing-ease;
 
     &:hover {
       opacity: 0.9;
@@ -22,18 +27,18 @@
   }
 
   &__content {
-    background-color: #ffffff;
+    background-color: tokens.$color-ui-background-primary;
     display: none;
-    padding: 16px 10px;
+    padding: tokens.$spacing-4 tokens.$spacing-2-5;
   }
 
   &__arrow {
-    font-size: 16px;
+    font-size: tokens.$typography-font-size-base;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: tokens.$sizing-6;
+    height: tokens.$sizing-6;
 
     svg {
       width: 100%;
@@ -50,38 +55,38 @@
   // Type variations
   &--extend {
     > .accordion__control {
-      padding-right: 24px;
+      padding-right: tokens.$spacing-6;
     }
   }
 
   // Color variations
   &--primary {
     > .accordion__control {
-      background-color: #f35625;
-      color: #ffffff;
+      background-color: tokens.$color-brand-accent-base;
+      color: tokens.$color-ui-text-inverse;
     }
   }
 
   &--grey {
     > .accordion__control {
-      background-color: #f4f7fc;
-      color: #7e8299;
+      background-color: tokens.$color-ui-background-secondary;
+      color: tokens.$color-neutral-600;
     }
 
     .accordion__arrow {
-      color: #b5b4c3;
+      color: tokens.$color-neutral-400;
     }
   }
 
   &--grey-outline {
     > .accordion__control {
       background-color: transparent;
-      border-bottom: 0.5px solid #b5b4c3;
-      color: #7e8299;
+      border-bottom: 0.5px solid tokens.$color-neutral-400;
+      color: tokens.$color-neutral-600;
     }
 
     .accordion__arrow {
-      color: #b5b4c3;
+      color: tokens.$color-neutral-400;
     }
   }
 }

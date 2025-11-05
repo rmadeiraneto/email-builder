@@ -1,31 +1,36 @@
+/**
+ * Property Panel Styles
+ * Design tokens are automatically imported via Vite configuration
+ */
+
 .propertyPanel {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: var(--color-surface-primary, #ffffff);
-  border-left: 1px solid var(--color-border-primary, #e5e7eb);
+  background: tokens.$color-ui-background-primary;
+  border-left: tokens.$border-width-base solid tokens.$color-ui-border-base;
   overflow: hidden;
 }
 
 .propertyPanelHeader {
-  padding: 1rem;
-  border-bottom: 1px solid var(--color-border-primary, #e5e7eb);
-  background: var(--color-surface-secondary, #f9fafb);
+  padding: tokens.$spacing-4;
+  border-bottom: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  background: tokens.$color-ui-background-secondary;
 }
 
 .propertyPanelHeaderTop {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 0.25rem;
+  gap: tokens.$spacing-2;
+  margin-bottom: tokens.$spacing-1;
 }
 
 .propertyPanelTitle {
   margin: 0;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--color-text-primary, #111827);
+  font-size: tokens.$typography-font-size-lg;
+  font-weight: tokens.$typography-font-weight-semibold;
+  color: tokens.$color-ui-text-primary;
   text-transform: capitalize;
 }
 
@@ -33,17 +38,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.375rem 0.5rem;
-  border: 1px solid var(--color-border-primary, #e5e7eb);
-  background: var(--color-surface-primary, #ffffff);
-  border-radius: 0.375rem;
-  font-size: 1.125rem;
+  padding: tokens.$spacing-1-5 tokens.$spacing-2;
+  border: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  background: tokens.$color-ui-background-primary;
+  border-radius: tokens.$border-radius-md;
+  font-size: tokens.$typography-font-size-lg;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
 
   &:hover {
-    background: var(--color-error-light, #fee2e2);
-    border-color: var(--color-error-primary, #ef4444);
+    background: tokens.$color-semantic-error-light;
+    border-color: tokens.$color-semantic-error-base;
   }
 
   &:active {
@@ -51,66 +56,66 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-error-primary, #ef4444);
-    outline-offset: 2px;
+    outline: tokens.$border-width-2 solid tokens.$color-semantic-error-base;
+    outline-offset: tokens.$border-width-2;
   }
 }
 
 .componentId {
   display: block;
-  font-size: 0.75rem;
-  color: var(--color-text-tertiary, #9ca3af);
-  font-family: monospace;
+  font-size: tokens.$typography-font-size-xs;
+  color: tokens.$color-ui-text-tertiary;
+  font-family: tokens.$typography-font-family-mono;
 }
 
 .tabNavigation {
   display: flex;
   gap: 0;
-  border-bottom: 1px solid var(--color-border-primary, #e5e7eb);
-  background: var(--color-surface-secondary, #f9fafb);
-  padding: 0 1rem;
+  border-bottom: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  background: tokens.$color-ui-background-secondary;
+  padding: 0 tokens.$spacing-4;
 }
 
 .tabButton {
   flex: 1;
-  padding: 0.75rem 1rem;
+  padding: tokens.$spacing-3 tokens.$spacing-4;
   border: none;
   background: transparent;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-text-secondary, #6b7280);
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-ui-text-secondary;
   cursor: pointer;
-  transition: all 0.15s ease;
-  border-bottom: 2px solid transparent;
+  transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
+  border-bottom: tokens.$border-width-2 solid transparent;
   position: relative;
 
   &:hover {
-    color: var(--color-text-primary, #111827);
-    background: var(--color-surface-hover, #f3f4f6);
+    color: tokens.$color-ui-text-primary;
+    background: tokens.$color-ui-background-tertiary;
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-primary, #3b82f6);
+    outline: tokens.$border-width-2 solid tokens.$color-brand-primary-500;
     outline-offset: -2px;
     z-index: 1;
   }
 }
 
 .tabButtonActive {
-  color: var(--color-primary, #3b82f6);
-  border-bottom-color: var(--color-primary, #3b82f6);
-  background: var(--color-surface-primary, #ffffff);
+  color: tokens.$color-brand-primary-500;
+  border-bottom-color: tokens.$color-brand-primary-500;
+  background: tokens.$color-ui-background-primary;
 
   &:hover {
-    color: var(--color-primary, #3b82f6);
-    background: var(--color-surface-primary, #ffffff);
+    color: tokens.$color-brand-primary-500;
+    background: tokens.$color-ui-background-primary;
   }
 }
 
 .propertyPanelContent {
   flex: 1;
   overflow-y: auto;
-  padding: 1rem;
+  padding: tokens.$spacing-4;
 
   /* Custom scrollbar */
   &::-webkit-scrollbar {
@@ -118,21 +123,21 @@
   }
 
   &::-webkit-scrollbar-track {
-    background: var(--color-surface-secondary, #f9fafb);
+    background: tokens.$color-ui-background-secondary;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: var(--color-border-primary, #d1d5db);
+    background: tokens.$color-ui-border-base;
     border-radius: 4px;
 
     &:hover {
-      background: var(--color-border-secondary, #9ca3af);
+      background: tokens.$color-ui-border-strong;
     }
   }
 }
 
 .propertySection {
-  margin-bottom: 1.5rem;
+  margin-bottom: tokens.$spacing-6;
 
   &:last-child {
     margin-bottom: 0;
@@ -140,16 +145,16 @@
 }
 
 .propertySectionTitle {
-  margin: 0 0 0.75rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--color-text-secondary, #6b7280);
+  margin: 0 0 tokens.$spacing-3;
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-semibold;
+  color: tokens.$color-ui-text-secondary;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: tokens.$typography-letter-spacing-wide;
 }
 
 .propertyField {
-  margin-bottom: 1rem;
+  margin-bottom: tokens.$spacing-4;
 
   &:last-child {
     margin-bottom: 0;
@@ -158,122 +163,124 @@
 
 .propertyLabel {
   display: block;
-  margin-bottom: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-text-primary, #374151);
+  margin-bottom: tokens.$spacing-2;
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-neutral-700;
 }
 
 .propertyInput,
 .propertySelect {
   width: 100%;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: var(--color-text-primary, #111827);
-  background: var(--color-surface-primary, #ffffff);
-  border: 1px solid var(--color-border-primary, #d1d5db);
-  border-radius: 0.375rem;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  padding: tokens.$spacing-2 tokens.$spacing-3;
+  font-size: tokens.$typography-font-size-sm;
+  line-height: tokens.$typography-line-height-normal;
+  color: tokens.$color-ui-text-primary;
+  background: tokens.$color-ui-background-primary;
+  border: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  border-radius: tokens.$border-radius-md;
+  transition: border-color tokens.$animation-duration-fast tokens.$animation-easing-ease,
+              box-shadow tokens.$animation-duration-fast tokens.$animation-easing-ease;
 
   &:focus {
     outline: none;
-    border-color: var(--color-primary, #7c3aed);
+    border-color: tokens.$color-brand-secondary-600;
     box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
   }
 
   &::placeholder {
-    color: var(--color-text-tertiary, #9ca3af);
+    color: tokens.$color-ui-text-tertiary;
   }
 }
 
 .propertyTextarea {
   width: 100%;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: var(--color-text-primary, #111827);
-  background: var(--color-surface-primary, #ffffff);
-  border: 1px solid var(--color-border-primary, #d1d5db);
-  border-radius: 0.375rem;
+  padding: tokens.$spacing-2 tokens.$spacing-3;
+  font-size: tokens.$typography-font-size-sm;
+  line-height: tokens.$typography-line-height-normal;
+  color: tokens.$color-ui-text-primary;
+  background: tokens.$color-ui-background-primary;
+  border: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  border-radius: tokens.$border-radius-md;
   resize: vertical;
   font-family: inherit;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color tokens.$animation-duration-fast tokens.$animation-easing-ease,
+              box-shadow tokens.$animation-duration-fast tokens.$animation-easing-ease;
 
   &:focus {
     outline: none;
-    border-color: var(--color-primary, #7c3aed);
+    border-color: tokens.$color-brand-secondary-600;
     box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
   }
 
   &::placeholder {
-    color: var(--color-text-tertiary, #9ca3af);
+    color: tokens.$color-ui-text-tertiary;
   }
 }
 
 .propertyColorInput {
   width: 60px;
   height: 36px;
-  padding: 2px;
-  margin-right: 0.5rem;
-  border: 1px solid var(--color-border-primary, #d1d5db);
-  border-radius: 0.375rem;
+  padding: tokens.$border-width-2;
+  margin-right: tokens.$spacing-2;
+  border: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  border-radius: tokens.$border-radius-md;
   cursor: pointer;
-  transition: border-color 0.15s ease;
+  transition: border-color tokens.$animation-duration-fast tokens.$animation-easing-ease;
 
   &:hover {
-    border-color: var(--color-border-secondary, #9ca3af);
+    border-color: tokens.$color-ui-border-strong;
   }
 
   &:focus {
     outline: none;
-    border-color: var(--color-primary, #7c3aed);
+    border-color: tokens.$color-brand-secondary-600;
     box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
   }
 }
 
 .propertyRadioGroup {
   display: flex;
-  gap: 0.5rem;
+  gap: tokens.$spacing-2;
   flex-wrap: wrap;
 }
 
 .propertyRadioLabel {
   display: flex;
   align-items: center;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
-  color: var(--color-text-primary, #374151);
-  background: var(--color-surface-secondary, #f9fafb);
-  border: 1px solid var(--color-border-primary, #d1d5db);
-  border-radius: 0.375rem;
+  padding: tokens.$spacing-2 tokens.$spacing-3;
+  font-size: tokens.$typography-font-size-sm;
+  color: tokens.$color-neutral-700;
+  background: tokens.$color-ui-background-secondary;
+  border: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  border-radius: tokens.$border-radius-md;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
 
   input[type='radio'] {
-    margin-right: 0.5rem;
+    margin-right: tokens.$spacing-2;
     cursor: pointer;
   }
 
   &:hover {
-    background: var(--color-surface-tertiary, #f3f4f6);
-    border-color: var(--color-border-secondary, #9ca3af);
+    background: tokens.$color-ui-background-tertiary;
+    border-color: tokens.$color-ui-border-strong;
   }
 
   input[type='radio']:checked + & {
-    background: var(--color-primary-light, #ede9fe);
-    border-color: var(--color-primary, #7c3aed);
-    color: var(--color-primary, #7c3aed);
-    font-weight: 500;
+    background: tokens.$color-brand-secondary-100;
+    border-color: tokens.$color-brand-secondary-600;
+    color: tokens.$color-brand-secondary-600;
+    font-weight: tokens.$typography-font-weight-medium;
   }
 }
 
 .propertyDescription {
   display: block;
-  margin-top: 0.25rem;
-  font-size: 0.75rem;
-  color: var(--color-text-tertiary, #9ca3af);
-  line-height: 1.4;
+  margin-top: tokens.$spacing-1;
+  font-size: tokens.$typography-font-size-xs;
+  color: tokens.$color-ui-text-tertiary;
+  line-height: tokens.$typography-line-height-snug;
 }
 
 /* Empty State */
@@ -283,28 +290,28 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: 2rem;
+  padding: tokens.$spacing-8;
   text-align: center;
 }
 
 .emptyStateIcon {
   font-size: 64px;
-  margin-bottom: 1rem;
+  margin-bottom: tokens.$spacing-4;
   opacity: 0.6;
 }
 
 .emptyStateTitle {
-  margin: 0 0 0.5rem;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--color-text-primary, #111827);
+  margin: 0 0 tokens.$spacing-2;
+  font-size: tokens.$typography-font-size-lg;
+  font-weight: tokens.$typography-font-weight-semibold;
+  color: tokens.$color-ui-text-primary;
 }
 
 .emptyStateText {
   margin: 0;
-  font-size: 0.875rem;
-  color: var(--color-text-secondary, #6b7280);
-  line-height: 1.5;
+  font-size: tokens.$typography-font-size-sm;
+  color: tokens.$color-ui-text-secondary;
+  line-height: tokens.$typography-line-height-normal;
   max-width: 280px;
 }
 
@@ -312,12 +319,12 @@
 .presetControls {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: tokens.$spacing-2;
 }
 
 .presetSelectGroup {
   display: flex;
-  gap: 0.5rem;
+  gap: tokens.$spacing-2;
   align-items: stretch;
 
   select {
@@ -326,19 +333,20 @@
 }
 
 .presetApplyButton {
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-surface-primary, #ffffff);
-  background: var(--color-primary, #7c3aed);
+  padding: tokens.$spacing-2 tokens.$spacing-4;
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-ui-background-primary;
+  background: tokens.$color-brand-secondary-600;
   border: none;
-  border-radius: 0.375rem;
+  border-radius: tokens.$border-radius-md;
   cursor: pointer;
-  transition: background-color 0.15s ease, transform 0.1s ease;
+  transition: background-color tokens.$animation-duration-fast tokens.$animation-easing-ease,
+              transform tokens.$animation-duration-fast tokens.$animation-easing-ease;
   white-space: nowrap;
 
   &:hover:not(:disabled) {
-    background: var(--color-primary-dark, #6d28d9);
+    background: tokens.$color-brand-secondary-700;
   }
 
   &:active:not(:disabled) {
@@ -351,27 +359,27 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-primary, #7c3aed);
-    outline-offset: 2px;
+    outline: tokens.$border-width-2 solid tokens.$color-brand-secondary-600;
+    outline-offset: tokens.$border-width-2;
   }
 }
 
 .presetPreviewButton {
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-text-secondary, #6b7280);
-  background: var(--color-surface-secondary, #ffffff);
-  border: 1px solid var(--color-border-default, #e5e7eb);
-  border-radius: 0.375rem;
+  padding: tokens.$spacing-2 tokens.$spacing-4;
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-ui-text-secondary;
+  background: tokens.$color-ui-background-primary;
+  border: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  border-radius: tokens.$border-radius-md;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
   white-space: nowrap;
 
   &:hover:not(:disabled) {
-    background: var(--color-surface-tertiary, #f9fafb);
-    border-color: var(--color-border-hover, #d1d5db);
-    color: var(--color-text-primary, #111827);
+    background: tokens.$color-ui-background-secondary;
+    border-color: tokens.$color-ui-border-strong;
+    color: tokens.$color-ui-text-primary;
   }
 
   &:active:not(:disabled) {
@@ -384,25 +392,25 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-primary, #7c3aed);
-    outline-offset: 2px;
+    outline: tokens.$border-width-2 solid tokens.$color-brand-secondary-600;
+    outline-offset: tokens.$border-width-2;
   }
 }
 
 .presetCreateButton {
   width: 100%;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-primary, #7c3aed);
-  background: var(--color-surface-primary, #ffffff);
-  border: 1px solid var(--color-primary, #7c3aed);
-  border-radius: 0.375rem;
+  padding: tokens.$spacing-2 tokens.$spacing-4;
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-brand-secondary-600;
+  background: tokens.$color-ui-background-primary;
+  border: tokens.$border-width-base solid tokens.$color-brand-secondary-600;
+  border-radius: tokens.$border-radius-md;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
 
   &:hover {
-    background: var(--color-primary-light, #ede9fe);
+    background: tokens.$color-brand-secondary-100;
   }
 
   &:active {
@@ -410,27 +418,27 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-primary, #7c3aed);
-    outline-offset: 2px;
+    outline: tokens.$border-width-2 solid tokens.$color-brand-secondary-600;
+    outline-offset: tokens.$border-width-2;
   }
 }
 
 .presetManageButton {
   width: 100%;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-text-secondary, #6b7280);
-  background: var(--color-surface-secondary, #f9fafb);
-  border: 1px solid var(--color-border-primary, #d1d5db);
-  border-radius: 0.375rem;
+  padding: tokens.$spacing-2 tokens.$spacing-4;
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-ui-text-secondary;
+  background: tokens.$color-ui-background-secondary;
+  border: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  border-radius: tokens.$border-radius-md;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
 
   &:hover {
-    background: var(--color-surface-tertiary, #f3f4f6);
-    border-color: var(--color-border-secondary, #9ca3af);
-    color: var(--color-text-primary, #111827);
+    background: tokens.$color-ui-background-tertiary;
+    border-color: tokens.$color-ui-border-strong;
+    color: tokens.$color-ui-text-primary;
   }
 
   &:active {
@@ -438,20 +446,20 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-primary, #7c3aed);
-    outline-offset: 2px;
+    outline: tokens.$border-width-2 solid tokens.$color-brand-secondary-600;
+    outline-offset: tokens.$border-width-2;
   }
 }
 
 .presetDescription {
-  margin: 0.75rem 0 0;
-  padding: 0.75rem;
-  font-size: 0.875rem;
-  color: var(--color-text-secondary, #6b7280);
-  background: var(--color-surface-secondary, #f9fafb);
-  border-left: 3px solid var(--color-primary, #7c3aed);
-  border-radius: 0.25rem;
-  line-height: 1.5;
+  margin: tokens.$spacing-3 0 0;
+  padding: tokens.$spacing-3;
+  font-size: tokens.$typography-font-size-sm;
+  color: tokens.$color-ui-text-secondary;
+  background: tokens.$color-ui-background-secondary;
+  border-left: 3px solid tokens.$color-brand-secondary-600;
+  border-radius: tokens.$border-radius-sm;
+  line-height: tokens.$typography-line-height-normal;
 }
 
 /* Modal Styles */
@@ -461,17 +469,17 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: tokens.$color-ui-background-overlay;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 1rem;
+  padding: tokens.$spacing-4;
 }
 
 .modalContent {
-  background: var(--color-surface-primary, #ffffff);
-  border-radius: 0.5rem;
+  background: tokens.$color-ui-background-primary;
+  border-radius: tokens.$border-radius-lg;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   max-width: 500px;
   width: 100%;
@@ -483,93 +491,93 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.25rem;
-  border-bottom: 1px solid var(--color-border-primary, #e5e7eb);
+  padding: tokens.$spacing-5;
+  border-bottom: tokens.$border-width-base solid tokens.$color-ui-border-base;
 }
 
 .modalTitle {
   margin: 0;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--color-text-primary, #111827);
+  font-size: tokens.$typography-font-size-lg;
+  font-weight: tokens.$typography-font-weight-semibold;
+  color: tokens.$color-ui-text-primary;
 }
 
 .modalCloseButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: tokens.$spacing-8;
+  height: tokens.$spacing-8;
   padding: 0;
-  font-size: 1.5rem;
-  line-height: 1;
-  color: var(--color-text-tertiary, #9ca3af);
+  font-size: tokens.$typography-font-size-2xl;
+  line-height: tokens.$typography-line-height-none;
+  color: tokens.$color-ui-text-tertiary;
   background: transparent;
   border: none;
-  border-radius: 0.375rem;
+  border-radius: tokens.$border-radius-md;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
 
   &:hover {
-    background: var(--color-surface-secondary, #f9fafb);
-    color: var(--color-text-primary, #111827);
+    background: tokens.$color-ui-background-secondary;
+    color: tokens.$color-ui-text-primary;
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-primary, #7c3aed);
-    outline-offset: 2px;
+    outline: tokens.$border-width-2 solid tokens.$color-brand-secondary-600;
+    outline-offset: tokens.$border-width-2;
   }
 }
 
 .modalBody {
-  padding: 1.25rem;
+  padding: tokens.$spacing-5;
 }
 
 .modalFooter {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.75rem;
-  padding: 1rem 1.25rem;
-  border-top: 1px solid var(--color-border-primary, #e5e7eb);
-  background: var(--color-surface-secondary, #f9fafb);
+  gap: tokens.$spacing-3;
+  padding: tokens.$spacing-4 tokens.$spacing-5;
+  border-top: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  background: tokens.$color-ui-background-secondary;
 }
 
 .modalCancelButton {
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-text-primary, #374151);
-  background: var(--color-surface-primary, #ffffff);
-  border: 1px solid var(--color-border-primary, #d1d5db);
-  border-radius: 0.375rem;
+  padding: tokens.$spacing-2 tokens.$spacing-4;
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-neutral-700;
+  background: tokens.$color-ui-background-primary;
+  border: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  border-radius: tokens.$border-radius-md;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
 
   &:hover {
-    background: var(--color-surface-secondary, #f9fafb);
-    border-color: var(--color-border-secondary, #9ca3af);
+    background: tokens.$color-ui-background-secondary;
+    border-color: tokens.$color-ui-border-strong;
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-primary, #7c3aed);
-    outline-offset: 2px;
+    outline: tokens.$border-width-2 solid tokens.$color-brand-secondary-600;
+    outline-offset: tokens.$border-width-2;
   }
 }
 
 .modalSaveButton {
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-surface-primary, #ffffff);
-  background: var(--color-primary, #7c3aed);
+  padding: tokens.$spacing-2 tokens.$spacing-4;
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-ui-background-primary;
+  background: tokens.$color-brand-secondary-600;
   border: none;
-  border-radius: 0.375rem;
+  border-radius: tokens.$border-radius-md;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition: background-color tokens.$animation-duration-fast tokens.$animation-easing-ease;
 
   &:hover:not(:disabled) {
-    background: var(--color-primary-dark, #6d28d9);
+    background: tokens.$color-brand-secondary-700;
   }
 
   &:disabled {
@@ -578,7 +586,7 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-primary, #7c3aed);
-    outline-offset: 2px;
+    outline: tokens.$border-width-2 solid tokens.$color-brand-secondary-600;
+    outline-offset: tokens.$border-width-2;
   }
 }

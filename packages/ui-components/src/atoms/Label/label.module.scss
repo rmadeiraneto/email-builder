@@ -1,22 +1,19 @@
 /**
  * Label component styles
+ * Design tokens are automatically imported via Vite configuration
  */
-
-// Placeholder values
-$gray-700: #374151;
-$error-color: #ef4444;
 
 .label {
   display: inline-block;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: $gray-700;
-  margin-bottom: 0.25rem;
+  font-weight: tokens.$typography-font-weight-medium;
+  font-size: tokens.$typography-font-size-sm;
+  line-height: tokens.$typography-line-height-normal;
+  color: tokens.$color-neutral-700;
+  margin-bottom: tokens.$spacing-1;
   cursor: pointer;
 
   &__required {
-    color: $error-color;
-    margin-left: 0.25rem;
+    color: tokens.$color-semantic-error-base;
+    margin-left: tokens.$spacing-1;
   }
 }

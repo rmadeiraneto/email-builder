@@ -1,25 +1,30 @@
+/**
+ * Dropdown Component Styles
+ * Design tokens are automatically imported via Vite configuration
+ */
+
 .dropdown {
-  // CSS Variables
-  --dropdown-height: 40px;
-  --dropdown-arrow-size: 20px;
-  --dropdown-options-height: 200px;
-  --dropdown-item-padding: 12px;
-  --dropdown-control-border-color: #eaedf2;
+  // CSS Variables (using tokens as default values)
+  --dropdown-height: #{tokens.$sizing-10};
+  --dropdown-arrow-size: #{tokens.$sizing-5};
+  --dropdown-options-height: #{tokens.$sizing-50};
+  --dropdown-item-padding: #{tokens.$spacing-3};
+  --dropdown-control-border-color: #{tokens.$color-neutral-200};
   --dropdown-control-text-color: inherit;
   --dropdown-control-font-weight: inherit;
-  --dropdown-control-gap: 12px;
-  --dropdown-control-padding: 0 12px;
+  --dropdown-control-gap: #{tokens.$spacing-3};
+  --dropdown-control-padding: 0 #{tokens.$spacing-3};
   --floater-coords-left: 0;
   --floater-coords-top: 100%;
 
-  font-size: 14px;
+  font-size: tokens.$typography-font-size-sm;
   position: relative;
 
   // Control (trigger button)
   &__control {
     align-items: center;
-    border: 1px solid var(--dropdown-control-border-color);
-    border-radius: 6px;
+    border: tokens.$border-width-base solid var(--dropdown-control-border-color);
+    border-radius: tokens.$border-radius-md;
     color: var(--dropdown-control-text-color);
     cursor: pointer;
     display: flex;
@@ -27,7 +32,7 @@
     gap: var(--dropdown-control-gap);
     height: var(--dropdown-height);
     justify-content: space-between;
-    line-height: 1;
+    line-height: tokens.$typography-line-height-none;
     padding: var(--dropdown-control-padding);
 
     &-content {
@@ -50,10 +55,10 @@
 
   // Options container (dropdown menu)
   &__options {
-    background-color: white;
-    border: 1px solid #eaedf2;
-    border-radius: 6px;
-    box-shadow: 4px 4px 34px rgba(0, 0, 0, 0.05);
+    background-color: tokens.$color-ui-background-primary;
+    border: tokens.$border-width-base solid tokens.$color-neutral-200;
+    border-radius: tokens.$border-radius-md;
+    box-shadow: tokens.$shadow-lg;
     display: none;
     left: var(--floater-coords-left);
     max-height: var(--dropdown-options-height);
@@ -70,12 +75,12 @@
     padding: var(--dropdown-item-padding);
 
     &:hover {
-      background-color: #d1d3e0;
+      background-color: tokens.$color-neutral-300;
     }
 
     &--active {
-      background-color: #e8e9f0;
-      font-weight: 600;
+      background-color: tokens.$color-neutral-200;
+      font-weight: tokens.$typography-font-weight-semibold;
     }
   }
 
@@ -88,20 +93,20 @@
 
   // Modifiers - Size variants
   &--sm {
-    --dropdown-height: 24px;
-    --dropdown-arrow-size: 16px;
-    --dropdown-item-padding: 8px;
-    --dropdown-control-gap: 8px;
-    --dropdown-control-padding: 0 8px;
-    font-size: 12px;
+    --dropdown-height: #{tokens.$sizing-6};
+    --dropdown-arrow-size: #{tokens.$sizing-4};
+    --dropdown-item-padding: #{tokens.$spacing-2};
+    --dropdown-control-gap: #{tokens.$spacing-2};
+    --dropdown-control-padding: 0 #{tokens.$spacing-2};
+    font-size: tokens.$typography-font-size-xs;
   }
 
   &--lg {
-    --dropdown-height: 48px;
-    --dropdown-arrow-size: 24px;
-    --dropdown-item-padding: 16px;
-    --dropdown-control-gap: 16px;
-    --dropdown-control-padding: 0 16px;
-    font-size: 16px;
+    --dropdown-height: #{tokens.$sizing-12};
+    --dropdown-arrow-size: #{tokens.$sizing-6};
+    --dropdown-item-padding: #{tokens.$spacing-4};
+    --dropdown-control-gap: #{tokens.$spacing-4};
+    --dropdown-control-padding: 0 #{tokens.$spacing-4};
+    font-size: tokens.$typography-font-size-base;
   }
 }

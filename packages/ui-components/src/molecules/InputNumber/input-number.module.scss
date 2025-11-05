@@ -1,3 +1,8 @@
+/**
+ * InputNumber Component Styles
+ * Design tokens are automatically imported via Vite configuration
+ */
+
 .input-number {
   position: relative;
   display: inline-block;
@@ -5,22 +10,22 @@
 
   &__input {
     width: 100%;
-    padding-right: 2rem;
-    padding: 0.5rem 2rem 0.5rem 0.75rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    transition: border-color 0.15s ease-in-out;
+    padding-right: tokens.$spacing-8;
+    padding: tokens.$spacing-2 tokens.$spacing-8 tokens.$spacing-2 tokens.$spacing-3;
+    border: tokens.$border-width-base solid tokens.$color-neutral-300;
+    border-radius: tokens.$border-radius-md;
+    font-size: tokens.$typography-font-size-sm;
+    line-height: tokens.$typography-line-height-normal;
+    transition: border-color tokens.$animation-duration-fast tokens.$animation-easing-ease-in-out;
 
     &:focus {
       outline: none;
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      border-color: tokens.$color-brand-primary-500;
+      box-shadow: 0 0 0 3px rgba(tokens.$color-brand-primary-500, 0.1);
     }
 
     &:disabled {
-      background-color: #f3f4f6;
+      background-color: tokens.$color-neutral-100;
       cursor: not-allowed;
       opacity: 0.6;
     }
@@ -29,33 +34,33 @@
   &__up-arrow,
   &__down-arrow {
     position: absolute;
-    right: 0.875rem;
-    color: #9ca3af;
+    right: tokens.$spacing-3-5;
+    color: tokens.$color-neutral-400;
     cursor: pointer;
-    font-size: 0.625rem;
+    font-size: tokens.$typography-font-size-2xs;
     user-select: none;
     z-index: 1;
-    transition: color 0.15s ease-in-out;
+    transition: color tokens.$animation-duration-fast tokens.$animation-easing-ease-in-out;
 
     &:hover {
-      color: #4b5563;
+      color: tokens.$color-neutral-600;
     }
 
     &:active {
-      color: #1f2937;
+      color: tokens.$color-neutral-800;
     }
   }
 
   &__up-arrow {
-    top: 0.375rem;
+    top: tokens.$spacing-1-5;
   }
 
   &__down-arrow {
-    bottom: 0.375rem;
+    bottom: tokens.$spacing-1-5;
   }
 
   &__arrow--disabled {
-    color: #e5e7eb;
+    color: tokens.$color-neutral-200;
     pointer-events: none;
     cursor: not-allowed;
   }
@@ -65,7 +70,7 @@
 
     .input-number__up-arrow,
     .input-number__down-arrow {
-      color: #e5e7eb;
+      color: tokens.$color-neutral-200;
       pointer-events: none;
       cursor: not-allowed;
     }

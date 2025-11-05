@@ -1,5 +1,6 @@
 /**
  * Popup Component Styles
+ * Design tokens are automatically imported via Vite configuration
  *
  * Fixed-position popup/modal with optional header,
  * title, close button, and content.
@@ -7,21 +8,21 @@
 
 .popup {
   /* CSS Custom Properties */
-  --popup-width: 300px;
-  --popup-min-height: 200px;
+  --popup-width: #{tokens.$sizing-75};
+  --popup-min-height: #{tokens.$sizing-50};
 
   /* Layout */
   position: fixed;
   display: none;
   width: var(--popup-width);
   min-height: var(--popup-min-height);
-  padding: 10px;
+  padding: tokens.$spacing-2-5;
 
   /* Visual */
-  background-color: #ffffff;
-  border: 1px solid #eaedf2;
-  border-radius: 6px;
-  box-shadow: 4px 4px 34px 0px rgba(0, 0, 0, 0.05);
+  background-color: tokens.$color-ui-background-primary;
+  border: tokens.$border-width-base solid tokens.$color-neutral-200;
+  border-radius: tokens.$border-radius-md;
+  box-shadow: tokens.$shadow-lg;
 
   /* Z-index */
   z-index: 1000;
@@ -43,17 +44,17 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 10px;
-    gap: 10px;
+    margin-bottom: tokens.$spacing-2-5;
+    gap: tokens.$spacing-2-5;
   }
 
   /* Element: Title */
   &__title {
     flex: 1;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 1.5;
-    color: #1a202c;
+    font-weight: tokens.$typography-font-weight-semibold;
+    font-size: tokens.$typography-font-size-base;
+    line-height: tokens.$typography-line-height-normal;
+    color: tokens.$color-neutral-900;
   }
 
   /* Element: Close button wrapper */
@@ -63,8 +64,8 @@
 
   /* Element: Content */
   &__content {
-    font-size: 14px;
-    line-height: 1.6;
-    color: #4a5568;
+    font-size: tokens.$typography-font-size-sm;
+    line-height: tokens.$typography-line-height-relaxed;
+    color: tokens.$color-neutral-600;
   }
 }

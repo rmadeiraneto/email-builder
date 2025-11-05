@@ -127,18 +127,18 @@
 .demoButton {
   // Use component tokens with base token fallbacks
   padding: var(--component-button-padding-y-md, 0.625rem) var(--component-button-padding-x-md, 1rem);
-  border: var(--component-button-border-width, 1px) solid var(--color-ui-border-base, #cbd5e1);
+  border: var(--component-button-border-width, 1px) solid var(--component-button-border-default, #cbd5e1);
   border-radius: var(--component-button-border-radius-md, 0.375rem);
-  background: var(--color-ui-surface-base, white);
-  color: var(--color-ui-text-primary, #1e293b);
+  background: var(--component-button-background-default, white);
+  color: var(--component-button-text-default, #1e293b);
   font-size: var(--component-button-font-size-md, 0.875rem);
   font-weight: var(--component-button-font-weight, 500);
   cursor: pointer;
   transition: all var(--animation-duration-normal, 0.2s);
 
   &:hover:not(:disabled) {
-    background: var(--color-ui-background-secondary, #f8fafc);
-    border-color: var(--color-ui-border-strong, #94a3b8);
+    background: var(--component-button-background-default-hover, #f8fafc);
+    border-color: var(--component-button-border-default-hover, #94a3b8);
   }
 
   &:disabled {
@@ -147,33 +147,35 @@
   }
 
   &.primary {
-    background: var(--color-brand-primary-500, #3b82f6);
-    color: var(--color-ui-text-inverse, white);
-    border-color: var(--color-brand-primary-500, #3b82f6);
+    background: var(--component-button-background-primary, #3b82f6);
+    color: var(--component-button-text-primary, white);
+    border-color: var(--component-button-border-primary, #3b82f6);
 
     &:hover {
-      background: var(--color-brand-primary-600, #2563eb);
-      border-color: var(--color-brand-primary-600, #2563eb);
+      background: var(--component-button-background-primary-hover, #2563eb);
+      border-color: var(--component-button-border-primary-hover, #2563eb);
     }
   }
 
   &.secondary {
-    background: var(--color-brand-secondary-500, #8b5cf6);
-    color: var(--color-ui-text-inverse, white);
-    border-color: var(--color-brand-secondary-500, #8b5cf6);
+    background: var(--component-button-background-secondary, #8b5cf6);
+    color: var(--component-button-text-secondary, white);
+    border-color: var(--component-button-border-secondary, #8b5cf6);
 
     &:hover {
-      background: var(--color-brand-secondary-600, #7c3aed);
-      border-color: var(--color-brand-secondary-600, #7c3aed);
+      background: var(--component-button-background-secondary-hover, #7c3aed);
+      border-color: var(--component-button-border-secondary-hover, #7c3aed);
     }
   }
 
   &.ghost {
-    background: transparent;
-    border-color: transparent;
+    background: var(--component-button-background-ghost, transparent);
+    color: var(--component-button-text-ghost, #1e293b);
+    border-color: var(--component-button-border-ghost, transparent);
 
     &:hover {
-      background: var(--color-ui-background-secondary, #f1f5f9);
+      background: var(--component-button-background-ghost-hover, #f1f5f9);
+      border-color: var(--component-button-border-ghost-hover, transparent);
     }
   }
 }

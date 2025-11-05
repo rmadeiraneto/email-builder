@@ -2,7 +2,7 @@
  * Utility for applying custom token values dynamically via CSS custom properties
  */
 
-import { CustomTokens } from './tokenStorage';
+import type { CustomTokens } from './tokenStorage';
 
 const STYLE_ID = 'custom-tokens-style';
 

@@ -14,7 +14,7 @@ import { BorderTokens } from '../components/styleguide/BorderTokens';
 import { ShadowTokens } from '../components/styleguide/ShadowTokens';
 import { ComponentShowcase } from '../components/styleguide/ComponentShowcase';
 import { TokenEditor } from '../components/styleguide-builder/TokenEditor';
-import { tokenStorage, CustomTokens } from '../utils/tokenStorage';
+import { tokenStorage, type CustomTokens } from '../utils/tokenStorage';
 import { applyCustomTokens, removeCustomTokens, TokenExporter } from '../utils/tokenApplier';
 import { getDefaultTokens, mergeTokens, getAllTokensFlat } from '../utils/tokenLoader';
 

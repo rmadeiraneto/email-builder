@@ -15,7 +15,8 @@ import { TemplatePickerModal } from '../components/modals/TemplatePickerModal';
 import { PreviewModal } from '../components/modals/PreviewModal';
 import { EmailTestingSettingsModal } from '../components/modals/EmailTestingSettingsModal';
 import { TestConfigModal } from '../components/modals/TestConfigModal';
-import type { ComponentDefinition, EmailTestingConfig, EmailTestRequest } from '@email-builder/core';
+import { CompatibilityReportModal } from '../components/modals/CompatibilityReportModal';
+import type { ComponentDefinition, EmailTestingConfig, EmailTestRequest, CompatibilityReport } from '@email-builder/core';
 import styles from './Builder.module.scss';
 
 const BuilderContent: Component = () => {
@@ -25,6 +26,9 @@ const BuilderContent: Component = () => {
   const [isPreviewModalOpen, setIsPreviewModalOpen] = createSignal(false);
   const [isEmailTestingSettingsModalOpen, setIsEmailTestingSettingsModalOpen] = createSignal(false);
   const [isTestConfigModalOpen, setIsTestConfigModalOpen] = createSignal(false);
+  const [isCompatibilityReportModalOpen, setIsCompatibilityReportModalOpen] = createSignal(false);
+  const [compatibilityReport, setCompatibilityReport] = createSignal<CompatibilityReport | null>(null);
+  const [pendingAction, setPendingAction] = createSignal<'export' | 'test' | null>(null);
 
   // Get the selected component from the template
   const selectedComponent = createMemo(() => {
@@ -199,6 +203,16 @@ const BuilderContent: Component = () => {
 
   const handleExport = async () => {
     try {
+      // Check compatibility first
+      const report = actions.checkCompatibility();
+      if (report && report.issues.length > 0) {
+        setCompatibilityReport(report);
+        setPendingAction('export');
+        setIsCompatibilityReportModalOpen(true);
+        return;
+      }
+
+      // No issues, proceed with export
       await actions.exportTemplate('html');
     } catch (error) {
       console.error('[Builder] Failed to export template:', error);
@@ -229,6 +243,16 @@ const BuilderContent: Component = () => {
       return;
     }
 
+    // Check compatibility first
+    const report = actions.checkCompatibility();
+    if (report && report.issues.length > 0) {
+      setCompatibilityReport(report);
+      setPendingAction('test');
+      setIsCompatibilityReportModalOpen(true);
+      return;
+    }
+
+    // No issues, proceed with test
     setIsTestConfigModalOpen(true);
   };
 
@@ -252,6 +276,41 @@ const BuilderContent: Component = () => {
     }
   };
 
+  const handleCheckCompatibility = () => {
+    const report = actions.checkCompatibility();
+    if (report) {
+      setCompatibilityReport(report);
+      setPendingAction(null);
+      setIsCompatibilityReportModalOpen(true);
+    } else {
+      alert('No compatibility issues found! Your template looks good.');
+    }
+  };
+
+  const handleCompatibilityReportClose = () => {
+    setIsCompatibilityReportModalOpen(false);
+    setPendingAction(null);
+    setCompatibilityReport(null);
+  };
+
+  const handleExportAnyway = async () => {
+    setIsCompatibilityReportModalOpen(false);
+    const action = pendingAction();
+    setPendingAction(null);
+    setCompatibilityReport(null);
+
+    try {
+      if (action === 'export') {
+        await actions.exportTemplate('html');
+      } else if (action === 'test') {
+        setIsTestConfigModalOpen(true);
+      }
+    } catch (error) {
+      console.error('[Builder] Failed to proceed with action:', error);
+      alert('Failed to proceed. Please try again.');
+    }
+  };
+
   return (
     <>
       <div class={styles.builder}>
@@ -270,6 +329,7 @@ const BuilderContent: Component = () => {
               onRedo={actions.redo}
               onExport={handleExport}
               onPreview={handlePreview}
+              onCheckCompatibility={handleCheckCompatibility}
               onTestEmailClients={handleTestEmailClients}
               onEmailTestingSettings={handleEmailTestingSettings}
             />
@@ -365,6 +425,15 @@ const BuilderContent: Component = () => {
         onClose={() => setIsTestConfigModalOpen(false)}
         onSubmit={handleSubmitTest}
       />
+
+      <Show when={compatibilityReport()}>
+        <CompatibilityReportModal
+          isOpen={isCompatibilityReportModalOpen()}
+          onClose={handleCompatibilityReportClose}
+          report={compatibilityReport()!}
+          onExportAnyway={handleExportAnyway}
+        />
+      </Show>
     </>
   );
 };

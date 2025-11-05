@@ -67,4 +67,9 @@ export interface TemplateToolbarProps {
    * Callback when Email Testing Settings button is clicked
    */
   onEmailTestingSettings?: () => void;
+
+  /**
+   * Callback when Check Compatibility button is clicked
+   */
+  onCheckCompatibility?: () => void;
 }

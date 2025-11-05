@@ -45,6 +45,10 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
     props.onEmailTestingSettings?.();
   };
 
+  const handleCheckCompatibility = () => {
+    props.onCheckCompatibility?.();
+  };
+
   return (
     <div class={styles.toolbar}>
       <div class={styles.toolbar__group}>
@@ -135,6 +139,17 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
       <div class={styles.toolbar__separator} />
 
       <div class={styles.toolbar__group}>
+        <button
+          class={styles.toolbar__button}
+          onClick={handleCheckCompatibility}
+          disabled={!props.hasTemplate}
+          title="Check Email Compatibility"
+          aria-label="Check Email Compatibility"
+        >
+          <span class={styles.toolbar__icon}>✓</span>
+          <span class={styles.toolbar__label}>Check</span>
+        </button>
+
         <button
           class={styles.toolbar__button}
           onClick={handleTestEmailClients}

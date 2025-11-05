@@ -7,7 +7,11 @@
 import { type Component, createSignal } from 'solid-js';
 import styles from './ComponentShowcase.module.scss';
 
-export const ComponentShowcase: Component = () => {
+interface ComponentShowcaseProps {
+  onTokenClick?: (tokenPath: string[]) => void;
+}
+
+export const ComponentShowcase: Component<ComponentShowcaseProps> = (props) => {
   const [modalOpen, setModalOpen] = createSignal(false);
 
   return (
@@ -180,60 +184,32 @@ export const ComponentShowcase: Component = () => {
           <h4 class={styles.componentTitle}>Alert</h4>
           <div class={styles.componentDemo}>
             <div style={{ display: 'flex', 'flex-direction': 'column', gap: '1rem' }}>
-              <div style={{
-                display: 'flex',
-                gap: '12px',
-                padding: '12px 16px',
-                'border-radius': '8px',
-                border: '1px solid #90caf9',
-                background: '#e3f2fd'
-              }}>
-                <div style={{ color: '#1976d2', 'font-size': '20px', 'flex-shrink': '0' }}>ℹ️</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ 'font-size': '14px', 'font-weight': 600, color: '#0d47a1', 'margin-bottom': '4px' }}>Information</div>
-                  <div style={{ 'font-size': '13px', color: '#1565c0' }}>This is an informational message</div>
+              <div class={`${styles.demoAlert} ${styles.info}`}>
+                <div class={styles.demoAlertIcon}>ℹ️</div>
+                <div class={styles.demoAlertContent}>
+                  <div class={styles.demoAlertTitle}>Information</div>
+                  <div class={styles.demoAlertDescription}>This is an informational message</div>
                 </div>
               </div>
-              <div style={{
-                display: 'flex',
-                gap: '12px',
-                padding: '12px 16px',
-                'border-radius': '8px',
-                border: '1px solid #81c784',
-                background: '#e8f5e9'
-              }}>
-                <div style={{ color: '#388e3c', 'font-size': '20px', 'flex-shrink': '0' }}>✅</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ 'font-size': '14px', 'font-weight': 600, color: '#1b5e20', 'margin-bottom': '4px' }}>Success</div>
-                  <div style={{ 'font-size': '13px', color: '#2e7d32' }}>Your changes have been saved successfully</div>
+              <div class={`${styles.demoAlert} ${styles.success}`}>
+                <div class={styles.demoAlertIcon}>✅</div>
+                <div class={styles.demoAlertContent}>
+                  <div class={styles.demoAlertTitle}>Success</div>
+                  <div class={styles.demoAlertDescription}>Your changes have been saved successfully</div>
                 </div>
               </div>
-              <div style={{
-                display: 'flex',
-                gap: '12px',
-                padding: '12px 16px',
-                'border-radius': '8px',
-                border: '1px solid #ffb74d',
-                background: '#fff3e0'
-              }}>
-                <div style={{ color: '#f57c00', 'font-size': '20px', 'flex-shrink': '0' }}>⚠️</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ 'font-size': '14px', 'font-weight': 600, color: '#e65100', 'margin-bottom': '4px' }}>Warning</div>
-                  <div style={{ 'font-size': '13px', color: '#ef6c00' }}>Please review your input before proceeding</div>
+              <div class={`${styles.demoAlert} ${styles.warning}`}>
+                <div class={styles.demoAlertIcon}>⚠️</div>
+                <div class={styles.demoAlertContent}>
+                  <div class={styles.demoAlertTitle}>Warning</div>
+                  <div class={styles.demoAlertDescription}>Please review your input before proceeding</div>
                 </div>
               </div>
-              <div style={{
-                display: 'flex',
-                gap: '12px',
-                padding: '12px 16px',
-                'border-radius': '8px',
-                border: '1px solid #e57373',
-                background: '#ffebee'
-              }}>
-                <div style={{ color: '#d32f2f', 'font-size': '20px', 'flex-shrink': '0' }}>❌</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ 'font-size': '14px', 'font-weight': 600, color: '#b71c1c', 'margin-bottom': '4px' }}>Error</div>
-                  <div style={{ 'font-size': '13px', color: '#c62828' }}>An error occurred while processing your request</div>
+              <div class={`${styles.demoAlert} ${styles.error}`}>
+                <div class={styles.demoAlertIcon}>❌</div>
+                <div class={styles.demoAlertContent}>
+                  <div class={styles.demoAlertTitle}>Error</div>
+                  <div class={styles.demoAlertDescription}>An error occurred while processing your request</div>
                 </div>
               </div>
             </div>
@@ -783,96 +759,19 @@ const transparent = new ColorPicker({
             <div style={{ display: 'flex', 'flex-direction': 'column', gap: '1.5rem' }}>
               <div>
                 <p style={{ 'font-size': '0.875rem', 'margin-bottom': '0.75rem', 'font-weight': 600 }}>Multi-selection (4 columns):</p>
-                <div style={{
-                  display: 'grid',
-                  'grid-template-columns': 'repeat(4, 1fr)',
-                  gap: '0.75rem'
-                }}>
-                  <div style={{
-                    display: 'flex',
-                    'align-items': 'center',
-                    'justify-content': 'center',
-                    padding: '1rem',
-                    border: '2px solid #3b82f6',
-                    'border-radius': '0.5rem',
-                    background: '#eff6ff',
-                    color: '#1e40af',
-                    'font-weight': 500,
-                    cursor: 'pointer'
-                  }}>Option 1</div>
-                  <div style={{
-                    display: 'flex',
-                    'align-items': 'center',
-                    'justify-content': 'center',
-                    padding: '1rem',
-                    border: '2px solid #e5e7eb',
-                    'border-radius': '0.5rem',
-                    background: '#ffffff',
-                    cursor: 'pointer'
-                  }}>Option 2</div>
-                  <div style={{
-                    display: 'flex',
-                    'align-items': 'center',
-                    'justify-content': 'center',
-                    padding: '1rem',
-                    border: '2px solid #3b82f6',
-                    'border-radius': '0.5rem',
-                    background: '#eff6ff',
-                    color: '#1e40af',
-                    'font-weight': 500,
-                    cursor: 'pointer'
-                  }}>Option 3</div>
-                  <div style={{
-                    display: 'flex',
-                    'align-items': 'center',
-                    'justify-content': 'center',
-                    padding: '1rem',
-                    border: '2px solid #e5e7eb',
-                    'border-radius': '0.5rem',
-                    background: '#ffffff',
-                    cursor: 'pointer'
-                  }}>Option 4</div>
+                <div class={`${styles.demoGridSelector} ${styles.cols4}`}>
+                  <div class={`${styles.gridItem} ${styles.selected}`}>Option 1</div>
+                  <div class={styles.gridItem}>Option 2</div>
+                  <div class={`${styles.gridItem} ${styles.selected}`}>Option 3</div>
+                  <div class={styles.gridItem}>Option 4</div>
                 </div>
               </div>
               <div>
                 <p style={{ 'font-size': '0.875rem', 'margin-bottom': '0.75rem', 'font-weight': 600 }}>Single-selection (3 columns):</p>
-                <div style={{
-                  display: 'grid',
-                  'grid-template-columns': 'repeat(3, 1fr)',
-                  gap: '0.75rem'
-                }}>
-                  <div style={{
-                    display: 'flex',
-                    'align-items': 'center',
-                    'justify-content': 'center',
-                    padding: '1rem',
-                    border: '2px solid #e5e7eb',
-                    'border-radius': '0.5rem',
-                    background: '#ffffff',
-                    cursor: 'pointer'
-                  }}>Small</div>
-                  <div style={{
-                    display: 'flex',
-                    'align-items': 'center',
-                    'justify-content': 'center',
-                    padding: '1rem',
-                    border: '2px solid #3b82f6',
-                    'border-radius': '0.5rem',
-                    background: '#eff6ff',
-                    color: '#1e40af',
-                    'font-weight': 500,
-                    cursor: 'pointer'
-                  }}>Medium</div>
-                  <div style={{
-                    display: 'flex',
-                    'align-items': 'center',
-                    'justify-content': 'center',
-                    padding: '1rem',
-                    border: '2px solid #e5e7eb',
-                    'border-radius': '0.5rem',
-                    background: '#ffffff',
-                    cursor: 'pointer'
-                  }}>Large</div>
+                <div class={`${styles.demoGridSelector} ${styles.cols3}`}>
+                  <div class={styles.gridItem}>Small</div>
+                  <div class={`${styles.gridItem} ${styles.selected}`}>Medium</div>
+                  <div class={styles.gridItem}>Large</div>
                 </div>
               </div>
             </div>

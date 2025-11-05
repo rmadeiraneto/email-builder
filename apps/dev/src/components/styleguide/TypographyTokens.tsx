@@ -4,55 +4,73 @@
  * Displays all typography tokens from the design system
  */
 
-import { type Component, For } from 'solid-js';
+import { type Component, For, createMemo } from 'solid-js';
 import styles from './TypographyTokens.module.scss';
-import fonts from '@email-builder/tokens/typography/fonts';
-import sizes from '@email-builder/tokens/typography/sizes';
-import weights from '@email-builder/tokens/typography/weights';
-import lineHeights from '@email-builder/tokens/typography/line-heights';
+import defaultFonts from '@email-builder/tokens/typography/fonts';
+import defaultSizes from '@email-builder/tokens/typography/sizes';
+import defaultWeights from '@email-builder/tokens/typography/weights';
+import defaultLineHeights from '@email-builder/tokens/typography/line-heights';
 
 interface TypographyToken {
   name: string;
   value: string;
   description: string;
+  path: string[];
 }
 
-export const TypographyTokens: Component = () => {
+interface TypographyTokensProps {
+  fonts?: any;
+  sizes?: any;
+  weights?: any;
+  lineHeights?: any;
+  onTokenClick?: (tokenPath: string[]) => void;
+}
+
+export const TypographyTokens: Component<TypographyTokensProps> = (props) => {
+  const fonts = () => props.fonts || defaultFonts;
+  const sizes = () => props.sizes || defaultSizes;
+  const weights = () => props.weights || defaultWeights;
+  const lineHeights = () => props.lineHeights || defaultLineHeights;
+
   // Parse font families
-  const fontFamilies: TypographyToken[] = Object.entries(fonts.typography['font-family'])
+  const fontFamilies = createMemo(() => Object.entries(fonts().typography['font-family'])
     .filter(([key]) => key !== '$type')
     .map(([name, token]: [string, any]) => ({
       name,
       value: Array.isArray(token.$value) ? token.$value.join(', ') : token.$value,
       description: token.$description || '',
-    }));
+      path: ['typography', 'font-family', name],
+    })));
 
   // Parse font sizes
-  const fontSizes: TypographyToken[] = Object.entries(sizes.typography['font-size'])
+  const fontSizes = createMemo(() => Object.entries(sizes().typography['font-size'])
     .filter(([key]) => key !== '$type')
     .map(([name, token]: [string, any]) => ({
       name,
       value: token.$value,
       description: token.$description || '',
-    }));
+      path: ['typography', 'font-size', name],
+    })));
 
   // Parse font weights
-  const fontWeights: TypographyToken[] = Object.entries(weights.typography['font-weight'])
+  const fontWeights = createMemo(() => Object.entries(weights().typography['font-weight'])
     .filter(([key]) => key !== '$type')
     .map(([name, token]: [string, any]) => ({
       name,
       value: String(token.$value),
       description: token.$description || '',
-    }));
+      path: ['typography', 'font-weight', name],
+    })));
 
   // Parse line heights
-  const lineHeightsList: TypographyToken[] = Object.entries(lineHeights.typography['line-height'])
+  const lineHeightsList = createMemo(() => Object.entries(lineHeights().typography['line-height'])
     .filter(([key]) => key !== '$type')
     .map(([name, token]: [string, any]) => ({
       name,
       value: String(token.$value),
       description: token.$description || '',
-    }));
+      path: ['typography', 'line-height', name],
+    })));
 
   return (
     <div class={styles.section}>
@@ -65,9 +83,14 @@ export const TypographyTokens: Component = () => {
       <div class={styles.subsection}>
         <h3 class={styles.subsectionTitle}>Font Families</h3>
         <div class={styles.tokenList}>
-          <For each={fontFamilies}>
+          <For each={fontFamilies()}>
             {(token) => (
-              <div class={styles.tokenCard}>
+              <div
+                class={styles.tokenCard}
+                classList={{ [styles.clickableCard]: !!props.onTokenClick }}
+                onClick={() => props.onTokenClick?.(token.path)}
+                title={props.onTokenClick ? 'Click to edit this token' : undefined}
+              >
                 <div class={styles.tokenLabel}>
                   <span class={styles.tokenName}>{token.name}</span>
                   <span class={styles.tokenValue}>{token.value}</span>
@@ -88,9 +111,14 @@ export const TypographyTokens: Component = () => {
       <div class={styles.subsection}>
         <h3 class={styles.subsectionTitle}>Font Sizes</h3>
         <div class={styles.tokenList}>
-          <For each={fontSizes}>
+          <For each={fontSizes()}>
             {(token) => (
-              <div class={styles.tokenCard}>
+              <div
+                class={styles.tokenCard}
+                classList={{ [styles.clickableCard]: !!props.onTokenClick }}
+                onClick={() => props.onTokenClick?.(token.path)}
+                title={props.onTokenClick ? 'Click to edit this token' : undefined}
+              >
                 <div class={styles.tokenLabel}>
                   <span class={styles.tokenName}>{token.name}</span>
                   <span class={styles.tokenValue}>{token.value}</span>
@@ -111,9 +139,14 @@ export const TypographyTokens: Component = () => {
       <div class={styles.subsection}>
         <h3 class={styles.subsectionTitle}>Font Weights</h3>
         <div class={styles.tokenList}>
-          <For each={fontWeights}>
+          <For each={fontWeights()}>
             {(token) => (
-              <div class={styles.tokenCard}>
+              <div
+                class={styles.tokenCard}
+                classList={{ [styles.clickableCard]: !!props.onTokenClick }}
+                onClick={() => props.onTokenClick?.(token.path)}
+                title={props.onTokenClick ? 'Click to edit this token' : undefined}
+              >
                 <div class={styles.tokenLabel}>
                   <span class={styles.tokenName}>{token.name}</span>
                   <span class={styles.tokenValue}>{token.value}</span>
@@ -134,9 +167,14 @@ export const TypographyTokens: Component = () => {
       <div class={styles.subsection}>
         <h3 class={styles.subsectionTitle}>Line Heights</h3>
         <div class={styles.tokenList}>
-          <For each={lineHeightsList}>
+          <For each={lineHeightsList()}>
             {(token) => (
-              <div class={styles.tokenCard}>
+              <div
+                class={styles.tokenCard}
+                classList={{ [styles.clickableCard]: !!props.onTokenClick }}
+                onClick={() => props.onTokenClick?.(token.path)}
+                title={props.onTokenClick ? 'Click to edit this token' : undefined}
+              >
                 <div class={styles.tokenLabel}>
                   <span class={styles.tokenName}>{token.name}</span>
                   <span class={styles.tokenValue}>{token.value}</span>

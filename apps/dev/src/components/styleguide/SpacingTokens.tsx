@@ -4,25 +4,34 @@
  * Displays all spacing tokens from the design system
  */
 
-import { type Component, For } from 'solid-js';
+import { type Component, For, createMemo } from 'solid-js';
 import styles from './SpacingTokens.module.scss';
-import spacingData from '@email-builder/tokens/spacing/scale';
+import defaultSpacingData from '@email-builder/tokens/spacing/scale';
 
 interface SpacingToken {
   name: string;
   value: string;
   description: string;
+  path: string[];
 }
 
-export const SpacingTokens: Component = () => {
+interface SpacingTokensProps {
+  spacingData?: any;
+  onTokenClick?: (tokenPath: string[]) => void;
+}
+
+export const SpacingTokens: Component<SpacingTokensProps> = (props) => {
+  const spacingData = () => props.spacingData || defaultSpacingData;
+
   // Parse spacing tokens
-  const spacingTokens: SpacingToken[] = Object.entries(spacingData.spacing)
+  const spacingTokens = createMemo(() => Object.entries(spacingData().spacing)
     .filter(([key]) => key !== '$type')
     .map(([name, token]) => ({
       name,
       value: token.$value,
       description: token.$description || '',
-    }));
+      path: ['spacing', name],
+    })));
 
   return (
     <div class={styles.section}>
@@ -32,9 +41,14 @@ export const SpacingTokens: Component = () => {
       </p>
 
       <div class={styles.spacingList}>
-        <For each={spacingTokens}>
+        <For each={spacingTokens()}>
           {(token) => (
-            <div class={styles.spacingCard}>
+            <div
+              class={styles.spacingCard}
+              classList={{ [styles.clickableCard]: !!props.onTokenClick }}
+              onClick={() => props.onTokenClick?.(token.path)}
+              title={props.onTokenClick ? 'Click to edit this token' : undefined}
+            >
               <div class={styles.spacingInfo}>
                 <div class={styles.spacingLabel}>
                   <span class={styles.spacingName}>{token.name}</span>

@@ -1,0 +1,60 @@
+{
+  "component": {
+    "input": {
+      "background": {
+        "$type": "color",
+        "default": { "$value": "{color.ui.surface.base}", "$description": "Input background color" },
+        "disabled": { "$value": "{color.ui.background.secondary}", "$description": "Disabled input background" }
+      },
+      "border-color": {
+        "$type": "color",
+        "default": { "$value": "{color.ui.border.base}", "$description": "Input border color" },
+        "hover": { "$value": "{color.ui.border.strong}", "$description": "Input border color on hover" },
+        "focus": { "$value": "{color.ui.border.focus}", "$description": "Input border color on focus" },
+        "error": { "$value": "{color.semantic.error.base}", "$description": "Input border color on error" }
+      },
+      "text-color": {
+        "$type": "color",
+        "default": { "$value": "{color.ui.text.primary}", "$description": "Input text color" },
+        "placeholder": { "$value": "{color.ui.text.tertiary}", "$description": "Input placeholder color" },
+        "disabled": { "$value": "{color.ui.text.disabled}", "$description": "Disabled input text color" }
+      },
+      "padding": {
+        "$type": "dimension",
+        "x": {
+          "sm": { "$value": "0.625rem", "$description": "Small input horizontal padding (10px)" },
+          "md": { "$value": "{spacing.3}", "$description": "Medium input horizontal padding" },
+          "lg": { "$value": "{spacing.4}", "$description": "Large input horizontal padding" }
+        },
+        "y": {
+          "sm": { "$value": "0.375rem", "$description": "Small input vertical padding (6px)" },
+          "md": { "$value": "{spacing.2}", "$description": "Medium input vertical padding" },
+          "lg": { "$value": "0.625rem", "$description": "Large input vertical padding (10px)" }
+        }
+      },
+      "border-radius": {
+        "$type": "dimension",
+        "sm": { "$value": "{border.radius.base}", "$description": "Small input border radius" },
+        "md": { "$value": "{border.radius.md}", "$description": "Medium input border radius" },
+        "lg": { "$value": "{border.radius.lg}", "$description": "Large input border radius" }
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{border.width.base}",
+        "$description": "Input border width"
+      },
+      "font-size": {
+        "$type": "dimension",
+        "sm": { "$value": "{typography.font-size.sm}", "$description": "Small input font size" },
+        "md": { "$value": "{typography.font-size.base}", "$description": "Medium input font size" },
+        "lg": { "$value": "{typography.font-size.lg}", "$description": "Large input font size" }
+      },
+      "height": {
+        "$type": "dimension",
+        "sm": { "$value": "{sizing.8}", "$description": "Small input height (32px)" },
+        "md": { "$value": "{sizing.10}", "$description": "Medium input height (40px)" },
+        "lg": { "$value": "{sizing.12}", "$description": "Large input height (48px)" }
+      }
+    }
+  }
+}

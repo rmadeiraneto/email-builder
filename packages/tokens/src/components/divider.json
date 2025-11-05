@@ -1,0 +1,22 @@
+{
+  "component": {
+    "divider": {
+      "color": {
+        "$type": "color",
+        "default": { "$value": "{color.ui.border.subtle}", "$description": "Default divider color" },
+        "strong": { "$value": "{color.ui.border.base}", "$description": "Strong divider color" }
+      },
+      "width": {
+        "$type": "dimension",
+        "$value": "{border.width.base}",
+        "$description": "Divider width/height"
+      },
+      "spacing": {
+        "$type": "dimension",
+        "sm": { "$value": "{spacing.2}", "$description": "Small divider spacing (margin)" },
+        "md": { "$value": "{spacing.4}", "$description": "Medium divider spacing (margin)" },
+        "lg": { "$value": "{spacing.6}", "$description": "Large divider spacing (margin)" }
+      }
+    }
+  }
+}

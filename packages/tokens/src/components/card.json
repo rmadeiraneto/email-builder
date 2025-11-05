@@ -1,0 +1,61 @@
+{
+  "component": {
+    "card": {
+      "background": {
+        "$type": "color",
+        "$value": "{color.ui.surface.raised}",
+        "$description": "Card background color"
+      },
+      "border-color": {
+        "$type": "color",
+        "$value": "{color.ui.border.subtle}",
+        "$description": "Card border color"
+      },
+      "border-radius": {
+        "$type": "dimension",
+        "sm": { "$value": "{border.radius.md}", "$description": "Small card border radius" },
+        "md": { "$value": "{border.radius.lg}", "$description": "Medium card border radius" },
+        "lg": { "$value": "{border.radius.xl}", "$description": "Large card border radius" }
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{border.width.base}",
+        "$description": "Card border width"
+      },
+      "shadow": {
+        "$type": "shadow",
+        "sm": { "$value": "{shadow.sm}", "$description": "Small card shadow" },
+        "md": { "$value": "{shadow.md}", "$description": "Medium card shadow" },
+        "lg": { "$value": "{shadow.lg}", "$description": "Large card shadow" }
+      },
+      "padding": {
+        "$type": "dimension",
+        "sm": { "$value": "{spacing.4}", "$description": "Small card padding" },
+        "md": { "$value": "{spacing.6}", "$description": "Medium card padding" },
+        "lg": { "$value": "{spacing.8}", "$description": "Large card padding" }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.4}",
+        "$description": "Gap between card sections"
+      },
+      "header": {
+        "padding-bottom": {
+          "$type": "dimension",
+          "$value": "{spacing.4}",
+          "$description": "Card header bottom padding"
+        },
+        "font-size": {
+          "$type": "dimension",
+          "$value": "{typography.font-size.lg}",
+          "$description": "Card header font size"
+        },
+        "font-weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.font-weight.semibold}",
+          "$description": "Card header font weight"
+        }
+      }
+    }
+  }
+}

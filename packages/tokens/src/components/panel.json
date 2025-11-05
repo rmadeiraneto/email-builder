@@ -1,0 +1,54 @@
+{
+  "component": {
+    "panel": {
+      "background": {
+        "$type": "color",
+        "$value": "{color.ui.surface.base}",
+        "$description": "Panel background color"
+      },
+      "border-color": {
+        "$type": "color",
+        "$value": "{color.ui.border.base}",
+        "$description": "Panel border color"
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{border.width.base}",
+        "$description": "Panel border width"
+      },
+      "padding": {
+        "$type": "dimension",
+        "sm": { "$value": "{spacing.4}", "$description": "Small panel padding" },
+        "md": { "$value": "{spacing.6}", "$description": "Medium panel padding" },
+        "lg": { "$value": "{spacing.8}", "$description": "Large panel padding" }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.4}",
+        "$description": "Gap between panel sections"
+      },
+      "header": {
+        "padding": {
+          "$type": "dimension",
+          "$value": "{spacing.4}",
+          "$description": "Panel header padding"
+        },
+        "border-color": {
+          "$type": "color",
+          "$value": "{color.ui.border.subtle}",
+          "$description": "Panel header border color"
+        },
+        "font-size": {
+          "$type": "dimension",
+          "$value": "{typography.font-size.base}",
+          "$description": "Panel header font size"
+        },
+        "font-weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.font-weight.semibold}",
+          "$description": "Panel header font weight"
+        }
+      }
+    }
+  }
+}

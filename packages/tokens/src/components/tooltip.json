@@ -1,0 +1,41 @@
+{
+  "component": {
+    "tooltip": {
+      "background": {
+        "$type": "color",
+        "$value": "{color.ui.background.inverse}",
+        "$description": "Tooltip background color"
+      },
+      "text-color": {
+        "$type": "color",
+        "$value": "{color.ui.text.inverse}",
+        "$description": "Tooltip text color"
+      },
+      "border-radius": {
+        "$type": "dimension",
+        "$value": "{border.radius.md}",
+        "$description": "Tooltip border radius"
+      },
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.md}",
+        "$description": "Tooltip shadow"
+      },
+      "padding": {
+        "$type": "dimension",
+        "x": { "$value": "{spacing.3}", "$description": "Tooltip horizontal padding" },
+        "y": { "$value": "{spacing.2}", "$description": "Tooltip vertical padding" }
+      },
+      "font-size": {
+        "$type": "dimension",
+        "$value": "{typography.font-size.sm}",
+        "$description": "Tooltip font size"
+      },
+      "max-width": {
+        "$type": "dimension",
+        "$value": "{sizing.64}",
+        "$description": "Tooltip max width (256px)"
+      }
+    }
+  }
+}

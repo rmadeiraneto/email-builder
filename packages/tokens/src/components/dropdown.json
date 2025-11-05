@@ -1,0 +1,85 @@
+{
+  "component": {
+    "dropdown": {
+      "background": {
+        "$type": "color",
+        "$value": "{color.ui.surface.overlay}",
+        "$description": "Dropdown menu background color"
+      },
+      "border-color": {
+        "$type": "color",
+        "$value": "{color.ui.border.subtle}",
+        "$description": "Dropdown menu border color"
+      },
+      "border-radius": {
+        "$type": "dimension",
+        "$value": "{border.radius.lg}",
+        "$description": "Dropdown menu border radius"
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{border.width.base}",
+        "$description": "Dropdown menu border width"
+      },
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.lg}",
+        "$description": "Dropdown menu shadow"
+      },
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.1}",
+        "$description": "Dropdown menu padding"
+      },
+      "item": {
+        "padding": {
+          "$type": "dimension",
+          "x": { "$value": "{spacing.3}", "$description": "Dropdown item horizontal padding" },
+          "y": { "$value": "{spacing.2}", "$description": "Dropdown item vertical padding" }
+        },
+        "border-radius": {
+          "$type": "dimension",
+          "$value": "{border.radius.base}",
+          "$description": "Dropdown item border radius"
+        },
+        "gap": {
+          "$type": "dimension",
+          "$value": "{spacing.2}",
+          "$description": "Gap between dropdown item icon and text"
+        },
+        "background": {
+          "$type": "color",
+          "hover": { "$value": "{color.ui.background.secondary}", "$description": "Dropdown item hover background" },
+          "active": { "$value": "{color.ui.background.tertiary}", "$description": "Dropdown item active background" }
+        },
+        "text-color": {
+          "$type": "color",
+          "default": { "$value": "{color.ui.text.primary}", "$description": "Dropdown item text color" },
+          "disabled": { "$value": "{color.ui.text.disabled}", "$description": "Dropdown item disabled text color" }
+        },
+        "font-size": {
+          "$type": "dimension",
+          "$value": "{typography.font-size.sm}",
+          "$description": "Dropdown item font size"
+        }
+      },
+      "divider": {
+        "color": {
+          "$type": "color",
+          "$value": "{color.ui.border.subtle}",
+          "$description": "Dropdown divider color"
+        },
+        "margin": {
+          "$type": "dimension",
+          "$value": "{spacing.1}",
+          "$description": "Dropdown divider margin"
+        }
+      },
+      "max-height": {
+        "$type": "dimension",
+        "$value": "{sizing.80}",
+        "$description": "Dropdown menu max height (320px)"
+      }
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "component": {
+    "modal": {
+      "backdrop": {
+        "$type": "color",
+        "$value": "{color.ui.background.overlay}",
+        "$description": "Modal backdrop overlay color"
+      },
+      "background": {
+        "$type": "color",
+        "$value": "{color.ui.surface.overlay}",
+        "$description": "Modal background color"
+      },
+      "border-radius": {
+        "$type": "dimension",
+        "$value": "{border.radius.xl}",
+        "$description": "Modal border radius"
+      },
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.2xl}",
+        "$description": "Modal shadow"
+      },
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.6}",
+        "$description": "Modal content padding"
+      },
+      "header": {
+        "padding-bottom": {
+          "$type": "dimension",
+          "$value": "{spacing.4}",
+          "$description": "Modal header bottom padding"
+        },
+        "font-size": {
+          "$type": "dimension",
+          "$value": "{typography.font-size.xl}",
+          "$description": "Modal header font size"
+        },
+        "font-weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.font-weight.semibold}",
+          "$description": "Modal header font weight"
+        }
+      },
+      "footer": {
+        "padding-top": {
+          "$type": "dimension",
+          "$value": "{spacing.4}",
+          "$description": "Modal footer top padding"
+        },
+        "gap": {
+          "$type": "dimension",
+          "$value": "{spacing.3}",
+          "$description": "Gap between footer buttons"
+        }
+      },
+      "max-width": {
+        "$type": "dimension",
+        "sm": { "$value": "{sizing.96}", "$description": "Small modal max width (384px)" },
+        "md": { "$value": "{sizing.128}", "$description": "Medium modal max width (512px)" },
+        "lg": { "$value": "{sizing.192}", "$description": "Large modal max width (768px)" },
+        "xl": { "$value": "{sizing.256}", "$description": "Extra large modal max width (1024px)" }
+      }
+    }
+  }
+}

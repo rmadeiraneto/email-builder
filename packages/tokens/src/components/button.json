@@ -1,0 +1,41 @@
+{
+  "component": {
+    "button": {
+      "$type": "dimension",
+      "padding": {
+        "x": {
+          "sm": { "$value": "{spacing.3}", "$description": "Small button horizontal padding" },
+          "md": { "$value": "{spacing.4}", "$description": "Medium button horizontal padding" },
+          "lg": { "$value": "{spacing.6}", "$description": "Large button horizontal padding" }
+        },
+        "y": {
+          "sm": { "$value": "0.375rem", "$description": "Small button vertical padding (6px)" },
+          "md": { "$value": "0.625rem", "$description": "Medium button vertical padding (10px)" },
+          "lg": { "$value": "{spacing.3}", "$description": "Large button vertical padding" }
+        }
+      },
+      "gap": {
+        "$value": "{spacing.2}",
+        "$description": "Gap between button icon and text"
+      },
+      "border-radius": {
+        "sm": { "$value": "{border.radius.base}", "$description": "Small button border radius" },
+        "md": { "$value": "{border.radius.md}", "$description": "Medium button border radius" },
+        "lg": { "$value": "{border.radius.lg}", "$description": "Large button border radius" }
+      },
+      "border-width": {
+        "$value": "{border.width.base}",
+        "$description": "Button border width"
+      },
+      "font-size": {
+        "sm": { "$value": "{typography.font-size.sm}", "$description": "Small button font size" },
+        "md": { "$value": "{typography.font-size.base}", "$description": "Medium button font size" },
+        "lg": { "$value": "{typography.font-size.lg}", "$description": "Large button font size" }
+      },
+      "font-weight": {
+        "$value": "{typography.font-weight.medium}",
+        "$description": "Button font weight"
+      }
+    }
+  }
+}

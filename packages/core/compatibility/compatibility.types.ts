@@ -12,7 +12,7 @@
  *
  * Covers major desktop, webmail, and mobile email clients
  */
-export type EmailClient =
+export type EmailClientId =
   // Desktop clients - Outlook
   | 'outlook-2016-win'
   | 'outlook-2019-win'
@@ -119,9 +119,9 @@ export interface CompatibilityInfo {
 
   /**
    * Support data for each email client
-   * Key: EmailClient, Value: PropertySupport
+   * Key: EmailClientId, Value: PropertySupport
    */
-  support: Record<EmailClient, PropertySupport>;
+  support: Record<EmailClientId, PropertySupport>;
 
   /**
    * General notes applicable to all clients
@@ -218,7 +218,7 @@ export interface CompatibilityQuery {
   /**
    * Filter by specific email client
    */
-  client?: EmailClient;
+  client?: EmailClientId;
 
   /**
    * Search by property name (partial match)
@@ -241,7 +241,7 @@ export enum ClientPlatform {
 /**
  * Mapping of email clients to platforms
  */
-export const CLIENT_PLATFORM_MAP: Record<EmailClient, ClientPlatform> = {
+export const CLIENT_PLATFORM_MAP: Record<EmailClientId, ClientPlatform> = {
   'outlook-2016-win': ClientPlatform.DESKTOP_OUTLOOK,
   'outlook-2019-win': ClientPlatform.DESKTOP_OUTLOOK,
   'outlook-2021-win': ClientPlatform.DESKTOP_OUTLOOK,
@@ -266,7 +266,7 @@ export const CLIENT_PLATFORM_MAP: Record<EmailClient, ClientPlatform> = {
 /**
  * Human-readable labels for email clients
  */
-export const EMAIL_CLIENT_LABELS: Record<EmailClient, string> = {
+export const EMAIL_CLIENT_LABELS: Record<EmailClientId, string> = {
   'outlook-2016-win': 'Outlook 2016 (Windows)',
   'outlook-2019-win': 'Outlook 2019 (Windows)',
   'outlook-2021-win': 'Outlook 2021 (Windows)',

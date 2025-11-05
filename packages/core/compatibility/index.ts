@@ -33,7 +33,7 @@ export {
 
 // Types
 export type {
-  EmailClient,
+  EmailClientId,
   PropertySupport,
   CompatibilityInfo,
   SupportStatistics,

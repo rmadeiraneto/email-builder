@@ -368,7 +368,7 @@ export class CompatibilityChecker {
    */
   private checkImage(component: BaseComponent): CompatibilityIssue[] {
     const issues: CompatibilityIssue[] = [];
-    const props = component.props || {};
+    const props = component.content || {};
 
     // Check for alt text
     if (!props.alt || props.alt.trim() === '') {
@@ -438,7 +438,7 @@ export class CompatibilityChecker {
    */
   private checkAccessibility(component: BaseComponent): CompatibilityIssue[] {
     const issues: CompatibilityIssue[] = [];
-    const props = component.props || {};
+    const props = component.content || {};
 
     // Check buttons and links for accessible text
     if ((component.type === 'button' || component.type === 'link') && !props.text && !props.children) {
@@ -462,7 +462,7 @@ export class CompatibilityChecker {
    */
   private checkContent(component: BaseComponent): CompatibilityIssue[] {
     const issues: CompatibilityIssue[] = [];
-    const props = component.props || {};
+    const props = component.content || {};
 
     // Check for very long text content
     if (component.type === 'text' && props.content) {

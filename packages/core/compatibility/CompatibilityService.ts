@@ -7,7 +7,7 @@
 import type {
   CompatibilityInfo,
   CompatibilityQuery,
-  EmailClient,
+  EmailClientId,
   PropertySupport,
   SupportStatistics,
 } from './compatibility.types';
@@ -58,7 +58,7 @@ export class CompatibilityService {
    */
   public getPropertySupportForClient(
     property: string,
-    client: EmailClient
+    client: EmailClientId
   ): PropertySupport | undefined {
     const info = this.getPropertyInfo(property);
     if (!info) {
@@ -82,7 +82,7 @@ export class CompatibilityService {
       return undefined;
     }
 
-    const clients = Object.keys(info.support) as EmailClient[];
+    const clients = Object.keys(info.support) as EmailClientId[];
     const totalClients = clients.length;
 
     let fullSupport = 0;
@@ -144,7 +144,7 @@ export class CompatibilityService {
    * @returns Array of property names with their support levels
    */
   public getClientSupportedProperties(
-    client: EmailClient
+    client: EmailClientId
   ): Array<{ property: string; support: PropertySupport }> {
     const properties = getAllProperties();
     const supported: Array<{ property: string; support: PropertySupport }> = [];
@@ -169,7 +169,7 @@ export class CompatibilityService {
    * @param client - Optional specific email client
    * @returns Array of workaround suggestions
    */
-  public getWorkarounds(property: string, client?: EmailClient): string[] {
+  public getWorkarounds(property: string, client?: EmailClientId): string[] {
     const info = this.getPropertyInfo(property);
     if (!info) {
       return [];
@@ -416,7 +416,7 @@ export class CompatibilityService {
    * @param client - Email client identifier
    * @returns Human-readable label
    */
-  public getClientLabel(client: EmailClient): string {
+  public getClientLabel(client: EmailClientId): string {
     return EMAIL_CLIENT_LABELS[client] || client;
   }
 }

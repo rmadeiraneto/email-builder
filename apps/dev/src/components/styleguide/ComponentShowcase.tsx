@@ -7,11 +7,20 @@
 import { type Component, createSignal } from 'solid-js';
 import styles from './ComponentShowcase.module.scss';
 
-export const ComponentShowcase: Component = () => {
+interface ComponentShowcaseProps {
+  onSectionClick?: () => void;
+}
+
+export const ComponentShowcase: Component<ComponentShowcaseProps> = (props) => {
   const [modalOpen, setModalOpen] = createSignal(false);
 
   return (
-    <div class={styles.section}>
+    <div
+      class={styles.section}
+      classList={{ [styles.clickableSection]: !!props.onSectionClick }}
+      onClick={props.onSectionClick}
+      title={props.onSectionClick ? 'Click to edit color tokens (used by components)' : undefined}
+    >
       <h2 class={styles.sectionTitle}>Components</h2>
       <p class={styles.sectionDescription}>
         Interactive showcase of all UI components with different variants and states.

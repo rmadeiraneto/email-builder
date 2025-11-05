@@ -138,6 +138,16 @@ const StyleguideBuilder: Component = () => {
     exporter.download(format);
   };
 
+  // Handle section navigation from preview clicks
+  const handleNavigateToSection = (section: Section) => {
+    setActiveSection(section);
+    // Scroll editor panel to top for better UX
+    const editorPanel = document.querySelector(`.${styles.editorPanel}`);
+    if (editorPanel) {
+      editorPanel.scrollTop = 0;
+    }
+  };
+
   // Get the current category tokens for the editor
   const getCurrentCategoryTokens = () => {
     const defaultTokens = getDefaultTokens();
@@ -254,22 +264,39 @@ const StyleguideBuilder: Component = () => {
         <div class={styles.previewPanel}>
           <div class={styles.previewContent}>
             <Show when={activeSection() === 'colors'}>
-              <ColorTokens {...getMergedColorTokens()} />
+              <ColorTokens
+                {...getMergedColorTokens()}
+                onSectionClick={() => handleNavigateToSection('colors')}
+              />
             </Show>
             <Show when={activeSection() === 'typography'}>
-              <TypographyTokens {...getMergedTypographyTokens()} />
+              <TypographyTokens
+                {...getMergedTypographyTokens()}
+                onSectionClick={() => handleNavigateToSection('typography')}
+              />
             </Show>
             <Show when={activeSection() === 'spacing'}>
-              <SpacingTokens spacingData={getMergedSpacingTokens()} />
+              <SpacingTokens
+                spacingData={getMergedSpacingTokens()}
+                onSectionClick={() => handleNavigateToSection('spacing')}
+              />
             </Show>
             <Show when={activeSection() === 'border'}>
-              <BorderTokens {...getMergedBorderTokens()} />
+              <BorderTokens
+                {...getMergedBorderTokens()}
+                onSectionClick={() => handleNavigateToSection('border')}
+              />
             </Show>
             <Show when={activeSection() === 'shadow'}>
-              <ShadowTokens elevation={getMergedShadowTokens()} />
+              <ShadowTokens
+                elevation={getMergedShadowTokens()}
+                onSectionClick={() => handleNavigateToSection('shadow')}
+              />
             </Show>
             <Show when={activeSection() === 'components'}>
-              <ComponentShowcase />
+              <ComponentShowcase
+                onSectionClick={() => handleNavigateToSection('colors')}
+              />
             </Show>
             <Show when={activeSection() === 'animation' || activeSection() === 'breakpoints'}>
               <div class={styles.comingSoon}>

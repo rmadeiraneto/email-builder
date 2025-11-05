@@ -9,6 +9,7 @@ import defaultElevation from '@email-builder/tokens/shadow/elevation';
 
 interface ShadowTokensProps {
   elevation?: any;
+  onSectionClick?: () => void;
 }
 
 export const ShadowTokens: Component<ShadowTokensProps> = (props) => {
@@ -19,7 +20,12 @@ export const ShadowTokens: Component<ShadowTokensProps> = (props) => {
   ));
 
   return (
-    <div class={styles.shadowTokens}>
+    <div
+      class={styles.shadowTokens}
+      classList={{ [styles.clickableSection]: !!props.onSectionClick }}
+      onClick={props.onSectionClick}
+      title={props.onSectionClick ? 'Click to edit shadow tokens' : undefined}
+    >
       <section class={styles.section}>
         <h2 class={styles.sectionTitle}>Elevation Shadows</h2>
         <p class={styles.sectionDescription}>

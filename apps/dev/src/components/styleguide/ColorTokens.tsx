@@ -25,6 +25,7 @@ interface ColorTokensProps {
   brandColors?: any;
   semanticColors?: any;
   uiColors?: any;
+  onSectionClick?: () => void;
 }
 
 export const ColorTokens: Component<ColorTokensProps> = (props) => {
@@ -98,7 +99,12 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
   };
 
   return (
-    <div class={styles.section}>
+    <div
+      class={styles.section}
+      classList={{ [styles.clickableSection]: !!props.onSectionClick }}
+      onClick={props.onSectionClick}
+      title={props.onSectionClick ? 'Click to edit color tokens' : undefined}
+    >
       <h2 class={styles.sectionTitle}>Colors</h2>
       <p class={styles.sectionDescription}>
         Our color palette includes brand colors, semantic colors for UI states, and general UI colors.
@@ -116,7 +122,10 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
                   {(color) => (
                     <div
                       class={styles.colorCard}
-                      onClick={() => copyToClipboard(color.value)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        copyToClipboard(color.value);
+                      }}
                       title="Click to copy"
                     >
                       <div
@@ -154,7 +163,10 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
                   {(color) => (
                     <div
                       class={styles.colorCard}
-                      onClick={() => copyToClipboard(color.value)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        copyToClipboard(color.value);
+                      }}
                       title="Click to copy"
                     >
                       <div
@@ -192,7 +204,10 @@ export const ColorTokens: Component<ColorTokensProps> = (props) => {
                   {(color) => (
                     <div
                       class={styles.colorCard}
-                      onClick={() => copyToClipboard(color.value)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        copyToClipboard(color.value);
+                      }}
                       title="Click to copy"
                     >
                       <div

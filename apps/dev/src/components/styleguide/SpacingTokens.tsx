@@ -16,6 +16,7 @@ interface SpacingToken {
 
 interface SpacingTokensProps {
   spacingData?: any;
+  onSectionClick?: () => void;
 }
 
 export const SpacingTokens: Component<SpacingTokensProps> = (props) => {
@@ -31,7 +32,12 @@ export const SpacingTokens: Component<SpacingTokensProps> = (props) => {
     })));
 
   return (
-    <div class={styles.section}>
+    <div
+      class={styles.section}
+      classList={{ [styles.clickableSection]: !!props.onSectionClick }}
+      onClick={props.onSectionClick}
+      title={props.onSectionClick ? 'Click to edit spacing tokens' : undefined}
+    >
       <h2 class={styles.sectionTitle}>Spacing</h2>
       <p class={styles.sectionDescription}>
         Consistent spacing scale used throughout the design system for margins, padding, and gaps.

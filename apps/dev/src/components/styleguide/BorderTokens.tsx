@@ -11,6 +11,7 @@ import defaultBorderWidth from '@email-builder/tokens/border/width';
 interface BorderTokensProps {
   borderRadius?: any;
   borderWidth?: any;
+  onSectionClick?: () => void;
 }
 
 export const BorderTokens: Component<BorderTokensProps> = (props) => {
@@ -26,7 +27,12 @@ export const BorderTokens: Component<BorderTokensProps> = (props) => {
   ));
 
   return (
-    <div class={styles.borderTokens}>
+    <div
+      class={styles.borderTokens}
+      classList={{ [styles.clickableSection]: !!props.onSectionClick }}
+      onClick={props.onSectionClick}
+      title={props.onSectionClick ? 'Click to edit border tokens' : undefined}
+    >
       {/* Border Radius */}
       <section class={styles.section}>
         <h2 class={styles.sectionTitle}>Border Radius</h2>

@@ -22,6 +22,7 @@ interface TypographyTokensProps {
   sizes?: any;
   weights?: any;
   lineHeights?: any;
+  onSectionClick?: () => void;
 }
 
 export const TypographyTokens: Component<TypographyTokensProps> = (props) => {
@@ -67,7 +68,12 @@ export const TypographyTokens: Component<TypographyTokensProps> = (props) => {
     })));
 
   return (
-    <div class={styles.section}>
+    <div
+      class={styles.section}
+      classList={{ [styles.clickableSection]: !!props.onSectionClick }}
+      onClick={props.onSectionClick}
+      title={props.onSectionClick ? 'Click to edit typography tokens' : undefined}
+    >
       <h2 class={styles.sectionTitle}>Typography</h2>
       <p class={styles.sectionDescription}>
         Typography tokens including font families, sizes, weights, and line heights.

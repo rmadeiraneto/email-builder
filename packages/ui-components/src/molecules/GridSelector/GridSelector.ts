@@ -165,7 +165,7 @@ export class GridSelector {
 		// height
 		this.element.style.setProperty(
 			'--grid-selector-card-min-height',
-			this.options.itemsConfig.height
+			this.options.itemsConfig.height ?? null
 		);
 
 		// Apply responsive configuration if provided in options

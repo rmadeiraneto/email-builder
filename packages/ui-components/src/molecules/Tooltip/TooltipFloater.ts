@@ -184,6 +184,17 @@ class TooltipFloater {
 }
 
 /**
- * Export singleton instance
+ * Create and export singleton instance
+ * Access the static instance property directly to avoid private constructor error
  */
-export default new TooltipFloater();
+const instance = (() => {
+  try {
+    // Try to create a new instance
+    return (TooltipFloater as any).instance || Reflect.construct(TooltipFloater, []);
+  } catch (e) {
+    // If instance already exists, return it
+    return (TooltipFloater as any).instance;
+  }
+})();
+
+export default instance as TooltipFloater;

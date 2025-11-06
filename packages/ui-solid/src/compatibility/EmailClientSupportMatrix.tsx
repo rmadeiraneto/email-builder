@@ -9,7 +9,7 @@
 
 import { Component, For, createSignal, Show } from 'solid-js';
 import { CompatibilityService } from '@email-builder/core/compatibility';
-import type { EmailClient } from '@email-builder/core/compatibility';
+import type { EmailClientId } from '@email-builder/core/compatibility';
 import { SupportLevel } from '@email-builder/core/compatibility';
 import styles from './EmailClientSupportMatrix.module.scss';
 
@@ -17,7 +17,7 @@ import styles from './EmailClientSupportMatrix.module.scss';
  * Email client information with tier and testing availability
  */
 export interface EmailClientInfo {
-  id: EmailClient;
+  id: EmailClientId;
   name: string;
   tier: 1 | 2 | 3;
   platform: 'desktop' | 'webmail' | 'mobile';
@@ -199,12 +199,12 @@ export interface EmailClientSupportMatrixProps {
   /**
    * Optional callback when "View Details" is clicked
    */
-  onViewDetails?: (clientId: EmailClient) => void;
+  onViewDetails?: (clientId: EmailClientId) => void;
 
   /**
    * Optional callback when a matrix cell is clicked
    */
-  onPropertyClick?: (property: string, clientId?: EmailClient) => void;
+  onPropertyClick?: (property: string, clientId?: EmailClientId) => void;
 
   /**
    * Show feature support matrix
@@ -235,7 +235,7 @@ export const EmailClientSupportMatrix: Component<EmailClientSupportMatrixProps> 
   const tier3Clients = EMAIL_CLIENTS.filter((c) => c.tier === 3);
 
   // Get support level for a property/client combination
-  const getSupportLevel = (property: string, clientId: EmailClient): SupportLevel => {
+  const getSupportLevel = (property: string, clientId: EmailClientId): SupportLevel => {
     const support = service.getPropertySupportForClient(property, clientId);
     return support?.level ?? SupportLevel.UNKNOWN;
   };
@@ -244,13 +244,13 @@ export const EmailClientSupportMatrix: Component<EmailClientSupportMatrixProps> 
   const getSupportClass = (level: SupportLevel): string => {
     switch (level) {
       case SupportLevel.FULL:
-        return styles['support-full'];
+        return styles['support-full'] ?? '';
       case SupportLevel.PARTIAL:
-        return styles['support-partial'];
+        return styles['support-partial'] ?? '';
       case SupportLevel.NONE:
-        return styles['support-none'];
+        return styles['support-none'] ?? '';
       default:
-        return styles['support-unknown'];
+        return styles['support-unknown'] ?? '';
     }
   };
 

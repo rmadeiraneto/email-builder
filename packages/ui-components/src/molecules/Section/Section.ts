@@ -44,7 +44,7 @@ export class Section {
     const baseEl = document.createElement(this.options.tagName) as SectionElement;
 
     // Add base class from CSS modules
-    baseEl.className = styles.section;
+    baseEl.className = styles.section ?? '';
 
     // Add extended classes if provided
     if (this.options.extendedClasses) {
@@ -68,18 +68,18 @@ export class Section {
 
     // Create content container
     this.contentContainer = document.createElement('div');
-    this.contentContainer.className = styles.section__content;
+    this.contentContainer.className = styles.section__content ?? '';
 
     // Set initial content if provided
     if (hasContent) {
-      this.setContent(this.contentContainer, this.options.content);
+      this.setContent(this.contentContainer, this.options.content!);
     }
 
     // Add label if provided (including empty strings)
     if (hasLabel) {
       const labelEl = document.createElement('label');
-      labelEl.className = `${styles.section__label} eb-label`;
-      this.setContent(labelEl, this.options.label);
+      labelEl.className = `${styles.section__label ?? ''} eb-label`;
+      this.setContent(labelEl, this.options.label!);
       baseEl.appendChild(labelEl);
     }
 

@@ -37,14 +37,14 @@ export class ExpandCollapse implements IExpandCollapse {
   constructor(options: ExpandCollapseOptions = {}) {
     // Set defaults
     this.options = {
-      expandable: options.expandable,
-      trigger: options.trigger,
-      element: options.element,
+      ...(options.expandable !== undefined ? { expandable: options.expandable } : {}),
+      ...(options.trigger !== undefined ? { trigger: options.trigger } : {}),
+      ...(options.element !== undefined ? { element: options.element } : {}),
       extendedClasses: options.extendedClasses ?? '',
       startExpanded: options.startExpanded ?? false,
       rightToLeft: options.rightToLeft ?? false,
       preventDefaultBehavior: options.preventDefaultBehavior ?? false,
-    };
+    } as typeof this.options;
 
     this.element = this.createElement();
     this.triggerEl = this.createTrigger();
@@ -96,7 +96,7 @@ export class ExpandCollapse implements IExpandCollapse {
    */
   private createTrigger(): HTMLElement {
     const trigger = document.createElement('div');
-    trigger.className = styles.expandCollapse__trigger;
+    trigger.className = styles.expandCollapse__trigger ?? '';
 
     if (this.options.trigger) {
       this.setContent(trigger, this.options.trigger);
@@ -110,7 +110,7 @@ export class ExpandCollapse implements IExpandCollapse {
    */
   private createExpandable(): HTMLElement {
     const expandable = document.createElement('div');
-    expandable.className = styles.expandCollapse__expandable;
+    expandable.className = styles.expandCollapse__expandable ?? '';
 
     if (this.options.expandable) {
       this.setContent(expandable, this.options.expandable);
@@ -172,7 +172,10 @@ export class ExpandCollapse implements IExpandCollapse {
    */
   public expand(): void {
     this.expanded = true;
-    this.element.classList.add(styles['expandCollapse--expanded']);
+    const expandedClass = styles['expandCollapse--expanded'];
+    if (expandedClass) {
+      this.element.classList.add(expandedClass);
+    }
   }
 
   /**
@@ -180,7 +183,10 @@ export class ExpandCollapse implements IExpandCollapse {
    */
   public collapse(): void {
     this.expanded = false;
-    this.element.classList.remove(styles['expandCollapse--expanded']);
+    const expandedClass = styles['expandCollapse--expanded'];
+    if (expandedClass) {
+      this.element.classList.remove(expandedClass);
+    }
   }
 
   /**

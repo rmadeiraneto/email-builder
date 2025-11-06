@@ -22,9 +22,7 @@
 
 import type {
   LinkedInputsOptions,
-  LinkedInputItemConfig,
   LinkedInputItem,
-  LinkedInputItemChangeCallback,
   InputNumberConfig,
 } from './linked-inputs.types';
 import { InputNumber } from '../InputNumber/InputNumber';
@@ -89,7 +87,7 @@ export class LinkedInputs {
    */
   private createWrapper(): void {
     this.element = document.createElement('div');
-    this.element.className = styles['linked-inputs'];
+    this.element.className = styles['linked-inputs'] ?? '';
 
     if (this.options.extendedClasses) {
       this.element.className += ` ${this.options.extendedClasses}`;
@@ -101,16 +99,17 @@ export class LinkedInputs {
    */
   private createItemsContainer(): void {
     this.itemsContainer = document.createElement('div');
-    this.itemsContainer.className = styles['linked-inputs__items'];
+    this.itemsContainer.className = styles['linked-inputs__items'] ?? '';
   }
 
   /**
    * Create the link/unlink toggle button
    */
   private createLinkButton(): void {
+    const buttonClassName = styles['linked-inputs__link'];
     this.linkButton = new Button({
       children: '',
-      className: styles['linked-inputs__link'],
+      ...(buttonClassName ? { className: buttonClassName } : {}),
       variant: 'ghost',
       onClick: () => this.handleLinkButtonClick(),
     });
@@ -129,7 +128,10 @@ export class LinkedInputs {
 
     // Set initial active state
     if (this.isLinked) {
-      this.linkButtonElement.classList.add(styles['linked-inputs__link--active']);
+      const activeClass = styles['linked-inputs__link--active'];
+      if (activeClass) {
+        this.linkButtonElement.classList.add(activeClass);
+      }
     }
 
     // Add data attribute for testing
@@ -143,11 +145,16 @@ export class LinkedInputs {
     this.isLinked = !this.isLinked;
 
     // Update button active state
+    const activeClass = styles['linked-inputs__link--active'];
     if (this.isLinked) {
-      this.linkButtonElement.classList.add(styles['linked-inputs__link--active']);
+      if (activeClass) {
+        this.linkButtonElement.classList.add(activeClass);
+      }
       this.syncInputs();
     } else {
-      this.linkButtonElement.classList.remove(styles['linked-inputs__link--active']);
+      if (activeClass) {
+        this.linkButtonElement.classList.remove(activeClass);
+      }
     }
 
     // Call callback
@@ -200,7 +207,7 @@ export class LinkedInputs {
    * Convert item configurations to InputNumber instances
    */
   private convertItems(): void {
-    this.items = this.options.items.map((config, index) => {
+    this.items = this.options.items.map((config) => {
       // Create InputNumber if not already an instance
       let inputNumber: InputNumber;
 
@@ -208,10 +215,12 @@ export class LinkedInputs {
         inputNumber = config.input;
       } else {
         const inputConfig = config.input as InputNumberConfig;
+        const itemClass = styles['linked-inputs__item'];
+        const inputClass = styles['linked-inputs__input'];
         inputNumber = new InputNumber({
           ...inputConfig,
-          extendedClasses: `${inputConfig.extendedClasses || ''} ${styles['linked-inputs__item']}`.trim(),
-          inputExtendedClasses: `${inputConfig.inputExtendedClasses || ''} ${styles['linked-inputs__input']}`.trim(),
+          class: `${inputConfig.class || ''} ${itemClass || ''}`.trim(),
+          inputClass: `${inputConfig.inputClass || ''} ${inputClass || ''}`.trim(),
         });
       }
 
@@ -222,23 +231,24 @@ export class LinkedInputs {
       }
 
       // Add change event listener
-      inputNumber.on('change', ((...args: any[]) => {
-        this.handleItemChange(inputNumber, ...args);
-      }) as any);
+      inputNumber.on('change', (value: number, unit: string, inputValue: string, userInput: boolean) => {
+        this.handleItemChange(inputNumber, value, unit, inputValue, userInput);
+      });
 
       // Create item object
+      const itemLabel = config.label;
       const item: LinkedInputItem = {
-        label: config.label,
+        ...(itemLabel !== undefined ? { label: itemLabel } : {}),
         input: inputNumber,
-      };
+      } as LinkedInputItem;
 
       // Wrap in label if needed
       if (this.options.useLabels && config.label) {
         const wrapper = document.createElement('div');
-        wrapper.className = styles['linked-inputs__item-wrapper'];
+        wrapper.className = styles['linked-inputs__item-wrapper'] ?? '';
 
         const label = document.createElement('label');
-        label.className = styles['linked-inputs__label'];
+        label.className = styles['linked-inputs__label'] ?? '';
         label.textContent = config.label;
 
         wrapper.appendChild(label);
@@ -251,7 +261,7 @@ export class LinkedInputs {
     });
 
     // Set alpha input to first item if not explicitly set
-    if (!this.alphaInput && this.items.length > 0) {
+    if (!this.alphaInput && this.items.length > 0 && this.items[0]) {
       this.alphaInput = this.items[0].input;
     }
   }
@@ -261,9 +271,9 @@ export class LinkedInputs {
    */
   private handleItemChange(
     item: InputNumber,
-    itemValue: number,
-    itemUnit: string,
-    itemInputValue: string,
+    _itemValue: number,
+    _itemUnit: string,
+    _itemInputValue: string,
     userInput: boolean
   ): void {
     // Update alpha input if auto mode and user input

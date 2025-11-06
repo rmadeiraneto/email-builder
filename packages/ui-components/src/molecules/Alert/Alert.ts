@@ -95,7 +95,7 @@ export class Alert {
     }
 
     this.iconWrapper = document.createElement('div');
-    this.iconWrapper.className = styles.alert__icon;
+    this.iconWrapper.className = styles.alert__icon ?? '';
     this.iconWrapper.setAttribute('data-testid', 'alert-icon');
 
     this.setIcon(this.options.icon);
@@ -110,7 +110,7 @@ export class Alert {
     }
 
     this.titleWrapper = document.createElement('div');
-    this.titleWrapper.className = styles.alert__title;
+    this.titleWrapper.className = styles.alert__title ?? '';
     this.titleWrapper.setAttribute('data-testid', 'alert-title');
 
     this.setTitle(this.options.title);
@@ -125,7 +125,7 @@ export class Alert {
     }
 
     this.descriptionWrapper = document.createElement('div');
-    this.descriptionWrapper.className = styles.alert__description;
+    this.descriptionWrapper.className = styles.alert__description ?? '';
     this.descriptionWrapper.setAttribute('data-testid', 'alert-description');
 
     this.setDescription(this.options.description);
@@ -136,12 +136,12 @@ export class Alert {
    */
   private createAlert(): void {
     // Create main wrapper
-    this.alert.className = `${styles.alert} ${styles[`alert--${this.type}`]}`;
+    this.alert.className = `${styles.alert} ${styles[`alert--${this.type}`] ?? ''}`;
     this.alert.setAttribute('data-testid', 'alert');
     this.alert.setAttribute('role', 'alert');
 
     // Create left column (icon)
-    this.alertLeft.className = styles.alert__left;
+    this.alertLeft.className = styles.alert__left ?? '';
     this.alertLeft.setAttribute('data-testid', 'alert-left');
 
     if (this.iconWrapper) {
@@ -149,7 +149,7 @@ export class Alert {
     }
 
     // Create right column (title + description)
-    this.alertRight.className = styles.alert__right;
+    this.alertRight.className = styles.alert__right ?? '';
     this.alertRight.setAttribute('data-testid', 'alert-right');
 
     if (this.titleWrapper) {
@@ -175,7 +175,7 @@ export class Alert {
     if (!this.iconWrapper) {
       // Create the wrapper manually instead of using createIcon
       this.iconWrapper = document.createElement('div');
-      this.iconWrapper.className = styles.alert__icon;
+      this.iconWrapper.className = styles.alert__icon ?? '';
       this.iconWrapper.setAttribute('data-testid', 'alert-icon');
 
       // Append to the left column
@@ -198,7 +198,7 @@ export class Alert {
     if (!this.titleWrapper) {
       // Create the wrapper manually instead of using createTitle
       this.titleWrapper = document.createElement('div');
-      this.titleWrapper.className = styles.alert__title;
+      this.titleWrapper.className = styles.alert__title ?? '';
       this.titleWrapper.setAttribute('data-testid', 'alert-title');
 
       // Insert before description if it exists
@@ -228,7 +228,7 @@ export class Alert {
     if (!this.descriptionWrapper) {
       // Create the wrapper manually instead of using createDescription
       this.descriptionWrapper = document.createElement('div');
-      this.descriptionWrapper.className = styles.alert__description;
+      this.descriptionWrapper.className = styles.alert__description ?? '';
       this.descriptionWrapper.setAttribute('data-testid', 'alert-description');
 
       // Append to the right column
@@ -250,7 +250,10 @@ export class Alert {
    */
   public show(): void {
     this.isHidden = false;
-    this.alert.classList.remove(styles['alert--hidden']);
+    const hiddenClass = styles['alert--hidden'];
+    if (hiddenClass) {
+      this.alert.classList.remove(hiddenClass);
+    }
   }
 
   /**
@@ -258,7 +261,10 @@ export class Alert {
    */
   public hide(): void {
     this.isHidden = true;
-    this.alert.classList.add(styles['alert--hidden']);
+    const hiddenClass = styles['alert--hidden'];
+    if (hiddenClass) {
+      this.alert.classList.add(hiddenClass);
+    }
   }
 
   /**

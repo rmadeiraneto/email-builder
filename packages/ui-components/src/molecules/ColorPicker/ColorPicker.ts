@@ -91,14 +91,13 @@ const DEFAULT_SWATCHES = [
 
 export class ColorPicker {
 	private options: Required<ColorPickerOptions>;
-	private className: string;
-	private element: HTMLDivElement;
+	private element!: HTMLDivElement;
 	private input?: HTMLInputElement;
 	private resetBtn?: HTMLDivElement;
-	private swatch: HTMLDivElement;
-	private transparentCnt: HTMLDivElement;
-	private colorPicker: AlwanInstance;
-	private colorObj: ColorObject;
+	private swatch!: HTMLDivElement;
+	private transparentCnt!: HTMLDivElement;
+	private colorPicker!: AlwanInstance;
+	private colorObj!: ColorObject;
 	private color: string;
 	private isTransparent: boolean = false;
 	private hasEmptyColor: boolean;
@@ -125,8 +124,8 @@ export class ColorPicker {
 				swatches: DEFAULT_SWATCHES
 			},
 			noInput: false,
-			onChange: null,
-			onReset: null
+			onChange: undefined as any,
+			onReset: undefined as any
 		};
 
 		// Merge options with custom array handling
@@ -135,8 +134,6 @@ export class ColorPicker {
 				return srcValue?.length ? srcValue : objValue;
 			}
 		}) as Required<ColorPickerOptions>;
-
-		this.className = `${this.options.classPrefix}${this.options.cssClass}`;
 
 		// Determine if empty color is available
 		this.hasEmptyColor =
@@ -185,10 +182,13 @@ export class ColorPicker {
 	 */
 	private createElement(): void {
 		this.element = document.createElement('div');
-		this.element.className = styles['color-picker-input'];
+		this.element.className = styles['color-picker-input'] ?? '';
 
 		if (this.options.noInput) {
-			this.element.classList.add(styles['color-picker-input--no-input']);
+			const noInputClass = styles['color-picker-input--no-input'];
+			if (noInputClass) {
+				this.element.classList.add(noInputClass);
+			}
 		}
 
 		if (this.options.extendedClasses) {
@@ -201,7 +201,7 @@ export class ColorPicker {
 	 */
 	private createInput(): void {
 		this.input = document.createElement('input');
-		this.input.className = `eb-input ${styles['color-picker-input__input']}`;
+		this.input.className = `eb-input ${styles['color-picker-input__input'] ?? ''}`;
 		this.input.type = 'text';
 		this.input.readOnly = true;
 
@@ -217,7 +217,7 @@ export class ColorPicker {
 	 */
 	private createResetBtn(): void {
 		this.resetBtn = document.createElement('div');
-		this.resetBtn.className = styles['color-picker-input__reset-btn'];
+		this.resetBtn.className = styles['color-picker-input__reset-btn'] ?? '';
 
 		// Set reset icon content
 		if (typeof this.options.resetIcon === 'string') {
@@ -236,7 +236,7 @@ export class ColorPicker {
 	 */
 	private createSwatch(): void {
 		this.swatch = document.createElement('div');
-		this.swatch.className = styles['color-picker-input__swatch'];
+		this.swatch.className = styles['color-picker-input__swatch'] ?? '';
 		this.swatch.setAttribute('data-testid', 'color-picker-swatch');
 	}
 
@@ -246,7 +246,7 @@ export class ColorPicker {
 	private createTransparentCnt(): void {
 		this.transparentCnt = document.createElement('div');
 		this.transparentCnt.className =
-			styles['color-picker-input__transparent-sign'];
+			styles['color-picker-input__transparent-sign'] ?? '';
 		this.transparentCnt.setAttribute('data-testid', 'color-picker-transparent');
 	}
 
@@ -254,10 +254,11 @@ export class ColorPicker {
 	 * Initialize the Alwan color picker
 	 */
 	private initColorPicker(): void {
-		this.colorPicker = new Alwan(this.element, {
+		const alwanConfig: any = {
 			...this.options.colorPickerOptions,
 			color: this.getColor()
-		}) as unknown as AlwanInstance;
+		};
+		this.colorPicker = new Alwan(this.element, alwanConfig) as unknown as AlwanInstance;
 
 		this.colorObj = this.colorPicker.getColor();
 		this.setTransparent(this.colorObj.a === 0);
@@ -410,23 +411,15 @@ export class ColorPicker {
 	 * Handle transparency state change
 	 */
 	private handleTransparencyChange(): void {
+		const transparentClass = styles['color-picker-input--transparent'];
 		if (this.isTransparent) {
-			this.element.classList.add(
-				styles['color-picker-input--transparent']
-			);
+			if (transparentClass) {
+				this.element.classList.add(transparentClass);
+			}
 		} else {
-			this.element.classList.remove(
-				styles['color-picker-input--transparent']
-			);
-		}
-	}
-
-	/**
-	 * Remove the reset button from the DOM
-	 */
-	private removeResetBtn(): void {
-		if (this.resetBtn && this.element.contains(this.resetBtn)) {
-			this.element.removeChild(this.resetBtn);
+			if (transparentClass) {
+				this.element.classList.remove(transparentClass);
+			}
 		}
 	}
 
@@ -485,7 +478,7 @@ export class ColorPicker {
 	 * Get the current color value
 	 */
 	public getColor(): string {
-		return typeof this.color === 'function' ? this.color() : this.color;
+		return this.color;
 	}
 
 	/**

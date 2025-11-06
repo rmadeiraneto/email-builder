@@ -63,7 +63,9 @@ export class TabItem {
     this.paneContent = config.paneContent;
     this.startActive = config.startActive ?? false;
     this.showPaneOnTabClick = config.showPaneOnTabClick ?? true;
-    this.onSelect = config.onSelect;
+    if (config.onSelect !== undefined) {
+      this.onSelect = config.onSelect;
+    }
     this.tabExtendedClasses = config.tabExtendedClasses ?? '';
     this.paneExtendedClasses = config.paneExtendedClasses ?? '';
     this._active = this.startActive;

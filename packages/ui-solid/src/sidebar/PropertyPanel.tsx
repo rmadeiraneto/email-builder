@@ -805,7 +805,7 @@ function getCssPropertyName(propertyKey: string): string | null {
     defaultComponentBorder: 'border',
   };
 
-  return propertyMap[lastPart] || null;
+  return lastPart ? propertyMap[lastPart] || null : null;
 }
 
 /**
@@ -837,7 +837,8 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
   const properties = createMemo(() => {
     if (!props.selectedComponent) return [];
     const componentType = props.selectedComponent.type.toLowerCase();
-    return PROPERTY_DEFINITIONS[componentType] || [];
+    const definitions = componentType ? PROPERTY_DEFINITIONS[componentType] : undefined;
+    return definitions || [];
   });
 
   const groupedProperties = createMemo(() => {
@@ -1057,8 +1058,8 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               {property.label}
               <Show when={textCssProp}>
                 <CompatibilityIcon
-                  propertyName={textCssProp!}
-                  size="small"
+                  property={textCssProp!}
+                  size={16}
                   onClick={() => {
                     setSelectedProperty(textCssProp!);
                     setCompatibilityModalOpen(true);
@@ -1131,8 +1132,8 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               {property.label}
               <Show when={numberCssProp}>
                 <CompatibilityIcon
-                  propertyName={numberCssProp!}
-                  size="small"
+                  property={numberCssProp!}
+                  size={16}
                   onClick={() => {
                     setSelectedProperty(numberCssProp!);
                     setCompatibilityModalOpen(true);
@@ -1147,9 +1148,10 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               value={currentValue || property.min || 0}
               min={property.min}
               max={property.max}
-              onInput={(e) =>
-                handlePropertyChange(property, parseInt(e.currentTarget.value, 10))
-              }
+              onInput={(e) => {
+                const numValue = Number(e.currentTarget.value);
+                handlePropertyChange(property, isNaN(numValue) ? 0 : numValue);
+              }}
             />
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
@@ -1165,8 +1167,8 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               {property.label}
               <Show when={colorCssProp}>
                 <CompatibilityIcon
-                  propertyName={colorCssProp!}
-                  size="small"
+                  property={colorCssProp!}
+                  size={16}
                   onClick={() => {
                     setSelectedProperty(colorCssProp!);
                     setCompatibilityModalOpen(true);
@@ -1201,8 +1203,8 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               {property.label}
               <Show when={selectCssProp}>
                 <CompatibilityIcon
-                  propertyName={selectCssProp!}
-                  size="small"
+                  property={selectCssProp!}
+                  size={16}
                   onClick={() => {
                     setSelectedProperty(selectCssProp!);
                     setCompatibilityModalOpen(true);
@@ -1281,8 +1283,8 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               {property.label}
               <Show when={generalTextCssProp}>
                 <CompatibilityIcon
-                  propertyName={generalTextCssProp!}
-                  size="small"
+                  property={generalTextCssProp!}
+                  size={16}
                   onClick={() => {
                     setSelectedProperty(generalTextCssProp!);
                     setCompatibilityModalOpen(true);
@@ -1312,8 +1314,8 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               {property.label}
               <Show when={generalNumberCssProp}>
                 <CompatibilityIcon
-                  propertyName={generalNumberCssProp!}
-                  size="small"
+                  property={generalNumberCssProp!}
+                  size={16}
                   onClick={() => {
                     setSelectedProperty(generalNumberCssProp!);
                     setCompatibilityModalOpen(true);
@@ -1328,9 +1330,10 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               value={currentValue || property.min || 0}
               min={property.min}
               max={property.max}
-              onInput={(e) =>
-                handleGeneralStyleChange(property, parseInt(e.currentTarget.value, 10))
-              }
+              onInput={(e) => {
+                const numValue = Number(e.currentTarget.value);
+                handleGeneralStyleChange(property, isNaN(numValue) ? 0 : numValue);
+              }}
             />
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
@@ -1346,8 +1349,8 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               {property.label}
               <Show when={generalColorCssProp}>
                 <CompatibilityIcon
-                  propertyName={generalColorCssProp!}
-                  size="small"
+                  property={generalColorCssProp!}
+                  size={16}
                   onClick={() => {
                     setSelectedProperty(generalColorCssProp!);
                     setCompatibilityModalOpen(true);
@@ -1382,8 +1385,8 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               {property.label}
               <Show when={generalSelectCssProp}>
                 <CompatibilityIcon
-                  propertyName={generalSelectCssProp!}
-                  size="small"
+                  property={generalSelectCssProp!}
+                  size={16}
                   onClick={() => {
                     setSelectedProperty(generalSelectCssProp!);
                     setCompatibilityModalOpen(true);

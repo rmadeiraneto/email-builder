@@ -13,6 +13,8 @@ export default defineConfig({
         services: resolve(__dirname, 'services/index.ts'),
         template: resolve(__dirname, 'template/index.ts'),
         types: resolve(__dirname, 'types/index.ts'),
+        'compatibility/index': resolve(__dirname, 'compatibility/index.ts'),
+        'tips/index': resolve(__dirname, 'tips/index.ts'),
       },
       formats: ['es'],
       fileName: (format, entryName) => `${entryName}.js`,
@@ -29,7 +31,7 @@ export default defineConfig({
   },
   plugins: [
     dts({
-      include: ['src/**/*', 'builder/**/*', 'commands/**/*', 'components/**/*', 'services/**/*', 'template/**/*', 'types/**/*'],
+      include: ['src/**/*', 'builder/**/*', 'commands/**/*', 'components/**/*', 'services/**/*', 'template/**/*', 'types/**/*', 'compatibility/**/*', 'tips/**/*'],
       exclude: ['**/*.test.ts', '**/*.test.tsx'],
       insertTypesEntry: true,
     }),

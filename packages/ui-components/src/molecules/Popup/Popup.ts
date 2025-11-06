@@ -50,10 +50,10 @@ class EventEmitter implements PopupEventEmitter {
     }
   }
 
-  emit(event: string, ...args: any[]): void {
+  emit(event: string, ...args: unknown[]): void {
     const callbacks = this.events.get(event);
     if (callbacks) {
-      callbacks.forEach(callback => callback(...args));
+      callbacks.forEach(callback => callback(...(args as Parameters<PopupEventCallback>)));
     }
   }
 
@@ -105,7 +105,6 @@ function merge<T extends Record<string, any>>(defaults: T, options: Partial<T>):
 export class Popup {
   private opts: Required<PopupOptions>;
   private eventEmitter: EventEmitter;
-  private className: string;
   private element!: HTMLDivElement;
   private header?: HTMLDivElement;
   private titleWrapper?: HTMLDivElement;
@@ -131,7 +130,6 @@ export class Popup {
 
     this.opts = merge(defaults, opts) as Required<PopupOptions>;
     this.eventEmitter = new EventEmitter();
-    this.className = `${this.opts.classPrefix}${this.opts.cssClass}`;
 
     this.init();
   }
@@ -152,7 +150,7 @@ export class Popup {
    */
   private init(): void {
     this.element = document.createElement('div');
-    this.element.className = styles.popup;
+    this.element.className = styles.popup ?? '';
 
     if (this.opts.extendedClasses) {
       this.opts.extendedClasses.split(' ').filter(Boolean).forEach(cls => {
@@ -161,7 +159,10 @@ export class Popup {
     }
 
     if (this.opts.centerPopup) {
-      this.element.classList.add(styles['popup--center']);
+      const centerClass = styles['popup--center'];
+      if (centerClass) {
+        this.element.classList.add(centerClass);
+      }
     }
 
     if (this.opts.title || this.opts.useCloseButton) {
@@ -175,7 +176,7 @@ export class Popup {
     }
 
     this.content = document.createElement('div');
-    this.content.className = styles.popup__content;
+    this.content.className = styles.popup__content ?? '';
 
     if (this.opts.contentExtendedClasses) {
       this.opts.contentExtendedClasses.split(' ').filter(Boolean).forEach(cls => {
@@ -209,13 +210,13 @@ export class Popup {
    */
   private createHeader(): void {
     this.header = document.createElement('div');
-    this.header.className = styles.popup__header;
+    this.header.className = styles.popup__header ?? '';
 
     this.titleWrapper = document.createElement('div');
-    this.titleWrapper.className = styles.popup__title;
+    this.titleWrapper.className = styles.popup__title ?? '';
 
     this.closeWrapper = document.createElement('div');
-    this.closeWrapper.className = styles.popup__close;
+    this.closeWrapper.className = styles.popup__close ?? '';
 
     // Create close button using Button component
     const buttonInstance = new Button({
@@ -267,7 +268,10 @@ export class Popup {
    * Opens the popup
    */
   open(): void {
-    this.element.classList.add(styles['popup--open']);
+    const openClass = styles['popup--open'];
+    if (openClass) {
+      this.element.classList.add(openClass);
+    }
     this.isOpen = true;
     this.eventEmitter.emit('open', this);
   }
@@ -276,7 +280,10 @@ export class Popup {
    * Closes the popup
    */
   close(): void {
-    this.element.classList.remove(styles['popup--open']);
+    const openClass = styles['popup--open'];
+    if (openClass) {
+      this.element.classList.remove(openClass);
+    }
     this.isOpen = false;
     this.eventEmitter.emit('close', this);
   }

@@ -23,7 +23,6 @@ import { RadioButtonGroupItem } from './RadioButtonGroupItem';
 import type {
   RadioButtonGroupConfig,
   RadioButtonGroupChangeCallback,
-  RadioButtonGroupItemConfig,
 } from './radio-button-group.types';
 import styles from './radio-button-group.module.scss';
 
@@ -48,7 +47,7 @@ export class RadioButtonGroup {
       allowNoSelection: config.allowNoSelection ?? true,
       linkItemsWithSameValue: config.linkItemsWithSameValue ?? true,
       class: config.class ?? '',
-      onChange: config.onChange,
+      ...(config.onChange !== undefined && { onChange: config.onChange }),
     };
 
     this.items = [];
@@ -63,7 +62,10 @@ export class RadioButtonGroup {
 
     // If no selection is allowed and nothing is selected, select first item
     if (!this.config.allowNoSelection && this.getSelectedItems().length === 0) {
-      this.selectItem(this.items[0]);
+      const firstItem = this.items[0];
+      if (firstItem) {
+        this.selectItem(firstItem);
+      }
     }
   }
 

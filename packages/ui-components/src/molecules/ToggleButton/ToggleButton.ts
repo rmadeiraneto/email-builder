@@ -19,7 +19,6 @@ import type { ToggleButtonOptions } from './toggle-button.types';
 
 export class ToggleButton {
   private options: Required<ToggleButtonOptions>;
-  private className: string;
   private isDisable: boolean;
   private isActive: boolean;
   private element: HTMLElement;
@@ -36,7 +35,6 @@ export class ToggleButton {
     };
 
     this.options = { ...defaults, ...options };
-    this.className = `${this.options.classPrefix}${this.options.cssClass}`;
     this.isDisable = this.options.disabled;
     this.isActive = this.options.startActive;
     this.element = document.createElement('div');
@@ -56,7 +54,7 @@ export class ToggleButton {
    */
   private createElement(): void {
     // Add base class from CSS modules
-    this.element.className = styles['toggle-button'];
+    this.element.className = styles['toggle-button'] ?? '';
 
     // Add extended classes if provided
     if (this.options.extendedClasses) {

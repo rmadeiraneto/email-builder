@@ -37,15 +37,15 @@ export class InputLabel {
     this.config = {
       input: config.input,
       label: config.label,
-      description: config.description,
+      ...(config.description !== undefined ? { description: config.description } : {}),
       labelClass: config.labelClass ?? '',
       inputWrapperClass: config.inputWrapperClass ?? '',
       class: config.class ?? '',
       sideBySide: config.sideBySide ?? false,
       required: config.required ?? false,
       inputId: config.inputId ?? this.generateId(),
-      onChange: config.onChange,
-    };
+      ...(config.onChange !== undefined ? { onChange: config.onChange } : {}),
+    } as typeof this.config;
 
     this.inputElement = this.setupInput();
     this.inputWrapper = this.createInputWrapper();
@@ -83,7 +83,7 @@ export class InputLabel {
    */
   private createInputWrapper(): HTMLDivElement {
     const wrapper = document.createElement('div');
-    wrapper.className = styles['input-label__input'];
+    wrapper.className = styles['input-label__input'] ?? '';
 
     if (this.config.inputWrapperClass) {
       wrapper.className += ` ${this.config.inputWrapperClass}`;
@@ -98,7 +98,7 @@ export class InputLabel {
    */
   private createLabel(): HTMLLabelElement {
     const label = document.createElement('label');
-    label.className = styles['input-label__label'];
+    label.className = styles['input-label__label'] ?? '';
     label.htmlFor = this.config.inputId;
 
     if (this.config.labelClass) {
@@ -115,7 +115,7 @@ export class InputLabel {
     // Add required indicator
     if (this.config.required) {
       const requiredIndicator = document.createElement('span');
-      requiredIndicator.className = styles['input-label__required'];
+      requiredIndicator.className = styles['input-label__required'] ?? '';
       requiredIndicator.textContent = '*';
       requiredIndicator.setAttribute('aria-label', 'required');
       label.appendChild(requiredIndicator);
@@ -135,7 +135,7 @@ export class InputLabel {
    */
   private createTooltip(description: string): HTMLSpanElement {
     const tooltip = document.createElement('span');
-    tooltip.className = styles['input-label__tooltip'];
+    tooltip.className = styles['input-label__tooltip'] ?? '';
     tooltip.textContent = '?';
     tooltip.title = description;
     tooltip.setAttribute('aria-label', description);
@@ -148,7 +148,7 @@ export class InputLabel {
    */
   private createWrapper(): HTMLDivElement {
     const wrapper = document.createElement('div');
-    wrapper.className = styles['input-label'];
+    wrapper.className = styles['input-label'] ?? '';
 
     if (this.config.sideBySide) {
       wrapper.className += ` ${styles['input-label--inline']}`;
@@ -223,7 +223,10 @@ export class InputLabel {
    */
   public enable(): void {
     this.inputElement.removeAttribute('disabled');
-    this.element.classList.remove(styles['input-label--disabled']);
+    const disabledClass = styles['input-label--disabled'];
+    if (disabledClass) {
+      this.element.classList.remove(disabledClass);
+    }
   }
 
   /**
@@ -231,7 +234,10 @@ export class InputLabel {
    */
   public disable(): void {
     this.inputElement.setAttribute('disabled', '');
-    this.element.classList.add(styles['input-label--disabled']);
+    const disabledClass = styles['input-label--disabled'];
+    if (disabledClass) {
+      this.element.classList.add(disabledClass);
+    }
   }
 
   /**

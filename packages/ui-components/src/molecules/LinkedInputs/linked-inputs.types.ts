@@ -1,4 +1,8 @@
 import type { InputNumber } from '../InputNumber/InputNumber';
+import type { InputNumberConfig } from '../InputNumber/input-number.types';
+
+// Re-export InputNumberConfig for convenience
+export type { InputNumberConfig };
 
 /**
  * Configuration for a single input item in LinkedInputs
@@ -19,46 +23,6 @@ export interface LinkedInputItemConfig {
    * @default false
    */
   alphaInput?: boolean;
-}
-
-/**
- * Configuration for InputNumber within LinkedInputs
- */
-export interface InputNumberConfig {
-  /**
-   * Default/initial value
-   */
-  defaultValue?: number;
-
-  /**
-   * Default unit for the value (px, rem, %, etc.)
-   */
-  defaultUnit?: string;
-
-  /**
-   * Minimum allowed value
-   */
-  min?: number;
-
-  /**
-   * Maximum allowed value
-   */
-  max?: number;
-
-  /**
-   * Increment/decrement step
-   */
-  increment?: number;
-
-  /**
-   * Additional classes for the wrapper
-   */
-  extendedClasses?: string;
-
-  /**
-   * Additional classes for the input element
-   */
-  inputExtendedClasses?: string;
 }
 
 /**

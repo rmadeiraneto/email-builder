@@ -198,7 +198,10 @@ export class EditableField implements IEditableField {
 
     if (this.options.labelClickOpensEditMode) {
       this.label.classList.add(`${this.cssClass}__label--clickable`);
-      this.label.classList.add(styles['editable-field__label--clickable']);
+      const clickableClass = styles['editable-field__label--clickable'];
+      if (clickableClass) {
+        this.label.classList.add(clickableClass);
+      }
       this.label.addEventListener('click', () => {
         this.onEdit();
       });
@@ -242,15 +245,15 @@ export class EditableField implements IEditableField {
    */
   private createEditModeButtons(): void {
     this.saveButton = this.createButton(
-      this.options.icons.save,
-      `${this.cssClass}__save-button ${styles['editable-field__save-button']}`,
+      this.options.icons.save ?? null,
+      `${this.cssClass}__save-button ${styles['editable-field__save-button'] ?? ''}`,
       () => this.onSave(),
       'editable-field-save-button'
     );
 
     this.discardButton = this.createButton(
-      this.options.icons.discard,
-      `${this.cssClass}__discard-button ${styles['editable-field__discard-button']}`,
+      this.options.icons.discard ?? null,
+      `${this.cssClass}__discard-button ${styles['editable-field__discard-button'] ?? ''}`,
       () => this.onDiscard(),
       'editable-field-discard-button'
     );
@@ -263,8 +266,8 @@ export class EditableField implements IEditableField {
    */
   private createViewModeButtons(): void {
     this.editButton = this.createButton(
-      this.options.icons.edit,
-      `${this.cssClass}__edit-button ${styles['editable-field__edit-button']}`,
+      this.options.icons.edit ?? null,
+      `${this.cssClass}__edit-button ${styles['editable-field__edit-button'] ?? ''}`,
       () => this.onEdit(),
       'editable-field-edit-button'
     );
@@ -277,7 +280,10 @@ export class EditableField implements IEditableField {
    */
   private hideButtonsWrapper(): void {
     this.buttonsWrapper.classList.add(`${this.cssClass}__buttons--hidden`);
-    this.buttonsWrapper.classList.add(styles['editable-field__buttons--hidden']);
+    const hiddenClass = styles['editable-field__buttons--hidden'];
+    if (hiddenClass) {
+      this.buttonsWrapper.classList.add(hiddenClass);
+    }
   }
 
   /**
@@ -285,7 +291,10 @@ export class EditableField implements IEditableField {
    */
   private showButtonsWrapper(): void {
     this.buttonsWrapper.classList.remove(`${this.cssClass}__buttons--hidden`);
-    this.buttonsWrapper.classList.remove(styles['editable-field__buttons--hidden']);
+    const hiddenClass = styles['editable-field__buttons--hidden'];
+    if (hiddenClass) {
+      this.buttonsWrapper.classList.remove(hiddenClass);
+    }
   }
 
   /**
@@ -305,9 +314,15 @@ export class EditableField implements IEditableField {
     }
 
     this.element.classList.remove(`${this.cssClass}--view-mode`);
-    this.element.classList.remove(styles['editable-field--view-mode']);
+    const viewModeClass = styles['editable-field--view-mode'];
+    if (viewModeClass) {
+      this.element.classList.remove(viewModeClass);
+    }
     this.element.classList.add(`${this.cssClass}--edit-mode`);
-    this.element.classList.add(styles['editable-field--edit-mode']);
+    const editModeClass = styles['editable-field--edit-mode'];
+    if (editModeClass) {
+      this.element.classList.add(editModeClass);
+    }
 
     this.editMode = true;
   }
@@ -329,9 +344,15 @@ export class EditableField implements IEditableField {
     }
 
     this.element.classList.add(`${this.cssClass}--view-mode`);
-    this.element.classList.add(styles['editable-field--view-mode']);
+    const viewModeClass = styles['editable-field--view-mode'];
+    if (viewModeClass) {
+      this.element.classList.add(viewModeClass);
+    }
     this.element.classList.remove(`${this.cssClass}--edit-mode`);
-    this.element.classList.remove(styles['editable-field--edit-mode']);
+    const editModeClass = styles['editable-field--edit-mode'];
+    if (editModeClass) {
+      this.element.classList.remove(editModeClass);
+    }
 
     this.editMode = false;
   }

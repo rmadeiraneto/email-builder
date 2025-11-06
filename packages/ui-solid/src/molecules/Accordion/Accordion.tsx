@@ -120,17 +120,17 @@ export const Accordion: Component<AccordionProps> = (props) => {
     <div class={getAccordionClasses()}>
       <button
         type="button"
-        class={styles.accordion__header}
+        class={styles.accordion__control}
         onClick={toggle}
         aria-expanded={isOpen()}
       >
-        <i
+        <span class={styles.accordion__controlInner}>{local.title}</span>
+        <span
           class={classNames(
-            styles.accordion__icon,
+            styles.accordion__arrow,
             `ri-${isOpen() ? local.iconExpanded : local.iconCollapsed}`
           )}
         />
-        <span class={styles.accordion__title}>{local.title}</span>
       </button>
 
       <Show when={isOpen()}>

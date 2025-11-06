@@ -225,63 +225,61 @@ export const Dropdown: Component<DropdownProps> = (props) => {
     document.removeEventListener('click', handleClickOutside);
   });
 
-  const getControlClasses = () => {
+  const getRootClasses = () => {
     return classNames(
-      styles.dropdown__control,
-      styles[`dropdown__control--${local.size}`],
-      isOpen() && styles['dropdown__control--open'],
+      styles.dropdown,
+      styles[`dropdown--${local.size}`],
+      isOpen() && styles['dropdown--open'],
       local.className
-    );
-  };
-
-  const getMenuClasses = () => {
-    return classNames(
-      styles.dropdown__menu,
-      isOpen() && styles['dropdown__menu--open']
     );
   };
 
   const getItemClasses = (item: DropdownItem) => {
     return classNames(
       styles.dropdown__item,
-      item.disabled && styles['dropdown__item--disabled'],
-      local.selectedItem?.value === item.value && styles['dropdown__item--selected']
+      local.selectedItem?.value === item.value && styles['dropdown__item--active']
     );
   };
 
   return (
-    <div class={styles.dropdown}>
+    <div class={getRootClasses()}>
       <button
         ref={controlRef}
         type="button"
-        class={getControlClasses()}
+        class={styles.dropdown__control}
         onClick={toggleDropdown}
       >
-        <span class={styles.dropdown__value}>
+        <span class={styles['dropdown__control-content']}>
           {local.selectedItem?.label ?? local.placeholder}
         </span>
-        <i
-          class={classNames(
-            styles.dropdown__arrow,
-            isOpen() ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'
-          )}
-        />
+        <span class={styles['dropdown__control-arrow']}>
+          <span
+            class={styles['dropdown__control-arrow-down']}
+            hidden={isOpen()}
+          >
+            <i class="ri-arrow-down-s-line" />
+          </span>
+          <span
+            class={styles['dropdown__control-arrow-up']}
+            hidden={!isOpen()}
+          >
+            <i class="ri-arrow-up-s-line" />
+          </span>
+        </span>
       </button>
 
-      <Show when={isOpen()}>
-        <div ref={menuRef} class={getMenuClasses()}>
-          <For each={local.items}>
-            {(item) => (
-              <div
-                class={getItemClasses(item)}
-                onClick={() => handleItemClick(item)}
-              >
-                {item.label}
-              </div>
-            )}
-          </For>
-        </div>
-      </Show>
+      <div ref={menuRef} class={styles.dropdown__options}>
+        <For each={local.items}>
+          {(item) => (
+            <div
+              class={getItemClasses(item)}
+              onClick={() => handleItemClick(item)}
+            >
+              {item.label}
+            </div>
+          )}
+        </For>
+      </div>
     </div>
   );
 };

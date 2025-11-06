@@ -21,8 +21,21 @@ import {
   Section,
   SectionItem,
   ExpandCollapse,
+  InputLabel,
+  InputNumber,
+  RadioButtonGroup,
+  EditableField,
+  Popup,
+  LinkedInputs,
+  ColorPicker,
+  GridSelector,
+  ChoosableSection,
+  ToggleableSection,
+  InteractiveCard,
   type DropdownItem,
   type TabItem,
+  type RadioButtonItem,
+  type LinkedInputItem,
 } from '@email-builder/ui-solid/molecules';
 import styles from './ComponentShowcase.module.scss';
 
@@ -59,6 +72,43 @@ const ComponentShowcase: Component = () => {
 
   // ExpandCollapse state
   const [isExpandCollapseOpen, setIsExpandCollapseOpen] = createSignal(false);
+
+  // InputNumber state
+  const [numberValue, setNumberValue] = createSignal(16);
+  const [numberUnit, setNumberUnit] = createSignal('px');
+
+  // RadioButtonGroup state
+  const radioButtons: RadioButtonItem[] = [
+    { value: 'left', label: 'Left', icon: 'align-left' },
+    { value: 'center', label: 'Center', icon: 'align-center', selected: true },
+    { value: 'right', label: 'Right', icon: 'align-right' },
+  ];
+
+  // EditableField state
+  const [editableValue, setEditableValue] = createSignal('Click to edit');
+
+  // Popup state
+  const [isPopupOpen, setIsPopupOpen] = createSignal(false);
+
+  // LinkedInputs state
+  const linkedInputItems: LinkedInputItem[] = [
+    { label: 'Top', value: 10, unit: 'px' },
+    { label: 'Right', value: 10, unit: 'px' },
+    { label: 'Bottom', value: 10, unit: 'px' },
+    { label: 'Left', value: 10, unit: 'px' },
+  ];
+
+  // ColorPicker state
+  const [selectedColor, setSelectedColor] = createSignal('#3b82f6');
+
+  // GridSelector state
+  const gridItems = [
+    { id: '1', label: 'Item 1' },
+    { id: '2', label: 'Item 2' },
+    { id: '3', label: 'Item 3' },
+    { id: '4', label: 'Item 4' },
+  ];
+  const [selectedGridItem, setSelectedGridItem] = createSignal<string | null>(null);
 
   return (
     <div class={styles.showcase}>
@@ -315,6 +365,167 @@ const ComponentShowcase: Component = () => {
                 <p>It can contain any elements.</p>
               </div>
             </ExpandCollapse>
+          </div>
+        </div>
+
+        <div class={styles.component}>
+          <h3>InputLabel</h3>
+          <div class={styles.demo}>
+            <InputLabel label="Field Label" htmlFor="test-input" required>
+              <Input id="test-input" type="text" placeholder="With label..." />
+            </InputLabel>
+            <InputLabel label="With Help" helpText="This is helpful information">
+              <Input type="text" placeholder="With help text..." />
+            </InputLabel>
+          </div>
+        </div>
+
+        <div class={styles.component}>
+          <h3>InputNumber</h3>
+          <div class={styles.demo}>
+            <InputNumber
+              value={numberValue()}
+              unit={numberUnit()}
+              min={0}
+              max={100}
+              increment={1}
+              onChange={(value, unit) => {
+                setNumberValue(value);
+                setNumberUnit(unit);
+              }}
+            />
+            <p>Value: {numberValue()}{numberUnit()}</p>
+            <InputNumber
+              value={16}
+              unit="px"
+              changeableUnit={true}
+              availableUnits={['px', 'rem', 'em', '%']}
+            />
+          </div>
+        </div>
+
+        <div class={styles.component}>
+          <h3>RadioButtonGroup</h3>
+          <div class={styles.demo}>
+            <RadioButtonGroup
+              items={radioButtons}
+              singleSelection={true}
+              onChange={(values) => console.log('Selected:', values)}
+            />
+          </div>
+        </div>
+
+        <div class={styles.component}>
+          <h3>EditableField</h3>
+          <div class={styles.demo}>
+            <EditableField
+              value={editableValue()}
+              onChange={(value) => setEditableValue(value)}
+            />
+          </div>
+        </div>
+
+        <div class={styles.component}>
+          <h3>Popup</h3>
+          <div class={styles.demo}>
+            <Button variant="primary" onClick={() => setIsPopupOpen(true)}>
+              Open Popup
+            </Button>
+            <Popup
+              isOpen={isPopupOpen()}
+              onClose={() => setIsPopupOpen(false)}
+              title="Popup Title"
+            >
+              <div class={styles.popupContent}>
+                <p>This is popup content!</p>
+                <Button variant="primary" onClick={() => setIsPopupOpen(false)}>
+                  Close
+                </Button>
+              </div>
+            </Popup>
+          </div>
+        </div>
+
+        <div class={styles.component}>
+          <h3>LinkedInputs</h3>
+          <div class={styles.demo}>
+            <LinkedInputs
+              items={linkedInputItems}
+              startLinked={true}
+              onChange={(values) => console.log('Values:', values)}
+            />
+          </div>
+        </div>
+
+        <div class={styles.component}>
+          <h3>ColorPicker</h3>
+          <div class={styles.demo}>
+            <ColorPicker
+              value={selectedColor()}
+              onChange={(color) => setSelectedColor(color)}
+            />
+            <div
+              style={{
+                width: '100px',
+                height: '100px',
+                'background-color': selectedColor(),
+                border: '1px solid #ccc',
+                'border-radius': '4px',
+              }}
+            />
+          </div>
+        </div>
+
+        <div class={styles.component}>
+          <h3>GridSelector</h3>
+          <div class={styles.demo}>
+            <GridSelector
+              items={gridItems}
+              selectedId={selectedGridItem()}
+              onSelect={(id) => setSelectedGridItem(id)}
+              columns={2}
+              renderItem={(item) => item.label}
+            />
+          </div>
+        </div>
+
+        <div class={styles.component}>
+          <h3>ChoosableSection</h3>
+          <div class={styles.demo}>
+            <ChoosableSection
+              label="Choose Option"
+              items={[
+                { label: 'Option 1', content: <p>Content for Option 1</p> },
+                { label: 'Option 2', content: <p>Content for Option 2</p> },
+              ]}
+            />
+          </div>
+        </div>
+
+        <div class={styles.component}>
+          <h3>ToggleableSection</h3>
+          <div class={styles.demo}>
+            <ToggleableSection
+              label="Advanced Settings"
+              startOpen={false}
+              toggleableContent={true}
+            >
+              <p>This content can be toggled!</p>
+              <Input type="text" placeholder="Hidden when collapsed..." />
+            </ToggleableSection>
+          </div>
+        </div>
+
+        <div class={styles.component}>
+          <h3>InteractiveCard</h3>
+          <div class={styles.demo}>
+            <InteractiveCard
+              title="Card Title"
+              description="This is an interactive card component"
+              onClick={() => console.log('Card clicked')}
+            >
+              <p>Card content goes here</p>
+            </InteractiveCard>
           </div>
         </div>
       </section>

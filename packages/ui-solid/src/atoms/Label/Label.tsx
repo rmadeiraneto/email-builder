@@ -13,7 +13,7 @@
 
 import { Component, JSX, mergeProps, splitProps, Show } from 'solid-js';
 import type { LabelProps as BaseLabelProps } from '@email-builder/ui-components/atoms';
-import { classNames } from '@email-builder/ui-components/utils';
+import { classNames } from '../../utils';
 import styles from '@email-builder/ui-components/src/atoms/Label/label.module.scss';
 
 /**

@@ -22,8 +22,7 @@
  */
 
 import { type Component, type JSX, mergeProps, Show } from 'solid-js';
-import { classNames } from '@email-builder/ui-components/utils';
-import type { ExpandCollapseOptions } from '@email-builder/ui-components/molecules';
+import { classNames } from '../../utils';
 import styles from '@email-builder/ui-components/src/molecules/ExpandCollapse/expand-collapse.module.scss';
 
 export interface ExpandCollapseProps {

@@ -8,6 +8,7 @@
 import { render } from 'solid-js/web';
 import App from './App';
 import '@email-builder/tokens/css';
+import 'remixicon/fonts/remixicon.css';
 import './index.css';
 
 const root = document.getElementById('root');

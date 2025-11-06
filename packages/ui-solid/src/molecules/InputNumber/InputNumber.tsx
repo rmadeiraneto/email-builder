@@ -24,7 +24,7 @@ import {
   mergeProps,
   splitProps,
 } from 'solid-js';
-import { classNames } from '@email-builder/ui-components/utils';
+import { classNames } from '../../utils';
 import styles from '@email-builder/ui-components/src/molecules/InputNumber/input-number.module.scss';
 
 /**
@@ -74,12 +74,12 @@ export interface InputNumberProps {
   /**
    * Additional CSS classes for the root element
    */
-  class?: string;
+  class?: string | undefined;
 
   /**
    * Additional CSS classes for the input element
    */
-  inputClass?: string;
+  inputClass?: string | undefined;
 
   /**
    * Disable the input
@@ -180,11 +180,13 @@ export const InputNumber: Component<InputNumberProps> = (props) => {
    */
   const clampValue = (value: number): number => {
     let clamped = value;
-    if (local.min !== null && clamped < local.min) {
-      clamped = local.min;
+    const min = local.min ?? null;
+    const max = local.max ?? null;
+    if (min !== null && clamped < min) {
+      clamped = min;
     }
-    if (local.max !== null && clamped > local.max) {
-      clamped = local.max;
+    if (max !== null && clamped > max) {
+      clamped = max;
     }
     return clamped;
   };
@@ -238,14 +240,16 @@ export const InputNumber: Component<InputNumberProps> = (props) => {
    * Check if increment is disabled
    */
   const isIncrementDisabled = () => {
-    return local.disabled || (local.max !== null && currentValue() >= local.max);
+    const max = local.max ?? null;
+    return local.disabled || (max !== null && currentValue() >= max);
   };
 
   /**
    * Check if decrement is disabled
    */
   const isDecrementDisabled = () => {
-    return local.disabled || (local.min !== null && currentValue() <= local.min);
+    const min = local.min ?? null;
+    return local.disabled || (min !== null && currentValue() <= min);
   };
 
   /**

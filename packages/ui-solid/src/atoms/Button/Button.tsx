@@ -23,7 +23,7 @@
 
 import { Component, JSX, mergeProps, splitProps } from 'solid-js';
 import type { ButtonProps as BaseButtonProps } from '@email-builder/ui-components/atoms';
-import { getComponentClasses } from '@email-builder/ui-components/utils';
+import { getComponentClasses } from '../../utils';
 import styles from '@email-builder/ui-components/src/atoms/Button/button.module.scss';
 
 /**

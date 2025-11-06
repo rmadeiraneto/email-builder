@@ -17,7 +17,7 @@
 
 import { Component, JSX, mergeProps, splitProps, createMemo } from 'solid-js';
 import type { IconProps as BaseIconProps, IconSize } from '@email-builder/ui-components/atoms';
-import { classNames } from '@email-builder/ui-components/utils';
+import { classNames } from '../../utils';
 import styles from '@email-builder/ui-components/src/atoms/Icon/icon.module.scss';
 
 /**
@@ -111,11 +111,11 @@ export const Icon: Component<IconProps> = (props) => {
     if (local.ariaLabel) {
       return {
         'aria-label': local.ariaLabel,
-        role: 'img',
+        role: 'img' as const,
       };
     }
     return {
-      'aria-hidden': 'true',
+      'aria-hidden': 'true' as const,
     };
   });
 

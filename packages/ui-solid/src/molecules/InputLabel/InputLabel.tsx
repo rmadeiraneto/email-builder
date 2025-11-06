@@ -18,7 +18,7 @@
  */
 
 import { Component, JSX, Show, mergeProps, splitProps, createUniqueId } from 'solid-js';
-import { classNames } from '@email-builder/ui-components/utils';
+import { classNames } from '../../utils';
 import styles from '@email-builder/ui-components/src/molecules/InputLabel/input-label.module.scss';
 
 /**

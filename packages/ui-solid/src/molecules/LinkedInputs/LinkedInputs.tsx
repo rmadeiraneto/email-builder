@@ -19,7 +19,7 @@
  */
 
 import { Component, For, createSignal, createEffect, mergeProps, splitProps } from 'solid-js';
-import { classNames } from '@email-builder/ui-components/utils';
+import { classNames } from '../../utils';
 import { InputNumber } from '../InputNumber';
 import type { CSSUnit } from '../InputNumber';
 import styles from '@email-builder/ui-components/src/molecules/LinkedInputs/linked-inputs.module.scss';
@@ -193,11 +193,11 @@ export const LinkedInputs: Component<LinkedInputsProps> = (props) => {
                 <InputNumber
                   value={currentVal?.value ?? 0}
                   unit={currentVal?.unit ?? 'px'}
-                  increment={item.increment}
-                  min={item.min}
-                  max={item.max}
-                  class={styles['linked-inputs__item']}
-                  inputClass={styles['linked-inputs__input']}
+                  increment={item.increment ?? 1}
+                  min={item.min ?? null}
+                  max={item.max ?? null}
+                  class={styles['linked-inputs__item'] ?? undefined}
+                  inputClass={styles['linked-inputs__input'] ?? undefined}
                   onChange={(value, unit) => handleValueChange(index(), value, unit)}
                 />
               </div>

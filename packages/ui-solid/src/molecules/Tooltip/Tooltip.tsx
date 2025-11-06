@@ -25,10 +25,9 @@ import {
   offset,
   shift,
   flip,
-  arrow,
   type Placement,
 } from '@floating-ui/dom';
-import { classNames } from '@email-builder/ui-components/utils';
+import { classNames } from '../../utils';
 import styles from '@email-builder/ui-components/src/molecules/Tooltip/tooltip.module.scss';
 
 /**
@@ -88,7 +87,7 @@ export const Tooltip: Component<TooltipProps> = (props) => {
     if (!triggerRef || !tooltipRef) return;
 
     const position = await computePosition(triggerRef, tooltipRef, {
-      placement: local.placement,
+      ...(local.placement ? { placement: local.placement } : {}),
       middleware: [offset(8), flip(), shift({ padding: 8 })],
     });
 

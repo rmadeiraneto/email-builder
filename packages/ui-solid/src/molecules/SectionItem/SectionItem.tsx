@@ -15,8 +15,8 @@
  */
 
 import { type Component, type JSX, mergeProps, Show } from 'solid-js';
-import { classNames } from '@email-builder/ui-components/utils';
-import type { SectionItemOptions } from '@email-builder/ui-components/molecules';
+import { Dynamic } from 'solid-js/web';
+import { classNames } from '../../utils';
 import styles from '@email-builder/ui-components/src/molecules/SectionItem/section-item.module.scss';
 
 export interface SectionItemProps {
@@ -89,10 +89,9 @@ export const SectionItem: Component<SectionItemProps> = (props) => {
       merged.contentClass
     );
 
-  const Tag = merged.as as any;
-
   return (
-    <Tag
+    <Dynamic
+      component={merged.as}
       class={rootClasses()}
       style={{ display: merged.hidden ? 'none' : undefined }}
     >
@@ -109,7 +108,7 @@ export const SectionItem: Component<SectionItemProps> = (props) => {
           {merged.children}
         </div>
       </Show>
-    </Tag>
+    </Dynamic>
   );
 };
 

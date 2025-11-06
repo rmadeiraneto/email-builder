@@ -27,7 +27,7 @@
 
 import { Component, JSX, mergeProps, splitProps } from 'solid-js';
 import type { InputProps as BaseInputProps } from '@email-builder/ui-components/atoms';
-import { getComponentClasses, getValidationAriaProps } from '@email-builder/ui-components/utils';
+import { getComponentClasses, getValidationAriaProps } from '../../utils';
 import styles from '@email-builder/ui-components/src/atoms/Input/input.module.scss';
 
 /**

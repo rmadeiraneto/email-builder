@@ -18,7 +18,7 @@
  */
 
 import { Component, JSX, For, Show, createSignal, mergeProps, splitProps } from 'solid-js';
-import { classNames } from '@email-builder/ui-components/utils';
+import { classNames } from '../../utils';
 import styles from '@email-builder/ui-components/src/molecules/InteractiveCard/interactive-card.module.scss';
 
 /**

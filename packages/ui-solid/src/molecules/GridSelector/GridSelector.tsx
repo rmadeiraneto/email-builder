@@ -19,7 +19,7 @@
  */
 
 import { Component, JSX, For, createSignal, mergeProps, splitProps } from 'solid-js';
-import { classNames } from '@email-builder/ui-components/utils';
+import { classNames } from '../../utils';
 import styles from '@email-builder/ui-components/src/molecules/GridSelector/grid-selector.module.scss';
 
 /**

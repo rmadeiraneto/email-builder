@@ -19,9 +19,8 @@
  * ```
  */
 
-import { type Component, mergeProps, createEffect } from 'solid-js';
-import { classNames } from '@email-builder/ui-components/utils';
-import type { ToggleButtonOptions } from '@email-builder/ui-components/molecules';
+import { type Component, mergeProps } from 'solid-js';
+import { classNames } from '../../utils';
 import styles from '@email-builder/ui-components/src/molecules/ToggleButton/toggle-button.module.scss';
 
 export interface ToggleButtonProps {

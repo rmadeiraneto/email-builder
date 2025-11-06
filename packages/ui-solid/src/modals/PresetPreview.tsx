@@ -6,6 +6,7 @@
 
 import { type Component, For, Show } from 'solid-js';
 import type { ComponentPreset } from '@email-builder/core';
+import { getTestId, getTestAction, getTestState } from '@email-builder/core/utils';
 import styles from './PresetPreview.module.scss';
 
 export interface PresetPreviewProps {
@@ -72,7 +73,16 @@ export const PresetPreview: Component<PresetPreviewProps> = (props) => {
 
   return (
     <Show when={props.isOpen && props.preset}>
-      <div class={styles.modal}>
+      <div
+        {...getTestId('modal-preset-preview')}
+        {...getTestState({
+          presetId: props.preset?.id || 'none',
+          componentType: props.componentType,
+          hasDescription: !!props.preset?.description,
+          styleCount: flattenedStyles().length
+        })}
+        class={styles.modal}
+      >
         <div class={styles.modal__overlay} onClick={props.onClose} />
         <div class={styles.modal__content}>
           <div class={styles.modal__header}>
@@ -81,6 +91,8 @@ export const PresetPreview: Component<PresetPreviewProps> = (props) => {
               <p class={styles.modal__subtitle}>{props.componentType} Preset</p>
             </div>
             <button
+              {...getTestId('button-close-preset-preview')}
+              {...getTestAction('close-modal')}
               class={styles.modal__close}
               onClick={props.onClose}
               aria-label="Close modal"
@@ -125,6 +137,8 @@ export const PresetPreview: Component<PresetPreviewProps> = (props) => {
 
           <div class={styles.modal__actions}>
             <button
+              {...getTestId('button-cancel-preset-preview')}
+              {...getTestAction('cancel-preview')}
               type="button"
               class={styles.modal__button}
               classList={{ [styles['modal__button--secondary'] ?? '']: true }}
@@ -133,6 +147,8 @@ export const PresetPreview: Component<PresetPreviewProps> = (props) => {
               Cancel
             </button>
             <button
+              {...getTestId('button-apply-preset-from-preview')}
+              {...getTestAction('apply-preset')}
               type="button"
               class={styles.modal__button}
               classList={{ [styles['modal__button--primary'] ?? '']: true }}

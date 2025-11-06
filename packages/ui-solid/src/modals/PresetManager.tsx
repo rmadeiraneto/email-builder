@@ -6,6 +6,7 @@
 
 import { type Component, createSignal, createMemo, For, Show } from 'solid-js';
 import type { ComponentPreset } from '@email-builder/core';
+import { getTestId, getTestAction, getTestState } from '@email-builder/core/utils';
 import styles from './PresetManager.module.scss';
 
 export interface PresetManagerProps {
@@ -144,12 +145,24 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
 
   return (
     <Show when={props.isOpen}>
-      <div class={styles.modal}>
+      <div
+        {...getTestId('modal-preset-manager')}
+        {...getTestState({
+          presetCount: filteredPresets().length,
+          category: filterComponentType(),
+          hasSearch: searchQuery().length > 0,
+          isEditing: editingPresetId() !== null,
+          showCreate: showCreateModal()
+        })}
+        class={styles.modal}
+      >
         <div class={styles.modal__overlay} onClick={props.onClose} />
         <div class={styles.modal__content}>
           <div class={styles.modal__header}>
             <h2 class={styles.modal__title}>Preset Manager</h2>
             <button
+              {...getTestId('button-close-preset-manager')}
+              {...getTestAction('close-modal')}
               class={styles.modal__close}
               onClick={props.onClose}
               aria-label="Close modal"
@@ -161,6 +174,8 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
           <div class={styles.modal__toolbar}>
             <div class={styles.modal__filters}>
               <select
+                {...getTestId('select-preset-filter-type')}
+                {...getTestAction('filter-presets')}
                 class={styles.modal__select}
                 value={filterComponentType()}
                 onChange={(e) => setFilterComponentType(e.currentTarget.value)}
@@ -172,6 +187,7 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
               </select>
 
               <input
+                {...getTestId('input-preset-search')}
                 type="text"
                 class={styles.modal__search}
                 placeholder="Search presets..."
@@ -182,6 +198,8 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
 
             <div class={styles.modal__actions}>
               <button
+                {...getTestId('button-new-preset')}
+                {...getTestAction('open-create-preset-modal')}
                 class={styles.modal__button}
                 classList={{ [styles['modal__button--primary'] ?? '']: true }}
                 onClick={() => setShowCreateModal(true)}
@@ -207,10 +225,21 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
                       {componentType.charAt(0).toUpperCase() + componentType.slice(1)} Presets ({presets.length})
                     </h3>
 
-                    <div class={styles.modal__presetList}>
+                    <div
+                      {...getTestId(`preset-list-${componentType}`)}
+                      class={styles.modal__presetList}
+                    >
                       <For each={presets}>
                         {(preset) => (
-                          <div class={styles.modal__preset}>
+                          <div
+                            {...getTestId(`preset-item-${preset.id}`)}
+                            {...getTestState({
+                              isEditing: editingPresetId() === preset.id,
+                              isCustom: preset.isCustom,
+                              isDeleting: deletingPresetId() === preset.id
+                            })}
+                            class={styles.modal__preset}
+                          >
                             <Show
                               when={editingPresetId() === preset.id}
                               fallback={
@@ -232,6 +261,8 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
                                   <div class={styles.modal__presetActions}>
                                     <Show when={preset.isCustom}>
                                       <button
+                                        {...getTestId(`button-edit-preset-${preset.id}`)}
+                                        {...getTestAction('edit-preset')}
                                         class={styles.modal__iconButton}
                                         onClick={() => handleEdit(preset)}
                                         title="Edit preset"
@@ -242,6 +273,8 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
 
                                     <Show when={props.onDuplicatePreset}>
                                       <button
+                                        {...getTestId(`button-duplicate-preset-${preset.id}`)}
+                                        {...getTestAction('duplicate-preset')}
                                         class={styles.modal__iconButton}
                                         onClick={() => handleDuplicate(preset)}
                                         title="Duplicate preset"
@@ -252,6 +285,8 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
 
                                     <Show when={preset.isCustom}>
                                       <button
+                                        {...getTestId(`button-delete-preset-${preset.id}`)}
+                                        {...getTestAction('delete-preset')}
                                         class={styles.modal__iconButton}
                                         classList={{ [styles['modal__iconButton--danger'] ?? '']: true }}
                                         onClick={() => setDeletingPresetId(preset.id)}
@@ -281,6 +316,8 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
                                 />
                                 <div class={styles.modal__editActions}>
                                   <button
+                                    {...getTestId('button-cancel-edit-preset')}
+                                    {...getTestAction('cancel-edit')}
                                     class={styles.modal__button}
                                     classList={{ [styles['modal__button--secondary'] ?? '']: true }}
                                     onClick={handleCancelEdit}
@@ -288,6 +325,8 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
                                     Cancel
                                   </button>
                                   <button
+                                    {...getTestId('button-save-edit-preset')}
+                                    {...getTestAction('save-preset-edits')}
                                     class={styles.modal__button}
                                     classList={{ [styles['modal__button--primary'] ?? '']: true }}
                                     onClick={() => handleSaveEdit(componentType)}
@@ -302,10 +341,15 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
                             {/* Delete Confirmation */}
                             <Show when={deletingPresetId() === preset.id}>
                               <div class={styles.modal__confirmOverlay}>
-                                <div class={styles.modal__confirm}>
+                                <div
+                                  {...getTestId(`confirm-delete-${preset.id}`)}
+                                  class={styles.modal__confirm}
+                                >
                                   <p>Delete "{preset.name}"?</p>
                                   <div class={styles.modal__confirmActions}>
                                     <button
+                                      {...getTestId('button-cancel-delete-preset')}
+                                      {...getTestAction('cancel-delete')}
                                       class={styles.modal__button}
                                       classList={{ [styles['modal__button--secondary'] ?? '']: true }}
                                       onClick={() => setDeletingPresetId(null)}
@@ -313,6 +357,8 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
                                       Cancel
                                     </button>
                                     <button
+                                      {...getTestId('button-confirm-delete-preset')}
+                                      {...getTestAction('confirm-delete-preset')}
                                       class={styles.modal__button}
                                       classList={{ [styles['modal__button--danger'] ?? '']: true }}
                                       onClick={() => handleDeleteConfirm(componentType, preset.id)}
@@ -336,7 +382,12 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
           <div class={styles.modal__footer}>
             <div class={styles.modal__footerActions}>
               <Show when={props.onImportPresets}>
-                <label class={styles.modal__button} classList={{ [styles['modal__button--secondary'] ?? '']: true }}>
+                <label
+                  {...getTestId('button-import-presets')}
+                  {...getTestAction('import-presets')}
+                  class={styles.modal__button}
+                  classList={{ [styles['modal__button--secondary'] ?? '']: true }}
+                >
                   Import
                   <input
                     type="file"
@@ -349,6 +400,8 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
 
               <Show when={props.onExportPresets}>
                 <button
+                  {...getTestId('button-export-presets')}
+                  {...getTestAction('export-presets')}
                   class={styles.modal__button}
                   classList={{ [styles['modal__button--secondary'] ?? '']: true }}
                   onClick={handleExport}
@@ -359,6 +412,8 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
             </div>
 
             <button
+              {...getTestId('button-close-preset-manager-footer')}
+              {...getTestAction('close-modal')}
               class={styles.modal__button}
               classList={{ [styles['modal__button--primary'] ?? '']: true }}
               onClick={props.onClose}
@@ -371,12 +426,18 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
 
       {/* Create Preset Modal */}
       <Show when={showCreateModal()}>
-        <div class={styles.modal} style={{ "z-index": 1100 }}>
+        <div
+          {...getTestId('modal-create-preset')}
+          class={styles.modal}
+          style={{ "z-index": 1100 }}
+        >
           <div class={styles.modal__overlay} onClick={() => setShowCreateModal(false)} />
           <div class={styles.modal__content} style={{ "max-width": "500px" }}>
             <div class={styles.modal__header}>
               <h2 class={styles.modal__title}>Create New Preset</h2>
               <button
+                {...getTestId('button-close-create-preset-modal')}
+                {...getTestAction('close-modal')}
                 class={styles.modal__close}
                 onClick={() => setShowCreateModal(false)}
                 aria-label="Close modal"
@@ -389,6 +450,7 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
               <div class={styles.modal__field}>
                 <label class={styles.modal__label}>Component Type *</label>
                 <select
+                  {...getTestId('select-new-preset-component-type')}
                   class={styles.modal__select}
                   value={newPresetComponentType()}
                   onChange={(e) => setNewPresetComponentType(e.currentTarget.value)}
@@ -403,6 +465,7 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
               <div class={styles.modal__field}>
                 <label class={styles.modal__label}>Preset Name *</label>
                 <input
+                  {...getTestId('input-new-preset-name')}
                   type="text"
                   class={styles.modal__input}
                   value={newPresetName()}
@@ -414,6 +477,7 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
               <div class={styles.modal__field}>
                 <label class={styles.modal__label}>Description (Optional)</label>
                 <textarea
+                  {...getTestId('textarea-new-preset-description')}
                   class={styles.modal__textarea}
                   value={newPresetDescription()}
                   onInput={(e) => setNewPresetDescription(e.currentTarget.value)}
@@ -425,6 +489,8 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
 
             <div class={styles.modal__footer}>
               <button
+                {...getTestId('button-cancel-create-preset')}
+                {...getTestAction('cancel-create-preset')}
                 class={styles.modal__button}
                 classList={{ [styles['modal__button--secondary'] ?? '']: true }}
                 onClick={() => setShowCreateModal(false)}
@@ -432,6 +498,8 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
                 Cancel
               </button>
               <button
+                {...getTestId('button-create-preset-confirm')}
+                {...getTestAction('create-preset')}
                 class={styles.modal__button}
                 classList={{ [styles['modal__button--primary'] ?? '']: true }}
                 onClick={handleCreatePreset}

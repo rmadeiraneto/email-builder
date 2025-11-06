@@ -146,6 +146,93 @@ const api = window.__TEST_API__;
 
 ---
 
+### Preset Manager Modal (PresetManager)
+
+| Test ID | Action | Description | Location |
+|---------|--------|-------------|----------|
+| `modal-preset-manager` | - | Main preset manager modal container | Modal |
+| `button-close-preset-manager` | `close-modal` | Close modal button | Header |
+| `select-preset-filter-type` | `filter-presets` | Component type filter dropdown | Toolbar |
+| `input-preset-search` | - | Search presets input | Toolbar |
+| `button-new-preset` | `open-create-preset-modal` | Open create preset modal | Toolbar |
+| `preset-list-{type}` | - | Preset list for component type | Body |
+| `preset-item-{id}` | - | Individual preset item | List |
+| `button-edit-preset-{id}` | `edit-preset` | Edit preset button | Preset actions |
+| `button-duplicate-preset-{id}` | `duplicate-preset` | Duplicate preset button | Preset actions |
+| `button-delete-preset-{id}` | `delete-preset` | Delete preset button | Preset actions |
+| `button-cancel-edit-preset` | `cancel-edit` | Cancel editing preset | Edit form |
+| `button-save-edit-preset` | `save-preset-edits` | Save preset edits | Edit form |
+| `confirm-delete-{id}` | - | Delete confirmation dialog | Overlay |
+| `button-cancel-delete-preset` | `cancel-delete` | Cancel delete action | Confirmation |
+| `button-confirm-delete-preset` | `confirm-delete-preset` | Confirm delete action | Confirmation |
+| `button-import-presets` | `import-presets` | Import presets from file | Footer |
+| `button-export-presets` | `export-presets` | Export presets to file | Footer |
+| `button-close-preset-manager-footer` | `close-modal` | Close modal button | Footer |
+
+**State Attributes:**
+- `data-state-presetCount`: Number of filtered presets
+- `data-state-category`: Currently selected category filter
+- `data-state-hasSearch`: Whether search query is active
+- `data-state-isEditing`: Whether a preset is being edited
+- `data-state-showCreate`: Whether create preset modal is open
+
+**Preset Item State Attributes:**
+- `data-state-isEditing`: Whether this preset is being edited
+- `data-state-isCustom`: Whether this is a custom preset
+- `data-state-isDeleting`: Whether delete confirmation is showing
+
+---
+
+### Create Preset Modal (nested in PresetManager)
+
+| Test ID | Action | Description | Location |
+|---------|--------|-------------|----------|
+| `modal-create-preset` | - | Create preset modal container | Modal |
+| `button-close-create-preset-modal` | `close-modal` | Close create modal | Header |
+| `select-new-preset-component-type` | - | Component type selector | Form |
+| `input-new-preset-name` | - | Preset name input | Form |
+| `textarea-new-preset-description` | - | Preset description textarea | Form |
+| `button-cancel-create-preset` | `cancel-create-preset` | Cancel creating preset | Footer |
+| `button-create-preset-confirm` | `create-preset` | Confirm creating preset | Footer |
+
+---
+
+### Preset Preview Modal (PresetPreview)
+
+| Test ID | Action | Description | Location |
+|---------|--------|-------------|----------|
+| `modal-preset-preview` | - | Preset preview modal container | Modal |
+| `button-close-preset-preview` | `close-modal` | Close preview modal | Header |
+| `button-cancel-preset-preview` | `cancel-preview` | Cancel preview and close | Footer |
+| `button-apply-preset-from-preview` | `apply-preset` | Apply preset to component | Footer |
+
+**State Attributes:**
+- `data-state-presetId`: ID of the preset being previewed
+- `data-state-componentType`: Component type for the preset
+- `data-state-hasDescription`: Whether preset has a description
+- `data-state-styleCount`: Number of styles in the preset
+
+---
+
+### Compatibility Modal (CompatibilityModal)
+
+| Test ID | Action | Description | Location |
+|---------|--------|-------------|----------|
+| `modal-compatibility` | - | Compatibility modal container | Modal |
+| `button-close-compatibility-modal` | `close-modal` | Close compatibility modal | Header |
+| `button-view-support-matrix` | `view-support-matrix` | View full support matrix | Footer |
+| `link-can-i-email` | `open-external-link` | Open Can I Email website | Footer |
+
+**State Attributes:**
+- `data-state-property`: CSS property being checked
+- `data-state-hasData`: Whether compatibility data is available
+- `data-state-supportScore`: Overall support percentage (0-100)
+- `data-state-fullSupport`: Number of clients with full support
+- `data-state-partialSupport`: Number of clients with partial support
+- `data-state-noSupport`: Number of clients with no support
+
+---
+
 ## 🎯 Action Reference
 
 Complete list of all `data-action` values:
@@ -172,6 +259,23 @@ Complete list of all `data-action` values:
 | `preview-preset` | Preview preset before applying | Preview button |
 | `open-save-preset-modal` | Open modal to save preset | Save Preset button |
 | `open-preset-manager` | Open preset management modal | Manage button |
+| `close-modal` | Close modal dialog | Close button |
+| `filter-presets` | Filter presets by component type | Filter dropdown |
+| `open-create-preset-modal` | Open create preset modal | New Preset button |
+| `edit-preset` | Edit existing preset | Edit button |
+| `duplicate-preset` | Duplicate existing preset | Duplicate button |
+| `delete-preset` | Delete existing preset | Delete button |
+| `cancel-edit` | Cancel editing preset | Cancel button |
+| `save-preset-edits` | Save preset changes | Save button |
+| `cancel-delete` | Cancel delete confirmation | Cancel button |
+| `confirm-delete-preset` | Confirm preset deletion | Delete button |
+| `import-presets` | Import presets from JSON file | Import button |
+| `export-presets` | Export presets to JSON file | Export button |
+| `cancel-create-preset` | Cancel creating new preset | Cancel button |
+| `create-preset` | Create new preset | Create button |
+| `cancel-preview` | Cancel preset preview | Cancel button |
+| `view-support-matrix` | View full compatibility matrix | View Matrix button |
+| `open-external-link` | Open external website | Link |
 
 ---
 
@@ -489,13 +593,21 @@ await window.__TEST_API__.waitForStable();
 | ComponentPalette | 6 + dynamic | 2 | 3 | ✅ Complete |
 | PropertyPanel | 14 | 7 | 3 | ✅ Complete |
 | TemplateCanvas | 3 + dynamic | 1 | 7 | ✅ Complete |
-| Modals | 0 | 0 | 0 | ⏳ Pending |
-| **Total** | **35+** | **21** | **13** | **🚧 80% Complete** |
+| PresetManager | 18 + dynamic | 13 | 8 | ✅ Complete |
+| PresetPreview | 4 | 3 | 4 | ✅ Complete |
+| CompatibilityModal | 4 | 3 | 6 | ✅ Complete |
+| **Total** | **61+** | **40** | **31** | **✅ 100% Complete** |
 
 ---
 
 ## 🔄 Updates
 
-This catalog is automatically updated when new test attributes are added. Last updated: Phase 2 completion.
+This catalog is automatically updated when new test attributes are added. Last updated: Phase 2 completion + Modal integration (November 6, 2025).
+
+**Recent Updates:**
+- Added PresetManager modal with 18+ test IDs and 13 actions
+- Added PresetPreview modal with 4 test IDs and 3 actions
+- Added CompatibilityModal with 4 test IDs and 3 actions
+- Total coverage now at 100% for all major UI components
 
 For questions or additions, see the [AI Testing Strategy](./AI_TESTING_STRATEGY.md) document.

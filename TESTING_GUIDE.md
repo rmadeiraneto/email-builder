@@ -278,6 +278,92 @@ test('should delete selected component', async ({ page }) => {
 });
 ```
 
+### Scenario 9: Working with Modals
+
+```typescript
+test('should open and interact with preset manager modal', async ({ page }) => {
+  await page.goto('http://localhost:3000');
+  await page.click('[data-testid="button-toggle-test-mode"]');
+  await page.click('[data-action="create-template"]');
+
+  // Add a component and select it
+  const canvas = page.locator('[data-testid="canvas-template"]');
+  await page.locator('[data-testid="component-text"]').dragTo(canvas);
+  await page.locator('[data-testid^="canvas-component-"]').first().click();
+
+  // Switch to style tab
+  await page.click('[data-testid="tab-style"]');
+
+  // Open preset manager
+  await page.click('[data-action="open-preset-manager"]');
+
+  // Verify modal is open
+  const modal = page.locator('[data-testid="modal-preset-manager"]');
+  await expect(modal).toBeVisible();
+
+  // Search for presets
+  await page.fill('[data-testid="input-preset-search"]', 'primary');
+  await expect(modal).toHaveAttribute('data-state-hasSearch', 'true');
+
+  // Filter by component type
+  await page.selectOption('[data-testid="select-preset-filter-type"]', 'button');
+  await expect(modal).toHaveAttribute('data-state-category', 'button');
+
+  // Close modal
+  await page.click('[data-testid="button-close-preset-manager"]');
+  await expect(modal).not.toBeVisible();
+});
+
+test('should preview and apply preset', async ({ page }) => {
+  await page.goto('http://localhost:3000');
+  await page.click('[data-testid="button-toggle-test-mode"]');
+  await page.click('[data-action="create-template"]');
+
+  // Add and select component
+  const canvas = page.locator('[data-testid="canvas-template"]');
+  await page.locator('[data-testid="component-button"]').dragTo(canvas);
+  await page.locator('[data-testid^="canvas-component-"]').first().click();
+
+  // Switch to style tab and select preset
+  await page.click('[data-testid="tab-style"]');
+  await page.selectOption('[data-testid="select-preset"]', { index: 1 });
+
+  // Open preview modal
+  await page.click('[data-action="preview-preset"]');
+
+  // Verify preview modal
+  const previewModal = page.locator('[data-testid="modal-preset-preview"]');
+  await expect(previewModal).toBeVisible();
+  await expect(previewModal).toHaveAttribute('data-state-componentType', 'button');
+
+  // Apply preset
+  await page.click('[data-testid="button-apply-preset-from-preview"]');
+  await expect(previewModal).not.toBeVisible();
+});
+
+test('should check compatibility modal', async ({ page }) => {
+  await page.goto('http://localhost:3000');
+  await page.click('[data-testid="button-toggle-test-mode"]');
+  await page.click('[data-action="create-template"]');
+
+  // Open compatibility checker
+  await page.click('[data-action="check-compatibility"]');
+
+  // Verify compatibility modal
+  const compatModal = page.locator('[data-testid="modal-compatibility"]');
+  await expect(compatModal).toBeVisible();
+  await expect(compatModal).toHaveAttribute('data-state-hasData', 'true');
+
+  // Check support statistics
+  const supportScore = await compatModal.getAttribute('data-state-supportScore');
+  expect(parseInt(supportScore || '0')).toBeGreaterThan(0);
+
+  // Close modal
+  await page.click('[data-testid="button-close-compatibility-modal"]');
+  await expect(compatModal).not.toBeVisible();
+});
+```
+
 ---
 
 ## 🧪 Using the Test API

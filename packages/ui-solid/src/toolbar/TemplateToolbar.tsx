@@ -4,11 +4,15 @@
  * Toolbar with actions for template management (new, save, load, undo, redo, export)
  */
 
-import { type Component, Show } from 'solid-js';
+import { type Component, Show, createSignal } from 'solid-js';
 import styles from './TemplateToolbar.module.scss';
 import type { TemplateToolbarProps } from './TemplateToolbar.types';
+import { TestMode } from '@email-builder/core/config';
+import { getTestId, getTestAction } from '@email-builder/core/utils';
 
 export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
+  const [testModeEnabled, setTestModeEnabled] = createSignal(TestMode.isEnabled());
+
   const handleNewTemplate = () => {
     props.onNewTemplate?.();
   };
@@ -49,10 +53,22 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
     props.onCheckCompatibility?.();
   };
 
+  const toggleTestMode = () => {
+    TestMode.toggle();
+    setTestModeEnabled(TestMode.isEnabled());
+
+    // Persist preference
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('test-mode-enabled', String(TestMode.isEnabled()));
+    }
+  };
+
   return (
-    <div class={styles.toolbar}>
+    <div {...getTestId('toolbar-template')} class={styles.toolbar}>
       <div class={styles.toolbar__group}>
         <button
+          {...getTestId('button-new-template')}
+          {...getTestAction('create-template')}
           class={styles.toolbar__button}
           onClick={handleNewTemplate}
           title="Create new template"
@@ -63,6 +79,8 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
         </button>
 
         <button
+          {...getTestId('button-save-template')}
+          {...getTestAction('save-template')}
           class={styles.toolbar__button}
           onClick={handleSaveTemplate}
           disabled={!props.hasTemplate}
@@ -74,6 +92,8 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
         </button>
 
         <button
+          {...getTestId('button-load-template')}
+          {...getTestAction('open-template-picker')}
           class={styles.toolbar__button}
           onClick={handleLoadTemplate}
           title="Load template"
@@ -88,6 +108,8 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
 
       <div class={styles.toolbar__group}>
         <button
+          {...getTestId('button-undo')}
+          {...getTestAction('undo')}
           class={styles.toolbar__button}
           onClick={handleUndo}
           disabled={!props.canUndo}
@@ -99,6 +121,8 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
         </button>
 
         <button
+          {...getTestId('button-redo')}
+          {...getTestAction('redo')}
           class={styles.toolbar__button}
           onClick={handleRedo}
           disabled={!props.canRedo}
@@ -114,6 +138,8 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
 
       <div class={styles.toolbar__group}>
         <button
+          {...getTestId('button-export-template')}
+          {...getTestAction('export-html')}
           class={styles.toolbar__button}
           onClick={handleExport}
           disabled={!props.hasTemplate}
@@ -125,6 +151,8 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
         </button>
 
         <button
+          {...getTestId('button-preview-template')}
+          {...getTestAction('preview-template')}
           class={styles.toolbar__button}
           onClick={handlePreview}
           disabled={!props.hasTemplate}
@@ -140,6 +168,8 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
 
       <div class={styles.toolbar__group}>
         <button
+          {...getTestId('button-check-compatibility')}
+          {...getTestAction('check-compatibility')}
           class={styles.toolbar__button}
           onClick={handleCheckCompatibility}
           disabled={!props.hasTemplate}
@@ -151,6 +181,8 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
         </button>
 
         <button
+          {...getTestId('button-test-email-clients')}
+          {...getTestAction('test-email-clients')}
           class={styles.toolbar__button}
           onClick={handleTestEmailClients}
           disabled={!props.hasTemplate}
@@ -162,6 +194,8 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
         </button>
 
         <button
+          {...getTestId('button-email-testing-settings')}
+          {...getTestAction('open-email-testing-settings')}
           class={styles.toolbar__button}
           onClick={handleEmailTestingSettings}
           title="Email Testing Settings"
@@ -169,6 +203,23 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
         >
           <span class={styles.toolbar__icon}>⚙️</span>
           <span class={styles.toolbar__label}>Settings</span>
+        </button>
+      </div>
+
+      <div class={styles.toolbar__separator} />
+
+      <div class={styles.toolbar__group}>
+        <button
+          {...getTestId('button-toggle-test-mode')}
+          {...getTestAction('toggle-test-mode')}
+          class={`${styles.toolbar__button} ${testModeEnabled() ? styles['toolbar__button--active'] : ''}`}
+          onClick={toggleTestMode}
+          title="Toggle Test Mode (adds test attributes for automation)"
+          aria-label="Toggle Test Mode"
+          aria-pressed={testModeEnabled()}
+        >
+          <span class={styles.toolbar__icon}>🧪</span>
+          <span class={styles.toolbar__label}>Test Mode</span>
         </button>
       </div>
 

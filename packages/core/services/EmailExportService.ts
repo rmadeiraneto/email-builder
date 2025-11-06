@@ -239,8 +239,10 @@ export class EmailExportService {
 
     while ((match = styleTagRegex.exec(html)) !== null) {
       const cssText = match[1];
-      const parsedRules = this.parseCSS(cssText);
-      rules.push(...parsedRules);
+      if (cssText) {
+        const parsedRules = this.parseCSS(cssText);
+        rules.push(...parsedRules);
+      }
     }
 
     return rules;
@@ -260,11 +262,15 @@ export class EmailExportService {
     let match;
 
     while ((match = ruleRegex.exec(cssText)) !== null) {
-      const selector = match[1].trim();
+      const selector = match[1]?.trim();
       const propertiesText = match[2];
 
-      // Skip @media, @keyframes, etc.
-      if (selector.startsWith('@')) {
+      // Skip @media, @keyframes, etc., or invalid selectors
+      if (!selector || selector.startsWith('@')) {
+        continue;
+      }
+
+      if (!propertiesText) {
         continue;
       }
 
@@ -273,9 +279,11 @@ export class EmailExportService {
       let propMatch;
 
       while ((propMatch = propertyRegex.exec(propertiesText)) !== null) {
-        const property = propMatch[1].trim();
-        const value = propMatch[2].trim();
-        properties[property] = value;
+        const property = propMatch[1]?.trim();
+        const value = propMatch[2]?.trim();
+        if (property && value) {
+          properties[property] = value;
+        }
       }
 
       rules.push({

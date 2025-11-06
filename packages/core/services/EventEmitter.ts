@@ -56,11 +56,23 @@ export class EventEmitter implements IEventEmitter {
     });
   }
 
-  public off(event?: string): void {
-    if (event) {
-      this.listeners.delete(event);
-    } else {
+  public off(event?: string, listener?: EventListener): void {
+    if (!event) {
       this.listeners.clear();
+      return;
+    }
+
+    if (!listener) {
+      this.listeners.delete(event);
+      return;
+    }
+
+    const listeners = this.listeners.get(event);
+    if (listeners) {
+      listeners.delete(listener);
+      if (listeners.size === 0) {
+        this.listeners.delete(event);
+      }
     }
   }
 

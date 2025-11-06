@@ -162,6 +162,21 @@ export interface BaseStyles {
   fontWeight?: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 'normal' | 'bold';
 
   /**
+   * Text color
+   */
+  color?: string;
+
+  /**
+   * Text alignment
+   */
+  textAlign?: 'left' | 'center' | 'right' | 'justify';
+
+  /**
+   * Line height
+   */
+  lineHeight?: CSSValue | string;
+
+  /**
    * Display mode
    */
   display?: 'block' | 'inline' | 'inline-block' | 'flex' | 'grid' | 'none';
@@ -175,6 +190,9 @@ export interface BaseStyles {
    * Link styles configuration
    */
   linkStyles?: {
+    fontFamily?: string;
+    fontSize?: CSSValue | string;
+    fontWeight?: number;
     color?: string;
     textDecoration?: string;
     hover?: {
@@ -187,10 +205,129 @@ export interface BaseStyles {
    * Text styles configuration
    */
   textStyles?: {
-    fontSize?: string;
-    lineHeight?: string;
+    fontFamily?: string;
+    fontSize?: CSSValue | string;
+    lineHeight?: CSSValue | string;
     color?: string;
   };
+
+  /**
+   * Heading styles (for Hero, CTA components)
+   */
+  headingStyles?: {
+    fontFamily?: string;
+    fontSize?: CSSValue;
+    fontWeight?: number;
+    color?: string;
+    lineHeight?: CSSValue;
+  };
+
+  /**
+   * Description styles (for Hero, CTA components)
+   */
+  descriptionStyles?: {
+    fontFamily?: string;
+    fontSize?: CSSValue;
+    fontWeight?: number;
+    color?: string;
+    lineHeight?: CSSValue;
+  };
+
+  /**
+   * Title styles (for List component)
+   */
+  titleStyles?: {
+    fontFamily?: string;
+    fontSize?: CSSValue;
+    fontWeight?: number;
+    color?: string;
+    lineHeight?: CSSValue;
+  };
+
+  /**
+   * Item gap (for List component)
+   */
+  itemGap?: CSSValue;
+
+  /**
+   * Social icon size (for Footer component)
+   */
+  socialIconSize?: CSSValue;
+
+  /**
+   * Content maximum width (for Email components)
+   */
+  contentMaxWidth?: CSSValue;
+
+  /**
+   * Button gap (for CTA component)
+   */
+  buttonGap?: CSSValue;
+
+  /**
+   * Item padding (for List component)
+   */
+  itemPadding?: CSSValue;
+
+  /**
+   * Component variant (for styling variations)
+   */
+  variant?: string;
+
+  /**
+   * Social icon gap (for Footer component)
+   */
+  socialIconGap?: CSSValue;
+
+  /**
+   * Social icon color (for Footer component)
+   */
+  socialIconColor?: string;
+
+  /**
+   * Social icon hover color (for Footer component)
+   */
+  socialIconHoverColor?: string;
+
+  /**
+   * Content alignment (for Email components)
+   */
+  contentAlign?: 'left' | 'center' | 'right';
+
+  /**
+   * Hover background color
+   */
+  hoverBackgroundColor?: string;
+
+  /**
+   * Hover color
+   */
+  hoverColor?: string;
+
+  /**
+   * Link hover color
+   */
+  linkHoverColor?: string;
+
+  /**
+   * Navigation gap (for Header/Footer components)
+   */
+  navigationGap?: CSSValue;
+
+  /**
+   * Section gap (for Footer component)
+   */
+  sectionGap?: CSSValue;
+
+  /**
+   * Image maximum width
+   */
+  imageMaxWidth?: CSSValue;
+
+  /**
+   * Image maximum height
+   */
+  imageMaxHeight?: CSSValue;
 }
 
 /**

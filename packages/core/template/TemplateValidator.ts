@@ -9,7 +9,6 @@ import type {
   Template,
   TemplateValidationResult,
 } from '../types/template.types';
-import type { BaseComponent, ValidationResult } from '../types/component.types';
 import type { ComponentRegistry } from '../components/ComponentRegistry';
 import { ComponentTreeBuilder } from './ComponentTreeBuilder';
 

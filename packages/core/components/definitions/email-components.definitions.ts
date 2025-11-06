@@ -428,7 +428,7 @@ export const listDefinition: ComponentDefinition = {
       color: '#6c757d',
       lineHeight: createCSSValue(1.6),
     },
-    itemBackgroundColor: '#ffffff',
+    backgroundColor: '#ffffff',
     itemPadding: createCSSValue(20),
     imageMaxWidth: createCSSValue(100, '%'),
     imageMaxHeight: createCSSValue(200),

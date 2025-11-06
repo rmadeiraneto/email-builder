@@ -16,11 +16,13 @@ export class BuilderError extends Error {
     super(message);
     this.name = 'BuilderError';
     this.code = code;
-    this.context = context;
+    if (context !== undefined) {
+      this.context = context;
+    }
 
     // Maintains proper stack trace for where our error was thrown (only available on V8)
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, this.constructor);
+    if ((Error as any).captureStackTrace) {
+      (Error as any).captureStackTrace(this, this.constructor);
     }
   }
 }
@@ -206,7 +208,9 @@ export class VersioningError extends BuilderError {
   constructor(message: string, versionId?: string, context?: Record<string, unknown>) {
     super(message, 'VERSIONING_ERROR', context);
     this.name = 'VersioningError';
-    this.versionId = versionId;
+    if (versionId !== undefined) {
+      this.versionId = versionId;
+    }
   }
 }
 

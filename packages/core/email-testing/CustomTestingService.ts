@@ -301,7 +301,7 @@ export class CustomTestingService extends EmailTestingService {
     return {
       testId: String(testId),
       status,
-      resultsUrl: resultsUrl ? String(resultsUrl) : undefined,
+      ...(resultsUrl && { resultsUrl: String(resultsUrl) }),
       createdAt,
       rawResponse: response,
     };

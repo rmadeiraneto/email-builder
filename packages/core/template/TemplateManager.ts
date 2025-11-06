@@ -68,12 +68,10 @@ export class TemplateManager {
   private validator: TemplateValidator;
   private treeBuilder: ComponentTreeBuilder;
   private eventEmitter: EventEmitter;
-  private registry: ComponentRegistry;
   private currentTemplate: Template | null = null;
 
   constructor(storage: TemplateStorage, registry: ComponentRegistry) {
     this.storage = storage;
-    this.registry = registry;
     this.validator = new TemplateValidator(registry);
     this.treeBuilder = new ComponentTreeBuilder();
     this.eventEmitter = new EventEmitter();
@@ -95,11 +93,10 @@ export class TemplateManager {
         metadata: {
           id: templateId,
           name: options.name,
-          description: options.description,
-          author: options.author,
-          category: options.category,
-          tags: options.tags,
-          thumbnail: undefined,
+          ...(options.description !== undefined && { description: options.description }),
+          ...(options.author !== undefined && { author: options.author }),
+          ...(options.category !== undefined && { category: options.category }),
+          ...(options.tags !== undefined && { tags: options.tags }),
           version: '1.0.0',
           createdAt: now,
           updatedAt: now,
@@ -107,7 +104,6 @@ export class TemplateManager {
         settings: options.settings,
         generalStyles: options.generalStyles || {},
         components: options.components || [],
-        componentTree: undefined,
         dataInjection: {
           enabled: false,
         },
@@ -458,6 +454,16 @@ export class TemplateManager {
     }
 
     const [major, minor, patch] = parts.map(Number);
+    if (
+      major === undefined ||
+      minor === undefined ||
+      patch === undefined ||
+      isNaN(major) ||
+      isNaN(minor) ||
+      isNaN(patch)
+    ) {
+      return '1.0.1';
+    }
     return `${major}.${minor}.${patch + 1}`;
   }
 }

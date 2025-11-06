@@ -306,7 +306,7 @@ export class TemplateStorage {
       ...(template.metadata.category !== undefined && { category: template.metadata.category }),
       updatedAt: template.metadata.updatedAt,
       target: template.settings.target,
-      ...(template.customData?.['isCustom'] !== undefined && { isCustom: template.customData['isCustom'] }),
+      ...(typeof template.customData?.['isCustom'] === 'boolean' && { isCustom: template.customData['isCustom'] }),
     };
 
     // Add to list

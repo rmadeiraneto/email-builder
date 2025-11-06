@@ -301,7 +301,7 @@ export const textDefinition: ComponentDefinition = {
     fontSize: { value: 16, unit: 'px' },
     fontWeight: 400,
     color: '#333333',
-    lineHeight: { value: 1.5, unit: '' },
+    lineHeight: '1.5',
     textAlign: 'left',
   },
   presets: [

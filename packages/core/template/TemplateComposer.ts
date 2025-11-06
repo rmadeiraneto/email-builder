@@ -61,10 +61,10 @@ export class TemplateComposer {
     const metadata: TemplateMetadata = {
       id: this.generateId(),
       name: options.name,
-      description: options.description,
-      author: options.author,
-      category: options.category,
-      tags: options.tags,
+      ...(options.description !== undefined && { description: options.description }),
+      ...(options.author !== undefined && { author: options.author }),
+      ...(options.category !== undefined && { category: options.category }),
+      ...(options.tags !== undefined && { tags: options.tags }),
       version: '1.0.0',
       createdAt: now,
       updatedAt: now,
@@ -434,6 +434,10 @@ export function mergeTemplates(
   }
 
   const baseTemplate = templates[0];
+  if (!baseTemplate) {
+    throw new Error('Base template is required');
+  }
+
   const target = options?.target || baseTemplate.settings.target;
 
   const composer = new TemplateComposer({
@@ -448,7 +452,7 @@ export function mergeTemplates(
   const stylesIndex = options?.preferGeneralStyles || 0;
   const preferredTemplate = templates[stylesIndex] || baseTemplate;
 
-  if (preferredTemplate.generalStyles) {
+  if (preferredTemplate?.generalStyles) {
     const { generalStyles } = preferredTemplate;
 
     if (generalStyles.canvasBackgroundColor) {
@@ -469,10 +473,10 @@ export function mergeTemplates(
 
     if (generalStyles.typography) {
       Object.entries(generalStyles.typography).forEach(([key, value]) => {
-        if (value) {
+        if (value && typeof value === 'object' && 'name' in value && 'styles' in value) {
           composer.setTypography(
             key as keyof NonNullable<GeneralStyles['typography']>,
-            value
+            value as TypographyPreset
           );
         }
       });

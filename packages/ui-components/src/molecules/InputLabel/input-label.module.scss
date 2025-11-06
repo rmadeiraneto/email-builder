@@ -37,7 +37,7 @@
     border-radius: tokens.$border-radius-full;
     background-color: tokens.$color-neutral-300;
     color: tokens.$color-neutral-600;
-    font-size: tokens.$typography-font-size-2xs;
+    font-size: tokens.$typography-font-size-xs;
     font-weight: tokens.$typography-font-weight-bold;
     cursor: help;
     user-select: none;
@@ -55,7 +55,7 @@
     .input-label__label {
       flex-shrink: 0;
       width: auto;
-      min-width: tokens.$sizing-25;
+      min-width: tokens.$sizing-24;
     }
 
     .input-label__input {

@@ -6,6 +6,7 @@
 
 import { type Component, For, createSignal, Show } from 'solid-js';
 import type { ComponentDefinition, ComponentCategory } from '@email-builder/core';
+import { getTestId, getTestAction, getTestState } from '@email-builder/core/utils';
 import styles from './ComponentPalette.module.scss';
 
 export interface ComponentPaletteProps {
@@ -48,29 +49,50 @@ export const ComponentPalette: Component<ComponentPaletteProps> = (props) => {
   };
 
   return (
-    <div class={styles.palette}>
+    <div
+      {...getTestId('panel-component-palette')}
+      {...getTestState({
+        componentCount: filteredComponents().length,
+        category: selectedCategory(),
+        hasSearch: searchQuery().length > 0
+      })}
+      class={styles.palette}
+    >
       <div class={styles.searchContainer}>
         <input
+          {...getTestId('input-component-search')}
           type="text"
           class={styles.searchInput}
           placeholder="Search components..."
           value={searchQuery()}
           onInput={(e) => setSearchQuery(e.currentTarget.value)}
+          aria-label="Search components"
         />
       </div>
 
-      <div class={styles.categoryFilter}>
+      <div
+        {...getTestId('category-filter')}
+        class={styles.categoryFilter}
+      >
         <button
+          {...getTestId('button-category-all')}
+          {...getTestAction('filter-category')}
           class={selectedCategory() === 'all' ? styles.active : ''}
           onClick={() => setSelectedCategory('all')}
+          aria-label="Show all categories"
+          aria-pressed={selectedCategory() === 'all'}
         >
           All
         </button>
         <For each={categories()}>
           {(category) => (
             <button
+              {...getTestId(`button-category-${category.toLowerCase()}`)}
+              {...getTestAction('filter-category')}
               class={selectedCategory() === category ? styles.active : ''}
               onClick={() => setSelectedCategory(category)}
+              aria-label={`Filter by ${category}`}
+              aria-pressed={selectedCategory() === category}
             >
               {category}
             </button>
@@ -78,7 +100,10 @@ export const ComponentPalette: Component<ComponentPaletteProps> = (props) => {
         </For>
       </div>
 
-      <div class={styles.componentList}>
+      <div
+        {...getTestId('list-components')}
+        class={styles.componentList}
+      >
         <Show
           when={filteredComponents().length > 0}
           fallback={<EmptyState query={searchQuery()} />}
@@ -114,10 +139,15 @@ const ComponentItem: Component<ComponentItemProps> = (props) => {
 
   return (
     <div
+      {...getTestId(`component-${props.definition.type}`)}
+      {...getTestAction('drag-component')}
       class={styles.componentItem}
       draggable={true}
       onDragStart={handleDragStart}
       data-component-type={props.definition.type}
+      role="button"
+      aria-label={`Drag ${props.definition.metadata.name} component to canvas`}
+      tabindex={0}
     >
       <div class={styles.componentIcon}>
         <Show when={props.definition.metadata.icon} fallback={<span>📦</span>}>

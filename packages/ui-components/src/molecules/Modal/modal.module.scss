@@ -13,7 +13,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: tokens.$color-ui-background-overlay;
+  background: tokens.$component-modal-backdrop;
   z-index: 1000;
 
   &--open {
@@ -23,13 +23,46 @@
   }
 
   &__dialog {
-    position: absolute;
-    background: tokens.$color-ui-background-primary;
-    border-radius: tokens.$border-radius-sm;
-    box-shadow: tokens.$shadow-sm;
-    border: tokens.$border-width-base solid tokens.$color-neutral-300;
-    max-width: 90vw;
+    position: relative;
+    background: tokens.$component-modal-background;
+    border-radius: tokens.$component-modal-border-radius;
+    padding: tokens.$component-modal-padding;
+    max-width: tokens.$component-modal-max-width-md;
     max-height: 90vh;
     overflow: auto;
+  }
+
+  &__header {
+    padding-bottom: tokens.$component-modal-header-padding-bottom;
+    font-size: tokens.$component-modal-header-font-size;
+    font-weight: tokens.$component-modal-header-font-weight;
+  }
+
+  &__content {
+    // Content area - inherits padding from dialog
+  }
+
+  &__footer {
+    padding-top: tokens.$component-modal-footer-padding-top;
+    display: flex;
+    gap: tokens.$component-modal-footer-gap;
+    justify-content: flex-end;
+  }
+
+  // Size variants
+  &--sm &__dialog {
+    max-width: tokens.$component-modal-max-width-sm;
+  }
+
+  &--md &__dialog {
+    max-width: tokens.$component-modal-max-width-md;
+  }
+
+  &--lg &__dialog {
+    max-width: tokens.$component-modal-max-width-lg;
+  }
+
+  &--xl &__dialog {
+    max-width: tokens.$component-modal-max-width-xl;
   }
 }

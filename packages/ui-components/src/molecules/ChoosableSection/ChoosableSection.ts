@@ -27,7 +27,6 @@ import { merge } from 'lodash-es';
 import styles from './choosable-section.module.scss';
 import type {
   ChoosableSectionProps,
-  ChoosableSectionItem,
 } from './choosable-section.types';
 import { Dropdown } from '../Dropdown/Dropdown';
 import { DropdownItem } from '../Dropdown/DropdownItem';
@@ -105,7 +104,6 @@ export class ChoosableSection {
   private content: HTMLElement;
   private label: HTMLElement;
   private dropdownLabel?: HTMLElement;
-  private cssClass: string;
   private eventEmitter: EventEmitter;
   private dropdown: Dropdown;
 
@@ -126,7 +124,6 @@ export class ChoosableSection {
 
     this.options = merge({}, defaults, options);
 
-    this.cssClass = `${this.options.classPrefix}${this.options.className}`;
     this.eventEmitter = new EventEmitter();
 
     // Create elements
@@ -156,8 +153,9 @@ export class ChoosableSection {
     this.draw();
 
     // Trigger initial item click if there's an active item
-    if (this.dropdown.activeItem && typeof this.dropdown.activeItem.onItemClick === 'function') {
-      this.dropdown.activeItem.onItemClick();
+    if (this.dropdown.activeItem) {
+      // Trigger click event on the active item's element to invoke onClick
+      this.dropdown.activeItem.getEl().click();
     }
   }
 
@@ -215,7 +213,7 @@ export class ChoosableSection {
   private createDropdown(): Dropdown {
     const items: (DropdownItem | DropdownItemProps)[] = this.options.items.map((item) => {
       const dropdownItemProps: DropdownItemProps = {
-        active: item.active,
+        ...(item.active !== undefined ? { active: item.active } : {}),
         content: item.label,
         onSelect: item.onSelect as any,
         onDeselect: item.onDeselect as any,
@@ -248,7 +246,10 @@ export class ChoosableSection {
   private draw(): void {
     // Create label wrapper
     const labelWrapper = document.createElement('div');
-    addClassesString(labelWrapper, styles['choosable-section__label-wrapper']);
+    const labelWrapperClass = styles['choosable-section__label-wrapper'];
+    if (labelWrapperClass) {
+      addClassesString(labelWrapper, labelWrapperClass);
+    }
 
     // Add main label
     labelWrapper.appendChild(this.label);
@@ -256,10 +257,13 @@ export class ChoosableSection {
     // Add dropdown (with optional dropdown label)
     if (this.options.dropdownLabel && this.dropdownLabel) {
       const dropdownLabelWrapper = document.createElement('div');
-      addClassesString(
-        dropdownLabelWrapper,
-        styles['choosable-section__dropdown-label-wrapper']
-      );
+      const dropdownLabelWrapperClass = styles['choosable-section__dropdown-label-wrapper'];
+      if (dropdownLabelWrapperClass) {
+        addClassesString(
+          dropdownLabelWrapper,
+          dropdownLabelWrapperClass
+        );
+      }
       dropdownLabelWrapper.appendChild(this.dropdownLabel);
       dropdownLabelWrapper.appendChild(this.dropdown.getEl());
       labelWrapper.appendChild(dropdownLabelWrapper);

@@ -9,8 +9,7 @@
 import { Component, createMemo, For, Show } from 'solid-js';
 import type {
   CompatibilityService,
-  EmailClient,
-  CompatibilityInfo,
+  EmailClientId,
 } from '@email-builder/core/compatibility';
 import {
   SupportLevel,
@@ -87,12 +86,12 @@ export const CompatibilityModal: Component<CompatibilityModalProps> = (props) =>
     const i = info();
     if (!i) return new Map();
 
-    const groups = new Map<ClientPlatform, Array<{ client: EmailClient; label: string }>>();
+    const groups = new Map<ClientPlatform, Array<{ client: EmailClientId; label: string }>>();
 
     Object.keys(i.support).forEach((clientKey) => {
-      const client = clientKey as EmailClient;
+      const client = clientKey as EmailClientId;
       const platform = CLIENT_PLATFORM_MAP[client];
-      const label = EMAIL_CLIENT_LABELS[client];
+      const label = EMAIL_CLIENT_LABELS[client] ?? '';
 
       if (!groups.has(platform)) {
         groups.set(platform, []);
@@ -201,13 +200,15 @@ export const CompatibilityModal: Component<CompatibilityModalProps> = (props) =>
                             <div class={styles.clientList}>
                               <For each={clients}>
                                 {({ client, label }) => {
-                                  const support = i().support[client];
+                                  const info = i();
+                                  const support = info.support[client as keyof typeof info.support];
+                                  if (!support) return null;
                                   const color = getSupportLevelColor(support.level);
                                   return (
-                                    <div class={`${styles.clientItem} ${styles[`clientItem--${color}`]}`}>
+                                    <div class={`${styles.clientItem} ${styles[`clientItem--${color}`] ?? ''}`}>
                                       <div class={styles.clientItem__header}>
                                         <div class={styles.clientItem__name}>{label}</div>
-                                        <div class={`${styles.clientItem__badge} ${styles[`badge--${color}`]}`}>
+                                        <div class={`${styles.clientItem__badge} ${styles[`badge--${color}`] ?? ''}`}>
                                           {getSupportLevelText(support.level)}
                                         </div>
                                       </div>

@@ -40,11 +40,15 @@ function formatStyleValue(value: any): string {
 function flattenStyles(obj: any, prefix = ''): Array<[string, any]> {
   const result: Array<[string, any]> = [];
 
+  if (!obj || typeof obj !== 'object') {
+    return result;
+  }
+
   for (const [key, value] of Object.entries(obj)) {
     const fullKey = prefix ? `${prefix}.${key}` : key;
 
     if (value && typeof value === 'object' && !('value' in value && 'unit' in value)) {
-      result.push(...flattenStyles(value, fullKey));
+      result.push(...flattenStyles(value as Record<string, any>, fullKey));
     } else {
       result.push([fullKey, value]);
     }
@@ -123,7 +127,7 @@ export const PresetPreview: Component<PresetPreviewProps> = (props) => {
             <button
               type="button"
               class={styles.modal__button}
-              classList={{ [styles['modal__button--secondary']]: true }}
+              classList={{ [styles['modal__button--secondary'] ?? '']: true }}
               onClick={props.onClose}
             >
               Cancel
@@ -131,7 +135,7 @@ export const PresetPreview: Component<PresetPreviewProps> = (props) => {
             <button
               type="button"
               class={styles.modal__button}
-              classList={{ [styles['modal__button--primary']]: true }}
+              classList={{ [styles['modal__button--primary'] ?? '']: true }}
               onClick={handleApply}
             >
               Apply Preset

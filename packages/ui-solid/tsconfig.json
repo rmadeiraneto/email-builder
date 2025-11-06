@@ -6,13 +6,15 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "noPropertyAccessFromIndexSignature": false,
+    "skipLibCheck": true,
     "paths": {
       "@/*": ["./src/*"],
       "@tokens": ["../tokens/build/ts"],
-      "@email-builder/core/compatibility": ["../core/compatibility/index.ts"],
-      "@email-builder/core/tips": ["../core/tips/index.ts"]
+      "@email-builder/core": ["../core/dist/index.d.ts"],
+      "@email-builder/core/compatibility": ["../core/dist/compatibility/index.d.ts"],
+      "@email-builder/core/tips": ["../core/dist/tips/index.d.ts"]
     }
   },
-  "include": ["src"],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]
 }

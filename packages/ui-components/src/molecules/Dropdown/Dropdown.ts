@@ -21,7 +21,6 @@
 import { computePosition, flip, offset } from '@floating-ui/dom';
 import type { DropdownProps } from './dropdown.types';
 import { DropdownItem } from './DropdownItem';
-import type { DropdownItemProps } from './dropdown-item.types';
 import styles from './dropdown.module.scss';
 
 export class Dropdown {
@@ -201,10 +200,13 @@ export class Dropdown {
    * Setup floating-ui positioning
    */
   private setupFloater(): void {
-    computePosition(this.control, this.itemsContainer, {
-      placement: this.props.placement,
+    const config: any = {
       middleware: [flip(), offset(2)],
-    }).then(({ x, y }) => {
+    };
+    if (this.props.placement) {
+      config.placement = this.props.placement;
+    }
+    computePosition(this.control, this.itemsContainer, config).then(({ x, y }) => {
       this.element.style.setProperty('--floater-coords-left', `${x}px`);
       this.element.style.setProperty('--floater-coords-top', `${y}px`);
     });
@@ -259,7 +261,7 @@ export class Dropdown {
     if (this.resettable && this.defaultItem) {
       this.deactivateAllItems();
       this.activateItem(this.defaultItem, false);
-      this.resetCallback();
+      this.resetCallback(this.defaultItem);
     } else {
       console.warn('Dropdown is not resettable');
     }
@@ -268,9 +270,9 @@ export class Dropdown {
   /**
    * Call reset callback
    */
-  private resetCallback(): void {
+  private resetCallback(defaultItem: DropdownItem): void {
     if (typeof this.props.onReset === 'function') {
-      this.props.onReset(this, this.defaultItem);
+      this.props.onReset(this, defaultItem);
     }
   }
 
@@ -280,7 +282,7 @@ export class Dropdown {
   private setActiveItem(): void {
     const activeItems = this.items.filter(item => item.getIsActive());
 
-    if (activeItems.length > 0) {
+    if (activeItems.length > 0 && activeItems[0]) {
       this.deactivateAllItems();
       this.activateItem(activeItems[0], false, { isDraw: true });
     }
@@ -292,7 +294,7 @@ export class Dropdown {
   public changeActiveItem(value: unknown): void {
     const matchingItems = this.items.filter(item => item.value === value);
 
-    if (matchingItems.length > 0) {
+    if (matchingItems.length > 0 && matchingItems[0]) {
       this.deactivateAllItems();
       this.activateItem(matchingItems[0], false, { isDraw: true });
     }
@@ -329,7 +331,7 @@ export class Dropdown {
 
       // Handle reset callback
       if (this.resettable && item === this.defaultItem && itemClicked) {
-        this.resetCallback();
+        this.resetCallback(item);
       }
     }
 

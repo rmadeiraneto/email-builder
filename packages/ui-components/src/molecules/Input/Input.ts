@@ -76,7 +76,7 @@ export class Input {
     const input = document.createElement('input');
 
     // Add base class from CSS modules
-    input.className = styles.input;
+    input.className = styles.input ?? '';
 
     // Add extended classes if provided
     if (this.options.extendedClasses) {

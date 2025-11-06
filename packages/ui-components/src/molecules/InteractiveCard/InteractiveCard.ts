@@ -19,13 +19,13 @@ function setContent(
     content.forEach((item) => {
       if (item && typeof item === 'string') {
         element.insertAdjacentHTML('beforeend', item);
-      } else if (item) {
+      } else if (item instanceof HTMLElement) {
         element.appendChild(item);
       }
     });
   } else if (typeof content === 'string') {
     element.innerHTML = content;
-  } else if (content) {
+  } else if (content instanceof HTMLElement) {
     element.appendChild(content);
   }
 
@@ -41,8 +41,6 @@ function addClassesString(element: HTMLElement, classes: string): HTMLElement {
 export class InteractiveCard {
   private options: Required<InteractiveCardOptions>;
   private element: HTMLElement;
-  private overlay: HTMLElement;
-  private className: string;
 
   constructor(options: InteractiveCardOptions = {}) {
     const defaults: Required<InteractiveCardOptions> = {
@@ -56,16 +54,17 @@ export class InteractiveCard {
     };
 
     this.options = merge({}, defaults, options);
-    this.className = `${this.options.classPrefix}${this.options.cssClass}`;
 
     this.element = this.createElements();
-    this.overlay = this.element.querySelector(`.${styles['interactive-card__overlay']}`)!;
     this.setupEventListeners();
   }
 
   private createElements(): HTMLElement {
     const element = document.createElement('div');
-    element.classList.add(styles['interactive-card']);
+    const cardClass = styles['interactive-card'];
+    if (cardClass) {
+      element.classList.add(cardClass);
+    }
 
     if (this.options.extendedClasses) {
       addClassesString(element, this.options.extendedClasses);
@@ -73,7 +72,10 @@ export class InteractiveCard {
 
     // Content element
     const contentElement = document.createElement('div');
-    contentElement.classList.add(styles['interactive-card__content']);
+    const contentClass = styles['interactive-card__content'];
+    if (contentClass) {
+      contentElement.classList.add(contentClass);
+    }
     if (this.options.contentExtendedClasses) {
       addClassesString(contentElement, this.options.contentExtendedClasses);
     }
@@ -82,13 +84,19 @@ export class InteractiveCard {
 
     // Overlay element
     const overlay = document.createElement('div');
-    overlay.classList.add(styles['interactive-card__overlay']);
+    const overlayClass = styles['interactive-card__overlay'];
+    if (overlayClass) {
+      overlay.classList.add(overlayClass);
+    }
     element.appendChild(overlay);
 
     // Add actions
     if (this.options.actions.length) {
       const actionsContainer = document.createElement('div');
-      actionsContainer.classList.add(styles['interactive-card__actions']);
+      const actionsClass = styles['interactive-card__actions'];
+      if (actionsClass) {
+        actionsContainer.classList.add(actionsClass);
+      }
 
       this.options.actions.forEach((action) => {
         const button = this.createActionButton(action);
@@ -103,7 +111,10 @@ export class InteractiveCard {
 
   private createActionButton(action: InteractiveCardAction): HTMLElement {
     const button = document.createElement('button');
-    button.classList.add(styles['interactive-card__action']);
+    const actionClass = styles['interactive-card__action'];
+    if (actionClass) {
+      button.classList.add(actionClass);
+    }
     button.type = 'button';
 
     if (action.title) {
@@ -120,7 +131,10 @@ export class InteractiveCard {
     // Add label
     if (action.label) {
       const label = document.createElement('span');
-      label.classList.add(styles['interactive-card__action-label']);
+      const labelClass = styles['interactive-card__action-label'];
+      if (labelClass) {
+        label.classList.add(labelClass);
+      }
       label.textContent = action.label;
       button.appendChild(label);
     }
@@ -143,15 +157,24 @@ export class InteractiveCard {
   }
 
   showOverlay(): void {
-    this.element.classList.add(styles['interactive-card--active']);
+    const activeClass = styles['interactive-card--active'];
+    if (activeClass) {
+      this.element.classList.add(activeClass);
+    }
   }
 
   hideOverlay(): void {
-    this.element.classList.remove(styles['interactive-card--active']);
+    const activeClass = styles['interactive-card--active'];
+    if (activeClass) {
+      this.element.classList.remove(activeClass);
+    }
   }
 
   toggleOverlay(): void {
-    this.element.classList.toggle(styles['interactive-card--active']);
+    const activeClass = styles['interactive-card--active'];
+    if (activeClass) {
+      this.element.classList.toggle(activeClass);
+    }
   }
 
   getEl(): HTMLElement {

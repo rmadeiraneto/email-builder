@@ -1,8 +1,6 @@
 import styles from './accordion.module.scss';
 import type {
   AccordionConfig,
-  AccordionColor,
-  AccordionType,
   AccordionEvent,
   AccordionEventCallback,
 } from './accordion.types';
@@ -135,7 +133,10 @@ export class Accordion {
    * Open the accordion
    */
   open(): void {
-    this.element.classList.add(styles['accordion--open']);
+    const openClass = styles['accordion--open'];
+    if (openClass) {
+      this.element.classList.add(openClass);
+    }
 
     if (this.config.useArrowUpWhenOpen) {
       this.showArrowUp();
@@ -151,7 +152,10 @@ export class Accordion {
    * Close the accordion
    */
   close(): void {
-    this.element.classList.remove(styles['accordion--open']);
+    const openClass = styles['accordion--open'];
+    if (openClass) {
+      this.element.classList.remove(openClass);
+    }
 
     if (this.config.useArrowUpWhenOpen) {
       this.showArrowDown();
@@ -241,13 +245,13 @@ export class Accordion {
 
   private createControl(): HTMLElement {
     const control = document.createElement('div');
-    control.className = styles.accordion__control;
+    control.className = styles.accordion__control ?? '';
     return control;
   }
 
   private createControlInner(): HTMLElement {
     const controlInner = document.createElement('div');
-    controlInner.className = styles.accordion__controlInner;
+    controlInner.className = styles.accordion__controlInner ?? '';
 
     if (typeof this.config.title === 'string') {
       controlInner.innerHTML = this.config.title;
@@ -260,7 +264,7 @@ export class Accordion {
 
   private createArrowWrapper(): HTMLElement {
     const arrowWrapper = document.createElement('div');
-    arrowWrapper.className = styles.accordion__arrow;
+    arrowWrapper.className = styles.accordion__arrow ?? '';
     return arrowWrapper;
   }
 

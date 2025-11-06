@@ -18,7 +18,7 @@
  * ```
  */
 
-import type { InputNumberConfig, CSS_UNITS } from './input-number.types';
+import type { InputNumberConfig } from './input-number.types';
 import { CSS_UNITS as DEFAULT_UNITS } from './input-number.types';
 import styles from './input-number.module.scss';
 
@@ -76,11 +76,11 @@ export class InputNumber {
       emitEventsWhenDisabled: config.emitEventsWhenDisabled ?? false,
       arrowUpClickPreventDefault: config.arrowUpClickPreventDefault ?? false,
       arrowDownClickPreventDefault: config.arrowDownClickPreventDefault ?? false,
-      arrowUp: config.arrowUp,
-      arrowDown: config.arrowDown,
-      onChange: config.onChange,
-      onUpArrowClick: config.onUpArrowClick,
-      onDownArrowClick: config.onDownArrowClick,
+      ...(config.arrowUp !== undefined && { arrowUp: config.arrowUp }),
+      ...(config.arrowDown !== undefined && { arrowDown: config.arrowDown }),
+      ...(config.onChange !== undefined && { onChange: config.onChange }),
+      ...(config.onUpArrowClick !== undefined && { onUpArrowClick: config.onUpArrowClick }),
+      ...(config.onDownArrowClick !== undefined && { onDownArrowClick: config.onDownArrowClick }),
     };
 
     this.value = this.config.defaultValue;
@@ -113,7 +113,7 @@ export class InputNumber {
    */
   private createWrapper(): HTMLDivElement {
     const wrapper = document.createElement('div');
-    wrapper.className = styles['input-number'];
+    wrapper.className = styles['input-number'] ?? '';
 
     if (this.config.class) {
       wrapper.className += ` ${this.config.class}`;
@@ -151,8 +151,8 @@ export class InputNumber {
     const arrow = document.createElement('div');
     arrow.className =
       direction === 'up'
-        ? styles['input-number__up-arrow']
-        : styles['input-number__down-arrow'];
+        ? (styles['input-number__up-arrow'] ?? '')
+        : (styles['input-number__down-arrow'] ?? '');
 
     // Add data-testid for testing
     arrow.setAttribute('data-testid', `input-number-${direction}-arrow`);
@@ -335,14 +335,17 @@ export class InputNumber {
    * Check if arrow is disabled
    */
   private arrowIsDisabled(arrow: HTMLDivElement): boolean {
-    return arrow.classList.contains(styles['input-number__arrow--disabled']);
+    return arrow.classList.contains(styles['input-number__arrow--disabled'] ?? '');
   }
 
   /**
    * Disable an arrow
    */
   private disableArrow(arrow: HTMLDivElement): void {
-    arrow.classList.add(styles['input-number__arrow--disabled']);
+    const disabledClass = styles['input-number__arrow--disabled'];
+    if (disabledClass) {
+      arrow.classList.add(disabledClass);
+    }
     arrow.setAttribute('data-disabled', 'true');
   }
 
@@ -350,7 +353,10 @@ export class InputNumber {
    * Enable an arrow
    */
   private enableArrow(arrow: HTMLDivElement): void {
-    arrow.classList.remove(styles['input-number__arrow--disabled']);
+    const disabledClass = styles['input-number__arrow--disabled'];
+    if (disabledClass) {
+      arrow.classList.remove(disabledClass);
+    }
     arrow.removeAttribute('data-disabled');
   }
 
@@ -418,7 +424,10 @@ export class InputNumber {
    * Enable the input
    */
   public enable(): void {
-    this.element.classList.remove(styles['input-number--disabled']);
+    const disabledClass = styles['input-number--disabled'];
+    if (disabledClass) {
+      this.element.classList.remove(disabledClass);
+    }
     this.input.removeAttribute('disabled');
     this.enableArrow(this.upArrow);
     this.enableArrow(this.downArrow);
@@ -429,7 +438,10 @@ export class InputNumber {
    * Disable the input
    */
   public disable(): void {
-    this.element.classList.add(styles['input-number--disabled']);
+    const disabledClass = styles['input-number--disabled'];
+    if (disabledClass) {
+      this.element.classList.add(disabledClass);
+    }
     this.input.setAttribute('disabled', '');
     this.disableArrow(this.upArrow);
     this.disableArrow(this.downArrow);

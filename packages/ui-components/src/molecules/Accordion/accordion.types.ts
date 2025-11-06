@@ -11,7 +11,7 @@ export type AccordionType = 'normal' | 'extend';
 /**
  * Accordion event types
  */
-export type AccordionEvent = 'open' | 'close' | 'toggle';
+export type AccordionEvent = 'open' | 'close' | 'toggle' | 'init';
 
 /**
  * Accordion event callback

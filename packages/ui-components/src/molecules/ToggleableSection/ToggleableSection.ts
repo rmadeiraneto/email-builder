@@ -116,20 +116,20 @@ export class ToggleableSection implements IToggleableSection {
     this.options = {
       tagName: options.tagName ?? 'div',
       type: options.type ?? 'section',
-      label: options.label,
-      content: options.content,
+      ...(options.label !== undefined && { label: options.label }),
+      ...(options.content !== undefined && { content: options.content }),
       extendedClasses: options.extendedClasses ?? '',
       labelExtendedClasses: options.labelExtendedClasses ?? '',
       contentExtendedClasses: options.contentExtendedClasses ?? '',
       toggleLabelExtendedClasses: options.toggleLabelExtendedClasses ?? '',
       toggleableContent: options.toggleableContent ?? false,
-      description: options.description,
+      ...(options.description !== undefined && { description: options.description }),
       startOpen: options.startOpen ?? false,
-      toggleLabel: options.toggleLabel,
+      ...(options.toggleLabel !== undefined && { toggleLabel: options.toggleLabel }),
       toggleOnShowsContent: options.toggleOnShowsContent ?? true,
-      onToggle: options.onToggle,
-      onOpen: options.onOpen,
-      onClose: options.onClose,
+      ...(options.onToggle !== undefined && { onToggle: options.onToggle }),
+      ...(options.onOpen !== undefined && { onOpen: options.onOpen }),
+      ...(options.onClose !== undefined && { onClose: options.onClose }),
     };
 
     this.eventEmitter = new SimpleEventEmitter();
@@ -190,17 +190,20 @@ export class ToggleableSection implements IToggleableSection {
    * Get class names for the root element
    */
   private getClassNames(): string {
-    const classes = [styles.toggleableSection];
+    const classes = [styles.toggleableSection ?? ''];
 
     if (this.options.type !== 'section') {
-      classes.push(styles[`toggleableSection--${this.options.type}`]);
+      const typeClass = styles[`toggleableSection--${this.options.type}`];
+      if (typeClass) {
+        classes.push(typeClass);
+      }
     }
 
     if (this.options.extendedClasses) {
       classes.push(this.options.extendedClasses);
     }
 
-    return classes.join(' ');
+    return classes.filter(Boolean).join(' ');
   }
 
   /**
@@ -208,13 +211,13 @@ export class ToggleableSection implements IToggleableSection {
    */
   private createLabel(): HTMLElement {
     const label = document.createElement('label');
-    const classList = ['eb-label', styles.toggleableSection__label];
+    const classList = ['eb-label', styles.toggleableSection__label ?? ''];
 
     if (this.options.labelExtendedClasses) {
       classList.push(this.options.labelExtendedClasses);
     }
 
-    label.className = classList.join(' ');
+    label.className = classList.filter(Boolean).join(' ');
     this.setContent(label, this.options.label || '');
 
     // Add description tooltip if provided
@@ -233,13 +236,13 @@ export class ToggleableSection implements IToggleableSection {
    */
   private createToggleLabel(): HTMLElement {
     const toggleLabel = document.createElement('label');
-    const classList = ['eb-label', styles.toggleableSection__toggleLabel];
+    const classList = ['eb-label', styles.toggleableSection__toggleLabel ?? ''];
 
     if (this.options.toggleLabelExtendedClasses) {
       classList.push(this.options.toggleLabelExtendedClasses);
     }
 
-    toggleLabel.className = classList.join(' ');
+    toggleLabel.className = classList.filter(Boolean).join(' ');
     this.setContent(toggleLabel, this.options.toggleLabel || '');
 
     return toggleLabel;
@@ -250,13 +253,13 @@ export class ToggleableSection implements IToggleableSection {
    */
   private createContent(): HTMLElement {
     const content = document.createElement('div');
-    const classList = [styles.toggleableSection__content];
+    const classList = [styles.toggleableSection__content ?? ''];
 
     if (this.options.contentExtendedClasses) {
       classList.push(this.options.contentExtendedClasses);
     }
 
-    content.className = classList.join(' ');
+    content.className = classList.filter(Boolean).join(' ');
     this.setContent(content, this.options.content);
 
     return content;
@@ -289,7 +292,7 @@ export class ToggleableSection implements IToggleableSection {
     if (this.options.toggleableContent) {
       // Create label wrapper
       const labelWrapper = document.createElement('div');
-      labelWrapper.className = styles.toggleableSection__labelWrapper;
+      labelWrapper.className = styles.toggleableSection__labelWrapper ?? '';
 
       // Add label
       labelWrapper.appendChild(this.labelEl);
@@ -297,7 +300,7 @@ export class ToggleableSection implements IToggleableSection {
       // Add toggle button (with optional toggle label)
       if (this.options.toggleLabel && this.toggleLabelEl && this.toggleButton) {
         const toggleLabelWrapper = document.createElement('div');
-        toggleLabelWrapper.className = styles.toggleableSection__toggleLabelWrapper;
+        toggleLabelWrapper.className = styles.toggleableSection__toggleLabelWrapper ?? '';
         toggleLabelWrapper.appendChild(this.toggleLabelEl);
         toggleLabelWrapper.appendChild(this.toggleButton.getEl());
         labelWrapper.appendChild(toggleLabelWrapper);
@@ -336,7 +339,10 @@ export class ToggleableSection implements IToggleableSection {
    * Open the section (show content)
    */
   public open(): void {
-    this.element.classList.add(styles['toggleableSection--open']);
+    const openClass = styles['toggleableSection--open'];
+    if (openClass) {
+      this.element.classList.add(openClass);
+    }
     this.isOpen = true;
     this.eventEmitter.emit('open', this);
   }
@@ -345,7 +351,10 @@ export class ToggleableSection implements IToggleableSection {
    * Close the section (hide content)
    */
   public close(): void {
-    this.element.classList.remove(styles['toggleableSection--open']);
+    const openClass = styles['toggleableSection--open'];
+    if (openClass) {
+      this.element.classList.remove(openClass);
+    }
     this.isOpen = false;
     this.eventEmitter.emit('close', this);
   }

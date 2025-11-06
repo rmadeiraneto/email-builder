@@ -95,7 +95,10 @@ export class Tabs {
     if (index < 0 || index >= this.items.length) {
       throw new Error(`Tab index ${index} is out of range`);
     }
-    this.activateItem(this.items[index]);
+    const item = this.items[index];
+    if (item) {
+      this.activateItem(item);
+    }
   }
 
   /**
@@ -115,13 +118,13 @@ export class Tabs {
 
   private createTabsContainer(): HTMLElement {
     const container = document.createElement('div');
-    container.className = styles.tabs__tabs;
+    container.className = styles.tabs__tabs ?? '';
     return container;
   }
 
   private createPanesContainer(): HTMLElement {
     const container = document.createElement('div');
-    container.className = styles.tabs__contentWrapper;
+    container.className = styles.tabs__contentWrapper ?? '';
     return container;
   }
 
@@ -187,14 +190,26 @@ export class Tabs {
 
   private selectItem(item: TabItem): void {
     item.setActive(true);
-    item.getTab().classList.add(styles['tabs__tabItem--active']);
-    item.getPane().classList.add(styles['tabs__tabPane--active']);
+    const activeTabClass = styles['tabs__tabItem--active'];
+    const activePaneClass = styles['tabs__tabPane--active'];
+    if (activeTabClass) {
+      item.getTab().classList.add(activeTabClass);
+    }
+    if (activePaneClass) {
+      item.getPane().classList.add(activePaneClass);
+    }
   }
 
   private deselectItem(item: TabItem): void {
     item.setActive(false);
-    item.getTab().classList.remove(styles['tabs__tabItem--active']);
-    item.getPane().classList.remove(styles['tabs__tabPane--active']);
+    const activeTabClass = styles['tabs__tabItem--active'];
+    const activePaneClass = styles['tabs__tabPane--active'];
+    if (activeTabClass) {
+      item.getTab().classList.remove(activeTabClass);
+    }
+    if (activePaneClass) {
+      item.getPane().classList.remove(activePaneClass);
+    }
   }
 
   private deselectAllItems(): void {
@@ -214,13 +229,22 @@ export class Tabs {
 
     if (activeItems.length === 0) {
       // No active items, activate the first one
-      this.selectItem(this.items[0]);
+      const firstItem = this.items[0];
+      if (firstItem) {
+        this.selectItem(firstItem);
+      }
     } else if (activeItems.length === 1) {
       // One active item, select it
-      this.selectItem(activeItems[0]);
+      const firstActiveItem = activeItems[0];
+      if (firstActiveItem) {
+        this.selectItem(firstActiveItem);
+      }
     } else {
       // Multiple active items, select the first one and deactivate the rest
-      this.selectItem(activeItems[0]);
+      const firstActiveItem = activeItems[0];
+      if (firstActiveItem) {
+        this.selectItem(firstActiveItem);
+      }
       activeItems.slice(1).forEach((item) => {
         item.setActive(false);
       });

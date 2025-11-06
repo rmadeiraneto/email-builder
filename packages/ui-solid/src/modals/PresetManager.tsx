@@ -64,6 +64,7 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
     filteredPresets().forEach(preset => {
       // Extract component type from preset ID (e.g., "button-primary" -> "button")
       const componentType = preset.id.split('-')[0];
+      if (!componentType) return; // Skip if no component type found
       if (!groups[componentType]) {
         groups[componentType] = [];
       }
@@ -182,7 +183,7 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
             <div class={styles.modal__actions}>
               <button
                 class={styles.modal__button}
-                classList={{ [styles['modal__button--primary']]: true }}
+                classList={{ [styles['modal__button--primary'] ?? '']: true }}
                 onClick={() => setShowCreateModal(true)}
               >
                 + New Preset
@@ -252,7 +253,7 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
                                     <Show when={preset.isCustom}>
                                       <button
                                         class={styles.modal__iconButton}
-                                        classList={{ [styles['modal__iconButton--danger']]: true }}
+                                        classList={{ [styles['modal__iconButton--danger'] ?? '']: true }}
                                         onClick={() => setDeletingPresetId(preset.id)}
                                         title="Delete preset"
                                       >
@@ -281,14 +282,14 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
                                 <div class={styles.modal__editActions}>
                                   <button
                                     class={styles.modal__button}
-                                    classList={{ [styles['modal__button--secondary']]: true }}
+                                    classList={{ [styles['modal__button--secondary'] ?? '']: true }}
                                     onClick={handleCancelEdit}
                                   >
                                     Cancel
                                   </button>
                                   <button
                                     class={styles.modal__button}
-                                    classList={{ [styles['modal__button--primary']]: true }}
+                                    classList={{ [styles['modal__button--primary'] ?? '']: true }}
                                     onClick={() => handleSaveEdit(componentType)}
                                     disabled={!editName().trim()}
                                   >
@@ -306,14 +307,14 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
                                   <div class={styles.modal__confirmActions}>
                                     <button
                                       class={styles.modal__button}
-                                      classList={{ [styles['modal__button--secondary']]: true }}
+                                      classList={{ [styles['modal__button--secondary'] ?? '']: true }}
                                       onClick={() => setDeletingPresetId(null)}
                                     >
                                       Cancel
                                     </button>
                                     <button
                                       class={styles.modal__button}
-                                      classList={{ [styles['modal__button--danger']]: true }}
+                                      classList={{ [styles['modal__button--danger'] ?? '']: true }}
                                       onClick={() => handleDeleteConfirm(componentType, preset.id)}
                                     >
                                       Delete
@@ -335,7 +336,7 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
           <div class={styles.modal__footer}>
             <div class={styles.modal__footerActions}>
               <Show when={props.onImportPresets}>
-                <label class={styles.modal__button} classList={{ [styles['modal__button--secondary']]: true }}>
+                <label class={styles.modal__button} classList={{ [styles['modal__button--secondary'] ?? '']: true }}>
                   Import
                   <input
                     type="file"
@@ -349,7 +350,7 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
               <Show when={props.onExportPresets}>
                 <button
                   class={styles.modal__button}
-                  classList={{ [styles['modal__button--secondary']]: true }}
+                  classList={{ [styles['modal__button--secondary'] ?? '']: true }}
                   onClick={handleExport}
                 >
                   Export
@@ -359,7 +360,7 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
 
             <button
               class={styles.modal__button}
-              classList={{ [styles['modal__button--primary']]: true }}
+              classList={{ [styles['modal__button--primary'] ?? '']: true }}
               onClick={props.onClose}
             >
               Close
@@ -370,7 +371,7 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
 
       {/* Create Preset Modal */}
       <Show when={showCreateModal()}>
-        <div class={styles.modal} style={{ "z-index": "1100" }}>
+        <div class={styles.modal} style={{ "z-index": 1100 }}>
           <div class={styles.modal__overlay} onClick={() => setShowCreateModal(false)} />
           <div class={styles.modal__content} style={{ "max-width": "500px" }}>
             <div class={styles.modal__header}>
@@ -425,14 +426,14 @@ export const PresetManager: Component<PresetManagerProps> = (props) => {
             <div class={styles.modal__footer}>
               <button
                 class={styles.modal__button}
-                classList={{ [styles['modal__button--secondary']]: true }}
+                classList={{ [styles['modal__button--secondary'] ?? '']: true }}
                 onClick={() => setShowCreateModal(false)}
               >
                 Cancel
               </button>
               <button
                 class={styles.modal__button}
-                classList={{ [styles['modal__button--primary']]: true }}
+                classList={{ [styles['modal__button--primary'] ?? '']: true }}
                 onClick={handleCreatePreset}
                 disabled={!newPresetName().trim() || !newPresetComponentType()}
               >

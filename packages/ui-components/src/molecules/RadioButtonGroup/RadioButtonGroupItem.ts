@@ -52,12 +52,12 @@ export class RadioButtonGroupItem {
       selected: config.selected ?? false,
       label: config.label ?? '',
       icon: config.icon ?? '',
-      description: config.description,
+      ...(config.description !== undefined && { description: config.description }),
       class: config.class ?? '',
       changeOnClick: config.changeOnClick ?? true,
       useActiveBorder: config.useActiveBorder ?? true,
-      onChange: config.onChange,
-      onClick: config.onClick,
+      ...(config.onChange !== undefined && { onChange: config.onChange }),
+      ...(config.onClick !== undefined && { onClick: config.onClick }),
     };
 
     this.selected = this.config.selected;
@@ -176,7 +176,11 @@ export class RadioButtonGroupItem {
     const listeners = this.eventListeners.get(eventName);
     if (listeners) {
       listeners.forEach((callback) => {
-        callback.apply(this, args as [RadioButtonGroupItem] | [boolean, RadioButtonGroupItem]);
+        if (eventName === 'change') {
+          (callback as RadioButtonGroupItemChangeCallback)(...(args as [boolean, RadioButtonGroupItem]));
+        } else if (eventName === 'click') {
+          (callback as RadioButtonGroupItemClickCallback)(...(args as [RadioButtonGroupItem]));
+        }
       });
     }
   }

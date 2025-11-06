@@ -115,18 +115,18 @@ export class GridSelectorItem {
 
 	/**
 	 * Selects the item
-	 * @param triggerEvent - Whether to trigger selection events (not used in current implementation)
+	 * @param _triggerEvent - Whether to trigger selection events (not used in current implementation)
 	 */
-	public select(triggerEvent = true): void {
+	public select(_triggerEvent = true): void {
 		this.selected = true;
 		this.element.classList.add(`${this.className}--selected`);
 	}
 
 	/**
 	 * Deselects the item
-	 * @param triggerEvent - Whether to trigger deselection events (not used in current implementation)
+	 * @param _triggerEvent - Whether to trigger deselection events (not used in current implementation)
 	 */
-	public deselect(triggerEvent = true): void {
+	public deselect(_triggerEvent = true): void {
 		this.selected = false;
 		this.element.classList.remove(`${this.className}--selected`);
 	}

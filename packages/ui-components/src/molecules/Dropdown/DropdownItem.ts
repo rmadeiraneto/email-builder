@@ -35,7 +35,7 @@ export class DropdownItem {
     this.className = `${this.props.classPrefix}${this.props.cssClass}`;
     this.isActive = this.props.active;
     this.value = this.props.value;
-    this.content = this.props.content || this.props.value;
+    this.content = this.props.content || (this.props.value as string | HTMLElement);
     this.isDefault = this.props.isDefault;
 
     this.element = this.createItemElement();

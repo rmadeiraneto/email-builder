@@ -36,9 +36,9 @@ export class SectionItem implements ISectionItem {
   constructor(options: SectionItemOptions = {}) {
     // Set defaults
     this.options = {
-      label: options.label,
-      content: options.content,
-      description: options.description,
+      ...(options.label !== undefined && { label: options.label }),
+      ...(options.content !== undefined && { content: options.content }),
+      ...(options.description !== undefined && { description: options.description }),
       tagName: options.tagName ?? 'div',
       extendedClasses: options.extendedClasses ?? '',
       labelExtendedClasses: options.labelExtendedClasses ?? '',

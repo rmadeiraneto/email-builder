@@ -109,8 +109,8 @@ export type {
 export { Section } from './Section';
 export type { SectionOptions, SectionElement } from './Section';
 
-export { Input } from './Input';
-export type { InputOptions, InputEventCallback, InputEvent } from './Input';
+export { Input as MoleculeInput } from './Input';
+export type { InputOptions as MoleculeInputOptions, InputEventCallback as MoleculeInputEventCallback, InputEvent as MoleculeInputEvent } from './Input';
 
 export { ToggleButton } from './ToggleButton';
 export type { ToggleButtonOptions } from './ToggleButton';
@@ -121,8 +121,8 @@ export type { ExpandCollapseOptions, IExpandCollapse, ElementContent as ExpandCo
 export { SectionItem } from './SectionItem';
 export type { SectionItemOptions, ISectionItem, ElementContent as SectionItemElementContent } from './SectionItem';
 
-export { Label } from './Label';
-export type { LabelOptions, ILabel } from './Label';
+export { Label as MoleculeLabel } from './Label';
+export type { LabelOptions as MoleculeLabelOptions, ILabel } from './Label';
 
 export { ChoosableSection } from './ChoosableSection';
 export type {

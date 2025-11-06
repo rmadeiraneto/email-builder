@@ -5,6 +5,7 @@ import type {
   ComponentPropertyMap,
 } from './PropertyPanel.types';
 import type { ComponentPreset } from '@email-builder/core';
+import { getTestId, getTestAction, getTestState } from '@email-builder/core/utils';
 import { PresetPreview, PresetManager } from '../modals';
 import { RichTextEditor } from '../editors';
 import { CompatibilityIcon, CompatibilityModal } from '../compatibility';
@@ -1418,7 +1419,15 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
   };
 
   return (
-    <div class={`${styles.propertyPanel} ${props.class || ''}`}>
+    <div
+      {...getTestId('panel-properties')}
+      {...getTestState({
+        hasSelection: !!props.selectedComponent,
+        componentType: props.selectedComponent?.type || 'none',
+        activeTab: props.selectedComponent ? activeComponentTab() : activeGeneralTab()
+      })}
+      class={`${styles.propertyPanel} ${props.class || ''}`}
+    >
       <Show
         when={props.selectedComponent}
         fallback={
@@ -1428,8 +1437,13 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
             </div>
 
             {/* Tab Navigation for General Settings */}
-            <div class={styles.tabNavigation}>
+            <div
+              {...getTestId('tabs-general')}
+              class={styles.tabNavigation}
+            >
               <button
+                {...getTestId('tab-components')}
+                {...getTestAction('switch-tab')}
                 class={`${styles.tabButton} ${activeGeneralTab() === 'components' ? styles.tabButtonActive : ''}`}
                 onClick={() => setActiveGeneralTab('components')}
                 aria-label="Components tab"
@@ -1438,6 +1452,8 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
                 Components
               </button>
               <button
+                {...getTestId('tab-general-styles')}
+                {...getTestAction('switch-tab')}
                 class={`${styles.tabButton} ${activeGeneralTab() === 'general-styles' ? styles.tabButtonActive : ''}`}
                 onClick={() => setActiveGeneralTab('general-styles')}
                 aria-label="General Styles tab"
@@ -1545,6 +1561,8 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
             </h3>
             <Show when={props.onDelete}>
               <button
+                {...getTestId('button-delete-component')}
+                {...getTestAction('delete-component')}
                 class={styles.deleteButton}
                 onClick={() => props.onDelete?.(props.selectedComponent!.id)}
                 title="Delete component"
@@ -1558,8 +1576,13 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
         </div>
 
         {/* Tab Navigation */}
-        <div class={styles.tabNavigation}>
+        <div
+          {...getTestId('tabs-component')}
+          class={styles.tabNavigation}
+        >
           <button
+            {...getTestId('tab-content')}
+            {...getTestAction('switch-tab')}
             class={`${styles.tabButton} ${activeComponentTab() === 'content' ? styles.tabButtonActive : ''}`}
             onClick={() => setActiveComponentTab('content')}
             aria-label="Content tab"
@@ -1568,6 +1591,8 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
             Content
           </button>
           <button
+            {...getTestId('tab-style')}
+            {...getTestAction('switch-tab')}
             class={`${styles.tabButton} ${activeComponentTab() === 'style' ? styles.tabButtonActive : ''}`}
             onClick={() => setActiveComponentTab('style')}
             aria-label="Style tab"
@@ -1580,15 +1605,20 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
         <div class={styles.propertyPanelContent}>
           {/* Presets Section - Only show in Style tab */}
           <Show when={activeComponentTab() === 'style' && props.presetActions && presets().length > 0}>
-            <div class={styles.propertySection}>
+            <div
+              {...getTestId('section-presets')}
+              class={styles.propertySection}
+            >
               <h4 class={styles.propertySectionTitle}>Style Presets</h4>
 
               <div class={styles.presetControls}>
                 <div class={styles.presetSelectGroup}>
                   <select
+                    {...getTestId('select-preset')}
                     class={styles.propertySelect}
                     value={selectedPresetId()}
                     onChange={(e) => setSelectedPresetId(e.currentTarget.value)}
+                    aria-label="Select style preset"
                   >
                     <option value="">Select a preset...</option>
                     <For each={presets()}>
@@ -1601,37 +1631,49 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
                   </select>
 
                   <button
+                    {...getTestId('button-apply-preset')}
+                    {...getTestAction('apply-preset')}
                     class={styles.presetApplyButton}
                     onClick={handleApplyPreset}
                     disabled={!selectedPresetId()}
                     title="Apply selected preset"
+                    aria-label="Apply selected preset"
                   >
                     Apply
                   </button>
 
                   <button
+                    {...getTestId('button-preview-preset')}
+                    {...getTestAction('preview-preset')}
                     class={styles.presetPreviewButton}
                     onClick={handlePreviewPreset}
                     disabled={!selectedPresetId()}
                     title="Preview selected preset"
+                    aria-label="Preview selected preset"
                   >
                     👁 Preview
                   </button>
                 </div>
 
                 <button
+                  {...getTestId('button-save-preset')}
+                  {...getTestAction('open-save-preset-modal')}
                   class={styles.presetCreateButton}
                   onClick={() => setShowCreatePresetModal(true)}
                   title="Save current styles as preset"
+                  aria-label="Save current styles as preset"
                 >
                   + Save Preset
                 </button>
 
                 <Show when={props.presetActions}>
                   <button
+                    {...getTestId('button-manage-presets')}
+                    {...getTestAction('open-preset-manager')}
                     class={styles.presetManageButton}
                     onClick={() => setShowPresetManagerModal(true)}
                     title="Manage all presets"
+                    aria-label="Manage all presets"
                   >
                     ⚙️ Manage
                   </button>

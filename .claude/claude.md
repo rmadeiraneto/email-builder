@@ -2183,6 +2183,575 @@ export const Icon: Component<IconProps> = (props) => {
 
 ---
 
+## AI Agent Testing & Automation
+
+### Purpose
+The UI must be "AI agent testable" - designed to allow automated testing through AI agents (Claude with computer use, Playwright, Puppeteer) and traditional automation tools. This ensures quality through automated testing and enables complex UI interaction validation.
+
+### Test Mode System
+
+#### Test Mode Manager
+Implement a global test mode that conditionally adds testing attributes without polluting production builds.
+
+**Service Implementation:**
+```typescript
+// packages/core/config/TestModeManager.ts
+class TestModeManager {
+  private static instance: TestModeManager;
+  private _enabled: boolean = false;
+
+  static getInstance(): TestModeManager {
+    if (!TestModeManager.instance) {
+      TestModeManager.instance = new TestModeManager();
+    }
+    return TestModeManager.instance;
+  }
+
+  enable(): void {
+    this._enabled = true;
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-test-mode', 'true');
+    }
+  }
+
+  disable(): void {
+    this._enabled = false;
+    if (typeof document !== 'undefined') {
+      document.documentElement.removeAttribute('data-test-mode');
+    }
+  }
+
+  toggle(): void {
+    if (this._enabled) {
+      this.disable();
+    } else {
+      this.enable();
+    }
+  }
+
+  isEnabled(): boolean {
+    return this._enabled;
+  }
+}
+
+export const TestMode = TestModeManager.getInstance();
+```
+
+**Initialization:**
+```typescript
+// Initialize test mode based on environment or stored preference
+if (import.meta.env.MODE === 'test' || localStorage.getItem('test-mode-enabled') === 'true') {
+  TestMode.enable();
+}
+```
+
+#### Test Attribute Helpers
+Create helper functions for conditional test attributes:
+
+```typescript
+// packages/core/utils/testAttributes.ts
+import { TestMode } from '../config/TestModeManager';
+
+type TestAttributes = Record<string, string | number | boolean>;
+
+/**
+ * Get test ID attribute if test mode is enabled
+ * @param id - Unique test identifier (e.g., 'button-primary-save')
+ */
+export function getTestId(id: string): { 'data-testid'?: string } {
+  return TestMode.isEnabled() ? { 'data-testid': id } : {};
+}
+
+/**
+ * Get action attribute if test mode is enabled
+ * @param action - Action identifier (e.g., 'save-template', 'delete-component')
+ */
+export function getTestAction(action: string): { 'data-action'?: string } {
+  return TestMode.isEnabled() ? { 'data-action': action } : {};
+}
+
+/**
+ * Get state attributes if test mode is enabled
+ * @param state - State object with boolean/string/number values
+ */
+export function getTestState(state: Record<string, any>): Record<string, string> {
+  if (!TestMode.isEnabled()) return {};
+  
+  return Object.entries(state).reduce((acc, [key, value]) => {
+    acc[`data-state-${key}`] = String(value);
+    return acc;
+  }, {} as Record<string, string>);
+}
+
+/**
+ * Get all test attributes at once
+ */
+export function getTestAttributes(attrs: {
+  testId?: string;
+  action?: string;
+  state?: Record<string, any>;
+}): Record<string, string> {
+  if (!TestMode.isEnabled()) return {};
+  
+  return {
+    ...getTestId(attrs.testId || ''),
+    ...getTestAction(attrs.action || ''),
+    ...getTestState(attrs.state || {})
+  };
+}
+```
+
+### Naming Conventions
+
+#### Test ID Patterns
+**Format:** `component-type-identifier`
+
+```typescript
+// Buttons
+'button-primary-save'
+'button-secondary-cancel'
+'button-icon-close'
+
+// Panels
+'panel-properties'
+'panel-components'
+'panel-canvas-settings'
+
+// Inputs
+'input-backgroundColor'
+'input-fontSize'
+'input-templateName'
+
+// Lists
+'list-components'
+'list-templates'
+'list-presets'
+
+// List Items
+'item-component-button-123'
+'item-template-456'
+'item-preset-primary-button'
+
+// Modals
+'modal-preset-preview'
+'modal-test-config'
+'modal-compatibility-report'
+
+// Canvas
+'canvas-drop-zone'
+'canvas-component-123'
+```
+
+#### Action Patterns
+**Format:** `verb-noun`
+
+```typescript
+// CRUD Operations
+'create-template'
+'create-preset'
+'create-component'
+
+'update-component'
+'update-style'
+'update-template'
+
+'delete-template'
+'delete-preset'
+'delete-component'
+
+'save-template'
+'save-preset'
+
+// Navigation
+'open-modal'
+'close-modal'
+'toggle-panel'
+'toggle-test-mode'
+
+// Canvas Operations
+'add-component'
+'remove-component'
+'select-component'
+'reorder-components'
+'duplicate-component'
+
+// Preview & Export
+'preview-web'
+'preview-mobile'
+'preview-email'
+'export-html'
+'export-json'
+'test-template'
+```
+
+#### State Attribute Patterns
+```typescript
+// Boolean states (always strings)
+'data-state-loading="true|false"'
+'data-state-modified="true|false"'
+'data-state-error="true|false"'
+'data-state-empty="true|false"'
+'data-state-expanded="true|false"'
+'data-state-selected="true|false"'
+'data-state-disabled="true|false"'
+'data-state-visible="true|false"'
+
+// Count states
+'data-state-component-count="3"'
+'data-state-item-count="5"'
+
+// Status states
+'data-state-status="pending|success|error"'
+```
+
+### Component Integration Pattern
+
+Always integrate test attributes using helpers:
+
+```tsx
+// Example: Button Component
+import { getTestId, getTestAction } from '@/utils/testAttributes';
+
+function Button({ variant, onClick, children }: ButtonProps) {
+  return (
+    <button
+      {...getTestId(`button-${variant}-action`)}
+      {...getTestAction('trigger-action')}
+      className={styles.button}
+      onClick={onClick}
+      aria-label={children as string}
+    >
+      {children}
+    </button>
+  );
+}
+```
+
+```tsx
+// Example: PropertyPanel Component
+import { getTestId, getTestState } from '@/utils/testAttributes';
+
+function PropertyPanel() {
+  const [modified, setModified] = createSignal(false);
+  const [loading, setLoading] = createSignal(false);
+  
+  return (
+    <div
+      {...getTestId('panel-properties')}
+      {...getTestState({
+        modified: modified(),
+        loading: loading(),
+        hasSelection: !!selectedComponent()
+      })}
+      role="region"
+      aria-label="Component Properties"
+    >
+      {/* Panel content */}
+    </div>
+  );
+}
+```
+
+```tsx
+// Example: TemplateToolbar Component
+import { getTestId, getTestAction } from '@/utils/testAttributes';
+
+function TemplateToolbar() {
+  return (
+    <div
+      {...getTestId('toolbar-template')}
+      className={styles.toolbar}
+    >
+      <button
+        {...getTestId('button-save-template')}
+        {...getTestAction('save-template')}
+        onClick={handleSave}
+        aria-label="Save Template"
+      >
+        Save
+      </button>
+      
+      <button
+        {...getTestId('button-preview-web')}
+        {...getTestAction('preview-web')}
+        onClick={() => handlePreview('web')}
+        aria-label="Preview in Web Mode"
+      >
+        Preview
+      </button>
+    </div>
+  );
+}
+```
+
+### Test API Exposure
+
+Expose state inspection API in test mode only:
+
+```typescript
+// packages/core/config/TestAPI.ts
+import { Builder } from '../builder/Builder';
+
+interface TestAPI {
+  getBuilderState: () => any;
+  getSelectedComponent: () => any;
+  getComponents: () => any[];
+  getTemplate: () => any;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
+  hasUnsavedChanges: () => boolean;
+  waitForStable: () => Promise<void>;
+  getTestIdElement: (testId: string) => HTMLElement | null;
+  getAllTestIds: () => string[];
+}
+
+export function initializeTestAPI(builder: Builder): void {
+  if (import.meta.env.MODE !== 'test') return;
+  
+  (window as any).__TEST_API__ = {
+    getBuilderState: () => ({
+      selectedComponent: builder.getSelectedComponent(),
+      componentCount: builder.getComponents().length,
+      canUndo: builder.canUndo(),
+      canRedo: builder.canRedo(),
+      template: builder.getCurrentTemplate()
+    }),
+    
+    getSelectedComponent: () => builder.getSelectedComponent(),
+    getComponents: () => builder.getComponents(),
+    getTemplate: () => builder.getCurrentTemplate(),
+    canUndo: () => builder.canUndo(),
+    canRedo: () => builder.canRedo(),
+    hasUnsavedChanges: () => builder.hasUnsavedChanges(),
+    
+    waitForStable: () => new Promise(resolve => {
+      // Wait for pending operations
+      setTimeout(resolve, 100);
+    }),
+    
+    getTestIdElement: (testId: string) => {
+      return document.querySelector(`[data-testid="${testId}"]`);
+    },
+    
+    getAllTestIds: () => {
+      const elements = document.querySelectorAll('[data-testid]');
+      return Array.from(elements).map(el => el.getAttribute('data-testid')!);
+    }
+  } as TestAPI;
+}
+```
+
+### Operation Result Indicators
+
+Show clear success/failure status for operations:
+
+```tsx
+// Example: Result Indicator Component
+function OperationResult() {
+  const [result, setResult] = createSignal<{
+    status: 'success' | 'error' | 'pending';
+    message: string;
+    operation: string;
+  } | null>(null);
+  
+  return (
+    <Show when={result()}>
+      {(r) => (
+        <div
+          {...getTestId('operation-result')}
+          data-result-status={r().status}
+          data-result-message={r().message}
+          data-operation-type={r().operation}
+          role="status"
+          aria-live="polite"
+          className={styles.result}
+        >
+          {r().message}
+        </div>
+      )}
+    </Show>
+  );
+}
+```
+
+### Build-Time Optimization (Optional)
+
+Strip test attributes in production builds:
+
+```typescript
+// build-plugins/strip-test-attributes.ts
+export default function stripTestAttributes() {
+  return {
+    name: 'strip-test-attributes',
+    transform(code: string, id: string) {
+      if (process.env.NODE_ENV === 'production') {
+        // Remove data-testid, data-action, data-state-* attributes
+        return {
+          code: code.replace(
+            /\s*(?:data-testid|data-action|data-state-[\w-]+)=["'][^"']*["']/g,
+            ''
+          ),
+          map: null
+        };
+      }
+      return null;
+    }
+  };
+}
+```
+
+```typescript
+// vite.config.ts
+import stripTestAttributes from './build-plugins/strip-test-attributes';
+
+export default defineConfig({
+  plugins: [
+    solidPlugin(),
+    stripTestAttributes(),
+    // ...other plugins
+  ]
+});
+```
+
+### UI Toggle for Test Mode
+
+Add a toggle button in the toolbar:
+
+```tsx
+// TemplateToolbar component
+import { TestMode } from '@email-builder/core/config/testMode';
+
+function TemplateToolbar() {
+  const [testModeEnabled, setTestModeEnabled] = createSignal(TestMode.isEnabled());
+
+  const toggleTestMode = () => {
+    TestMode.toggle();
+    setTestModeEnabled(TestMode.isEnabled());
+    
+    // Persist preference
+    localStorage.setItem('test-mode-enabled', String(TestMode.isEnabled()));
+  };
+
+  return (
+    <div className={styles.toolbar}>
+      {/* ...other buttons */}
+      
+      <button
+        {...getTestId('button-toggle-test-mode')}
+        {...getTestAction('toggle-test-mode')}
+        onClick={toggleTestMode}
+        className={testModeEnabled() ? styles.active : ''}
+        title="Toggle Test Mode (adds test attributes for automation)"
+        aria-label="Toggle Test Mode"
+        aria-pressed={testModeEnabled()}
+      >
+        🧪 Test Mode
+      </button>
+    </div>
+  );
+}
+```
+
+### Testing Best Practices
+
+#### Always Include:
+1. **Test IDs on ALL interactive elements**: Buttons, inputs, links
+2. **Actions on ALL buttons and triggers**: What the element does
+3. **State attributes on stateful components**: Loading, modified, error states
+4. **ARIA labels on ALL elements**: For accessibility and AI comprehension
+5. **Result indicators for operations**: Success/failure feedback
+
+#### Example Test Scenario:
+```typescript
+/**
+ * AI Agent Test: Create and Save Template
+ * 
+ * This test creates a new template, adds a component, edits properties,
+ * and saves the template.
+ */
+async function testCreateAndSaveTemplate() {
+  // 1. Enable test mode
+  await click('[data-action="toggle-test-mode"]');
+  await waitForStable();
+  
+  // 2. Create new template
+  await click('[data-action="create-template"]');
+  await waitForStable();
+  
+  // 3. Verify canvas is empty
+  const state = window.__TEST_API__.getBuilderState();
+  assert(state.componentCount === 0, "Canvas should be empty");
+  
+  // 4. Add a button component
+  await dragAndDrop(
+    '[data-testid="component-button"]',
+    '[data-testid="canvas-drop-zone"]'
+  );
+  await waitForStable();
+  
+  // 5. Verify component was added
+  const updatedState = window.__TEST_API__.getBuilderState();
+  assert(updatedState.componentCount === 1, "Should have 1 component");
+  
+  // 6. Edit button text
+  await fill('[data-testid="input-text"]', 'Click Me');
+  await waitForStable();
+  
+  // 7. Save template
+  await fill('[data-testid="input-templateName"]', 'Test Template');
+  await click('[data-action="save-template"]');
+  await waitForStable();
+  
+  // 8. Verify success
+  const result = await getAttribute(
+    '[data-testid="operation-result"]',
+    'data-result-status'
+  );
+  assert(result === 'success', "Save should succeed");
+}
+```
+
+### Key Principles
+
+1. **Zero Production Impact**: Test attributes only present when test mode is active
+2. **Consistent Naming**: Follow naming conventions religiously
+3. **Comprehensive Coverage**: Every interactive element must have test attributes
+4. **State Transparency**: Expose component state via data attributes
+5. **Result Feedback**: Always show operation results
+6. **ARIA First**: Use ARIA attributes for accessibility (always present)
+7. **Test API**: Expose state inspection API in test mode
+8. **Documentation**: Maintain catalog of all test IDs and actions
+
+### Documentation Requirements
+
+Maintain a test attribute catalog:
+
+```markdown
+## Test Attribute Catalog
+
+### Buttons
+| Test ID | Action | Location | Description |
+|---------|--------|----------|-------------|
+| button-primary-save | save-template | TemplateToolbar | Save current template |
+| button-icon-close | close-modal | Modal | Close active modal |
+
+### Panels
+| Test ID | State Attributes | Location | Description |
+|---------|------------------|----------|-------------|
+| panel-properties | modified, loading, hasSelection | PropertyPanel | Component properties editor |
+
+### Inputs
+| Test ID | Property | Location | Description |
+|---------|----------|----------|-------------|
+| input-backgroundColor | backgroundColor | PropertyPanel | Background color input |
+```
+
+### See Also
+- [REQUIREMENTS.md §15](../REQUIREMENTS.md#15-ai-agent-testing--automation) - Complete AI testing requirements
+- [AI_TESTING_STRATEGY.md](../AI_TESTING_STRATEGY.md) - Detailed testing strategies and examples
+
+---
+
 ## Final Notes
 
 ### When in Doubt
@@ -2191,7 +2760,8 @@ export const Icon: Component<IconProps> = (props) => {
 3. Use design tokens
 4. Document thoroughly
 5. Write tests
-6. Ask for code review
+6. Add test attributes when in test mode
+7. Ask for code review
 
 ### Resources
 - [TypeScript Documentation](https://www.typescriptlang.org/docs/)
@@ -2200,6 +2770,8 @@ export const Icon: Component<IconProps> = (props) => {
 - [W3C Design Tokens](https://design-tokens.github.io/community-group/format/)
 - [WCAG Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
 - [Remix Icons](https://remixicon.com/)
+- [Playwright Documentation](https://playwright.dev/)
+- [Testing Library](https://testing-library.com/)
 
 ### Continuous Improvement
 This document is living and should be updated as the project evolves. Suggest improvements via pull requests.

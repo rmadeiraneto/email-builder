@@ -17,6 +17,7 @@ import {
   ClientPlatform,
   CLIENT_PLATFORM_MAP,
 } from '@email-builder/core/compatibility';
+import { getTestId, getTestAction, getTestState } from '@email-builder/core/utils';
 import styles from './CompatibilityModal.module.scss';
 
 export interface CompatibilityModalProps {
@@ -137,7 +138,18 @@ export const CompatibilityModal: Component<CompatibilityModalProps> = (props) =>
   return (
     <Show when={props.isOpen}>
       <div class={styles.modalOverlay} onClick={handleOverlayClick}>
-        <div class={styles.modal}>
+        <div
+          {...getTestId('modal-compatibility')}
+          {...getTestState({
+            property: props.property,
+            hasData: !!info(),
+            supportScore: stats()?.supportScore || 0,
+            fullSupport: stats()?.fullSupport || 0,
+            partialSupport: stats()?.partialSupport || 0,
+            noSupport: stats()?.noSupport || 0
+          })}
+          class={styles.modal}
+        >
           {/* Header */}
           <div class={styles.modal__header}>
             <div>
@@ -146,7 +158,13 @@ export const CompatibilityModal: Component<CompatibilityModalProps> = (props) =>
                 <code>{props.property}</code>
               </div>
             </div>
-            <button class={styles.modal__closeButton} onClick={props.onClose} aria-label="Close">
+            <button
+              {...getTestId('button-close-compatibility-modal')}
+              {...getTestAction('close-modal')}
+              class={styles.modal__closeButton}
+              onClick={props.onClose}
+              aria-label="Close"
+            >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path d="M18 6L6 18M6 6l12 12" stroke-width="2" stroke-linecap="round" />
               </svg>
@@ -258,6 +276,8 @@ export const CompatibilityModal: Component<CompatibilityModalProps> = (props) =>
                   <div class={styles.section}>
                     <Show when={props.onViewSupportMatrix}>
                       <button
+                        {...getTestId('button-view-support-matrix')}
+                        {...getTestAction('view-support-matrix')}
                         class={styles.supportMatrixButton}
                         onClick={props.onViewSupportMatrix}
                       >
@@ -265,6 +285,8 @@ export const CompatibilityModal: Component<CompatibilityModalProps> = (props) =>
                       </button>
                     </Show>
                     <a
+                      {...getTestId('link-can-i-email')}
+                      {...getTestAction('open-external-link')}
                       href={`https://www.caniemail.com/search/?s=${encodeURIComponent(props.property)}`}
                       target="_blank"
                       rel="noopener noreferrer"

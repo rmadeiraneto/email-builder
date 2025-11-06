@@ -187,7 +187,7 @@ describe('Base Component Factories', () => {
       expect(image.id).toMatch(/^image-/);
       expect(image.type).toBe('image');
       expect(image.metadata.name).toBe('Image');
-      expect(image.content.src).toContain('placeholder');
+      expect(image.content.src).toContain('placehold');
       expect(image.content.alt).toBe('Placeholder image');
       expect(image.content.lazy).toBe(true);
       expect(image.styles.width).toEqual({ value: 100, unit: '%' });

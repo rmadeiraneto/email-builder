@@ -51,6 +51,7 @@ export default defineConfig({
     },
     preprocessorOptions: {
       scss: {
+        api: 'modern-compiler',
         additionalData: `@use "@email-builder/tokens/scss" as tokens;`,
       },
     },

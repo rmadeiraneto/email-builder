@@ -29,6 +29,7 @@ export default defineConfig({
     },
     preprocessorOptions: {
       scss: {
+        api: 'modern-compiler',
         additionalData: `@use "@tokens" as tokens;\n`,
       },
     },

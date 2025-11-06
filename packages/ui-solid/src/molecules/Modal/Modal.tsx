@@ -30,7 +30,6 @@ import {
   Component,
   JSX,
   Show,
-  onMount,
   onCleanup,
   createEffect,
   splitProps,
@@ -44,7 +43,7 @@ import {
   flip,
   type Placement,
 } from '@floating-ui/dom';
-import { classNames } from '@email-builder/ui-components/utils';
+import { classNames } from '../../utils';
 import styles from '@email-builder/ui-components/src/molecules/Modal/modal.module.scss';
 
 /**
@@ -152,7 +151,7 @@ export const Modal: Component<ModalProps> = (props) => {
         if (!local.triggerElement || !modalRef) return;
 
         const position = await computePosition(local.triggerElement, modalRef, {
-          placement: local.placement,
+          ...(local.placement ? { placement: local.placement } : {}),
           middleware: [offset(10), flip(), shift({ padding: 5 })],
         });
 
@@ -177,7 +176,7 @@ export const Modal: Component<ModalProps> = (props) => {
   /**
    * Get modal container element
    */
-  const getContainer = (): HTMLElement => {
+  const _getContainer = (): HTMLElement => {
     if (local.targetElement) {
       return local.targetElement;
     }

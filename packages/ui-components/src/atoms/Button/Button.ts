@@ -30,6 +30,7 @@
 
 import type { ButtonProps } from './button.types';
 import styles from './button.module.scss';
+import { classNames, setAriaAttribute } from '../../utils';
 
 export class Button {
   private props: ButtonProps;
@@ -69,9 +70,7 @@ export class Button {
     button.disabled = this.props.disabled!;
 
     // Set ARIA attributes
-    if (this.props.disabled) {
-      button.setAttribute('aria-disabled', 'true');
-    }
+    setAriaAttribute(button, 'aria-disabled', this.props.disabled);
 
     // Build button content
     this.buildContent(button);
@@ -124,34 +123,14 @@ export class Button {
    * @returns Space-separated class names
    */
   private getClassNames(): string {
-    const classes = [styles.button];
-
-    // Variant
-    if (this.props.variant) {
-      classes.push(styles[`button--${this.props.variant}`]);
-    }
-
-    // Size
-    if (this.props.size) {
-      classes.push(styles[`button--${this.props.size}`]);
-    }
-
-    // Full width
-    if (this.props.fullWidth) {
-      classes.push(styles['button--full-width']);
-    }
-
-    // Disabled
-    if (this.props.disabled) {
-      classes.push(styles['button--disabled']);
-    }
-
-    // Custom class
-    if (this.props.className) {
-      classes.push(this.props.className);
-    }
-
-    return classes.join(' ');
+    return classNames(
+      styles.button,
+      this.props.variant && styles[`button--${this.props.variant}`],
+      this.props.size && styles[`button--${this.props.size}`],
+      this.props.fullWidth && styles['button--full-width'],
+      this.props.disabled && styles['button--disabled'],
+      this.props.className
+    );
   }
 
   /**

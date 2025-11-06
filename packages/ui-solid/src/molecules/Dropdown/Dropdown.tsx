@@ -22,7 +22,6 @@
 
 import {
   Component,
-  JSX,
   createSignal,
   For,
   Show,
@@ -39,7 +38,7 @@ import {
   flip,
   type Placement,
 } from '@floating-ui/dom';
-import { classNames } from '@email-builder/ui-components/utils';
+import { classNames } from '../../utils';
 import styles from '@email-builder/ui-components/src/molecules/Dropdown/dropdown.module.scss';
 
 /**
@@ -159,7 +158,7 @@ export const Dropdown: Component<DropdownProps> = (props) => {
       if (!controlRef || !menuRef) return;
 
       const position = await computePosition(controlRef, menuRef, {
-        placement: local.placement,
+        ...(local.placement ? { placement: local.placement } : {}),
         middleware: [offset(8), flip(), shift({ padding: 8 })],
       });
 

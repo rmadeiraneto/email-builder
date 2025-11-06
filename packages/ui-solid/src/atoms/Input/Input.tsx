@@ -69,6 +69,11 @@ export interface InputProps extends Omit<BaseInputProps, 'onChange' | 'onInput' 
    * Reference to the input element
    */
   ref?: HTMLInputElement | ((el: HTMLInputElement) => void);
+
+  /**
+   * Test ID for automated testing
+   */
+  testId?: string;
 }
 
 /**
@@ -99,6 +104,7 @@ export const Input: Component<InputProps> = (props) => {
     'className',
     'ariaLabel',
     'ariaDescribedBy',
+    'testId',
   ]);
 
   /**
@@ -133,6 +139,7 @@ export const Input: Component<InputProps> = (props) => {
       class={getClassNames()}
       aria-label={local.ariaLabel}
       autocomplete={inputProps.autocomplete}
+      data-testid={local.testId}
     />
   );
 };

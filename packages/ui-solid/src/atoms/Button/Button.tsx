@@ -55,6 +55,16 @@ export interface ButtonProps extends Omit<BaseButtonProps, 'children' | 'onClick
    * Reference to the button element
    */
   ref?: HTMLButtonElement | ((el: HTMLButtonElement) => void);
+
+  /**
+   * Test ID for automated testing
+   */
+  testId?: string;
+
+  /**
+   * Action identifier for automated testing
+   */
+  action?: string;
 }
 
 /**
@@ -85,6 +95,8 @@ export const Button: Component<ButtonProps> = (props) => {
     'fullWidth',
     'children',
     'className',
+    'testId',
+    'action',
   ]);
 
   /**
@@ -122,6 +134,8 @@ export const Button: Component<ButtonProps> = (props) => {
       {...buttonProps}
       class={getClassNames()}
       aria-disabled={buttonProps.disabled ? 'true' : undefined}
+      data-testid={local.testId}
+      data-action={local.action}
     >
       {local.iconPosition === 'left' && renderIcon()}
       <span class={styles.buttonText}>{local.children}</span>

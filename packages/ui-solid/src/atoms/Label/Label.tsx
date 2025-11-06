@@ -34,6 +34,11 @@ export interface LabelProps extends Omit<BaseLabelProps, 'children' | 'onClick'>
    * Reference to the label element
    */
   ref?: HTMLLabelElement | ((el: HTMLLabelElement) => void);
+
+  /**
+   * Test ID for automated testing
+   */
+  testId?: string;
 }
 
 /**
@@ -51,7 +56,7 @@ export const Label: Component<LabelProps> = (props) => {
   const merged = mergeProps(defaultProps, props);
 
   // Split props
-  const [local, labelProps] = splitProps(merged, ['children', 'required', 'className']);
+  const [local, labelProps] = splitProps(merged, ['children', 'required', 'className', 'testId']);
 
   /**
    * Generate class names
@@ -61,7 +66,7 @@ export const Label: Component<LabelProps> = (props) => {
   };
 
   return (
-    <label {...labelProps} class={getClassNames()}>
+    <label {...labelProps} class={getClassNames()} data-testid={local.testId}>
       {local.children}
       <Show when={local.required}>
         <span class={styles.label__required} aria-hidden="true">

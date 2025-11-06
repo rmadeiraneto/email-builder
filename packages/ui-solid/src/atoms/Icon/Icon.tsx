@@ -33,6 +33,11 @@ export interface IconProps extends Omit<BaseIconProps, 'onClick'> {
    * Reference to the icon element
    */
   ref?: HTMLElement | ((el: HTMLElement) => void);
+
+  /**
+   * Test ID for automated testing
+   */
+  testId?: string;
 }
 
 /**
@@ -77,6 +82,7 @@ export const Icon: Component<IconProps> = (props) => {
     'ariaLabel',
     'className',
     'onClick',
+    'testId',
   ]);
 
   /**
@@ -126,6 +132,7 @@ export const Icon: Component<IconProps> = (props) => {
       class={getClassNames()}
       style={iconStyle()}
       onClick={local.onClick}
+      data-testid={local.testId}
     />
   );
 };

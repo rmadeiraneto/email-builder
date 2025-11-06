@@ -268,6 +268,95 @@ import { Alert } from '@email-builder/ui-solid/molecules';
 - Default icons for each variant
 - Custom icons
 
+#### ToggleButton
+**Location:** `packages/ui-solid/src/molecules/ToggleButton/ToggleButton.tsx`
+
+Toggle switch component for on/off states.
+
+```tsx
+import { ToggleButton } from '@email-builder/ui-solid/molecules';
+import { createSignal } from 'solid-js';
+
+const [isActive, setIsActive] = createSignal(false);
+
+<ToggleButton
+  isActive={isActive()}
+  onChange={(active) => setIsActive(active)}
+  ariaLabel="Toggle setting"
+/>
+```
+
+**Features:**
+- Active/inactive states
+- Disabled state
+- ARIA accessibility support
+- Custom click behavior (stop propagation)
+
+#### Section
+**Location:** `packages/ui-solid/src/molecules/Section/Section.tsx`
+
+Generic section wrapper with optional label.
+
+```tsx
+import { Section } from '@email-builder/ui-solid/molecules';
+
+<Section label="Settings">
+  <div>Section content here</div>
+</Section>
+```
+
+**Features:**
+- Optional label
+- Custom HTML tag (div, section, etc.)
+- Consistent spacing
+- Composable with children
+
+#### SectionItem
+**Location:** `packages/ui-solid/src/molecules/SectionItem/SectionItem.tsx`
+
+Section item with label and content for form-like layouts.
+
+```tsx
+import { SectionItem } from '@email-builder/ui-solid/molecules';
+
+<SectionItem label="Field Name" description="Help text">
+  <input type="text" />
+</SectionItem>
+```
+
+**Features:**
+- Optional label with description tooltip
+- Custom label and content classes
+- Hidden state support
+- Custom HTML tag support
+
+#### ExpandCollapse
+**Location:** `packages/ui-solid/src/molecules/ExpandCollapse/ExpandCollapse.tsx`
+
+Expandable/collapsible content with trigger control.
+
+```tsx
+import { ExpandCollapse } from '@email-builder/ui-solid/molecules';
+import { createSignal } from 'solid-js';
+
+const [isExpanded, setIsExpanded] = createSignal(false);
+
+<ExpandCollapse
+  isExpanded={isExpanded()}
+  onToggle={(expanded) => setIsExpanded(expanded)}
+  trigger={<button>Toggle</button>}
+  rightToLeft={false}
+>
+  <div>Expandable content</div>
+</ExpandCollapse>
+```
+
+**Features:**
+- Absolute positioning
+- Left or right alignment
+- Custom trigger element
+- Toggle callback
+
 ## Shared Utilities
 
 ### Class Name Utilities
@@ -344,7 +433,18 @@ The SolidJS components are now available for use in the existing ui-solid packag
 import { Button, Input, Label, Icon } from '@email-builder/ui-solid/atoms';
 
 // Import molecules
-import { Modal, Dropdown, Tabs, Tooltip, Accordion, Alert } from '@email-builder/ui-solid/molecules';
+import {
+  Modal,
+  Dropdown,
+  Tabs,
+  Tooltip,
+  Accordion,
+  Alert,
+  ToggleButton,
+  Section,
+  SectionItem,
+  ExpandCollapse
+} from '@email-builder/ui-solid/molecules';
 
 // Or import from main package
 import { Button, Modal, Tabs } from '@email-builder/ui-solid';
@@ -446,11 +546,64 @@ The following dependencies were added:
 5. **Progressive Enhancement**: Existing vanilla components continue to work, new SolidJS components provide modern reactive patterns
 6. **Type Safety**: Full TypeScript support across both implementations
 
+## Component Progress
+
+### ✅ Completed Molecules (10/24)
+1. Modal
+2. Dropdown
+3. Tabs
+4. Tooltip
+5. Accordion
+6. Alert
+7. ToggleButton
+8. Section
+9. SectionItem
+10. ExpandCollapse
+
+### 🔲 Remaining Molecules (14/24)
+1. **ChoosableSection** - Section with selectable state
+2. **ColorPicker** - Color selection input
+3. **EditableField** - Inline editable text field
+4. **GridSelector** - Grid-based selector component
+5. **Input** - Molecule version with label integration
+6. **InputLabel** - Input with integrated label
+7. **InputNumber** - Number input with increment/decrement and unit support
+8. **InteractiveCard** - Clickable card component
+9. **Label** - Molecule version with additional features
+10. **LinkedInputs** - Multiple linked input fields
+11. **Popup** - Popup/popover component
+12. **RadioButtonGroup** - Radio button group selector
+13. **ToggleableSection** - Section with toggle functionality
+14. **ColorPicker** needs complex implementation with color selection UI
+
 ## Next Steps
 
-1. **Install dependencies**: Run `npm install` in the root to install `@floating-ui/dom`
-2. **Build packages**: Build `ui-components` first, then `ui-solid`
-3. **Update vanilla components**: Optionally refactor existing vanilla JS components to use the new shared utilities
-4. **Create additional components**: Add more SolidJS versions of the remaining 20+ molecule components
-5. **Integration testing**: Test components in the dev app
-6. **Documentation**: Add Storybook or similar for component showcase
+1. ✅ **Install dependencies**: Dependencies installed with pnpm
+2. ✅ **Build packages**: `ui-components` and `ui-solid` build successfully
+3. ✅ **Create ComponentShowcase page**: Added to dev app at `/apps/dev/src/pages/ComponentShowcase.tsx`
+4. 🔲 **Create remaining components**: 14 molecules remain to be converted to SolidJS
+5. 🔲 **Update vanilla components**: Optionally refactor existing vanilla JS components to use the new shared utilities
+6. 🔲 **Integration testing**: Test all components thoroughly in the dev app
+7. 🔲 **Documentation**: Add Storybook or similar for component showcase
+
+## Development Workflow
+
+To continue developing components:
+
+```bash
+# Install dependencies
+pnpm install
+
+# Build in order (tokens, core, ui-components, ui-solid)
+pnpm --filter "@email-builder/tokens" build
+pnpm --filter "@email-builder/core" build
+pnpm --filter "@email-builder/ui-components" build
+pnpm --filter "@email-builder/ui-solid" build
+
+# Run dev app to test components
+pnpm dev
+# Navigate to "Components" tab to see ComponentShowcase
+
+# Build all at once
+pnpm build
+```

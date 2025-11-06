@@ -1,0 +1,32 @@
+declare const styles: {
+  readonly "button": string;
+  readonly "clientGrid": string;
+  readonly "clientGroup": string;
+  readonly "clientGroup__title": string;
+  readonly "clientGroup__items": string;
+  readonly "clientItem": string;
+  readonly "clientItem__name": string;
+  readonly "clientItem__version": string;
+  readonly "errorMessage": string;
+  readonly "formGroup": string;
+  readonly "formGroup__label": string;
+  readonly "formGroup__input": string;
+  readonly "formGroup__textarea": string;
+  readonly "formGroup__checkbox": string;
+  readonly "formSection": string;
+  readonly "formSection__header": string;
+  readonly "formSection__title": string;
+  readonly "formSection__actions": string;
+  readonly "linkButton": string;
+  readonly "modal": string;
+  readonly "modal__header": string;
+  readonly "modal__title": string;
+  readonly "modal__closeButton": string;
+  readonly "modal__content": string;
+  readonly "modal__footer": string;
+  readonly "modalOverlay": string;
+  readonly "spin": string;
+  readonly "spinner": string;
+};
+export = styles;
+

@@ -1,0 +1,20 @@
+declare const styles: {
+  readonly "modal": string;
+  readonly "modal__overlay": string;
+  readonly "modal__content": string;
+  readonly "modal__header": string;
+  readonly "modal__title": string;
+  readonly "modal__subtitle": string;
+  readonly "modal__close": string;
+  readonly "modal__modes": string;
+  readonly "modal__modeButton": string;
+  readonly "modal__modeButton--active": string;
+  readonly "modal__body": string;
+  readonly "modal__viewport": string;
+  readonly "modal__viewportLabel": string;
+  readonly "modal__preview": string;
+  readonly "modal__template": string;
+  readonly "modal__component": string;
+  readonly "modal__emptyState": string;
+};
+export = styles;

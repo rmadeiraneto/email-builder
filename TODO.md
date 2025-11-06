@@ -1005,7 +1005,7 @@ When no component is selected, show "General Styles" tab:
   - [x] Fixed template service type issues
   - [x] Removed unused imports and variables
   - **Result**: All core package TypeScript strict mode errors resolved
-- [ ] **TypeScript Strict Mode Compliance - UI Packages** 🎯 NEXT PRIORITY
+- [ ] **TypeScript Strict Mode Compliance - UI Packages**
   - [ ] Fix ui-components package TypeScript errors
   - [ ] Fix ui-solid package TypeScript errors (if any)
   - [ ] Ensure all packages pass strict type checking
@@ -1014,6 +1014,150 @@ When no component is selected, show "General Styles" tab:
 - [ ] Add component tree view for hierarchy navigation
 - [ ] Improve error messages across the UI
 - [ ] Add loading states for async operations
+
+### AI Agent Testing & Automation 🧪
+**Priority: High** - Enable automated UI testing through AI agents and testing frameworks
+**Status**: Not Started
+**Why**: Critical for quality assurance, regression prevention, and enabling AI-driven testing workflows
+**Estimated Time**: 12-16 hours total
+
+#### Phase 1: Test Mode Infrastructure (3-4 hours)
+**Goal**: Create the foundation for conditional test attribute injection
+
+- [ ] **Test Mode Manager** (1-2 hours)
+  - [ ] Create `TestModeManager` singleton in `packages/core/config/`
+    - [ ] `enable()` method - Enable test mode
+    - [ ] `disable()` method - Disable test mode
+    - [ ] `toggle()` method - Toggle test mode
+    - [ ] `isEnabled()` method - Check if test mode is active
+    - [ ] Update `data-test-mode` attribute on document root
+  - [ ] Add localStorage persistence for test mode preference
+  - [ ] Initialize test mode based on environment variables or stored preference
+  - [ ] Export from `packages/core/config/index.ts`
+
+- [ ] **Test Attribute Helpers** (1-2 hours)
+  - [ ] Create helper utilities in `packages/core/utils/testAttributes.ts`
+    - [ ] `getTestId(id: string)` - Returns data-testid if test mode enabled
+    - [ ] `getTestAction(action: string)` - Returns data-action if test mode enabled
+    - [ ] `getTestState(state: Record<string, any>)` - Returns data-state-* attributes
+    - [ ] `getTestAttributes(...)` - Returns all test attributes at once
+  - [ ] Add JSDoc documentation with examples
+  - [ ] Write unit tests for helpers
+  - [ ] Export from `packages/core/utils/index.ts`
+
+- [ ] **Test API Exposure** (1 hour)
+  - [ ] Create `TestAPI` interface in `packages/core/config/testAPI.ts`
+  - [ ] Implement `initializeTestAPI(builder: Builder)` function
+  - [ ] Expose `window.__TEST_API__` only in test mode
+  - [ ] Add methods:
+    - [ ] `getBuilderState()` - Return complete builder state
+    - [ ] `getSelectedComponent()` - Return selected component
+    - [ ] `getComponents()` - Return all components
+    - [ ] `canUndo()` / `canRedo()` - Return undo/redo availability
+    - [ ] `waitForStable()` - Wait for pending operations
+    - [ ] `getTestIdElement(testId)` - Query element by test ID
+    - [ ] `getAllTestIds()` - List all test IDs in document
+
+#### Phase 2: Component Integration (4-6 hours)
+**Goal**: Add test attributes to all interactive elements
+
+- [ ] **Core UI Components** (2-3 hours)
+  - [ ] Update `Button` component with test attributes
+  - [ ] Update `Input` component with test attributes
+  - [ ] Update `Modal` component with test attributes
+  - [ ] Update `Dropdown` component with test attributes
+  - [ ] Update `Tabs` component with test attributes
+  - [ ] Update `Accordion` component with test attributes
+  - [ ] Ensure all components use helper functions
+  - [ ] Add state exposure via `data-state-*` attributes
+
+- [ ] **Builder UI Components** (2-3 hours)
+  - [ ] Update `ComponentPalette` with test IDs and state
+  - [ ] Update `PropertyPanel` with test IDs and state
+  - [ ] Update `TemplateCanvas` with test IDs and state
+  - [ ] Update `TemplateToolbar` with actions and test IDs
+  - [ ] Update `CanvasSettings` with test IDs
+  - [ ] Update all modal components with test attributes
+  - [ ] Add operation result indicators
+
+#### Phase 3: UI Toggle & Integration (2-3 hours)
+**Goal**: Make test mode easily accessible and integrate with BuilderContext
+
+- [ ] **Toolbar Integration** (1 hour)
+  - [ ] Add "Test Mode" toggle button to `TemplateToolbar`
+  - [ ] Visual indicator when test mode is active
+  - [ ] Keyboard shortcut for toggling (e.g., Ctrl+Shift+T)
+  - [ ] Tooltip explaining test mode purpose
+  - [ ] Icon or emoji indicator (🧪)
+
+- [ ] **BuilderContext Integration** (1 hour)
+  - [ ] Add `testModeEnabled` state to BuilderContext
+  - [ ] Add `toggleTestMode()` action
+  - [ ] Persist test mode preference to localStorage
+  - [ ] Load test mode preference on initialization
+  - [ ] Call `initializeTestAPI()` when builder is created
+
+- [ ] **Result Indicators** (1 hour)
+  - [ ] Create `OperationResult` component
+  - [ ] Add to Builder page for displaying operation results
+  - [ ] Show success/error status for all operations
+  - [ ] Include operation type and message
+  - [ ] Auto-dismiss after delay or manual close
+
+#### Phase 4: Documentation & Testing (3-4 hours)
+**Goal**: Document test attributes and create test examples
+
+- [ ] **Test Attribute Catalog** (1-2 hours)
+  - [ ] Create `TEST_ATTRIBUTE_CATALOG.md`
+  - [ ] Document all test IDs by component
+  - [ ] Document all action types
+  - [ ] Document all state attributes
+  - [ ] Add location and description for each
+
+- [ ] **Test Examples** (1-2 hours)
+  - [ ] Create example Playwright tests
+  - [ ] Create example AI agent test scenarios
+  - [ ] Document common test patterns
+  - [ ] Add troubleshooting guide
+  - [ ] Create "Getting Started with Testing" guide
+
+- [ ] **Testing & Validation** (1 hour)
+  - [ ] Verify test mode can be toggled on/off
+  - [ ] Verify test attributes only present when enabled
+  - [ ] Verify Test API works correctly
+  - [ ] Verify all interactive elements have test IDs
+  - [ ] Test with Playwright to ensure selectors work
+  - [ ] Verify zero production impact
+
+#### Phase 5: Build Optimization (Optional, 1-2 hours)
+**Goal**: Strip test attributes from production builds
+
+- [ ] **Build Plugin** (1-2 hours)
+  - [ ] Create Vite plugin to strip test attributes in production
+  - [ ] Configure plugin in all package vite.config.ts files
+  - [ ] Test that production builds have no test attributes
+  - [ ] Verify bundle size reduction
+  - [ ] Document plugin usage
+
+**Key Deliverables:**
+1. ✅ Test mode toggle system
+2. ✅ Helper functions for conditional attributes
+3. ✅ Test API for state inspection
+4. ✅ All components with test attributes
+5. ✅ Operation result indicators
+6. ✅ Comprehensive documentation
+7. ✅ Example test scenarios
+8. ✅ (Optional) Production build optimization
+
+**Success Criteria:**
+- [ ] Test mode can be toggled from UI
+- [ ] 100% of buttons have test IDs and actions
+- [ ] 100% of inputs have test IDs
+- [ ] All stateful components expose state
+- [ ] Test API available in test mode
+- [ ] Zero test attributes in production builds
+- [ ] Complete test attribute catalog
+- [ ] Working example tests
 
 ### User Experience Testing
 - [ ] Test drag-and-drop smoothness and responsiveness

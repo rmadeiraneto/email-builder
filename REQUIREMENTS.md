@@ -760,7 +760,418 @@ Focus on building the UI components library with three implementations:
 - ES6+ JavaScript environment
 - Users will provide their own backend for storage (or use local storage)
 
-## 15. Glossary
+## 15. AI Agent Testing & Automation
+
+### 15.1 Purpose
+Enable automated UI testing through AI agents (e.g., Claude with computer use, Playwright, Puppeteer) by making the interface semantically rich, predictable, and machine-testable. This ensures quality through automated testing and enables AI agents to perform complex UI interaction tests.
+
+### 15.2 Core Requirements
+
+#### 15.2.1 Test Mode System
+**Requirement**: UI must support a "test mode" that adds testing attributes without polluting production HTML or impacting performance.
+
+**Features**:
+- Global test mode toggle (enabled/disabled)
+- Test attributes only present when test mode is active
+- Zero performance impact in production mode
+- Configurable via environment variables or UI toggle
+- Persistent preference storage (localStorage)
+
+**Test Mode Indicators**:
+- Visual indicator in UI when test mode is active
+- Toolbar button to toggle test mode
+- `data-test-mode="true"` attribute on root element when active
+
+#### 15.2.2 Semantic HTML & Test Attributes
+**Requirement**: All interactive elements must have predictable, semantic test attributes.
+
+**Mandatory Attributes** (when test mode enabled):
+- `data-testid`: Unique identifier for element selection
+  - Format: `component-type-identifier` (e.g., `button-primary-save`, `panel-properties`)
+  - Must be unique within the component scope
+  - Use kebab-case naming
+
+- `data-action`: Describes the action performed by interactive elements
+  - Format: `verb-noun` (e.g., `create-component`, `delete-template`, `save-preset`)
+  - Applied to buttons, links, and interactive elements
+  - Must be descriptive and predictable
+
+- `data-state-*`: Exposes component state for validation
+  - Dynamic attributes reflecting current state
+  - Examples: `data-state-loading`, `data-state-modified`, `data-state-error`
+  - Boolean values as strings ("true"/"false")
+  - Updated reactively as state changes
+
+**ARIA Attributes** (always present):
+- `aria-label`: Accessible label for screen readers and AI agents
+- `role`: Semantic role for complex widgets
+- `aria-live`: For dynamic content updates
+- `aria-expanded`: For collapsible sections
+- `aria-selected`: For selectable items
+
+#### 15.2.3 Standardized Naming Conventions
+**Requirement**: Consistent, predictable naming patterns across the entire UI.
+
+**Test ID Patterns**:
+```typescript
+// Buttons
+`button-{variant}-{action}` // e.g., button-primary-save, button-icon-close
+
+// Panels/Regions
+`panel-{name}` // e.g., panel-properties, panel-components
+
+// Inputs
+`input-{property-name}` // e.g., input-backgroundColor, input-fontSize
+
+// Lists
+`list-{type}` // e.g., list-components, list-templates
+
+// List Items
+`item-{type}-{id}` // e.g., item-component-button-123, item-template-456
+
+// Modals
+`modal-{name}` // e.g., modal-preset-preview, modal-test-config
+
+// Canvas Elements
+`canvas-{element}` // e.g., canvas-drop-zone, canvas-component-123
+```
+
+**Action Patterns**:
+```typescript
+// CRUD Operations
+create-{resource}  // create-template, create-preset
+update-{resource}  // update-component, update-style
+delete-{resource}  // delete-template, delete-preset
+save-{resource}    // save-template, save-preset
+
+// Navigation
+open-{target}      // open-modal, open-panel
+close-{target}     // close-modal, close-panel
+toggle-{feature}   // toggle-test-mode, toggle-section
+
+// Canvas Operations
+add-component
+remove-component
+select-component
+reorder-components
+duplicate-component
+
+// Preview & Export
+preview-{mode}     // preview-web, preview-mobile, preview-email
+export-{format}    // export-html, export-json
+test-template
+```
+
+**State Attribute Patterns**:
+```typescript
+data-state-loading="true|false"
+data-state-modified="true|false"
+data-state-error="true|false"
+data-state-empty="true|false"
+data-state-expanded="true|false"
+data-state-selected="true|false"
+data-state-disabled="true|false"
+data-state-visible="true|false"
+```
+
+#### 15.2.4 State Exposure API
+**Requirement**: Expose internal application state for AI agent validation and testing.
+
+**Test API** (available when `import.meta.env.MODE === 'test'`):
+```typescript
+window.__TEST_API__ = {
+  // State inspection
+  getBuilderState: () => BuilderState,
+  getSelectedComponent: () => Component | null,
+  getComponents: () => Component[],
+  getTemplate: () => Template | null,
+  getCanvasSettings: () => CanvasSettings,
+  
+  // Validation helpers
+  canUndo: () => boolean,
+  canRedo: () => boolean,
+  hasUnsavedChanges: () => boolean,
+  isModified: () => boolean,
+  
+  // Async operation helpers
+  waitForStable: () => Promise<void>,
+  waitForOperation: (operationId: string) => Promise<void>,
+  
+  // Test utilities
+  getComponentById: (id: string) => Component | null,
+  getTestIdElement: (testId: string) => HTMLElement | null,
+  getAllTestIds: () => string[],
+}
+```
+
+#### 15.2.5 Operation Result Indicators
+**Requirement**: Provide clear, machine-readable success/failure indicators for all operations.
+
+**Result Indicator Element**:
+```html
+<div
+  data-testid="operation-result"
+  data-result-status="success | error | pending"
+  data-result-message="Human readable message"
+  data-operation-type="save-template | create-preset | etc"
+  role="status"
+  aria-live="polite"
+>
+  {message}
+</div>
+```
+
+**Error Format** (structured JSON in error boundaries):
+```typescript
+{
+  code: 'ERROR_CODE',
+  message: 'Human readable error message',
+  details: {
+    /* context-specific details */
+  },
+  timestamp: number,
+  severity: 'critical' | 'warning' | 'info'
+}
+```
+
+#### 15.2.6 Test Scenarios Support
+**Requirement**: UI must support common automated testing scenarios.
+
+**Required Test Scenarios**:
+1. **Create and save template**
+   - Add components to canvas
+   - Edit component properties
+   - Save template with name
+   - Verify template saved successfully
+
+2. **Load and modify template**
+   - Load existing template
+   - Modify component styles
+   - Verify changes reflected
+   - Save changes
+
+3. **Apply and manage presets**
+   - Select component
+   - Apply style preset
+   - Verify styles applied
+   - Create custom preset from component
+
+4. **Export and preview**
+   - Generate HTML export
+   - Switch preview modes
+   - Verify rendering in each mode
+
+5. **Undo/Redo operations**
+   - Perform actions
+   - Undo actions
+   - Redo actions
+   - Verify state changes
+
+6. **Drag and drop**
+   - Drag component from palette
+   - Drop on canvas
+   - Reorder components
+   - Verify final order
+
+### 15.3 Implementation Requirements
+
+#### 15.3.1 Test Mode Manager
+**Service**: `TestModeManager` singleton
+
+**Responsibilities**:
+- Maintain test mode state
+- Enable/disable test mode
+- Persist test mode preference
+- Notify components of test mode changes
+
+**API**:
+```typescript
+class TestModeManager {
+  enable(): void
+  disable(): void
+  isEnabled(): boolean
+  toggle(): void
+  onChange(callback: (enabled: boolean) => void): void
+}
+```
+
+#### 15.3.2 Test Attribute Helpers
+**Utilities**: Helper functions for conditional test attributes
+
+**Functions**:
+```typescript
+// Get test ID attribute if test mode is enabled
+getTestId(id: string): { 'data-testid'?: string }
+
+// Get action attribute if test mode is enabled
+getTestAction(action: string): { 'data-action'?: string }
+
+// Get state attributes if test mode is enabled
+getTestState(state: Record<string, any>): Record<string, string>
+
+// Get all test attributes at once
+getTestAttributes(attrs: {
+  testId?: string,
+  action?: string,
+  state?: Record<string, any>
+}): Record<string, string>
+```
+
+#### 15.3.3 Component Integration Pattern
+**Pattern**: Consistent integration of test attributes in all components
+
+**Example**:
+```tsx
+import { getTestId, getTestAction, getTestState } from '@/utils/testAttributes';
+
+function ComponentPalette() {
+  return (
+    <div
+      {...getTestId('panel-components')}
+      {...getTestState({
+        empty: components.length === 0,
+        loading: isLoading()
+      })}
+      role="region"
+      aria-label="Component Palette"
+    >
+      {components.map(component => (
+        <button
+          {...getTestId(`component-${component.type}`)}
+          {...getTestAction('add-component')}
+          draggable="true"
+          aria-label={`Add ${component.name}`}
+        >
+          {component.name}
+        </button>
+      ))}
+    </div>
+  );
+}
+```
+
+#### 15.3.4 Build-Time Optimization (Optional)
+**Tool**: Babel/SWC plugin to strip test attributes in production
+
+**Configuration**:
+```typescript
+// vite.config.ts
+export default defineConfig({
+  plugins: [
+    stripTestAttributes(), // Remove in production builds
+    // ...other plugins
+  ]
+});
+```
+
+### 15.4 Testing Tools Compatibility
+
+#### 15.4.1 Supported Testing Frameworks
+- Playwright
+- Puppeteer
+- Selenium WebDriver
+- Cypress
+- AI agents with computer use (Claude, etc.)
+
+#### 15.4.2 Selector Strategies
+**Preferred Selectors** (in order of preference):
+1. `data-testid` attributes
+2. `data-action` attributes
+3. ARIA labels and roles
+4. Semantic HTML elements
+
+**Avoid**:
+- CSS class selectors (change frequently)
+- XPath with deep nesting
+- Text content selectors (i18n issues)
+
+### 15.5 Documentation Requirements
+
+#### 15.5.1 Test Attribute Catalog
+Maintain a comprehensive catalog of all test IDs and actions used in the application.
+
+**Format**:
+```markdown
+## Button Components
+
+| Test ID | Action | Description |
+|---------|--------|-------------|
+| button-primary-save | save-template | Save current template |
+| button-icon-close | close-modal | Close active modal |
+```
+
+#### 15.5.2 Test Scenario Documentation
+Document all supported test scenarios with example code.
+
+**Format**:
+```typescript
+/**
+ * Test Scenario: Create and Save Template
+ * 
+ * Steps:
+ * 1. Enable test mode
+ * 2. Click "New Template" button
+ * 3. Drag component to canvas
+ * 4. Edit component properties
+ * 5. Save template
+ * 6. Verify success
+ */
+async function testCreateTemplate() {
+  // Enable test mode
+  await click('[data-action="toggle-test-mode"]');
+  
+  // Create new template
+  await click('[data-action="create-template"]');
+  
+  // Add button component
+  await dragAndDrop(
+    '[data-testid="component-button"]',
+    '[data-testid="canvas-drop-zone"]'
+  );
+  
+  // Verify component added
+  const state = await getTestState();
+  assert(state.componentCount === 1);
+  
+  // Save template
+  await fill('[data-testid="input-templateName"]', 'Test Template');
+  await click('[data-action="save-template"]');
+  
+  // Verify success
+  const result = await getAttribute('[data-testid="operation-result"]', 'data-result-status');
+  assert(result === 'success');
+}
+```
+
+### 15.6 Success Criteria
+
+#### 15.6.1 Functional Requirements
+- [ ] Test mode can be toggled on/off
+- [ ] All interactive elements have test attributes when test mode is enabled
+- [ ] No test attributes present in production builds
+- [ ] Test API available in test mode
+- [ ] All operations expose success/failure status
+- [ ] Consistent naming across all components
+
+#### 15.6.2 Coverage Requirements
+- [ ] 100% of buttons have test IDs and actions
+- [ ] 100% of inputs have test IDs
+- [ ] 100% of modals have test IDs
+- [ ] All stateful components expose state via data attributes
+- [ ] All CRUD operations have result indicators
+
+#### 15.6.3 Performance Requirements
+- [ ] Zero performance impact when test mode is disabled
+- [ ] No increase in production bundle size
+- [ ] Test attribute helpers have negligible overhead (<1ms)
+
+#### 15.6.4 Documentation Requirements
+- [ ] Complete test attribute catalog
+- [ ] Test scenario examples for all major workflows
+- [ ] Integration guide for test frameworks
+- [ ] AI agent testing guide with examples
+
+## 16. Glossary
 
 - **Component**: Reusable building block (Header, Footer, Button, etc.)
 - **Template**: Complete email/page layout with components
@@ -770,3 +1181,7 @@ Focus on building the UI components library with three implementations:
 - **Design Tokens**: Design system values (colors, spacing, etc.)
 - **Adapter**: Framework-specific wrapper/integration layer
 - **Headless Service**: Backend processing service without UI
+- **Test Mode**: Application state where test attributes are injected for automated testing
+- **Test ID**: Unique identifier (`data-testid`) used for element selection in tests
+- **Test Action**: Semantic label (`data-action`) describing what an element does
+- **Test API**: JavaScript API exposed for programmatic state inspection during testing

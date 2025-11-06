@@ -7,6 +7,7 @@
 import { type Component, createSignal, Show, For, onMount, createEffect } from 'solid-js';
 import type { TemplateListItem } from '@email-builder/core';
 import styles from './TemplatePickerModal.module.scss';
+import { Button, Input, Icon } from '@email-builder/ui-solid/atoms';
 
 export interface TemplatePickerModalProps {
   isOpen: boolean;
@@ -102,21 +103,20 @@ export const TemplatePickerModal: Component<TemplatePickerModalProps> = (props) 
         <div class={styles.modal__content}>
           <div class={styles.modal__header}>
             <h2 class={styles.modal__title}>Load Template</h2>
-            <button
+            <Button
               class={styles.modal__close}
               onClick={handleClose}
               aria-label="Close modal"
-            >
-              ×
-            </button>
+              variant="ghost"
+              icon="close-line"
+            />
           </div>
 
           <div class={styles.modal__body}>
             {/* Search */}
             <div class={styles.modal__search}>
-              <input
+              <Input
                 type="text"
-                class={styles.modal__searchInput}
                 placeholder="Search templates..."
                 value={searchQuery()}
                 onInput={(e) => setSearchQuery(e.currentTarget.value)}
@@ -136,7 +136,9 @@ export const TemplatePickerModal: Component<TemplatePickerModalProps> = (props) 
             {/* Empty state */}
             <Show when={!loading() && filteredTemplates().length === 0}>
               <div class={styles.modal__empty}>
-                <div class={styles.modal__emptyIcon}>📋</div>
+                <div class={styles.modal__emptyIcon}>
+                  <Icon name="file-list-3-line" size="large" />
+                </div>
                 <h3 class={styles.modal__emptyTitle}>
                   {searchQuery() ? 'No templates found' : 'No saved templates'}
                 </h3>
@@ -166,8 +168,8 @@ export const TemplatePickerModal: Component<TemplatePickerModalProps> = (props) 
                         </Show>
                         <div class={styles.templateCard__meta}>
                           <span class={styles.templateCard__type}>
-                            {template.target === 'email' ? '📧' : '🌐'}{' '}
-                            {template.target}
+                            <Icon name={template.target === 'email' ? 'mail-line' : 'global-line'} size="small" />
+                            {' '}{template.target}
                           </span>
                           <span class={styles.templateCard__date}>
                             {formatDate(template.updatedAt)}
@@ -184,14 +186,14 @@ export const TemplatePickerModal: Component<TemplatePickerModalProps> = (props) 
                         </Show>
                       </div>
                       <div class={styles.templateCard__actions}>
-                        <button
+                        <Button
                           class={styles.templateCard__deleteButton}
                           onClick={(e) => handleDelete(template, e)}
                           title="Delete template"
                           aria-label={`Delete ${template.name}`}
-                        >
-                          🗑️
-                        </button>
+                          variant="ghost"
+                          icon="delete-bin-line"
+                        />
                       </div>
                     </div>
                   )}
@@ -201,13 +203,13 @@ export const TemplatePickerModal: Component<TemplatePickerModalProps> = (props) 
           </div>
 
           <div class={styles.modal__footer}>
-            <button
+            <Button
               type="button"
-              class={`${styles.modal__button} ${styles['modal__button--secondary']}`}
+              variant="secondary"
               onClick={handleClose}
             >
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
       </div>

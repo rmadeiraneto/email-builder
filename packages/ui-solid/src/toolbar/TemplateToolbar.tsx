@@ -9,6 +9,7 @@ import styles from './TemplateToolbar.module.scss';
 import type { TemplateToolbarProps } from './TemplateToolbar.types';
 import { TestMode } from '@email-builder/core/config';
 import { getTestId, getTestAction } from '@email-builder/core/utils';
+import { Button } from '../atoms/Button/Button';
 
 export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
   const [testModeEnabled, setTestModeEnabled] = createSignal(TestMode.isEnabled());
@@ -66,19 +67,21 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
   return (
     <div {...getTestId('toolbar-template')} class={styles.toolbar}>
       <div class={styles.toolbar__group}>
-        <button
+        <Button
           {...getTestId('button-new-template')}
           {...getTestAction('create-template')}
           class={styles.toolbar__button}
           onClick={handleNewTemplate}
           title="Create new template"
           aria-label="Create new template"
+          variant="secondary"
+          icon="file-add-line"
+          iconPosition="left"
         >
-          <span class={styles.toolbar__icon}>📄</span>
-          <span class={styles.toolbar__label}>New</span>
-        </button>
+          New
+        </Button>
 
-        <button
+        <Button
           {...getTestId('button-save-template')}
           {...getTestAction('save-template')}
           class={styles.toolbar__button}
@@ -86,28 +89,32 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
           disabled={!props.hasTemplate}
           title="Save template"
           aria-label="Save template"
+          variant="secondary"
+          icon="save-line"
+          iconPosition="left"
         >
-          <span class={styles.toolbar__icon}>💾</span>
-          <span class={styles.toolbar__label}>Save</span>
-        </button>
+          Save
+        </Button>
 
-        <button
+        <Button
           {...getTestId('button-load-template')}
           {...getTestAction('open-template-picker')}
           class={styles.toolbar__button}
           onClick={handleLoadTemplate}
           title="Load template"
           aria-label="Load template"
+          variant="secondary"
+          icon="folder-open-line"
+          iconPosition="left"
         >
-          <span class={styles.toolbar__icon}>📂</span>
-          <span class={styles.toolbar__label}>Load</span>
-        </button>
+          Load
+        </Button>
       </div>
 
       <div class={styles.toolbar__separator} />
 
       <div class={styles.toolbar__group}>
-        <button
+        <Button
           {...getTestId('button-undo')}
           {...getTestAction('undo')}
           class={styles.toolbar__button}
@@ -115,12 +122,14 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
           disabled={!props.canUndo}
           title="Undo"
           aria-label="Undo"
+          variant="secondary"
+          icon="arrow-go-back-line"
+          iconPosition="left"
         >
-          <span class={styles.toolbar__icon}>↶</span>
-          <span class={styles.toolbar__label}>Undo</span>
-        </button>
+          Undo
+        </Button>
 
-        <button
+        <Button
           {...getTestId('button-redo')}
           {...getTestAction('redo')}
           class={styles.toolbar__button}
@@ -128,16 +137,18 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
           disabled={!props.canRedo}
           title="Redo"
           aria-label="Redo"
+          variant="secondary"
+          icon="arrow-go-forward-line"
+          iconPosition="left"
         >
-          <span class={styles.toolbar__icon}>↷</span>
-          <span class={styles.toolbar__label}>Redo</span>
-        </button>
+          Redo
+        </Button>
       </div>
 
       <div class={styles.toolbar__separator} />
 
       <div class={styles.toolbar__group}>
-        <button
+        <Button
           {...getTestId('button-export-template')}
           {...getTestAction('export-html')}
           class={styles.toolbar__button}
@@ -145,12 +156,14 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
           disabled={!props.hasTemplate}
           title="Export template"
           aria-label="Export template"
+          variant="secondary"
+          icon="download-line"
+          iconPosition="left"
         >
-          <span class={styles.toolbar__icon}>⬇️</span>
-          <span class={styles.toolbar__label}>Export</span>
-        </button>
+          Export
+        </Button>
 
-        <button
+        <Button
           {...getTestId('button-preview-template')}
           {...getTestAction('preview-template')}
           class={styles.toolbar__button}
@@ -158,16 +171,18 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
           disabled={!props.hasTemplate}
           title="Preview template"
           aria-label="Preview template"
+          variant="secondary"
+          icon="eye-line"
+          iconPosition="left"
         >
-          <span class={styles.toolbar__icon}>👁️</span>
-          <span class={styles.toolbar__label}>Preview</span>
-        </button>
+          Preview
+        </Button>
       </div>
 
       <div class={styles.toolbar__separator} />
 
       <div class={styles.toolbar__group}>
-        <button
+        <Button
           {...getTestId('button-check-compatibility')}
           {...getTestAction('check-compatibility')}
           class={styles.toolbar__button}
@@ -175,12 +190,14 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
           disabled={!props.hasTemplate}
           title="Check Email Compatibility"
           aria-label="Check Email Compatibility"
+          variant="secondary"
+          icon="checkbox-circle-line"
+          iconPosition="left"
         >
-          <span class={styles.toolbar__icon}>✓</span>
-          <span class={styles.toolbar__label}>Check</span>
-        </button>
+          Check
+        </Button>
 
-        <button
+        <Button
           {...getTestId('button-test-email-clients')}
           {...getTestAction('test-email-clients')}
           class={styles.toolbar__button}
@@ -188,28 +205,32 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
           disabled={!props.hasTemplate}
           title="Test in Email Clients"
           aria-label="Test in Email Clients"
+          variant="secondary"
+          icon="flask-line"
+          iconPosition="left"
         >
-          <span class={styles.toolbar__icon}>🧪</span>
-          <span class={styles.toolbar__label}>Test</span>
-        </button>
+          Test
+        </Button>
 
-        <button
+        <Button
           {...getTestId('button-email-testing-settings')}
           {...getTestAction('open-email-testing-settings')}
           class={styles.toolbar__button}
           onClick={handleEmailTestingSettings}
           title="Email Testing Settings"
           aria-label="Email Testing Settings"
+          variant="secondary"
+          icon="settings-line"
+          iconPosition="left"
         >
-          <span class={styles.toolbar__icon}>⚙️</span>
-          <span class={styles.toolbar__label}>Settings</span>
-        </button>
+          Settings
+        </Button>
       </div>
 
       <div class={styles.toolbar__separator} />
 
       <div class={styles.toolbar__group}>
-        <button
+        <Button
           {...getTestId('button-toggle-test-mode')}
           {...getTestAction('toggle-test-mode')}
           class={`${styles.toolbar__button} ${testModeEnabled() ? styles['toolbar__button--active'] : ''}`}
@@ -217,10 +238,12 @@ export const TemplateToolbar: Component<TemplateToolbarProps> = (props) => {
           title="Toggle Test Mode (adds test attributes for automation)"
           aria-label="Toggle Test Mode"
           aria-pressed={testModeEnabled()}
+          variant="secondary"
+          icon="flask-line"
+          iconPosition="left"
         >
-          <span class={styles.toolbar__icon}>🧪</span>
-          <span class={styles.toolbar__label}>Test Mode</span>
-        </button>
+          Test Mode
+        </Button>
       </div>
 
       <Show when={props.templateName}>

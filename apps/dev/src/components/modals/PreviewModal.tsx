@@ -9,6 +9,7 @@ import { ComponentRenderer } from '@email-builder/ui-solid/canvas';
 import type { PreviewModalProps, PreviewMode } from './PreviewModal.types';
 import { VIEWPORT_DIMENSIONS } from './PreviewModal.types';
 import styles from './PreviewModal.module.scss';
+import { Button } from '@email-builder/ui-solid/atoms';
 
 export const PreviewModal: Component<PreviewModalProps> = (props) => {
   const [previewMode, setPreviewMode] = createSignal<PreviewMode>('web');
@@ -62,42 +63,48 @@ export const PreviewModal: Component<PreviewModalProps> = (props) => {
             </div>
 
             <div class={styles.modal__modes}>
-              <button
+              <Button
                 class={styles.modal__modeButton}
                 classList={{ [styles['modal__modeButton--active']]: previewMode() === 'web' }}
                 onClick={() => handleModeChange('web')}
                 title="Desktop Preview"
+                variant="secondary"
+                icon="computer-line"
+                iconPosition="left"
               >
-                <i class="ri-computer-line" />
-                <span>Web</span>
-              </button>
-              <button
+                Web
+              </Button>
+              <Button
                 class={styles.modal__modeButton}
                 classList={{ [styles['modal__modeButton--active']]: previewMode() === 'mobile' }}
                 onClick={() => handleModeChange('mobile')}
                 title="Mobile Preview"
+                variant="secondary"
+                icon="smartphone-line"
+                iconPosition="left"
               >
-                <i class="ri-smartphone-line" />
-                <span>Mobile</span>
-              </button>
-              <button
+                Mobile
+              </Button>
+              <Button
                 class={styles.modal__modeButton}
                 classList={{ [styles['modal__modeButton--active']]: previewMode() === 'email' }}
                 onClick={() => handleModeChange('email')}
                 title="Email Client Preview"
+                variant="secondary"
+                icon="mail-line"
+                iconPosition="left"
               >
-                <i class="ri-mail-line" />
-                <span>Email</span>
-              </button>
+                Email
+              </Button>
             </div>
 
-            <button
+            <Button
               class={styles.modal__close}
               onClick={handleClose}
               aria-label="Close preview"
-            >
-              ×
-            </button>
+              variant="ghost"
+              icon="close-line"
+            />
           </div>
 
           <div class={styles.modal__body}>

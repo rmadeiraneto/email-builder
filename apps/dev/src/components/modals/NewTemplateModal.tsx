@@ -6,6 +6,9 @@
 
 import { type Component, createSignal, Show } from 'solid-js';
 import styles from './NewTemplateModal.module.scss';
+import { Button } from '@email-builder/ui-solid/atoms';
+import { Input, Label } from '@email-builder/ui-solid/atoms';
+import { RadioButtonGroup } from '@email-builder/ui-solid/molecules';
 
 export interface NewTemplateModalProps {
   isOpen: boolean;
@@ -45,24 +48,23 @@ export const NewTemplateModal: Component<NewTemplateModalProps> = (props) => {
         <div class={styles.modal__content}>
           <div class={styles.modal__header}>
             <h2 class={styles.modal__title}>Create New Template</h2>
-            <button
+            <Button
               class={styles.modal__close}
               onClick={handleClose}
               aria-label="Close modal"
-            >
-              ×
-            </button>
+              variant="ghost"
+              icon="close-line"
+            />
           </div>
 
           <form onSubmit={handleSubmit} class={styles.modal__form}>
             <div class={styles.modal__field}>
-              <label for="template-name" class={styles.modal__label}>
+              <Label for="template-name">
                 Template Name
-              </label>
-              <input
+              </Label>
+              <Input
                 id="template-name"
                 type="text"
-                class={styles.modal__input}
                 placeholder="My Email Template"
                 value={templateName()}
                 onInput={(e) => {
@@ -70,61 +72,48 @@ export const NewTemplateModal: Component<NewTemplateModalProps> = (props) => {
                   setError('');
                 }}
                 autofocus
+                error={error()}
               />
-              <Show when={error()}>
-                <p class={styles.modal__error}>{error()}</p>
-              </Show>
             </div>
 
             <div class={styles.modal__field}>
-              <label class={styles.modal__label}>Template Type</label>
-              <div class={styles.modal__radioGroup}>
-                <label class={styles.modal__radio}>
-                  <input
-                    type="radio"
-                    name="template-type"
-                    value="email"
-                    checked={templateType() === 'email'}
-                    onChange={() => setTemplateType('email')}
-                  />
-                  <span class={styles.modal__radioLabel}>Email Template</span>
-                  <p class={styles.modal__radioDescription}>
-                    Optimized for email clients with inline styles
-                  </p>
-                </label>
-
-                <label class={styles.modal__radio}>
-                  <input
-                    type="radio"
-                    name="template-type"
-                    value="web"
-                    checked={templateType() === 'web'}
-                    onChange={() => setTemplateType('web')}
-                  />
-                  <span class={styles.modal__radioLabel}>Web Template</span>
-                  <p class={styles.modal__radioDescription}>
-                    For web pages with full CSS support
-                  </p>
-                </label>
-              </div>
+              <Label>Template Type</Label>
+              <RadioButtonGroup
+                items={[
+                  {
+                    value: 'email',
+                    label: 'Email Template',
+                    description: 'Optimized for email clients with inline styles',
+                    selected: templateType() === 'email',
+                    icon: 'mail-line'
+                  },
+                  {
+                    value: 'web',
+                    label: 'Web Template',
+                    description: 'For web pages with full CSS support',
+                    selected: templateType() === 'web',
+                    icon: 'global-line'
+                  }
+                ]}
+                singleSelection
+                onChange={(values) => setTemplateType(values[0] as 'email' | 'web')}
+              />
             </div>
 
             <div class={styles.modal__actions}>
-              <button
+              <Button
                 type="button"
-                class={styles.modal__button}
-                classList={{ [styles['modal__button--secondary']]: true }}
+                variant="secondary"
                 onClick={handleClose}
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
-                class={styles.modal__button}
-                classList={{ [styles['modal__button--primary']]: true }}
+                variant="primary"
               >
                 Create Template
-              </button>
+              </Button>
             </div>
           </form>
         </div>

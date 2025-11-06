@@ -6,6 +6,8 @@
 
 import { type Component, createSignal } from 'solid-js';
 import styles from './ComponentShowcase.module.scss';
+import { Button, Input, Icon } from '@email-builder/ui-solid/atoms';
+import { Alert } from '@email-builder/ui-solid/molecules';
 
 interface ComponentShowcaseProps {
   onTokenClick?: (tokenPath: string[]) => void;
@@ -31,13 +33,16 @@ export const ComponentShowcase: Component<ComponentShowcaseProps> = (props) => {
         <div class={styles.componentSection}>
           <div class={styles.componentHeader}>
             <h4 class={styles.componentTitle}>Button</h4>
-            <button
+            <Button
               class={styles.editButton}
               onClick={() => props.onComponentClick?.('button')}
               title="Edit button properties"
+              variant="ghost"
+              icon="edit-line"
+              iconPosition="left"
             >
-              ✏️ Edit
-            </button>
+              Edit
+            </Button>
           </div>
           <div class={styles.componentDemo}>
             <button class={styles.demoButton}>Default Button</button>
@@ -57,13 +62,16 @@ export const ComponentShowcase: Component<ComponentShowcaseProps> = (props) => {
         <div class={styles.componentSection}>
           <div class={styles.componentHeader}>
             <h4 class={styles.componentTitle}>Input</h4>
-            <button
+            <Button
               class={styles.editButton}
               onClick={() => props.onComponentClick?.('input')}
               title="Edit input properties"
+              variant="ghost"
+              icon="edit-line"
+              iconPosition="left"
             >
-              ✏️ Edit
-            </button>
+              Edit
+            </Button>
           </div>
           <div class={styles.componentDemo}>
             <input type="text" placeholder="Default input" class={styles.demoInput} />
@@ -91,13 +99,16 @@ export const ComponentShowcase: Component<ComponentShowcaseProps> = (props) => {
         <div class={styles.componentSection}>
           <div class={styles.componentHeader}>
             <h4 class={styles.componentTitle}>Modal</h4>
-            <button
+            <Button
               class={styles.editButton}
               onClick={() => props.onComponentClick?.('modal')}
               title="Edit modal properties"
+              variant="ghost"
+              icon="edit-line"
+              iconPosition="left"
             >
-              ✏️ Edit
-            </button>
+              Edit
+            </Button>
           </div>
           <div class={styles.componentDemo}>
             <button
@@ -154,13 +165,16 @@ export const ComponentShowcase: Component<ComponentShowcaseProps> = (props) => {
         <div class={styles.componentSection}>
           <div class={styles.componentHeader}>
             <h4 class={styles.componentTitle}>Dropdown</h4>
-            <button
+            <Button
               class={styles.editButton}
               onClick={() => props.onComponentClick?.('dropdown')}
               title="Edit dropdown properties"
+              variant="ghost"
+              icon="edit-line"
+              iconPosition="left"
             >
-              ✏️ Edit
-            </button>
+              Edit
+            </Button>
           </div>
           <div class={styles.componentDemo}>
             <button class={`${styles.demoButton} ${styles.secondary}`}>
@@ -222,28 +236,36 @@ export const ComponentShowcase: Component<ComponentShowcaseProps> = (props) => {
           <div class={styles.componentDemo}>
             <div style={{ display: 'flex', 'flex-direction': 'column', gap: '1rem' }}>
               <div class={`${styles.demoAlert} ${styles.info}`}>
-                <div class={styles.demoAlertIcon}>ℹ️</div>
+                <div class={styles.demoAlertIcon}>
+                  <Icon name="information-line" size="medium" />
+                </div>
                 <div class={styles.demoAlertContent}>
                   <div class={styles.demoAlertTitle}>Information</div>
                   <div class={styles.demoAlertDescription}>This is an informational message</div>
                 </div>
               </div>
               <div class={`${styles.demoAlert} ${styles.success}`}>
-                <div class={styles.demoAlertIcon}>✅</div>
+                <div class={styles.demoAlertIcon}>
+                  <Icon name="checkbox-circle-line" size="medium" />
+                </div>
                 <div class={styles.demoAlertContent}>
                   <div class={styles.demoAlertTitle}>Success</div>
                   <div class={styles.demoAlertDescription}>Your changes have been saved successfully</div>
                 </div>
               </div>
               <div class={`${styles.demoAlert} ${styles.warning}`}>
-                <div class={styles.demoAlertIcon}>⚠️</div>
+                <div class={styles.demoAlertIcon}>
+                  <Icon name="error-warning-line" size="medium" />
+                </div>
                 <div class={styles.demoAlertContent}>
                   <div class={styles.demoAlertTitle}>Warning</div>
                   <div class={styles.demoAlertDescription}>Please review your input before proceeding</div>
                 </div>
               </div>
               <div class={`${styles.demoAlert} ${styles.error}`}>
-                <div class={styles.demoAlertIcon}>❌</div>
+                <div class={styles.demoAlertIcon}>
+                  <Icon name="close-circle-line" size="medium" />
+                </div>
                 <div class={styles.demoAlertContent}>
                   <div class={styles.demoAlertTitle}>Error</div>
                   <div class={styles.demoAlertDescription}>An error occurred while processing your request</div>
@@ -365,13 +387,16 @@ popup.on('close', (popup) => {
         <div class={styles.componentSection}>
           <div class={styles.componentHeader}>
             <h4 class={styles.componentTitle}>Tooltip</h4>
-            <button
+            <Button
               class={styles.editButton}
               onClick={() => props.onComponentClick?.('tooltip')}
               title="Edit tooltip properties"
+              variant="ghost"
+              icon="edit-line"
+              iconPosition="left"
             >
-              ✏️ Edit
-            </button>
+              Edit
+            </Button>
           </div>
           <div class={styles.componentDemo}>
             <div style={{ display: 'flex', gap: '2rem', 'align-items': 'center', 'flex-wrap': 'wrap' }}>
@@ -621,9 +646,12 @@ document.body.appendChild(group.getEl());`}</code>
               <input type="text" value="10px" class={styles.demoInput} style={{ width: '80px' }} />
               <input type="text" value="10px" class={styles.demoInput} style={{ width: '80px' }} />
               <input type="text" value="10px" class={styles.demoInput} style={{ width: '80px' }} />
-              <button class={`${styles.demoButton} ${styles.linkButton} ${styles.active}`} title="Link values">
-                🔗
-              </button>
+              <Button
+                class={`${styles.linkButton} ${styles.active}`}
+                title="Link values"
+                variant="ghost"
+                icon="link"
+              />
             </div>
           </div>
           <div class={styles.componentCode}>
@@ -663,12 +691,12 @@ document.body.appendChild(linkedInputs.getEl());`}</code>
               </div>
               <div style={{ display: 'flex', 'align-items': 'center', gap: '0.5rem' }}>
                 <span style={{ padding: '0.5rem' }}>Non-editable text</span>
-                <button class={`${styles.demoButton}`} style={{ padding: '0.25rem 0.5rem' }}>✏️</button>
+                <Button variant="ghost" icon="edit-line" style={{ padding: '0.25rem 0.5rem' }} />
               </div>
               <div style={{ display: 'flex', 'align-items': 'center', gap: '0.5rem' }}>
                 <input type="text" value="Edit mode" class={styles.demoInput} />
-                <button class={`${styles.demoButton} ${styles.primary}`} style={{ padding: '0.25rem 0.5rem' }}>💾</button>
-                <button class={`${styles.demoButton}`} style={{ padding: '0.25rem 0.5rem' }}>🗑️</button>
+                <Button variant="primary" icon="save-line" style={{ padding: '0.25rem 0.5rem' }} />
+                <Button variant="ghost" icon="delete-bin-line" style={{ padding: '0.25rem 0.5rem' }} />
               </div>
             </div>
           </div>

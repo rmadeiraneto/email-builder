@@ -141,8 +141,8 @@ export const Tabs: Component<TabsProps> = (props) => {
    */
   const getTabClasses = (index: number, item: TabItem) => {
     return classNames(
-      styles.tabs__tabItem,
-      activeTab() === index && styles['tabs__tabItem--active'],
+      styles.tabsTabItem,
+      activeTab() === index && styles.tabsTabItemActive,
       item.tabClass
     );
   };
@@ -152,8 +152,8 @@ export const Tabs: Component<TabsProps> = (props) => {
    */
   const getPaneClasses = (index: number, item: TabItem) => {
     return classNames(
-      styles.tabs__tabPane,
-      activeTab() === index && styles['tabs__tabPane--active'],
+      styles.tabsTabPane,
+      activeTab() === index && styles.tabsTabPaneActive,
       item.paneClass
     );
   };
@@ -162,7 +162,7 @@ export const Tabs: Component<TabsProps> = (props) => {
     <div class={classNames(styles.tabs, local.className)}>
       {/* Tab List */}
       <div
-        class={classNames(styles.tabs__tabs, local.tabListClass)}
+        class={classNames(styles.tabsTabs, local.tabListClass)}
         role="tablist"
       >
         <For each={local.items}>
@@ -183,7 +183,7 @@ export const Tabs: Component<TabsProps> = (props) => {
       </div>
 
       {/* Tab Panels */}
-      <div class={classNames(styles.tabs__contentWrapper, local.tabPanelsClass)}>
+      <div class={classNames(styles.tabsContentWrapper, local.tabPanelsClass)}>
         <For each={local.items}>
           {(item, index) => (
             <Show when={activeTab() === index()}>

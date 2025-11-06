@@ -108,10 +108,14 @@ export const Accordion: Component<AccordionProps> = (props) => {
    * Get accordion classes
    */
   const getAccordionClasses = () => {
+    const variantClass = local.variant === 'primary' ? styles.accordionPrimary :
+                         local.variant === 'secondary' ? styles.accordionSecondary :
+                         styles.accordionDefault;
+
     return classNames(
       styles.accordion,
-      styles[`accordion--${local.variant}`],
-      isOpen() && styles['accordion--open'],
+      variantClass,
+      isOpen() && styles.accordionOpen,
       local.className
     );
   };
@@ -120,21 +124,21 @@ export const Accordion: Component<AccordionProps> = (props) => {
     <div class={getAccordionClasses()}>
       <button
         type="button"
-        class={styles.accordion__control}
+        class={styles.accordionControl}
         onClick={toggle}
         aria-expanded={isOpen()}
       >
-        <span class={styles.accordion__controlInner}>{local.title}</span>
+        <span class={styles.accordionControlInner}>{local.title}</span>
         <span
           class={classNames(
-            styles.accordion__arrow,
+            styles.accordionArrow,
             `ri-${isOpen() ? local.iconExpanded : local.iconCollapsed}`
           )}
         />
       </button>
 
       <Show when={isOpen()}>
-        <div class={styles.accordion__content}>{local.children}</div>
+        <div class={styles.accordionContent}>{local.children}</div>
       </Show>
     </div>
   );

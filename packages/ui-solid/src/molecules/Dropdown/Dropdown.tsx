@@ -226,18 +226,22 @@ export const Dropdown: Component<DropdownProps> = (props) => {
   });
 
   const getRootClasses = () => {
+    const sizeClass = local.size === 'sm' ? styles.dropdownSm :
+                      local.size === 'lg' ? styles.dropdownLg :
+                      styles.dropdownMd;
+
     return classNames(
       styles.dropdown,
-      styles[`dropdown--${local.size}`],
-      isOpen() && styles['dropdown--open'],
+      sizeClass,
+      isOpen() && styles.dropdownOpen,
       local.className
     );
   };
 
   const getItemClasses = (item: DropdownItem) => {
     return classNames(
-      styles.dropdown__item,
-      local.selectedItem?.value === item.value && styles['dropdown__item--active']
+      styles.dropdownItem,
+      local.selectedItem?.value === item.value && styles.dropdownItemActive
     );
   };
 
@@ -246,21 +250,21 @@ export const Dropdown: Component<DropdownProps> = (props) => {
       <button
         ref={controlRef}
         type="button"
-        class={styles.dropdown__control}
+        class={styles.dropdownControl}
         onClick={toggleDropdown}
       >
-        <span class={styles['dropdown__control-content']}>
+        <span class={styles.dropdownControlContent}>
           {local.selectedItem?.label ?? local.placeholder}
         </span>
-        <span class={styles['dropdown__control-arrow']}>
+        <span class={styles.dropdownControlArrow}>
           <span
-            class={styles['dropdown__control-arrow-down']}
+            class={styles.dropdownControlArrowDown}
             hidden={isOpen()}
           >
             <i class="ri-arrow-down-s-line" />
           </span>
           <span
-            class={styles['dropdown__control-arrow-up']}
+            class={styles.dropdownControlArrowUp}
             hidden={!isOpen()}
           >
             <i class="ri-arrow-up-s-line" />
@@ -268,7 +272,7 @@ export const Dropdown: Component<DropdownProps> = (props) => {
         </span>
       </button>
 
-      <div ref={menuRef} class={styles.dropdown__options}>
+      <div ref={menuRef} class={styles.dropdownOptions}>
         <For each={local.items}>
           {(item) => (
             <div

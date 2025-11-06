@@ -86,9 +86,14 @@ export const Alert: Component<AlertProps> = (props) => {
    * Get alert classes
    */
   const getAlertClasses = () => {
+    const variantClass = local.variant === 'info' ? styles.alertInfo :
+                         local.variant === 'success' ? styles.alertSuccess :
+                         local.variant === 'warning' ? styles.alertWarning :
+                         styles.alertError;
+
     return classNames(
       styles.alert,
-      styles[`alert--${local.variant}`],
+      variantClass,
       local.className
     );
   };
@@ -103,15 +108,15 @@ export const Alert: Component<AlertProps> = (props) => {
   return (
     <div class={getAlertClasses()} role="alert">
       <Show when={getIcon()}>
-        <i class={classNames(styles.alert__icon, `ri-${getIcon()}`)} />
+        <i class={classNames(styles.alertIcon, `ri-${getIcon()}`)} />
       </Show>
 
-      <div class={styles.alert__content}>{local.children}</div>
+      <div class={styles.alertContent}>{local.children}</div>
 
       <Show when={local.closable}>
         <button
           type="button"
-          class={styles.alert__close}
+          class={styles.alertClose}
           onClick={local.onClose}
           aria-label="Close alert"
         >

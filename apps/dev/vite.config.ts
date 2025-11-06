@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import solid from 'vite-plugin-solid';
 
 export default defineConfig({
+  base: process.env.NODE_ENV === 'production' ? '/email-builder/' : '/',
   plugins: [solid()],
   resolve: {
     alias: {

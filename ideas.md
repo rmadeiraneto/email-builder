@@ -7,3 +7,5 @@
 * The codebase should somehow allow AI agents to test the frontend finding UI bugs and UX improvements
 
 * We should have a documentation specifically for AI agents,so they would consume less tokens to complete a task
+
+* Translation Framework

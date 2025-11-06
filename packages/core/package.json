@@ -36,6 +36,16 @@
       "types": "./dist/compatibility/index.d.ts",
       "import": "./dist/compatibility/index.js",
       "development": "./compatibility/index.ts"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.js",
+      "development": "./utils/index.ts"
+    },
+    "./config": {
+      "types": "./dist/config/index.d.ts",
+      "import": "./dist/config/index.js",
+      "development": "./config/index.ts"
     }
   },
   "files": ["dist", "src"],

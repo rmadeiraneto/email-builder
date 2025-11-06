@@ -15,6 +15,8 @@ export default defineConfig({
         types: resolve(__dirname, 'types/index.ts'),
         'compatibility/index': resolve(__dirname, 'compatibility/index.ts'),
         'tips/index': resolve(__dirname, 'tips/index.ts'),
+        'config/index': resolve(__dirname, 'config/index.ts'),
+        'utils/index': resolve(__dirname, 'utils/index.ts'),
       },
       formats: ['es'],
       fileName: (format, entryName) => `${entryName}.js`,
@@ -31,7 +33,7 @@ export default defineConfig({
   },
   plugins: [
     dts({
-      include: ['src/**/*', 'builder/**/*', 'commands/**/*', 'components/**/*', 'services/**/*', 'template/**/*', 'types/**/*', 'compatibility/**/*', 'tips/**/*'],
+      include: ['src/**/*', 'builder/**/*', 'commands/**/*', 'components/**/*', 'services/**/*', 'template/**/*', 'types/**/*', 'compatibility/**/*', 'tips/**/*', 'config/**/*', 'utils/**/*', 'vite-env.d.ts'],
       exclude: ['**/*.test.ts', '**/*.test.tsx'],
       insertTypesEntry: true,
     }),

@@ -45,6 +45,8 @@ import { PresetStorage } from '../preset/PresetStorage';
 import { PresetManager } from '../preset/PresetManager';
 import { CompatibilityService, CompatibilityChecker } from '../compatibility';
 import type { CompatibilityReport } from '../compatibility';
+import { TestMode } from '../config/TestModeManager';
+import { initializeTestAPI } from '../config/TestAPI';
 
 interface NormalizedConfig extends BuilderConfig {
   locale: string;
@@ -97,6 +99,12 @@ export class Builder {
 
     // Initialize compatibility checker
     this.compatibilityChecker = new CompatibilityChecker(this.compatibilityService);
+
+    // Initialize test mode
+    TestMode.initialize();
+
+    // Initialize test API
+    initializeTestAPI(this);
   }
 
   /**

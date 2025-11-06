@@ -141,9 +141,8 @@ export const Tabs: Component<TabsProps> = (props) => {
    */
   const getTabClasses = (index: number, item: TabItem) => {
     return classNames(
-      styles.tabs__tab,
-      activeTab() === index && styles['tabs__tab--active'],
-      item.disabled && styles['tabs__tab--disabled'],
+      styles.tabsTabItem,
+      activeTab() === index && styles.tabsTabItemActive,
       item.tabClass
     );
   };
@@ -153,8 +152,8 @@ export const Tabs: Component<TabsProps> = (props) => {
    */
   const getPaneClasses = (index: number, item: TabItem) => {
     return classNames(
-      styles.tabs__pane,
-      activeTab() === index && styles['tabs__pane--active'],
+      styles.tabsTabPane,
+      activeTab() === index && styles.tabsTabPaneActive,
       item.paneClass
     );
   };
@@ -163,7 +162,7 @@ export const Tabs: Component<TabsProps> = (props) => {
     <div class={classNames(styles.tabs, local.className)}>
       {/* Tab List */}
       <div
-        class={classNames(styles.tabs__list, local.tabListClass)}
+        class={classNames(styles.tabsTabs, local.tabListClass)}
         role="tablist"
       >
         <For each={local.items}>
@@ -174,6 +173,7 @@ export const Tabs: Component<TabsProps> = (props) => {
               class={getTabClasses(index(), item)}
               aria-selected={activeTab() === index()}
               aria-disabled={item.disabled}
+              disabled={item.disabled}
               onClick={() => handleTabClick(index(), item)}
             >
               {item.label}
@@ -183,7 +183,7 @@ export const Tabs: Component<TabsProps> = (props) => {
       </div>
 
       {/* Tab Panels */}
-      <div class={classNames(styles.tabs__panels, local.tabPanelsClass)}>
+      <div class={classNames(styles.tabsContentWrapper, local.tabPanelsClass)}>
         <For each={local.items}>
           {(item, index) => (
             <Show when={activeTab() === index()}>

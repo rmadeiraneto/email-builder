@@ -111,8 +111,8 @@ export const Button: Component<ButtonProps> = (props) => {
     if (!local.icon) return null;
 
     const iconClass = local.iconPosition === 'right'
-      ? styles['button__icon--right']
-      : styles.button__icon;
+      ? styles.buttonIconRight
+      : styles.buttonIcon;
 
     return <i class={`ri-${local.icon} ${iconClass}`} aria-hidden="true" />;
   };
@@ -124,7 +124,7 @@ export const Button: Component<ButtonProps> = (props) => {
       aria-disabled={buttonProps.disabled ? 'true' : undefined}
     >
       {local.iconPosition === 'left' && renderIcon()}
-      <span class={styles.button__text}>{local.children}</span>
+      <span class={styles.buttonText}>{local.children}</span>
       {local.iconPosition === 'right' && renderIcon()}
     </button>
   );

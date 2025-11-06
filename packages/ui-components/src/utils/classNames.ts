@@ -13,6 +13,23 @@ export function classNames(...classes: (string | false | null | undefined)[]): s
 }
 
 /**
+ * Converts a BEM-style class name to camelCase for CSS Modules
+ *
+ * @param str - String to convert
+ * @returns camelCase string
+ *
+ * @example
+ * bemToCamelCase('button--full-width') // 'buttonFullWidth'
+ * bemToCamelCase('button__icon--right') // 'buttonIconRight'
+ */
+function bemToCamelCase(str: string): string {
+  return str
+    .replace(/--([a-z])/g, (_, letter) => letter.toUpperCase())
+    .replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
+    .replace(/__([a-z])/g, (_, letter) => letter.toUpperCase());
+}
+
+/**
  * Generates class names from a styles object with optional modifiers
  *
  * @param styles - SCSS modules styles object
@@ -28,7 +45,7 @@ export function classNames(...classes: (string | false | null | undefined)[]): s
  *   { primary: true, disabled: false, 'full-width': true },
  *   'custom-class'
  * )
- * // Returns: 'button button--primary button--full-width custom-class'
+ * // Returns: 'button buttonPrimary buttonFullWidth custom-class'
  */
 export function getComponentClasses(
   styles: Record<string, string | undefined>,
@@ -42,9 +59,11 @@ export function getComponentClasses(
   if (modifiers) {
     Object.entries(modifiers).forEach(([key, value]) => {
       if (value === true) {
-        classes.push(styles[`${baseClass}--${key}`]);
+        const modifierClass = bemToCamelCase(`${baseClass}--${key}`);
+        classes.push(styles[modifierClass]);
       } else if (typeof value === 'string') {
-        classes.push(styles[`${baseClass}--${value}`]);
+        const modifierClass = bemToCamelCase(`${baseClass}--${value}`);
+        classes.push(styles[modifierClass]);
       }
     });
   }

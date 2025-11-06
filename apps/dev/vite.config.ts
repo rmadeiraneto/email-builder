@@ -13,6 +13,7 @@ export default defineConfig({
       '@email-builder/core/utils': resolve(__dirname, '../../packages/core/utils'),
       '@email-builder/core/config': resolve(__dirname, '../../packages/core/config'),
       '@email-builder/core': resolve(__dirname, '../../packages/core/src'),
+      '@email-builder/ui-components': resolve(__dirname, '../../packages/ui-components'),
       '@email-builder/ui-solid': resolve(__dirname, '../../packages/ui-solid/src'),
       '@email-builder/ui-solid/canvas': resolve(__dirname, '../../packages/ui-solid/src/canvas'),
       '@email-builder/ui-solid/sidebar': resolve(__dirname, '../../packages/ui-solid/src/sidebar'),
@@ -21,7 +22,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ['@email-builder/ui-solid', '@email-builder/core'],
+    exclude: ['@email-builder/ui-solid', '@email-builder/ui-components', '@email-builder/core'],
   },
   css: {
     modules: {

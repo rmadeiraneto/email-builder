@@ -8,7 +8,7 @@
 
   &__control {
     align-items: center;
-    background-color: tokens.$color-brand-accent-base;
+    background-color: tokens.$color-brand-accent-500;
     color: tokens.$color-ui-text-inverse;
     cursor: pointer;
     display: flex;
@@ -62,7 +62,7 @@
   // Color variations
   &--primary {
     > .accordion__control {
-      background-color: tokens.$color-brand-accent-base;
+      background-color: tokens.$color-brand-accent-500;
       color: tokens.$color-ui-text-inverse;
     }
   }

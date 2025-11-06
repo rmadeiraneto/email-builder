@@ -9,7 +9,7 @@
 .popup {
   /* CSS Custom Properties */
   --popup-width: #{tokens.$sizing-80};
-  --popup-min-height: #{tokens.$sizing-52};
+  --popup-min-height: #{tokens.$sizing-48};
 
   /* Layout */
   position: fixed;

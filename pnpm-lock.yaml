@@ -146,6 +146,9 @@ importers:
       '@email-builder/ui-components':
         specifier: workspace:*
         version: link:../ui-components
+      '@floating-ui/dom':
+        specifier: ^1.6.0
+        version: 1.7.4
       '@lexical/history':
         specifier: ^0.38.2
         version: 0.38.2

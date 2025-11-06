@@ -16,7 +16,22 @@ export default defineConfig({
       fileName: (format, entryName) => `${entryName}.js`,
     },
     rollupOptions: {
-      external: ['solid-js', 'solid-js/web', 'solid-js/store', '@email-builder/core', '@email-builder/tokens', '@email-builder/ui-components'],
+      external: [
+        'solid-js',
+        'solid-js/web',
+        'solid-js/store',
+        '@email-builder/core',
+        '@email-builder/core/utils',
+        '@email-builder/core/compatibility',
+        '@email-builder/core/tips',
+        '@email-builder/tokens',
+        '@email-builder/ui-components',
+        '@email-builder/ui-components/atoms',
+        '@email-builder/ui-components/molecules',
+        '@email-builder/ui-components/utils',
+        /^@email-builder\/ui-components\/src\//,
+        '@floating-ui/dom',
+      ],
       output: {
         preserveModules: true,
         preserveModulesRoot: 'src',

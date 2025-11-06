@@ -22,7 +22,12 @@
       "types": "./dist/organisms/index.d.ts",
       "import": "./dist/organisms/index.js"
     },
-    "./styles": "./dist/styles/index.css"
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.js"
+    },
+    "./styles": "./dist/styles/index.css",
+    "./src/*": "./src/*"
   },
   "files": [
     "dist",

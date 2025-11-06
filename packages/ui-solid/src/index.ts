@@ -6,6 +6,12 @@
  * @packageDocumentation
  */
 
+// Export atoms (basic components)
+export * from './atoms';
+
+// Export molecules (complex components)
+export * from './molecules';
+
 // Export canvas
 export * from './canvas';
 

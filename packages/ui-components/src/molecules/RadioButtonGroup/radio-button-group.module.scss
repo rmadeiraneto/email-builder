@@ -8,74 +8,74 @@
 .radio-btn-group {
   display: flex;
   text-align: center;
-}
 
-.radio-btn-group-item {
-  background: tokens.$color-ui-background-primary;
-  border-color: tokens.$color-ui-border-base;
-  border-style: solid;
-  border-width: tokens.$border-width-base 0 tokens.$border-width-base tokens.$border-width-base;
-  cursor: pointer;
-  flex-grow: 1;
-  font-weight: tokens.$typography-font-weight-medium;
-  font-size: tokens.$typography-font-size-xs;
-  padding: tokens.$spacing-3-5 tokens.$spacing-4;
-  transition: all tokens.$animation-duration-normal tokens.$animation-easing-ease;
-
-  &__icon {
-    display: inline-block;
-  }
-
-  &__label {
-    display: inline-block;
-  }
-
-  &__tooltip-trigger {
-    vertical-align: middle;
-    margin-left: tokens.$spacing-1;
-    display: inline-block;
-    width: tokens.$sizing-3-5;
-    height: tokens.$sizing-3-5;
-    line-height: tokens.$sizing-3-5;
-    text-align: center;
-    border-radius: tokens.$border-radius-full;
-    background: tokens.$color-neutral-300;
-    color: tokens.$color-ui-text-secondary;
+  &__item {
+    background: tokens.$color-ui-background-primary;
+    border-color: tokens.$color-ui-border-base;
+    border-style: solid;
+    border-width: tokens.$border-width-base 0 tokens.$border-width-base tokens.$border-width-base;
+    cursor: pointer;
+    flex-grow: 1;
+    font-weight: tokens.$typography-font-weight-medium;
     font-size: tokens.$typography-font-size-xs;
-    cursor: help;
-  }
+    padding: tokens.$spacing-3-5 tokens.$spacing-4;
+    transition: all tokens.$animation-duration-normal tokens.$animation-easing-ease;
 
-  // First child gets left border radius
-  &:first-child {
-    border-radius: tokens.$border-radius-md 0 0 tokens.$border-radius-md;
-  }
-
-  // Last child gets right border radius and full border
-  &:last-child {
-    border-radius: 0 tokens.$border-radius-md tokens.$border-radius-md 0;
-    border-width: tokens.$border-width-base;
-  }
-
-  // Active state
-  &--active {
-    background-color: tokens.$color-ui-background-tertiary;
-    border-width: tokens.$border-width-base;
-    color: tokens.$color-brand-primary-500;
-    font-weight: tokens.$typography-font-weight-semibold;
-
-    // Active border variant
-    &.radio-btn-group-item--active-border {
-      border-color: currentColor;
+    &-icon {
+      display: inline-block;
     }
-  }
 
-  // Remove left border from item following an active item
-  &--active + & {
-    border-left: 0;
-  }
+    &-label {
+      display: inline-block;
+    }
 
-  // Hover state
-  &:hover:not(&--active) {
-    background-color: tokens.$color-ui-background-secondary;
+    &-tooltip-trigger {
+      vertical-align: middle;
+      margin-left: tokens.$spacing-1;
+      display: inline-block;
+      width: tokens.$sizing-3-5;
+      height: tokens.$sizing-3-5;
+      line-height: tokens.$sizing-3-5;
+      text-align: center;
+      border-radius: tokens.$border-radius-full;
+      background: tokens.$color-neutral-300;
+      color: tokens.$color-ui-text-secondary;
+      font-size: tokens.$typography-font-size-xs;
+      cursor: help;
+    }
+
+    // First child gets left border radius
+    &:first-child {
+      border-radius: tokens.$border-radius-md 0 0 tokens.$border-radius-md;
+    }
+
+    // Last child gets right border radius and full border
+    &:last-child {
+      border-radius: 0 tokens.$border-radius-md tokens.$border-radius-md 0;
+      border-width: tokens.$border-width-base;
+    }
+
+    // Active state
+    &--active {
+      background-color: tokens.$color-ui-background-tertiary;
+      border-width: tokens.$border-width-base;
+      color: tokens.$color-brand-primary-500;
+      font-weight: tokens.$typography-font-weight-semibold;
+
+      // Active border variant
+      &-border {
+        border-color: currentColor;
+      }
+    }
+
+    // Remove left border from item following an active item
+    &--active + & {
+      border-left: 0;
+    }
+
+    // Hover state
+    &:hover:not(&--active) {
+      background-color: tokens.$color-ui-background-secondary;
+    }
   }
 }

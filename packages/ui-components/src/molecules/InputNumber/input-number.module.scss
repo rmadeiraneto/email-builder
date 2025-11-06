@@ -31,15 +31,26 @@
     }
   }
 
-  &__up-arrow,
-  &__down-arrow {
+  &__arrows {
     position: absolute;
-    right: tokens.$spacing-3-5;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__arrow {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: tokens.$spacing-7;
     color: tokens.$color-neutral-400;
     cursor: pointer;
     font-size: tokens.$typography-font-size-xs;
     user-select: none;
-    z-index: 1;
+    flex: 1;
     transition: color tokens.$animation-duration-fast tokens.$animation-easing-ease-in-out;
 
     &:hover {
@@ -49,27 +60,26 @@
     &:active {
       color: tokens.$color-neutral-800;
     }
-  }
 
-  &__up-arrow {
-    top: tokens.$spacing-1-5;
-  }
+    &--up {
+      border-bottom: 1px solid tokens.$color-neutral-200;
+    }
 
-  &__down-arrow {
-    bottom: tokens.$spacing-1-5;
-  }
+    &--down {
+      // No additional styles needed
+    }
 
-  &__arrow--disabled {
-    color: tokens.$color-neutral-200;
-    pointer-events: none;
-    cursor: not-allowed;
+    &--disabled {
+      color: tokens.$color-neutral-200;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
   }
 
   &--disabled {
     opacity: 0.6;
 
-    .input-number__up-arrow,
-    .input-number__down-arrow {
+    .input-number__arrow {
       color: tokens.$color-neutral-200;
       pointer-events: none;
       cursor: not-allowed;

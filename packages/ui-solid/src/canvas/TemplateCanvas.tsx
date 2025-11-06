@@ -6,6 +6,7 @@
 
 import { type Component, For, Show, createSignal } from 'solid-js';
 import type { Template, BaseComponent } from '@email-builder/core';
+import { getTestId, getTestAction, getTestState } from '@email-builder/core/utils';
 import { ComponentRenderer } from './ComponentRenderer';
 import styles from './TemplateCanvas.module.scss';
 
@@ -103,15 +104,25 @@ export const TemplateCanvas: Component<TemplateCanvasProps> = (props) => {
 
   return (
     <div
+      {...getTestId('canvas-template')}
+      {...getTestState({
+        hasTemplate: !!props.template,
+        componentCount: props.template?.components?.length || 0,
+        isDraggingOver: isDraggingOver(),
+        hasSelection: !!props.selectedComponentId
+      })}
       ref={canvasRef}
       class={`${styles.canvas} ${isDraggingOver() ? styles.draggingOver : ''}`}
       onClick={handleCanvasClick}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
+      role="region"
+      aria-label="Template canvas"
     >
       <Show when={props.template} fallback={<EmptyState />}>
         <div
+          {...getTestId('container-template')}
           class={styles.templateContainer}
           style={{
             width: props.template?.settings.canvasDimensions.width
@@ -187,6 +198,13 @@ interface ComponentItemProps {
 const ComponentItem: Component<ComponentItemProps> = (props) => {
   return (
     <div
+      {...getTestId(`canvas-component-${props.component.type.toLowerCase()}-${props.component.id}`)}
+      {...getTestAction('select-component')}
+      {...getTestState({
+        selected: props.isSelected,
+        dragging: props.isDragging,
+        type: props.component.type
+      })}
       class={`${styles.component} ${props.isSelected ? styles.selected : ''} ${props.isDragging ? styles.dragging : ''}`}
       onClick={props.onClick}
       draggable={true}
@@ -195,6 +213,10 @@ const ComponentItem: Component<ComponentItemProps> = (props) => {
       onDragEnd={props.onDragEnd}
       data-component-id={props.component.id}
       data-component-type={props.component.type}
+      role="button"
+      aria-label={`${props.component.type} component`}
+      aria-selected={props.isSelected}
+      tabindex={0}
     >
       <div class={styles.componentOverlay}>
         <span class={styles.dragHandle} title="Drag to reorder">

@@ -17,6 +17,7 @@ import {
   createEmailTestingService,
 } from '@email-builder/core';
 import styles from './EmailTestingSettingsModal.module.scss';
+import { Button, Input, Label } from '@email-builder/ui-solid/atoms';
 
 export interface EmailTestingSettingsModalProps {
   isOpen: boolean;
@@ -144,21 +145,21 @@ export const EmailTestingSettingsModal: Component<EmailTestingSettingsModalProps
         <div class={styles.modal__content}>
           <div class={styles.modal__header}>
             <h2 class={styles.modal__title}>Email Testing Service Settings</h2>
-            <button
+            <Button
               class={styles.modal__close}
               onClick={handleClose}
               aria-label="Close modal"
-            >
-              ×
-            </button>
+              variant="ghost"
+              icon="close-line"
+            />
           </div>
 
           <form onSubmit={handleSubmit} class={styles.modal__form}>
             {/* Provider Selection */}
             <div class={styles.modal__field}>
-              <label for="provider" class={styles.modal__label}>
+              <Label for="provider">
                 Service Provider
-              </label>
+              </Label>
               <select
                 id="provider"
                 class={styles.modal__select}
@@ -174,13 +175,12 @@ export const EmailTestingSettingsModal: Component<EmailTestingSettingsModalProps
 
             {/* API Endpoint */}
             <div class={styles.modal__field}>
-              <label for="api-endpoint" class={styles.modal__label}>
+              <Label for="api-endpoint">
                 API Endpoint
-              </label>
-              <input
+              </Label>
+              <Input
                 id="api-endpoint"
                 type="url"
-                class={styles.modal__input}
                 placeholder="https://api.litmus.com/v1"
                 value={apiEndpoint()}
                 onInput={(e) => {
@@ -192,9 +192,9 @@ export const EmailTestingSettingsModal: Component<EmailTestingSettingsModalProps
 
             {/* Authentication Method */}
             <div class={styles.modal__field}>
-              <label for="auth-method" class={styles.modal__label}>
+              <Label for="auth-method">
                 Authentication Method
-              </label>
+              </Label>
               <select
                 id="auth-method"
                 class={styles.modal__select}
@@ -211,13 +211,12 @@ export const EmailTestingSettingsModal: Component<EmailTestingSettingsModalProps
             {/* Conditional Credential Fields */}
             <Show when={authMethod() === 'api-key' || authMethod() === 'bearer'}>
               <div class={styles.modal__field}>
-                <label for="api-key" class={styles.modal__label}>
+                <Label for="api-key">
                   API Key
-                </label>
-                <input
+                </Label>
+                <Input
                   id="api-key"
                   type="password"
-                  class={styles.modal__input}
                   placeholder="Enter your API key"
                   value={apiKey()}
                   onInput={(e) => {
@@ -230,13 +229,12 @@ export const EmailTestingSettingsModal: Component<EmailTestingSettingsModalProps
 
             <Show when={authMethod() === 'basic'}>
               <div class={styles.modal__field}>
-                <label for="username" class={styles.modal__label}>
+                <Label for="username">
                   Username
-                </label>
-                <input
+                </Label>
+                <Input
                   id="username"
                   type="text"
-                  class={styles.modal__input}
                   placeholder="your-email@example.com"
                   value={username()}
                   onInput={(e) => {
@@ -247,13 +245,12 @@ export const EmailTestingSettingsModal: Component<EmailTestingSettingsModalProps
               </div>
 
               <div class={styles.modal__field}>
-                <label for="password" class={styles.modal__label}>
+                <Label for="password">
                   Password / API Key
-                </label>
-                <input
+                </Label>
+                <Input
                   id="password"
                   type="password"
-                  class={styles.modal__input}
                   placeholder="Enter your password or API key"
                   value={password()}
                   onInput={(e) => {
@@ -266,13 +263,12 @@ export const EmailTestingSettingsModal: Component<EmailTestingSettingsModalProps
 
             <Show when={authMethod() === 'oauth'}>
               <div class={styles.modal__field}>
-                <label for="oauth-token" class={styles.modal__label}>
+                <Label for="oauth-token">
                   OAuth Token
-                </label>
-                <input
+                </Label>
+                <Input
                   id="oauth-token"
                   type="password"
-                  class={styles.modal__input}
                   placeholder="Enter your OAuth token"
                   value={oauthToken()}
                   onInput={(e) => {
@@ -285,14 +281,14 @@ export const EmailTestingSettingsModal: Component<EmailTestingSettingsModalProps
 
             {/* Test Connection Section */}
             <div class={styles.modal__testSection}>
-              <button
+              <Button
                 type="button"
-                class={styles.modal__testButton}
+                variant="secondary"
                 onClick={handleTestConnection}
                 disabled={testStatus() === 'testing'}
               >
                 {testStatus() === 'testing' ? 'Testing...' : 'Test Connection'}
-              </button>
+              </Button>
 
               <Show when={testStatus() !== 'idle'}>
                 <div
@@ -314,21 +310,19 @@ export const EmailTestingSettingsModal: Component<EmailTestingSettingsModalProps
 
             {/* Actions */}
             <div class={styles.modal__actions}>
-              <button
+              <Button
                 type="button"
-                class={styles.modal__button}
-                classList={{ [styles['modal__button--secondary']]: true }}
+                variant="secondary"
                 onClick={handleClose}
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
-                class={styles.modal__button}
-                classList={{ [styles['modal__button--primary']]: true }}
+                variant="primary"
               >
                 Save Configuration
-              </button>
+              </Button>
             </div>
           </form>
         </div>

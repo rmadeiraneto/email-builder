@@ -9,6 +9,7 @@ import { type Component, createSignal, For, Show } from 'solid-js';
 import type { CompatibilityReport, CompatibilityIssue } from '@email-builder/core';
 import { IssueSeverity, IssueCategory } from '@email-builder/core';
 import styles from './CompatibilityReportModal.module.scss';
+import { Button, Icon } from '@email-builder/ui-solid/atoms';
 
 export interface CompatibilityReportModalProps {
   isOpen: boolean;
@@ -41,18 +42,18 @@ export const CompatibilityReportModal: Component<CompatibilityReportModalProps> 
   };
 
   /**
-   * Get icon for severity
+   * Get icon for severity (Remix icon name)
    */
   const getSeverityIcon = (severity: IssueSeverity): string => {
     switch (severity) {
       case IssueSeverity.CRITICAL:
-        return '🔴';
+        return 'error-warning-fill';
       case IssueSeverity.WARNING:
-        return '🟡';
+        return 'alert-fill';
       case IssueSeverity.SUGGESTION:
-        return '🔵';
+        return 'information-fill';
       default:
-        return '⚪';
+        return 'checkbox-blank-circle-fill';
     }
   };
 
@@ -73,24 +74,24 @@ export const CompatibilityReportModal: Component<CompatibilityReportModalProps> 
   };
 
   /**
-   * Get icon for category
+   * Get icon for category (Remix icon name)
    */
   const getCategoryIcon = (category: IssueCategory): string => {
     switch (category) {
       case IssueCategory.CSS:
-        return '🎨';
+        return 'palette-line';
       case IssueCategory.HTML:
-        return '📝';
+        return 'code-line';
       case IssueCategory.IMAGES:
-        return '🖼️';
+        return 'image-line';
       case IssueCategory.ACCESSIBILITY:
-        return '♿';
+        return 'accessible-line';
       case IssueCategory.STRUCTURE:
-        return '🏗️';
+        return 'layout-line';
       case IssueCategory.CONTENT:
-        return '📄';
+        return 'file-text-line';
       default:
-        return '⚠️';
+        return 'alert-line';
     }
   };
 
@@ -173,9 +174,12 @@ export const CompatibilityReportModal: Component<CompatibilityReportModalProps> 
         {/* Header */}
         <div class={styles.header}>
           <h2 class={styles.title}>Compatibility Report</h2>
-          <button class={styles.closeButton} onClick={props.onClose}>
-            ×
-          </button>
+          <Button
+            class={styles.closeButton}
+            onClick={props.onClose}
+            variant="ghost"
+            icon="close-line"
+          />
         </div>
 
         {/* Overall Score */}
@@ -197,7 +201,7 @@ export const CompatibilityReportModal: Component<CompatibilityReportModalProps> 
             </div>
             <Show when={!props.report.safeToExport}>
               <div class={`${styles.stat} ${styles.statDanger}`}>
-                <span class={styles.statValue}>⚠️</span>
+                <span class={styles.statValue}><Icon name="alert-fill" size="medium" /></span>
                 <span class={styles.statLabel}>Not Safe to Export</span>
               </div>
             </Show>
@@ -207,9 +211,15 @@ export const CompatibilityReportModal: Component<CompatibilityReportModalProps> 
         {/* Support Matrix Link */}
         <Show when={props.onViewSupportMatrix}>
           <div class={styles.helpSection}>
-            <button class={styles.supportMatrixLink} onClick={props.onViewSupportMatrix}>
-              📊 View Full Email Client Support Matrix
-            </button>
+            <Button
+              class={styles.supportMatrixLink}
+              onClick={props.onViewSupportMatrix}
+              variant="ghost"
+              icon="bar-chart-2-line"
+              iconPosition="left"
+            >
+              View Full Email Client Support Matrix
+            </Button>
             <p class={styles.helpText}>
               Learn which email clients support specific CSS properties
             </p>
@@ -222,7 +232,7 @@ export const CompatibilityReportModal: Component<CompatibilityReportModalProps> 
           <Show when={props.report.issues.critical.length > 0}>
             <div class={styles.issueGroup}>
               <h3 class={`${styles.groupTitle} ${getSeverityClass(IssueSeverity.CRITICAL)}`}>
-                {getSeverityIcon(IssueSeverity.CRITICAL)} {getSeverityLabel(IssueSeverity.CRITICAL)} (
+                <Icon name={getSeverityIcon(IssueSeverity.CRITICAL)} size="small" /> {getSeverityLabel(IssueSeverity.CRITICAL)} (
                 {props.report.issues.critical.length})
               </h3>
               <div class={styles.issueList}>
@@ -244,7 +254,7 @@ export const CompatibilityReportModal: Component<CompatibilityReportModalProps> 
           <Show when={props.report.issues.warnings.length > 0}>
             <div class={styles.issueGroup}>
               <h3 class={`${styles.groupTitle} ${getSeverityClass(IssueSeverity.WARNING)}`}>
-                {getSeverityIcon(IssueSeverity.WARNING)} {getSeverityLabel(IssueSeverity.WARNING)} (
+                <Icon name={getSeverityIcon(IssueSeverity.WARNING)} size="small" /> {getSeverityLabel(IssueSeverity.WARNING)} (
                 {props.report.issues.warnings.length})
               </h3>
               <div class={styles.issueList}>
@@ -266,7 +276,7 @@ export const CompatibilityReportModal: Component<CompatibilityReportModalProps> 
           <Show when={props.report.issues.suggestions.length > 0}>
             <div class={styles.issueGroup}>
               <h3 class={`${styles.groupTitle} ${getSeverityClass(IssueSeverity.SUGGESTION)}`}>
-                {getSeverityIcon(IssueSeverity.SUGGESTION)} {getSeverityLabel(IssueSeverity.SUGGESTION)} (
+                <Icon name={getSeverityIcon(IssueSeverity.SUGGESTION)} size="small" /> {getSeverityLabel(IssueSeverity.SUGGESTION)} (
                 {props.report.issues.suggestions.length})
               </h3>
               <div class={styles.issueList}>
@@ -287,7 +297,9 @@ export const CompatibilityReportModal: Component<CompatibilityReportModalProps> 
           {/* No Issues */}
           <Show when={props.report.totalIssues === 0}>
             <div class={styles.noIssues}>
-              <div class={styles.noIssuesIcon}>✅</div>
+              <div class={styles.noIssuesIcon}>
+                <Icon name="checkbox-circle-fill" size="large" />
+              </div>
               <h3 class={styles.noIssuesTitle}>No Issues Found!</h3>
               <p class={styles.noIssuesMessage}>
                 Your template looks great! All components are compatible with email clients.
@@ -299,28 +311,28 @@ export const CompatibilityReportModal: Component<CompatibilityReportModalProps> 
         {/* Footer Actions */}
         <div class={styles.footer}>
           <Show when={fixableIssuesCount() > 0}>
-            <button
-              class={`${styles.button} ${styles.buttonPrimary}`}
+            <Button
+              variant="primary"
               onClick={handleFixAll}
               disabled={fixingAll()}
             >
               {fixingAll() ? 'Fixing...' : `Fix All (${fixableIssuesCount()})`}
-            </button>
+            </Button>
           </Show>
-          <button
-            class={`${styles.button} ${styles.buttonSecondary}`}
+          <Button
+            variant="secondary"
             onClick={handleExportAnyway}
             disabled={fixingAll()}
           >
             {props.report.safeToExport ? 'Continue' : 'Export Anyway'}
-          </button>
-          <button
-            class={`${styles.button} ${styles.buttonGhost}`}
+          </Button>
+          <Button
+            variant="ghost"
             onClick={props.onClose}
             disabled={fixingAll()}
           >
             Cancel
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -342,17 +354,22 @@ const IssueCard: Component<IssueCardProps> = (props) => {
     <div class={styles.issueCard}>
       <div class={styles.issueHeader}>
         <div class={styles.issueTitle}>
-          <span class={styles.categoryIcon}>{props.categoryIcon}</span>
+          <span class={styles.categoryIcon}>
+            <Icon name={props.categoryIcon} size="small" />
+          </span>
           <span class={styles.issueName}>{props.issue.message}</span>
         </div>
         <Show when={props.issue.autoFixAvailable}>
-          <button
-            class={`${styles.fixButton} ${props.isFixing ? styles.fixing : ''}`}
+          <Button
+            class={styles.fixButton}
             onClick={() => props.onFix(props.issue.id)}
             disabled={props.isFixing}
+            variant="secondary"
+            icon={props.isFixing ? 'loader-4-line' : 'tools-line'}
+            iconPosition="left"
           >
-            {props.isFixing ? '⏳ Fixing...' : '🔧 Fix'}
-          </button>
+            {props.isFixing ? 'Fixing...' : 'Fix'}
+          </Button>
         </Show>
       </div>
 
@@ -393,7 +410,9 @@ const IssueCard: Component<IssueCardProps> = (props) => {
 
         <Show when={props.issue.suggestedFix}>
           <div class={styles.suggestedFix}>
-            <span class={styles.suggestedFixLabel}>💡 Suggested Fix:</span>
+            <span class={styles.suggestedFixLabel}>
+              <Icon name="lightbulb-line" size="small" /> Suggested Fix:
+            </span>
             <span class={styles.suggestedFixText}>{props.issue.suggestedFix}</span>
           </div>
         </Show>

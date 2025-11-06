@@ -9,6 +9,7 @@ import { type Component, createSignal, For, Show } from 'solid-js';
 import { COMMON_EMAIL_CLIENTS } from '@email-builder/core';
 import type { EmailTestRequest } from '@email-builder/core';
 import styles from './TestConfigModal.module.scss';
+import { Button, Input, Label } from '@email-builder/ui-solid/atoms';
 
 export interface TestConfigModalProps {
   isOpen: boolean;
@@ -127,14 +128,14 @@ export const TestConfigModal: Component<TestConfigModalProps> = (props) => {
       <div class={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div class={styles.modal__header}>
           <h2 class={styles.modal__title}>Test in Email Clients</h2>
-          <button
+          <Button
             class={styles.modal__closeButton}
             onClick={handleClose}
             disabled={isSubmitting()}
             aria-label="Close modal"
-          >
-            ✕
-          </button>
+            variant="ghost"
+            icon="close-line"
+          />
         </div>
 
         <form class={styles.modal__content} onSubmit={handleSubmit}>
@@ -143,13 +144,12 @@ export const TestConfigModal: Component<TestConfigModalProps> = (props) => {
             <h3 class={styles.formSection__title}>Test Details</h3>
 
             <div class={styles.formGroup}>
-              <label class={styles.formGroup__label} for="testName">
+              <Label for="testName">
                 Test Name *
-              </label>
-              <input
+              </Label>
+              <Input
                 id="testName"
                 type="text"
-                class={styles.formGroup__input}
                 value={testName()}
                 onInput={(e) => setTestName(e.currentTarget.value)}
                 placeholder="e.g., Newsletter Template Test"
@@ -158,13 +158,12 @@ export const TestConfigModal: Component<TestConfigModalProps> = (props) => {
             </div>
 
             <div class={styles.formGroup}>
-              <label class={styles.formGroup__label} for="subject">
+              <Label for="subject">
                 Email Subject *
-              </label>
-              <input
+              </Label>
+              <Input
                 id="subject"
                 type="text"
-                class={styles.formGroup__input}
                 value={subject()}
                 onInput={(e) => setSubject(e.currentTarget.value)}
                 placeholder="e.g., Weekly Newsletter"
@@ -173,9 +172,9 @@ export const TestConfigModal: Component<TestConfigModalProps> = (props) => {
             </div>
 
             <div class={styles.formGroup}>
-              <label class={styles.formGroup__label} for="description">
+              <Label for="description">
                 Description (optional)
-              </label>
+              </Label>
               <textarea
                 id="description"
                 class={styles.formGroup__textarea}
@@ -207,22 +206,22 @@ export const TestConfigModal: Component<TestConfigModalProps> = (props) => {
                 Email Clients * ({selectedClients().length} selected)
               </h3>
               <div class={styles.formSection__actions}>
-                <button
+                <Button
                   type="button"
-                  class={styles.linkButton}
+                  variant="ghost"
                   onClick={handleSelectAll}
                   disabled={isSubmitting()}
                 >
                   Select All
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
-                  class={styles.linkButton}
+                  variant="ghost"
                   onClick={handleSelectNone}
                   disabled={isSubmitting()}
                 >
                   Clear
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -266,26 +265,24 @@ export const TestConfigModal: Component<TestConfigModalProps> = (props) => {
 
           {/* Footer Actions */}
           <div class={styles.modal__footer}>
-            <button
+            <Button
               type="button"
-              class={styles.button}
-              classList={{ [styles['button--secondary']]: true }}
+              variant="secondary"
               onClick={handleClose}
               disabled={isSubmitting()}
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              class={styles.button}
-              classList={{ [styles['button--primary']]: true }}
+              variant="primary"
               disabled={isSubmitting()}
             >
               <Show when={isSubmitting()} fallback="Submit Test">
                 <span class={styles.spinner} />
                 Submitting...
               </Show>
-            </button>
+            </Button>
           </div>
         </form>
       </div>

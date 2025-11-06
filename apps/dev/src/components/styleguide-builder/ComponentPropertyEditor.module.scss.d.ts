@@ -1,0 +1,22 @@
+declare const styles: {
+  readonly "propertyEditor": string;
+  readonly "header": string;
+  readonly "componentName": string;
+  readonly "componentDescription": string;
+  readonly "emptyState": string;
+  readonly "emptyIcon": string;
+  readonly "emptyTitle": string;
+  readonly "emptyDescription": string;
+  readonly "propertyList": string;
+  readonly "propertyField": string;
+  readonly "fieldHeader": string;
+  readonly "fieldLabel": string;
+  readonly "fieldDescription": string;
+  readonly "fieldControl": string;
+  readonly "select": string;
+  readonly "selectWrapper": string;
+  readonly "colorControl": string;
+  readonly "colorSwatch": string;
+  readonly "currentValue": string;
+};
+export = styles;

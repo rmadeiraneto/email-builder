@@ -1,0 +1,35 @@
+declare const styles: {
+  readonly "modal": string;
+  readonly "modal__overlay": string;
+  readonly "modal__content": string;
+  readonly "modal__header": string;
+  readonly "modal__title": string;
+  readonly "modal__close": string;
+  readonly "modal__body": string;
+  readonly "modal__search": string;
+  readonly "modal__searchInput": string;
+  readonly "modal__error": string;
+  readonly "modal__loading": string;
+  readonly "modal__empty": string;
+  readonly "modal__emptyIcon": string;
+  readonly "modal__emptyTitle": string;
+  readonly "modal__emptyText": string;
+  readonly "modal__list": string;
+  readonly "modal__footer": string;
+  readonly "modal__actions": string;
+  readonly "modal__button": string;
+  readonly "modal__button--secondary": string;
+  readonly "templateCard": string;
+  readonly "templateCard__content": string;
+  readonly "templateCard__name": string;
+  readonly "templateCard__description": string;
+  readonly "templateCard__meta": string;
+  readonly "templateCard__type": string;
+  readonly "templateCard__date": string;
+  readonly "templateCard__tags": string;
+  readonly "templateCard__tag": string;
+  readonly "templateCard__actions": string;
+  readonly "templateCard__deleteButton": string;
+};
+export = styles;
+

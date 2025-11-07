@@ -71,3 +71,13 @@ export {
   DEFAULT_VISUAL_FEEDBACK_CONFIG,
   DEFAULT_PERFORMANCE_THRESHOLDS,
 } from './visual-feedback.types';
+
+// Export PropertyMappingRegistry
+export {
+  PropertyMappingRegistry,
+  getPropertyMappingRegistry,
+  resetPropertyMappingRegistry,
+} from './PropertyMappingRegistry';
+
+// Export AnimationController
+export { AnimationController } from './AnimationController';

@@ -30,6 +30,11 @@ const BuilderContent: Component = () => {
   const [compatibilityReport, setCompatibilityReport] = createSignal<CompatibilityReport | null>(null);
   const [pendingAction, setPendingAction] = createSignal<'export' | 'test' | null>(null);
 
+  // Handle canvas element ref for visual feedback
+  const handleCanvasRef = (element: HTMLElement | null) => {
+    actions.setCanvasElement(element);
+  };
+
   // Get the selected component from the template
   const selectedComponent = createMemo(() => {
     if (!state.template || !state.selectedComponentId) return null;
@@ -367,6 +372,7 @@ const BuilderContent: Component = () => {
                 onComponentSelect={handleComponentSelect}
                 onDrop={handleDrop}
                 onComponentReorder={handleComponentReorder}
+                onCanvasRef={handleCanvasRef}
               />
             </Show>
           </main>
@@ -387,6 +393,12 @@ const BuilderContent: Component = () => {
                 listPresets: actions.listPresets,
                 exportPresets: actions.exportPresets,
                 importPresets: actions.importPresets,
+              }}
+              visualFeedback={{
+                onPropertyHover: actions.onPropertyHover,
+                onPropertyUnhover: actions.onPropertyUnhover,
+                onPropertyEditStart: actions.onPropertyEditStart,
+                onPropertyEditEnd: actions.onPropertyEditEnd,
               }}
             />
           </aside>

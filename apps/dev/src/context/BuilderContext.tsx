@@ -38,7 +38,13 @@ import {
   TIPS_DATABASE,
   type Tip,
   type CompatibilityReport,
+  // Visual feedback imports
+  OverlayManager,
+  AnimationController,
+  getPropertyMappingRegistry,
+  DEFAULT_VISUAL_FEEDBACK_CONFIG,
 } from '@email-builder/core';
+import type { PropertyHoverEvent, PropertyEditEvent } from '@email-builder/ui-solid/sidebar/PropertyPanel.types';
 
 export interface BuilderState {
   template: Template | null;
@@ -89,6 +95,12 @@ export interface BuilderContextValue {
     testTemplate: (testRequest: Omit<EmailTestRequest, 'htmlContent'>) => Promise<{ success: boolean; testId?: string; url?: string; error?: string }>;
     showTip: (tipId: string) => void;
     dismissTip: (tipId: string) => void;
+    // Visual feedback actions
+    setCanvasElement: (element: HTMLElement | null) => void;
+    onPropertyHover: (event: PropertyHoverEvent) => void;
+    onPropertyUnhover: (propertyPath: string) => void;
+    onPropertyEditStart: (event: PropertyEditEvent) => void;
+    onPropertyEditEnd: (propertyPath: string) => void;
   };
 }
 
@@ -159,6 +171,12 @@ export const BuilderProvider: ParentComponent = (props) => {
     dismissedTips: loadDismissedTipsFromStorage(),
   });
 
+  // Visual feedback state
+  const [canvasElement, setCanvasElement] = createSignal<HTMLElement | null>(null);
+  const [overlayManager, setOverlayManager] = createSignal<OverlayManager | null>(null);
+  const [animationController, setAnimationController] = createSignal<AnimationController | null>(null);
+  const propertyMappingRegistry = getPropertyMappingRegistry();
+
   // Initialize builder on mount
   createEffect(async () => {
     try {
@@ -180,6 +198,38 @@ export const BuilderProvider: ParentComponent = (props) => {
       }
     } catch (error) {
       console.error('[BuilderContext] Failed to initialize builder:', error);
+    }
+  });
+
+  // Initialize visual feedback managers when canvas is available
+  createEffect(() => {
+    const canvas = canvasElement();
+    if (canvas && !overlayManager()) {
+      // Initialize OverlayManager
+      const manager = new OverlayManager({
+        canvasElement: canvas,
+        highlightConfig: DEFAULT_VISUAL_FEEDBACK_CONFIG.highlights,
+        zIndex: 9999,
+      });
+      setOverlayManager(manager);
+
+      // Initialize AnimationController
+      const controller = new AnimationController(
+        DEFAULT_VISUAL_FEEDBACK_CONFIG.animations,
+        DEFAULT_VISUAL_FEEDBACK_CONFIG.performance,
+        DEFAULT_VISUAL_FEEDBACK_CONFIG.respectReducedMotion
+      );
+      setAnimationController(controller);
+
+      console.log('[BuilderContext] Visual feedback managers initialized');
+
+      // Cleanup on unmount
+      onCleanup(() => {
+        manager.destroy();
+        controller.destroy();
+        setOverlayManager(null);
+        setAnimationController(null);
+      });
     }
   });
 
@@ -813,6 +863,108 @@ export const BuilderProvider: ParentComponent = (props) => {
       } catch (error) {
         console.error('[BuilderContext] Failed to save dismissed tips:', error);
       }
+    },
+
+    // Visual feedback action handlers
+    setCanvasElement: (element: HTMLElement | null) => {
+      setCanvasElement(element);
+    },
+
+    onPropertyHover: (event: PropertyHoverEvent) => {
+      const manager = overlayManager();
+      if (!manager || !state.template) return;
+
+      // Get the mapping for this property
+      const componentType = state.selectedComponentId
+        ? state.template.components.find(c => c.id === state.selectedComponentId)?.type
+        : undefined;
+
+      const mapping = componentType
+        ? propertyMappingRegistry.getMapping(componentType.toLowerCase(), event.propertyPath)
+        : null;
+
+      if (!mapping) return;
+
+      // Get the target element
+      const targetElement = event.componentId
+        ? document.querySelector(`[data-component-id="${event.componentId}"]`) as HTMLElement
+        : null;
+
+      if (!targetElement) return;
+
+      // Create overlay based on property type
+      const propertyType = propertyMappingRegistry.getPropertyType(event.propertyPath);
+
+      if (propertyType === 'spacing' || propertyType === 'size') {
+        // Show measurement lines
+        manager.createOverlay('measurement', {
+          targetElement,
+          propertyPath: event.propertyPath,
+          value: event.currentValue,
+          visualMapping: mapping,
+          mode: 'hover',
+        });
+      } else if (propertyType === 'color' || propertyType === 'border' || propertyType === 'typography') {
+        // Show region highlight
+        manager.createOverlay('region', {
+          targetElement,
+          propertyPath: event.propertyPath,
+          value: event.currentValue,
+          visualMapping: mapping,
+          mode: 'hover',
+        });
+      } else if (propertyType === 'content') {
+        // Show property indicator
+        manager.createOverlay('indicator', {
+          targetElement,
+          propertyPath: event.propertyPath,
+          value: event.currentValue,
+          visualMapping: mapping,
+          mode: 'hover',
+        });
+      }
+    },
+
+    onPropertyUnhover: (propertyPath: string) => {
+      const manager = overlayManager();
+      if (!manager) return;
+
+      // Destroy all overlays for this property
+      const overlays = manager.getAllOverlays();
+      overlays.forEach(overlay => {
+        if (overlay.data.propertyPath === propertyPath) {
+          manager.destroyOverlay(overlay.id);
+        }
+      });
+    },
+
+    onPropertyEditStart: (event: PropertyEditEvent) => {
+      const manager = overlayManager();
+      if (!manager || !state.template) return;
+
+      // Update existing overlays to active mode
+      const overlays = manager.getAllOverlays();
+      overlays.forEach(overlay => {
+        if (overlay.data.propertyPath === event.propertyPath) {
+          manager.updateOverlay(overlay.id, {
+            ...overlay.data,
+            mode: 'active',
+          });
+        }
+      });
+    },
+
+    onPropertyEditEnd: (propertyPath: string) => {
+      const manager = overlayManager();
+      if (!manager) return;
+
+      // Update overlays back to hover mode or destroy them
+      const overlays = manager.getAllOverlays();
+      overlays.forEach(overlay => {
+        if (overlay.data.propertyPath === propertyPath) {
+          manager.destroyOverlay(overlay.id);
+        }
+      });
     },
   };
 

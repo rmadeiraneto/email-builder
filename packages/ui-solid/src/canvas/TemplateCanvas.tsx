@@ -4,7 +4,7 @@
  * Renders the template and allows for component selection and interaction
  */
 
-import { type Component, For, Show, createSignal } from 'solid-js';
+import { type Component, For, Show, createSignal, onMount, onCleanup } from 'solid-js';
 import type { Template, BaseComponent } from '@email-builder/core';
 import { getTestId, getTestAction, getTestState } from '@email-builder/core/utils';
 import { ComponentRenderer } from './ComponentRenderer';
@@ -17,6 +17,7 @@ export interface TemplateCanvasProps {
   onComponentAdd?: (component: BaseComponent, index?: number) => void;
   onDrop?: (event: DragEvent) => void;
   onComponentReorder?: (componentId: string, newIndex: number) => void;
+  onCanvasRef?: (element: HTMLElement | null) => void;
 }
 
 export const TemplateCanvas: Component<TemplateCanvasProps> = (props) => {
@@ -24,6 +25,18 @@ export const TemplateCanvas: Component<TemplateCanvasProps> = (props) => {
   const [isDraggingOver, setIsDraggingOver] = createSignal(false);
   const [draggedComponentId, setDraggedComponentId] = createSignal<string | null>(null);
   const [dropIndicatorIndex, setDropIndicatorIndex] = createSignal<number | null>(null);
+
+  // Notify parent when canvas element is mounted
+  onMount(() => {
+    if (canvasRef) {
+      props.onCanvasRef?.(canvasRef);
+    }
+  });
+
+  // Cleanup on unmount
+  onCleanup(() => {
+    props.onCanvasRef?.(null);
+  });
 
   const handleComponentClick = (component: BaseComponent, event: MouseEvent) => {
     event.stopPropagation();

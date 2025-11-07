@@ -48,6 +48,7 @@ import type { CompatibilityReport } from '../compatibility';
 import { TestMode } from '../config/TestModeManager';
 import { initializeTestAPI } from '../config/TestAPI';
 import { BreakpointManager } from '../responsive';
+import { DataSourceManager, DataProcessingService } from '../data-injection';
 
 interface NormalizedConfig extends BuilderConfig {
   locale: string;
@@ -67,6 +68,8 @@ export class Builder {
   private compatibilityService: CompatibilityService;
   private compatibilityChecker: CompatibilityChecker;
   private breakpointManager: BreakpointManager;
+  private dataSourceManager: DataSourceManager;
+  private dataProcessingService: DataProcessingService;
   private storageAdapter: StorageAdapter;
   private initialized: boolean = false;
   private state: Record<string, unknown> = {};
@@ -104,6 +107,10 @@ export class Builder {
 
     // Initialize breakpoint manager
     this.breakpointManager = new BreakpointManager();
+
+    // Initialize data injection system
+    this.dataSourceManager = new DataSourceManager();
+    this.dataProcessingService = new DataProcessingService();
 
     // Initialize test mode
     TestMode.initialize();
@@ -276,6 +283,47 @@ export class Builder {
    */
   public getBreakpointManager(): BreakpointManager {
     return this.breakpointManager;
+  }
+
+  /**
+   * Gets the data source manager
+   *
+   * Provides access to data source management for template variable injection.
+   * Supports JSON, API, and custom data sources.
+   *
+   * @example
+   * ```ts
+   * const dataSourceManager = builder.getDataSourceManager();
+   * dataSourceManager.addDataSource({
+   *   id: 'users',
+   *   name: 'User Data',
+   *   type: DataSourceType.JSON,
+   *   config: { data: { name: 'John', email: 'john@example.com' } }
+   * });
+   * ```
+   */
+  public getDataSourceManager(): DataSourceManager {
+    return this.dataSourceManager;
+  }
+
+  /**
+   * Gets the data processing service
+   *
+   * Provides access to template variable processing and rendering.
+   * Handles variable substitution, conditionals, loops, and helpers.
+   *
+   * @example
+   * ```ts
+   * const service = builder.getDataProcessingService();
+   * const result = service.process(
+   *   'Hello {{name}}!',
+   *   { name: 'World' }
+   * );
+   * console.log(result.output); // 'Hello World!'
+   * ```
+   */
+  public getDataProcessingService(): DataProcessingService {
+    return this.dataProcessingService;
   }
 
   /**

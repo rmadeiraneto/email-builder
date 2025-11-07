@@ -25,3 +25,6 @@ export type { CompatibilityReportModalProps } from './CompatibilityReportModal';
 
 export { SupportMatrixModal } from './SupportMatrixModal';
 export type { SupportMatrixModalProps } from './SupportMatrixModal';
+
+export { DataSourceConfigModal } from './DataSourceConfigModal';
+export type { DataSourceConfigModalProps } from './DataSourceConfigModal';

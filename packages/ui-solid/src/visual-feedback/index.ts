@@ -12,3 +12,9 @@ export type { MeasurementOverlayProps } from './MeasurementOverlay';
 
 export { RegionHighlight } from './RegionHighlight';
 export type { RegionHighlightProps } from './RegionHighlight';
+
+export { OffScreenIndicator } from './OffScreenIndicator';
+export type { OffScreenIndicatorProps, OffScreenDirection } from './OffScreenIndicator';
+
+export { PropertyIndicator } from './PropertyIndicator';
+export type { PropertyIndicatorProps, IndicatorPosition } from './PropertyIndicator';

@@ -1,866 +1,1855 @@
-# Headless Email Builder API
-
-The headless Email Builder API allows you to create email templates programmatically without requiring a user interface. This is perfect for:
-
-- **AI Agents** - Automatically generate personalized email templates
-- **Backend Services** - Create email templates on the server
-- **Automation** - Generate emails based on data or events
-- **Testing** - Programmatically create test email templates
-- **Integration** - Embed email building capabilities in your application
+# Headless API Documentation
 
 ## Table of Contents
 
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [API Reference](#api-reference)
-- [Examples](#examples)
-- [Use Cases](#use-cases)
-- [Best Practices](#best-practices)
+1. [Overview](#overview)
+2. [Getting Started](#getting-started)
+3. [Core Concepts](#core-concepts)
+4. [API Reference](#api-reference)
+   - [Builder](#builder)
+   - [TemplateManager](#templatemanager)
+   - [ComponentRegistry](#componentregistry)
+   - [CommandManager](#commandmanager)
+   - [EventEmitter](#eventemitter)
+   - [TemplateExporter](#templateexporter)
+   - [EmailExportService](#emailexportservice)
+5. [Event System](#event-system)
+6. [Command Pattern](#command-pattern)
+7. [Storage Adapters](#storage-adapters)
+8. [TypeScript Types](#typescript-types)
+9. [Examples](#examples)
+10. [Troubleshooting](#troubleshooting)
 
-## Installation
+---
+
+## Overview
+
+The Email Builder Headless API provides a programmatic interface for building, managing, and exporting email templates without requiring a UI. This enables:
+
+- **Server-side email generation** in Node.js environments
+- **Batch template processing** for multiple templates
+- **REST/GraphQL API endpoints** for template management
+- **CLI tools** for email building and automation
+- **Template migration scripts** for data transformation
+- **Automated testing workflows** for template validation
+
+### Key Features
+
+- ✅ **UI-Independent**: Works in Node.js and browser environments
+- ✅ **Event-Driven**: Subscribe to all builder operations
+- ✅ **Undo/Redo**: Full command pattern with history
+- ✅ **Type-Safe**: Complete TypeScript definitions
+- ✅ **Storage Agnostic**: Use localStorage, custom APIs, or any storage
+- ✅ **Email-Optimized**: Built-in email client compatibility
+
+---
+
+## Getting Started
+
+### Installation
 
 ```bash
 npm install @email-builder/core
 ```
 
-## Quick Start
+### Basic Usage
 
 ```typescript
-import { EmailBuilder } from '@email-builder/core';
+import { Builder } from '@email-builder/core';
 
-// Create a new email builder
-const builder = new EmailBuilder({
-  name: 'Welcome Email',
-  subject: 'Welcome to our platform!',
+// 1. Create and initialize the builder
+const builder = new Builder({
+  target: 'email',
+  storage: {
+    method: 'local',
+    keyPrefix: 'my-app'
+  }
 });
 
-// Initialize the builder
 await builder.initialize();
 
-// Build your email using a fluent API
-await builder
-  .addHeader({
-    logo: 'https://example.com/logo.png',
-    links: [
-      { text: 'Home', url: 'https://example.com' },
-      { text: 'About', url: 'https://example.com/about' },
-    ],
-  })
-  .addHero({
-    heading: 'Welcome!',
-    description: 'We\'re excited to have you.',
-    buttonText: 'Get Started',
-    buttonUrl: 'https://example.com/start',
-  })
-  .addFooter({
-    companyName: 'Acme Inc.',
-    socialLinks: {
-      facebook: 'https://facebook.com/acme',
-      twitter: 'https://twitter.com/acme',
-    },
-  });
+// 2. Create a new template
+const template = await builder.createTemplate({
+  name: 'Welcome Email',
+  description: 'Welcome email for new users',
+  settings: {
+    target: 'email',
+    locale: 'en-US',
+    canvasDimensions: { width: 600 }
+  }
+});
 
-// Export to HTML
-const html = await builder.toHTML();
+// 3. Add components programmatically
+const registry = builder.getComponentRegistry();
+const textComponent = registry.create('text');
+textComponent.content.text = 'Hello, World!';
 
-// Or export to JSON
-const json = builder.toJSON();
+// 4. Update the template
+const templateManager = builder.getTemplateManager();
+await templateManager.update(template.metadata.id, {
+  components: [textComponent]
+});
+
+// 5. Export to HTML
+const exporter = new TemplateExporter();
+const result = exporter.export(template, {
+  format: 'html',
+  inlineStyles: true,
+  prettyPrint: true
+});
+
+console.log(result.html);
 ```
+
+---
+
+## Core Concepts
+
+### Builder Architecture
+
+The Email Builder uses a modular architecture:
+
+```
+Builder (Main Entry Point)
+  ├── TemplateManager (Template CRUD)
+  ├── ComponentRegistry (Component Management)
+  ├── CommandManager (Undo/Redo)
+  ├── EventEmitter (Event System)
+  ├── PresetManager (Style Presets)
+  ├── CompatibilityService (Email Client Compatibility)
+  └── StorageAdapter (Data Persistence)
+```
+
+### Component Structure
+
+Every component has:
+- **id**: Unique identifier
+- **type**: Component type (button, text, image, etc.)
+- **content**: Component-specific data
+- **styles**: Visual styling properties
+- **metadata**: Component metadata (name, description, category)
+
+### Template Structure
+
+Templates contain:
+- **metadata**: Name, description, version, timestamps
+- **settings**: Canvas dimensions, locale, target
+- **generalStyles**: Global styling defaults
+- **components**: Array of component instances
+- **componentTree**: Hierarchical component structure
+
+---
 
 ## API Reference
 
-### EmailBuilder Class
+### Builder
+
+The main entry point for all headless operations.
 
 #### Constructor
 
 ```typescript
-new EmailBuilder(config?: EmailBuilderConfig)
+constructor(config: BuilderConfig)
 ```
 
-**Configuration Options:**
+**Parameters:**
+
+- `config.target`: `'email' | 'web' | 'hybrid'` - Output target
+- `config.storage`: Storage configuration
+  - `method`: `'local' | 'api' | 'custom'`
+  - `keyPrefix`: Storage key prefix (default: 'email-builder')
+  - `adapter`: Custom storage adapter (for method='custom')
+  - `apiEndpoint`: API endpoint URL (for method='api')
+- `config.locale`: UI locale (default: 'en-US')
+- `config.features`: Feature flags
+  - `customComponents`: Enable custom components (default: true)
+  - `dataInjection`: Enable data injection (default: true)
+  - `templateVersioning`: Enable versioning (default: false)
+  - `undoRedo`: Enable undo/redo (default: true)
+  - `autoSave`: Enable auto-save (default: false)
+- `config.callbacks`: Event callbacks
+  - `onSaveTemplate`: Called when template is saved
+  - `onError`: Called on errors
+  - `onStateChange`: Called on state changes
+- `config.debug`: Enable debug logging (default: false)
+- `config.initialTemplate`: Initial template to load
+
+**Example:**
 
 ```typescript
-interface EmailBuilderConfig {
-  name?: string;              // Template name
-  subject?: string;           // Email subject line
-  description?: string;       // Template description
-  author?: string;            // Template author
-  category?: string;          // Template category
-  tags?: string[];           // Template tags
-  width?: number;            // Canvas width (default: 600px)
-  backgroundColor?: string;   // Canvas background color
-  storage?: StorageConfig;   // Storage configuration
-  debug?: boolean;           // Debug mode
-}
+const builder = new Builder({
+  target: 'email',
+  storage: {
+    method: 'local',
+    keyPrefix: 'my-app-emails'
+  },
+  features: {
+    undoRedo: true,
+    autoSave: false
+  },
+  callbacks: {
+    onSaveTemplate: (template) => {
+      console.log(`Saved: ${template.metadata.name}`);
+    },
+    onError: (error) => {
+      console.error('Builder error:', error);
+    }
+  },
+  debug: true
+});
 ```
 
 #### Methods
 
-##### Initialize
+##### initialize()
+
+Initialize the builder. Must be called before any other operations.
 
 ```typescript
-async initialize(): Promise<EmailBuilder>
+async initialize(): Promise<void>
 ```
 
-Initializes the builder. Must be called before using any other methods.
-
-##### Metadata Methods
+**Example:**
 
 ```typescript
-setName(name: string): EmailBuilder
-setSubject(subject: string): EmailBuilder
-setDescription(description: string): EmailBuilder
-setAuthor(author: string): EmailBuilder
-setCategory(category: string): EmailBuilder
-setTags(tags: string[]): EmailBuilder
-setBackgroundColor(color: string): EmailBuilder
+await builder.initialize();
+console.log('Builder initialized:', builder.isInitialized());
 ```
 
-All metadata methods are chainable and return the builder instance.
+---
 
-##### Component Methods
+##### createTemplate()
 
-###### addHeader
+Create a new template.
 
 ```typescript
-async addHeader(options: AddHeaderOptions): Promise<EmailBuilder>
+async createTemplate(options: CreateTemplateOptions): Promise<Template>
 ```
 
-Adds a header component with logo and navigation links.
-
-**Options:**
+**Parameters:**
 
 ```typescript
-interface AddHeaderOptions {
-  logo?: string;                    // Logo image URL
-  logoAlt?: string;                 // Logo alt text
-  links?: Array<{                   // Navigation links
-    text: string;
-    url: string;
-  }>;
-  backgroundColor?: string;         // Background color
-  showNavigation?: boolean;         // Show navigation links
+interface CreateTemplateOptions {
+  name: string;
+  description?: string;
+  author?: string;
+  category?: string;
+  tags?: string[];
+  settings: TemplateSettings;
+  generalStyles?: GeneralStyles;
+  components?: BaseComponent[];
 }
 ```
 
-###### addFooter
+**Example:**
 
 ```typescript
-async addFooter(options: AddFooterOptions): Promise<EmailBuilder>
+const template = await builder.createTemplate({
+  name: 'Product Launch',
+  description: 'Email template for product launches',
+  author: 'marketing@company.com',
+  category: 'marketing',
+  tags: ['product', 'announcement'],
+  settings: {
+    target: 'email',
+    locale: 'en-US',
+    canvasDimensions: { width: 600, maxWidth: 600 }
+  },
+  generalStyles: {
+    canvasBackgroundColor: '#f5f5f5',
+    typography: {
+      bodyText: {
+        fontFamily: 'Arial, sans-serif',
+        fontSize: '14px',
+        color: '#333333'
+      }
+    }
+  }
+});
+
+console.log(`Created template: ${template.metadata.id}`);
 ```
 
-Adds a footer component with company info and social links.
+---
 
-**Options:**
+##### loadTemplate()
+
+Load an existing template from storage.
 
 ```typescript
-interface AddFooterOptions {
-  companyName?: string;             // Company name
-  address?: string;                 // Company address
-  text?: string;                    // Footer text (HTML)
-  socialLinks?: {                   // Social media links
-    facebook?: string;
-    twitter?: string;
-    instagram?: string;
-    linkedin?: string;
-    youtube?: string;
-  };
-  backgroundColor?: string;         // Background color
-}
+async loadTemplate(templateId: string): Promise<Template>
 ```
 
-###### addHero
+**Example:**
 
 ```typescript
-async addHero(options: AddHeroOptions): Promise<EmailBuilder>
+const template = await builder.loadTemplate('tpl_1699564321_abc123');
+console.log(`Loaded: ${template.metadata.name}`);
 ```
 
-Adds a hero section with heading, description, image, and buttons.
+---
 
-**Options:**
+##### saveTemplate()
+
+Save the current template.
 
 ```typescript
-interface AddHeroOptions {
-  heading: string;                  // Hero heading (required)
-  description?: string;             // Hero description
-  image?: string;                   // Hero image URL
-  imageAlt?: string;                // Image alt text
-  buttonText?: string;              // Primary button text
-  buttonUrl?: string;               // Primary button URL
-  secondaryButtonText?: string;     // Secondary button text
-  secondaryButtonUrl?: string;      // Secondary button URL
-  backgroundColor?: string;         // Background color
-  textAlign?: 'left' | 'center' | 'right';  // Text alignment
-}
+async saveTemplate(template: Template): Promise<void>
 ```
 
-###### addCTA
+**Example:**
 
 ```typescript
-async addCTA(options: AddCTAOptions): Promise<EmailBuilder>
+// Modify template
+template.metadata.name = 'Updated Name';
+template.components.push(newComponent);
+
+// Save changes
+await builder.saveTemplate(template);
 ```
 
-Adds a call-to-action section with heading, description, and buttons.
+---
 
-**Options:**
+##### deleteTemplate()
+
+Delete a template from storage.
 
 ```typescript
-interface AddCTAOptions {
-  heading: string;                  // CTA heading (required)
-  description?: string;             // CTA description
-  buttonText: string;               // Primary button text (required)
-  buttonUrl: string;                // Primary button URL (required)
-  secondaryButtonText?: string;     // Secondary button text
-  secondaryButtonUrl?: string;      // Secondary button URL
-  backgroundColor?: string;         // Background color
-  textAlign?: 'left' | 'center' | 'right';  // Text alignment
-}
+async deleteTemplate(templateId: string): Promise<void>
 ```
 
-###### addText
+**Example:**
 
 ```typescript
-async addText(options: AddTextOptions): Promise<EmailBuilder>
+await builder.deleteTemplate('tpl_1699564321_abc123');
+console.log('Template deleted');
 ```
 
-Adds a text component with HTML content.
+---
 
-**Options:**
+##### listTemplates()
 
-```typescript
-interface AddTextOptions {
-  content: string;                  // Text content (HTML, required)
-  backgroundColor?: string;         // Background color
-  textAlign?: 'left' | 'center' | 'right' | 'justify';  // Text alignment
-  fontSize?: number;                // Font size in pixels
-  color?: string;                   // Text color
-}
-```
-
-###### addImage
-
-```typescript
-async addImage(options: AddImageOptions): Promise<EmailBuilder>
-```
-
-Adds an image component.
-
-**Options:**
-
-```typescript
-interface AddImageOptions {
-  src: string;                      // Image URL (required)
-  alt?: string;                     // Alt text
-  title?: string;                   // Image title
-  link?: string;                    // Link URL (makes image clickable)
-  width?: number;                   // Image width in pixels
-  height?: number;                  // Image height in pixels
-  align?: 'left' | 'center' | 'right';  // Image alignment
-}
-```
-
-###### addButton
-
-```typescript
-async addButton(options: AddButtonOptions): Promise<EmailBuilder>
-```
-
-Adds a button component.
-
-**Options:**
-
-```typescript
-interface AddButtonOptions {
-  text: string;                     // Button text (required)
-  url: string;                      // Button URL (required)
-  backgroundColor?: string;         // Button background color
-  color?: string;                   // Button text color
-  align?: 'left' | 'center' | 'right';  // Button alignment
-  variant?: 'filled' | 'outlined' | 'text';  // Button style variant
-}
-```
-
-###### addList
-
-```typescript
-async addList(options: AddListOptions): Promise<EmailBuilder>
-```
-
-Adds a list component with items.
-
-**Options:**
-
-```typescript
-interface AddListOptions {
-  items: Array<{                    // List items (required)
-    title: string;                  // Item title
-    description?: string;           // Item description
-    icon?: string;                  // Item icon (Remix Icon name or URL)
-  }>;
-  backgroundColor?: string;         // Background color
-}
-```
-
-###### addSpacer
-
-```typescript
-async addSpacer(options?: AddSpacerOptions): Promise<EmailBuilder>
-```
-
-Adds a spacer component for vertical spacing.
-
-**Options:**
-
-```typescript
-interface AddSpacerOptions {
-  height?: number;                  // Spacer height in pixels (default: 20)
-}
-```
-
-###### addSeparator
-
-```typescript
-async addSeparator(options?: AddSeparatorOptions): Promise<EmailBuilder>
-```
-
-Adds a horizontal separator line.
-
-**Options:**
-
-```typescript
-interface AddSeparatorOptions {
-  color?: string;                   // Separator color
-  height?: number;                  // Separator thickness in pixels
-  width?: number;                   // Separator width percentage (0-100)
-}
-```
-
-##### Export Methods
-
-###### toHTML
-
-```typescript
-async toHTML(options?: Partial<EmailExportOptions>): Promise<string>
-```
-
-Exports the template to email-safe HTML.
-
-**Options:**
-
-```typescript
-interface EmailExportOptions {
-  inlineCSS?: boolean;              // Inline CSS styles (default: true)
-  minify?: boolean;                 // Minify HTML (default: false)
-  useTableLayout?: boolean;         // Use table-based layout (default: true)
-  addOutlookFixes?: boolean;        // Add Outlook compatibility fixes (default: true)
-  removeIncompatibleCSS?: boolean;  // Remove email-incompatible CSS (default: true)
-  optimizeStructure?: boolean;      // Optimize HTML structure (default: true)
-}
-```
-
-###### toJSON
-
-```typescript
-toJSON(): Template | null
-```
-
-Exports the template as a JSON object.
-
-##### Storage Methods
-
-###### save
-
-```typescript
-async save(): Promise<void>
-```
-
-Saves the template to storage.
-
-###### load
-
-```typescript
-async load(templateId: string): Promise<EmailBuilder>
-```
-
-Loads a template from storage.
-
-###### listTemplates
+List all templates.
 
 ```typescript
 async listTemplates(): Promise<TemplateListItem[]>
 ```
 
-Lists all templates in storage.
+**Returns:** Array of template metadata (id, name, description, timestamps)
 
-###### delete
+**Example:**
+
+```typescript
+const templates = await builder.listTemplates();
+templates.forEach(t => {
+  console.log(`${t.name} (${t.id}) - Updated: ${new Date(t.updatedAt)}`);
+});
+```
+
+---
+
+##### getCurrentTemplate()
+
+Get the currently loaded template.
+
+```typescript
+getCurrentTemplate(): Template | null
+```
+
+**Example:**
+
+```typescript
+const current = builder.getCurrentTemplate();
+if (current) {
+  console.log(`Current template: ${current.metadata.name}`);
+}
+```
+
+---
+
+##### executeCommand()
+
+Execute a command with undo/redo support.
+
+```typescript
+async executeCommand<TPayload, TResult>(
+  command: Command<TPayload>
+): Promise<CommandResult<TResult>>
+```
+
+**Example:**
+
+```typescript
+import { TemplateAddComponentCommand } from '@email-builder/core';
+
+const command = new TemplateAddComponentCommand(
+  templateManager,
+  template.metadata.id,
+  newComponent
+);
+
+const result = await builder.executeCommand(command);
+if (result.success) {
+  console.log('Component added successfully');
+}
+```
+
+---
+
+##### undo() / redo()
+
+Undo or redo the last command.
+
+```typescript
+async undo(): Promise<boolean>
+async redo(): Promise<boolean>
+```
+
+**Example:**
+
+```typescript
+// Undo last action
+if (builder.canUndo()) {
+  await builder.undo();
+  console.log('Undone');
+}
+
+// Redo
+if (builder.canRedo()) {
+  await builder.redo();
+  console.log('Redone');
+}
+```
+
+---
+
+##### on() / once()
+
+Subscribe to builder events.
+
+```typescript
+on<TData>(event: string, listener: (data: TData) => void): EventSubscription
+once<TData>(event: string, listener: (data: TData) => void): EventSubscription
+```
+
+**Example:**
+
+```typescript
+// Subscribe to all template creations
+const subscription = builder.on('template:created', (data) => {
+  console.log('New template created:', data.template.metadata.name);
+});
+
+// Unsubscribe later
+subscription.unsubscribe();
+
+// Subscribe once
+builder.once('builder:initialized', (data) => {
+  console.log('Builder initialized with config:', data.config);
+});
+```
+
+---
+
+##### getTemplateManager()
+
+Get the template manager instance.
+
+```typescript
+getTemplateManager(): TemplateManager
+```
+
+**Example:**
+
+```typescript
+const templateManager = builder.getTemplateManager();
+const templates = await templateManager.search({
+  category: 'marketing',
+  tags: ['product']
+});
+```
+
+---
+
+##### getComponentRegistry()
+
+Get the component registry instance.
+
+```typescript
+getComponentRegistry(): ComponentRegistry
+```
+
+**Example:**
+
+```typescript
+const registry = builder.getComponentRegistry();
+const buttonComponent = registry.create('button');
+```
+
+---
+
+##### getPresetManager()
+
+Get the preset manager instance.
+
+```typescript
+getPresetManager(): PresetManager
+```
+
+**Example:**
+
+```typescript
+const presetManager = builder.getPresetManager();
+const presets = presetManager.listPresets('button');
+console.log(`Found ${presets.length} button presets`);
+```
+
+---
+
+##### getCompatibilityService()
+
+Get the compatibility service for email client checks.
+
+```typescript
+getCompatibilityService(): CompatibilityService
+```
+
+**Example:**
+
+```typescript
+const compatibility = builder.getCompatibilityService();
+const stats = compatibility.getPropertyStatistics('border-radius');
+console.log(`border-radius support: ${stats.supportScore}%`);
+```
+
+---
+
+##### checkCompatibility()
+
+Check template for email compatibility issues.
+
+```typescript
+checkCompatibility(): CompatibilityReport
+```
+
+**Returns:** Detailed report with issues grouped by severity
+
+**Example:**
+
+```typescript
+const report = builder.checkCompatibility();
+
+console.log(`Overall score: ${report.overallScore}/100`);
+console.log(`Critical issues: ${report.issues.critical.length}`);
+console.log(`Safe to export: ${report.safeToExport}`);
+
+if (!report.safeToExport) {
+  report.issues.critical.forEach(issue => {
+    console.log(`❌ ${issue.message}`);
+    console.log(`   Fix: ${issue.suggestedFix}`);
+  });
+}
+```
+
+---
+
+##### destroy()
+
+Clean up resources and destroy the builder.
+
+```typescript
+destroy(): void
+```
+
+**Example:**
+
+```typescript
+// When done
+builder.destroy();
+```
+
+---
+
+### TemplateManager
+
+Manages template lifecycle (CRUD operations, validation, duplication).
+
+#### Methods
+
+##### create()
+
+Create a new template.
+
+```typescript
+async create(options: CreateTemplateOptions): Promise<Template>
+```
+
+##### load()
+
+Load a template from storage.
+
+```typescript
+async load(templateId: string): Promise<Template>
+```
+
+##### update()
+
+Update an existing template.
+
+```typescript
+async update(
+  templateId: string,
+  options: UpdateTemplateOptions
+): Promise<Template>
+```
+
+**Parameters:**
+
+```typescript
+interface UpdateTemplateOptions {
+  metadata?: Partial<Omit<TemplateMetadata, 'id' | 'createdAt'>>;
+  settings?: Partial<TemplateSettings>;
+  generalStyles?: Partial<GeneralStyles>;
+  components?: BaseComponent[];
+}
+```
+
+**Example:**
+
+```typescript
+const templateManager = builder.getTemplateManager();
+
+// Update template metadata and components
+await templateManager.update('tpl_123', {
+  metadata: {
+    name: 'New Name',
+    description: 'Updated description',
+    tags: ['new', 'tags']
+  },
+  components: updatedComponents
+});
+```
+
+---
+
+##### delete()
+
+Delete a template.
 
 ```typescript
 async delete(templateId: string): Promise<void>
 ```
 
-Deletes a template from storage.
+---
 
-##### Advanced Methods
+##### list()
 
-###### getTemplate
-
-```typescript
-getTemplate(): Template | null
-```
-
-Gets the current template object.
-
-###### getBuilder
+List all templates.
 
 ```typescript
-getBuilder(): Builder
+async list(): Promise<TemplateListItem[]>
 ```
 
-Gets the underlying Builder instance for advanced features.
+---
+
+##### search()
+
+Search templates with filters.
+
+```typescript
+async search(criteria: {
+  tags?: string[];
+  category?: string;
+  target?: string;
+  searchTerm?: string;
+}): Promise<TemplateListItem[]>
+```
+
+**Example:**
+
+```typescript
+// Find all marketing emails with "welcome" in name
+const results = await templateManager.search({
+  category: 'marketing',
+  tags: ['welcome'],
+  target: 'email',
+  searchTerm: 'welcome'
+});
+```
+
+---
+
+##### validate()
+
+Validate a template.
+
+```typescript
+validate(template: Template): TemplateValidationResult
+```
+
+**Returns:**
+
+```typescript
+interface TemplateValidationResult {
+  valid: boolean;
+  errors?: Array<{
+    field: string;
+    message: string;
+    severity: 'error' | 'warning';
+  }>;
+}
+```
+
+**Example:**
+
+```typescript
+const validation = templateManager.validate(template);
+
+if (!validation.valid) {
+  console.log('Validation errors:');
+  validation.errors?.forEach(err => {
+    console.log(`  [${err.severity}] ${err.field}: ${err.message}`);
+  });
+}
+```
+
+---
+
+##### duplicate()
+
+Duplicate an existing template.
+
+```typescript
+async duplicate(templateId: string, newName?: string): Promise<Template>
+```
+
+**Example:**
+
+```typescript
+const duplicated = await templateManager.duplicate(
+  'tpl_123',
+  'Copy of Original Template'
+);
+console.log(`Duplicated as: ${duplicated.metadata.id}`);
+```
+
+---
+
+##### getCurrentTemplate()
+
+Get the currently loaded template.
+
+```typescript
+getCurrentTemplate(): Template | null
+```
+
+---
+
+##### on() / off()
+
+Subscribe to template events.
+
+```typescript
+on(event: TemplateManagerEvent, callback: (data: unknown) => void): void
+off(event: TemplateManagerEvent, callback: (data: unknown) => void): void
+```
+
+**Events:**
+- `template:created`
+- `template:updated`
+- `template:deleted`
+- `template:loaded`
+- `template:validated`
+
+**Example:**
+
+```typescript
+templateManager.on('template:updated', (data) => {
+  console.log('Template updated:', data.template.metadata.name);
+});
+```
+
+---
+
+### ComponentRegistry
+
+Manages component definitions, creation, and presets.
+
+#### Methods
+
+##### register()
+
+Register a custom component definition.
+
+```typescript
+register(definition: ComponentDefinition): void
+```
+
+**Example:**
+
+```typescript
+const registry = builder.getComponentRegistry();
+
+registry.register({
+  type: 'custom-banner',
+  metadata: {
+    name: 'Custom Banner',
+    description: 'A custom promotional banner',
+    category: 'email',
+    icon: '🎉',
+    tags: ['custom', 'banner']
+  },
+  create: () => ({
+    id: crypto.randomUUID(),
+    type: 'custom-banner',
+    content: {
+      title: 'Special Offer!',
+      description: 'Limited time only',
+      imageUrl: '',
+      ctaText: 'Shop Now',
+      ctaUrl: '#'
+    },
+    styles: {
+      backgroundColor: '#ff6b35',
+      padding: { top: 20, right: 20, bottom: 20, left: 20 }
+    },
+    metadata: {
+      name: 'Custom Banner',
+      category: 'email'
+    },
+    createdAt: Date.now(),
+    updatedAt: Date.now()
+  }),
+  validate: (component) => {
+    const errors = [];
+    if (!component.content.title) {
+      errors.push('Title is required');
+    }
+    return {
+      valid: errors.length === 0,
+      errors: errors.length > 0 ? errors : undefined
+    };
+  }
+});
+```
+
+---
+
+##### get()
+
+Get a component definition by type.
+
+```typescript
+get(type: ComponentType | string): ComponentDefinition | undefined
+```
+
+---
+
+##### has()
+
+Check if a component type is registered.
+
+```typescript
+has(type: ComponentType | string): boolean
+```
+
+---
+
+##### getAll()
+
+Get all registered component definitions.
+
+```typescript
+getAll(): ComponentDefinition[]
+```
+
+---
+
+##### getByCategory()
+
+Get components by category.
+
+```typescript
+getByCategory(category: ComponentCategory): ComponentDefinition[]
+```
+
+**Example:**
+
+```typescript
+const emailComponents = registry.getByCategory('email');
+console.log(`Found ${emailComponents.length} email components`);
+```
+
+---
+
+##### filter()
+
+Search and filter components.
+
+```typescript
+filter(filter: ComponentFilter): ComponentDefinition[]
+```
+
+**Parameters:**
+
+```typescript
+interface ComponentFilter {
+  category?: ComponentCategory;
+  tags?: string[];
+  searchTerm?: string;
+  customOnly?: boolean;
+}
+```
+
+**Example:**
+
+```typescript
+// Find all custom components with "banner" tag
+const banners = registry.filter({
+  customOnly: true,
+  tags: ['banner']
+});
+
+// Search by name
+const searchResults = registry.filter({
+  searchTerm: 'button'
+});
+```
+
+---
+
+##### create()
+
+Create a new component instance.
+
+```typescript
+create(type: ComponentType | string): BaseComponent
+```
+
+**Example:**
+
+```typescript
+const button = registry.create('button');
+button.content.text = 'Click Me';
+button.content.href = 'https://example.com';
+button.styles.backgroundColor = '#007bff';
+```
+
+---
+
+##### createWithPreset()
+
+Create a component with a preset applied.
+
+```typescript
+createWithPreset(type: ComponentType | string, presetId: string): BaseComponent
+```
+
+**Example:**
+
+```typescript
+const primaryButton = registry.createWithPreset('button', 'primary');
+// Button already has primary preset styles applied
+```
+
+---
+
+##### validate()
+
+Validate a component.
+
+```typescript
+validate(component: BaseComponent): ValidationResult
+```
+
+**Returns:**
+
+```typescript
+interface ValidationResult {
+  valid: boolean;
+  errors?: string[];
+}
+```
+
+---
+
+##### getPresets()
+
+Get all presets for a component type.
+
+```typescript
+getPresets(type: ComponentType | string): ComponentPreset[]
+```
+
+---
+
+##### addPreset()
+
+Add a preset to a component type.
+
+```typescript
+addPreset(type: ComponentType | string, preset: ComponentPreset): void
+```
+
+**Example:**
+
+```typescript
+registry.addPreset('button', {
+  id: 'danger',
+  name: 'Danger Button',
+  description: 'Red button for destructive actions',
+  componentType: 'button',
+  styles: {
+    backgroundColor: '#dc3545',
+    color: '#ffffff',
+    border: {
+      width: { value: 1, unit: 'px' },
+      style: 'solid',
+      color: '#dc3545'
+    }
+  },
+  isDefault: false
+});
+```
+
+---
+
+##### on() / off()
+
+Subscribe to registry events.
+
+```typescript
+on<T>(event: RegistryEvent | string, listener: (data: T) => void): EventSubscription
+off(event?: string): void
+```
+
+**Events:**
+- `component:registered`
+- `component:unregistered`
+- `preset:added`
+- `preset:removed`
+
+---
+
+### CommandManager
+
+Manages command execution and undo/redo history.
+
+#### Methods
+
+##### execute()
+
+Execute a command.
+
+```typescript
+async execute<TPayload, TResult>(
+  command: Command<TPayload>
+): Promise<CommandResult<TResult>>
+```
+
+---
+
+##### undo()
+
+Undo the last command.
+
+```typescript
+async undo(): Promise<boolean>
+```
+
+---
+
+##### redo()
+
+Redo the next command.
+
+```typescript
+async redo(): Promise<boolean>
+```
+
+---
+
+##### canUndo() / canRedo()
+
+Check if undo/redo is available.
+
+```typescript
+canUndo(): boolean
+canRedo(): boolean
+```
+
+---
+
+##### getHistory()
+
+Get command history.
+
+```typescript
+getHistory(): ReadonlyArray<CommandHistoryEntry>
+```
+
+**Example:**
+
+```typescript
+const commandManager = builder.getCommandManager();
+const history = commandManager.getHistory();
+
+console.log('Command history:');
+history.forEach((entry, index) => {
+  console.log(`  ${index + 1}. ${entry.command.type} at ${new Date(entry.timestamp)}`);
+});
+```
+
+---
+
+##### clearHistory()
+
+Clear command history.
+
+```typescript
+clearHistory(): void
+```
+
+---
+
+### EventEmitter
+
+Implements pub/sub pattern for builder events.
+
+#### Methods
+
+##### on()
+
+Subscribe to an event.
+
+```typescript
+on<TData>(event: string, listener: (data: TData) => void): EventSubscription
+```
+
+**Returns:** Subscription object with `unsubscribe()` method
+
+---
+
+##### once()
+
+Subscribe to an event once.
+
+```typescript
+once<TData>(event: string, listener: (data: TData) => void): EventSubscription
+```
+
+---
+
+##### emit()
+
+Emit an event.
+
+```typescript
+emit<TData>(event: string, data?: TData): void
+```
+
+---
+
+##### off()
+
+Unsubscribe from events.
+
+```typescript
+off(event?: string, listener?: EventListener): void
+```
+
+**Example:**
+
+```typescript
+// Unsubscribe from all events
+eventEmitter.off();
+
+// Unsubscribe from specific event
+eventEmitter.off('template:created');
+
+// Unsubscribe specific listener
+eventEmitter.off('template:created', myListener);
+```
+
+---
+
+##### listenerCount()
+
+Get number of listeners for an event.
+
+```typescript
+listenerCount(event: string): number
+```
+
+---
+
+### TemplateExporter
+
+Exports templates to HTML and JSON formats.
+
+#### Methods
+
+##### export()
+
+Export a template.
+
+```typescript
+export(template: Template, options: TemplateExportOptions): ExportResult
+```
+
+**Parameters:**
+
+```typescript
+interface TemplateExportOptions {
+  format: 'html' | 'json' | 'both';
+  inlineStyles?: boolean;
+  minify?: boolean;
+  prettyPrint?: boolean;
+  includeComments?: boolean;
+}
+```
+
+**Returns:**
+
+```typescript
+interface ExportResult {
+  html?: string;
+  json?: string;
+  format: 'html' | 'json' | 'both';
+}
+```
+
+**Example:**
+
+```typescript
+import { TemplateExporter } from '@email-builder/core';
+
+const exporter = new TemplateExporter();
+
+// Export to HTML with inline styles
+const htmlResult = exporter.export(template, {
+  format: 'html',
+  inlineStyles: true,
+  prettyPrint: true,
+  includeComments: false
+});
+
+console.log(htmlResult.html);
+
+// Export to JSON
+const jsonResult = exporter.export(template, {
+  format: 'json',
+  prettyPrint: true
+});
+
+console.log(jsonResult.json);
+
+// Export to both formats
+const bothResult = exporter.export(template, {
+  format: 'both',
+  inlineStyles: true,
+  prettyPrint: true
+});
+
+console.log('HTML:', bothResult.html);
+console.log('JSON:', bothResult.json);
+```
+
+---
+
+### EmailExportService
+
+Converts builder HTML to email-safe HTML with optimizations for email clients.
+
+#### Methods
+
+##### export()
+
+Export HTML with email optimizations.
+
+```typescript
+export(html: string, options?: EmailExportOptions): EmailExportResult
+```
+
+**Parameters:**
+
+```typescript
+interface EmailExportOptions {
+  inlineCSS?: boolean;              // Inline CSS styles (default: true)
+  useTableLayout?: boolean;         // Convert to table-based layout (default: true)
+  addOutlookFixes?: boolean;        // Add Outlook conditional comments (default: true)
+  removeIncompatibleCSS?: boolean;  // Remove email-incompatible CSS (default: true)
+  optimizeStructure?: boolean;      // Optimize HTML structure (default: true)
+  doctype?: string;                 // Custom DOCTYPE
+  charset?: string;                 // Character set (default: 'utf-8')
+  clientOptimizations?: {           // Client-specific optimizations
+    gmail?: boolean;
+    outlook?: boolean;
+    ios?: boolean;
+    yahoo?: boolean;
+  };
+  maxWidth?: number;                // Max width in pixels (default: 600)
+  minify?: boolean;                 // Minify output (default: false)
+}
+```
+
+**Returns:**
+
+```typescript
+interface EmailExportResult {
+  html: string;                     // Email-optimized HTML
+  warnings: EmailExportWarning[];   // Warnings about potential issues
+  statistics: {
+    inlinedRules: number;
+    convertedElements: number;
+    removedProperties: number;
+  };
+}
+```
+
+**Example:**
+
+```typescript
+import { EmailExportService } from '@email-builder/core';
+
+const emailExporter = new EmailExportService();
+
+// Get builder HTML
+const builderHTML = exporter.export(template, {
+  format: 'html',
+  inlineStyles: false
+}).html;
+
+// Convert to email-safe HTML
+const result = emailExporter.export(builderHTML, {
+  inlineCSS: true,
+  useTableLayout: true,
+  addOutlookFixes: true,
+  removeIncompatibleCSS: true,
+  clientOptimizations: {
+    gmail: true,
+    outlook: true,
+    ios: true
+  },
+  maxWidth: 600
+});
+
+console.log('Email-optimized HTML:', result.html);
+console.log('Warnings:', result.warnings);
+console.log('Statistics:', result.statistics);
+
+// Check for warnings
+if (result.warnings.length > 0) {
+  console.log('⚠️ Warnings:');
+  result.warnings.forEach(warning => {
+    console.log(`  ${warning.severity}: ${warning.message}`);
+  });
+}
+```
+
+**Features:**
+
+1. **CSS Inlining**: Converts `<style>` tags to inline styles
+2. **Table Layout**: Converts div-based layouts to table-based layouts
+3. **Outlook Fixes**: Adds MSO conditional comments and fixes
+4. **Incompatible CSS Removal**: Removes flexbox, grid, position, animations, etc.
+5. **Client Optimizations**: Gmail anti-link styles, iOS fixes, etc.
+
+---
+
+## Event System
+
+The Email Builder uses an event-driven architecture. All major operations emit events that you can subscribe to.
+
+### Builder Events
+
+```typescript
+enum BuilderEvent {
+  INITIALIZED = 'builder:initialized',
+  STATE_CHANGED = 'builder:state-changed',
+  ERROR = 'builder:error',
+  UNDO = 'builder:undo',
+  REDO = 'builder:redo'
+}
+```
+
+### Template Events
+
+```typescript
+enum TemplateManagerEvent {
+  TEMPLATE_CREATED = 'template:created',
+  TEMPLATE_UPDATED = 'template:updated',
+  TEMPLATE_DELETED = 'template:deleted',
+  TEMPLATE_LOADED = 'template:loaded',
+  TEMPLATE_VALIDATED = 'template:validated'
+}
+```
+
+### Registry Events
+
+```typescript
+enum RegistryEvent {
+  COMPONENT_REGISTERED = 'component:registered',
+  COMPONENT_UNREGISTERED = 'component:unregistered',
+  PRESET_ADDED = 'preset:added',
+  PRESET_REMOVED = 'preset:removed'
+}
+```
+
+### Event Subscription Example
+
+```typescript
+// Subscribe to multiple events
+const subscriptions = [];
+
+// Builder initialization
+subscriptions.push(
+  builder.on('builder:initialized', (data) => {
+    console.log('✅ Builder ready');
+  })
+);
+
+// Template operations
+const templateManager = builder.getTemplateManager();
+subscriptions.push(
+  templateManager.on('template:created', (data) => {
+    console.log(`📝 Template created: ${data.template.metadata.name}`);
+  })
+);
+
+subscriptions.push(
+  templateManager.on('template:updated', (data) => {
+    console.log(`💾 Template updated: ${data.template.metadata.name}`);
+  })
+);
+
+// Errors
+subscriptions.push(
+  builder.on('builder:error', (error) => {
+    console.error('❌ Error:', error.message);
+  })
+);
+
+// Cleanup: unsubscribe from all
+function cleanup() {
+  subscriptions.forEach(sub => sub.unsubscribe());
+}
+```
+
+---
+
+## Command Pattern
+
+The builder uses the Command Pattern for undo/redo functionality. All state-changing operations should be implemented as commands.
+
+### Available Commands
+
+- `TemplateAddComponentCommand` - Add component to template
+- `TemplateRemoveComponentCommand` - Remove component from template
+- `TemplateUpdateComponentCommand` - Update component properties
+- `TemplateReorderComponentCommand` - Reorder components
+- `TemplateDuplicateComponentCommand` - Duplicate a component
+- `SaveTemplateCommand` - Save template
+- `LoadTemplateCommand` - Load template
+- `ExportTemplateCommand` - Export template
+- `ApplyPresetCommand` - Apply preset to component
+- `CreatePresetCommand` - Create new preset
+- `UpdatePresetCommand` - Update preset
+- `DeletePresetCommand` - Delete preset
+
+### Creating Custom Commands
+
+```typescript
+import { UndoableCommand } from '@email-builder/core';
+
+class CustomCommand implements UndoableCommand {
+  type = 'custom:operation';
+  canUndo = true;
+  payload: any;
+
+  private previousState: any;
+
+  constructor(payload: any) {
+    this.payload = payload;
+  }
+
+  async execute(): Promise<void> {
+    // Save state for undo
+    this.previousState = getCurrentState();
+
+    // Perform operation
+    performOperation(this.payload);
+  }
+
+  async undo(): Promise<void> {
+    // Restore previous state
+    restoreState(this.previousState);
+  }
+}
+
+// Use the command
+const command = new CustomCommand({ data: 'value' });
+await builder.executeCommand(command);
+
+// Can be undone
+await builder.undo();
+```
+
+---
+
+## Storage Adapters
+
+The builder supports multiple storage backends through adapters.
+
+### LocalStorage Adapter
+
+Built-in adapter for browser localStorage.
+
+```typescript
+const builder = new Builder({
+  storage: {
+    method: 'local',
+    keyPrefix: 'my-app'
+  }
+});
+```
+
+### Custom Storage Adapter
+
+Implement the `StorageAdapter` interface for custom storage.
+
+```typescript
+import { StorageAdapter } from '@email-builder/core';
+
+class DatabaseAdapter implements StorageAdapter {
+  async get(key: string): Promise<string | null> {
+    const result = await db.collection('templates').findOne({ key });
+    return result ? result.value : null;
+  }
+
+  async set(key: string, value: string): Promise<void> {
+    await db.collection('templates').updateOne(
+      { key },
+      { $set: { key, value, updatedAt: new Date() } },
+      { upsert: true }
+    );
+  }
+
+  async delete(key: string): Promise<void> {
+    await db.collection('templates').deleteOne({ key });
+  }
+
+  async list(): Promise<string[]> {
+    const docs = await db.collection('templates').find({}).toArray();
+    return docs.map(doc => doc.key);
+  }
+
+  async clear(): Promise<void> {
+    await db.collection('templates').deleteMany({});
+  }
+}
+
+// Use custom adapter
+const builder = new Builder({
+  storage: {
+    method: 'custom',
+    adapter: new DatabaseAdapter()
+  }
+});
+```
+
+---
+
+## TypeScript Types
+
+### Core Types
+
+```typescript
+import type {
+  // Builder
+  BuilderConfig,
+  BuilderCallbacks,
+  FeatureFlags,
+
+  // Template
+  Template,
+  TemplateMetadata,
+  TemplateSettings,
+  GeneralStyles,
+  TemplateListItem,
+
+  // Component
+  BaseComponent,
+  ComponentDefinition,
+  ComponentType,
+  ComponentCategory,
+  ComponentPreset,
+  BaseStyles,
+
+  // Command
+  Command,
+  CommandResult,
+  UndoableCommand,
+
+  // Storage
+  StorageAdapter,
+  StorageConfig,
+
+  // Events
+  EventSubscription,
+  EventListener,
+
+  // Export
+  TemplateExportOptions,
+  ExportResult,
+  EmailExportOptions,
+  EmailExportResult
+} from '@email-builder/core';
+```
+
+### Type Examples
+
+```typescript
+// Creating type-safe components
+const createEmailTemplate = (name: string): Template => {
+  const template: Template = {
+    metadata: {
+      id: crypto.randomUUID(),
+      name,
+      version: '1.0.0',
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    },
+    settings: {
+      target: 'email',
+      locale: 'en-US',
+      canvasDimensions: { width: 600 }
+    },
+    generalStyles: {},
+    components: [],
+    dataInjection: { enabled: false },
+    customData: {}
+  };
+
+  return template;
+};
+
+// Type-safe component creation
+const createButton = (): BaseComponent => {
+  const button: BaseComponent = {
+    id: crypto.randomUUID(),
+    type: 'button',
+    content: {
+      text: 'Click Me',
+      href: '#'
+    },
+    styles: {
+      backgroundColor: '#007bff',
+      color: '#ffffff',
+      padding: {
+        top: { value: 10, unit: 'px' },
+        right: { value: 20, unit: 'px' },
+        bottom: { value: 10, unit: 'px' },
+        left: { value: 20, unit: 'px' }
+      }
+    },
+    metadata: {
+      name: 'Button',
+      category: 'base'
+    },
+    createdAt: Date.now(),
+    updatedAt: Date.now()
+  };
+
+  return button;
+};
+```
+
+---
 
 ## Examples
 
-### Basic Welcome Email
+See the `/examples` directory for complete, working examples:
+
+1. **Server-side Email Generation** (`examples/01-server-side-generation/`)
+   - Node.js script for generating emails
+   - Batch processing multiple recipients
+   - Email service integration
+
+2. **Batch Template Processing** (`examples/02-batch-processing/`)
+   - Process multiple templates at once
+   - Bulk export and optimization
+   - Progress tracking
+
+3. **REST API Endpoint** (`examples/03-rest-api/`)
+   - Express.js API for template management
+   - CRUD operations via HTTP
+   - Authentication and authorization
+
+4. **CLI Tool** (`examples/04-cli-tool/`)
+   - Command-line interface for email building
+   - Interactive template creation
+   - Export and validation commands
+
+5. **Template Migration Script** (`examples/05-template-migration/`)
+   - Migrate templates from old format
+   - Data transformation and validation
+   - Bulk import/export
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+#### Builder not initialized
 
 ```typescript
-import { EmailBuilder } from '@email-builder/core';
+// ❌ Wrong
+const builder = new Builder(config);
+await builder.createTemplate(options); // Error: Builder not initialized
 
-const builder = new EmailBuilder({
-  name: 'Welcome Email',
-  subject: 'Welcome aboard!',
+// ✅ Correct
+const builder = new Builder(config);
+await builder.initialize(); // Initialize first!
+await builder.createTemplate(options);
+```
+
+#### Storage errors in Node.js
+
+```typescript
+// ❌ Wrong - localStorage not available in Node.js
+const builder = new Builder({
+  storage: { method: 'local' }
 });
 
-await builder.initialize();
+// ✅ Correct - Use custom adapter
+import { MemoryStorageAdapter } from './adapters/MemoryStorageAdapter';
 
-await builder
-  .setBackgroundColor('#f5f5f5')
-  .addHeader({
-    logo: 'https://example.com/logo.png',
-    links: [{ text: 'Home', url: 'https://example.com' }],
-  })
-  .addHero({
-    heading: 'Welcome!',
-    description: 'Thanks for signing up.',
-    buttonText: 'Get Started',
-    buttonUrl: 'https://example.com/start',
-  })
-  .addFooter({ companyName: 'Acme Inc.' });
-
-const html = await builder.toHTML();
-```
-
-### Newsletter Email
-
-```typescript
-const builder = new EmailBuilder({
-  name: 'Weekly Newsletter',
-  subject: 'This week\'s highlights',
-});
-
-await builder.initialize();
-
-await builder
-  .addHeader({ logo: 'https://example.com/logo.png' })
-  .addText({
-    content: '<h2>This Week\'s Highlights</h2>',
-    textAlign: 'center',
-  })
-  .addList({
-    items: [
-      {
-        title: 'New Feature Launch',
-        description: 'We launched an amazing new feature',
-        icon: 'ri-rocket-line',
-      },
-      {
-        title: 'Community Spotlight',
-        description: 'Meet our community member of the week',
-        icon: 'ri-user-star-line',
-      },
-    ],
-  })
-  .addCTA({
-    heading: 'Want more updates?',
-    buttonText: 'Read Full Newsletter',
-    buttonUrl: 'https://example.com/newsletter',
-  })
-  .addFooter({
-    companyName: 'Acme Inc.',
-    socialLinks: {
-      facebook: 'https://facebook.com/acme',
-      twitter: 'https://twitter.com/acme',
-    },
-  });
-
-const html = await builder.toHTML({ minify: true });
-```
-
-### Promotional Email
-
-```typescript
-const builder = new EmailBuilder({
-  name: 'Holiday Sale',
-  subject: '50% OFF Everything!',
-});
-
-await builder.initialize();
-
-await builder
-  .setBackgroundColor('#ff6b6b')
-  .addText({
-    content: '<h1 style="color: white; text-align: center;">HOLIDAY SALE</h1>',
-  })
-  .addSpacer({ height: 40 })
-  .addCTA({
-    heading: '50% OFF Everything!',
-    description: 'Limited time offer. Sale ends Sunday.',
-    buttonText: 'Shop Now',
-    buttonUrl: 'https://example.com/sale',
-    backgroundColor: '#ffffff',
-  })
-  .addSpacer({ height: 40 })
-  .addImage({
-    src: 'https://example.com/products.jpg',
-    alt: 'Featured Products',
-    align: 'center',
-  })
-  .addFooter({ companyName: 'Acme Store' });
-
-const html = await builder.toHTML();
-```
-
-### Transactional Email
-
-```typescript
-const builder = new EmailBuilder({
-  name: 'Order Confirmation',
-  subject: 'Your order has been confirmed',
-});
-
-await builder.initialize();
-
-await builder
-  .addHeader({ logo: 'https://example.com/logo.png' })
-  .addText({
-    content: `
-      <h2>Order Confirmed!</h2>
-      <p>Thank you for your order. We'll send you a shipping confirmation email as soon as your order ships.</p>
-    `,
-  })
-  .addSeparator()
-  .addText({
-    content: `
-      <h3>Order Details</h3>
-      <p><strong>Order Number:</strong> #12345</p>
-      <p><strong>Order Date:</strong> January 15, 2024</p>
-      <p><strong>Total:</strong> $99.99</p>
-    `,
-  })
-  .addSeparator()
-  .addButton({
-    text: 'View Order',
-    url: 'https://example.com/orders/12345',
-    align: 'center',
-  })
-  .addFooter({
-    companyName: 'Acme Store',
-    address: '123 Main St, San Francisco, CA 94102',
-  });
-
-const html = await builder.toHTML();
-```
-
-## Use Cases
-
-### 1. AI-Powered Email Generation
-
-Use the headless API to let AI agents generate personalized emails:
-
-```typescript
-async function generatePersonalizedEmail(userData: UserData) {
-  const builder = new EmailBuilder({
-    name: `Personalized Email for ${userData.name}`,
-  });
-
-  await builder.initialize();
-
-  // AI determines content based on user data
-  await builder
-    .addHeader({ logo: userData.companyLogo })
-    .addHero({
-      heading: `Hi ${userData.name}!`,
-      description: generatePersonalizedMessage(userData),
-      buttonText: 'Continue',
-      buttonUrl: userData.dashboardUrl,
-    });
-
-  // AI adds relevant content sections
-  for (const recommendation of userData.recommendations) {
-    await builder.addText({
-      content: generateRecommendationHTML(recommendation),
-    });
-  }
-
-  await builder.addFooter({ companyName: userData.companyName });
-
-  return await builder.toHTML();
-}
-```
-
-### 2. Automated Marketing Campaigns
-
-Programmatically create email campaigns:
-
-```typescript
-async function createCampaignEmails(campaign: Campaign) {
-  const templates = [];
-
-  for (const variant of campaign.variants) {
-    const builder = new EmailBuilder({
-      name: `${campaign.name} - ${variant.name}`,
-      subject: variant.subject,
-    });
-
-    await builder.initialize();
-
-    // Build variant-specific email
-    await builder
-      .addHeader({ logo: campaign.logo })
-      .addHero({
-        heading: variant.heading,
-        description: variant.description,
-        buttonText: variant.ctaText,
-        buttonUrl: variant.ctaUrl,
-      })
-      .addFooter({ companyName: campaign.companyName });
-
-    templates.push({
-      variant: variant.name,
-      html: await builder.toHTML(),
-      json: builder.toJSON(),
-    });
-  }
-
-  return templates;
-}
-```
-
-### 3. Template Generation from Data
-
-Create emails from structured data:
-
-```typescript
-async function emailFromData(data: EmailData) {
-  const builder = new EmailBuilder({
-    name: data.name,
-    subject: data.subject,
-  });
-
-  await builder.initialize();
-
-  // Add components based on data structure
-  for (const section of data.sections) {
-    switch (section.type) {
-      case 'hero':
-        await builder.addHero(section.content);
-        break;
-      case 'text':
-        await builder.addText(section.content);
-        break;
-      case 'list':
-        await builder.addList(section.content);
-        break;
-      case 'cta':
-        await builder.addCTA(section.content);
-        break;
-    }
-  }
-
-  return await builder.toHTML();
-}
-```
-
-### 4. Testing and Automation
-
-Programmatically create test templates:
-
-```typescript
-describe('Email Templates', () => {
-  it('should generate valid welcome email', async () => {
-    const builder = new EmailBuilder({ name: 'Test Welcome Email' });
-    await builder.initialize();
-
-    await builder
-      .addHeader({ logo: 'https://example.com/logo.png' })
-      .addHero({
-        heading: 'Welcome!',
-        buttonText: 'Start',
-        buttonUrl: 'https://example.com',
-      });
-
-    const html = await builder.toHTML();
-
-    expect(html).toContain('Welcome!');
-    expect(html).toContain('https://example.com');
-  });
-});
-```
-
-## Best Practices
-
-### 1. Always Initialize
-
-Always call `initialize()` before using the builder:
-
-```typescript
-const builder = new EmailBuilder();
-await builder.initialize();  // Required!
-```
-
-### 2. Use Method Chaining
-
-Take advantage of the fluent API:
-
-```typescript
-await builder
-  .setName('My Email')
-  .setSubject('Hello!')
-  .addHeader({ logo: '...' })
-  .addText({ content: '...' })
-  .addFooter({ companyName: '...' });
-```
-
-### 3. Handle Errors
-
-Wrap builder calls in try-catch blocks:
-
-```typescript
-try {
-  const builder = new EmailBuilder();
-  await builder.initialize();
-  // ... build email
-  const html = await builder.toHTML();
-} catch (error) {
-  console.error('Email generation failed:', error);
-}
-```
-
-### 4. Optimize for Email Clients
-
-Use the export options to ensure compatibility:
-
-```typescript
-const html = await builder.toHTML({
-  inlineCSS: true,              // Required for most email clients
-  useTableLayout: true,         // Better compatibility
-  addOutlookFixes: true,        // Fix Outlook issues
-  removeIncompatibleCSS: true,  // Remove unsupported CSS
-});
-```
-
-### 5. Reuse Builder Instances
-
-You can reuse a builder instance for multiple emails:
-
-```typescript
-const builder = new EmailBuilder();
-await builder.initialize();
-
-// First email
-await builder.addText({ content: 'Email 1' });
-const html1 = await builder.toHTML();
-await builder.save();
-
-// Load and modify for second email
-await builder.load(templateId);
-// ... modify template
-const html2 = await builder.toHTML();
-```
-
-### 6. Use TypeScript
-
-Take advantage of TypeScript for better type safety:
-
-```typescript
-import type { AddHeroOptions } from '@email-builder/core';
-
-const heroOptions: AddHeroOptions = {
-  heading: 'Welcome!',
-  description: 'Get started today',
-  buttonText: 'Start',
-  buttonUrl: 'https://example.com',
-};
-
-await builder.addHero(heroOptions);
-```
-
-### 7. Store Templates
-
-Save templates for reuse:
-
-```typescript
-// Save template
-await builder.save();
-
-// List templates
-const templates = await builder.listTemplates();
-
-// Load template
-await builder.load(templateId);
-
-// Delete template
-await builder.delete(templateId);
-```
-
-## Advanced Usage
-
-### Access the Underlying Builder
-
-For advanced features, access the core Builder instance:
-
-```typescript
-const coreBuilder = builder.getBuilder();
-
-// Use advanced features
-const registry = coreBuilder.getComponentRegistry();
-const presetManager = coreBuilder.getPresetManager();
-const compatibilityService = coreBuilder.getCompatibilityService();
-
-// Check compatibility
-const report = coreBuilder.checkCompatibility();
-```
-
-### Custom Storage
-
-Configure custom storage:
-
-```typescript
-const builder = new EmailBuilder({
+const builder = new Builder({
   storage: {
     method: 'custom',
-    adapter: new MyCustomStorageAdapter(),
-    keyPrefix: 'my-app',
-  },
+    adapter: new MemoryStorageAdapter()
+  }
 });
+```
+
+#### TypeScript errors
+
+```typescript
+// ❌ Wrong - Missing required fields
+const template: Template = {
+  metadata: { name: 'Test' } // Error: missing required fields
+};
+
+// ✅ Correct - All required fields
+const template: Template = {
+  metadata: {
+    id: crypto.randomUUID(),
+    name: 'Test',
+    version: '1.0.0',
+    createdAt: Date.now(),
+    updatedAt: Date.now()
+  },
+  settings: {
+    target: 'email',
+    locale: 'en-US'
+  },
+  generalStyles: {},
+  components: [],
+  dataInjection: { enabled: false },
+  customData: {}
+};
+```
+
+#### Email export issues
+
+```typescript
+// ❌ Wrong - Builder HTML not email-safe
+const result = exporter.export(template, { format: 'html' });
+sendEmail(result.html); // May break in email clients
+
+// ✅ Correct - Use EmailExportService
+const builderHTML = exporter.export(template, { format: 'html' }).html;
+const emailResult = emailExporter.export(builderHTML, {
+  inlineCSS: true,
+  useTableLayout: true,
+  addOutlookFixes: true
+});
+sendEmail(emailResult.html); // Email-safe!
 ```
 
 ### Debug Mode
 
-Enable debug mode for troubleshooting:
+Enable debug mode for detailed logging:
 
 ```typescript
-const builder = new EmailBuilder({
-  debug: true,  // Enables console logging
+const builder = new Builder({
+  debug: true,
+  callbacks: {
+    onError: (error) => {
+      console.error('Builder error:', error);
+      console.trace(); // Stack trace
+    }
+  }
 });
 ```
 
-## Next Steps
+### Validation
 
-- See [examples](./packages/core/examples/) for more code samples
-- Read the [core documentation](./packages/core/README.md) for advanced features
-- Check out the [UI documentation](./apps/dev/README.md) for the drag-and-drop interface
-- Explore [component definitions](./packages/core/components/definitions/) to understand available components
+Always validate templates before export:
+
+```typescript
+const templateManager = builder.getTemplateManager();
+const validation = templateManager.validate(template);
+
+if (!validation.valid) {
+  console.error('Validation errors:', validation.errors);
+  throw new Error('Template validation failed');
+}
+
+// Check email compatibility
+const compatReport = builder.checkCompatibility();
+if (!compatReport.safeToExport) {
+  console.warn('Compatibility issues found:', compatReport.issues);
+}
+```
+
+### Memory Management
+
+Clean up resources when done:
+
+```typescript
+// Unsubscribe from events
+subscription.unsubscribe();
+
+// Clear command history if needed
+const commandManager = builder.getCommandManager();
+commandManager.clearHistory();
+
+// Destroy builder
+builder.destroy();
+```
+
+---
+
+## Additional Resources
+
+- **Examples Directory**: `/examples` - Complete working examples
+- **API Types**: `packages/core/types/` - Full TypeScript definitions
+- **Component Definitions**: `packages/core/components/definitions/` - Built-in components
+- **Tests**: `packages/core/**/*.test.ts` - Unit tests with usage examples
+
+---
 
 ## Support
 
-For issues, questions, or contributions, please visit our [GitHub repository](https://github.com/your-repo/email-builder).
+For issues, questions, or contributions:
+
+- GitHub Issues: https://github.com/your-org/email-builder/issues
+- Documentation: https://docs.email-builder.dev
+- Examples: https://github.com/your-org/email-builder/tree/main/examples
+
+---
+
+*Last updated: November 2025*

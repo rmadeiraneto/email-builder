@@ -13,14 +13,28 @@ describe('ComponentTreeBuilder', () => {
     builder = new ComponentTreeBuilder();
   });
 
+  const createComponent = (overrides: Partial<BaseComponent> = {}): BaseComponent => ({
+    id: 'comp1',
+    type: 'text',
+    content: {},
+    styles: {},
+    metadata: {
+      name: 'Test Component',
+      category: 'text',
+      locked: false,
+    },
+    createdAt: Date.now(),
+    children: [],
+    ...overrides,
+  });
+
   describe('buildTree', () => {
     it('should build tree from flat component list', () => {
       const components: BaseComponent[] = [
-        {
+        createComponent({
           id: 'root',
           type: 'container',
-          children: [],
-        },
+        }),
       ];
 
       const tree = builder.buildTree(components);
@@ -33,18 +47,15 @@ describe('ComponentTreeBuilder', () => {
 
     it('should handle nested components', () => {
       const components: BaseComponent[] = [
-        {
+        createComponent({
           id: 'parent',
           type: 'container',
-          children: [
-            {
-              id: 'child',
-              type: 'text',
-              content: { text: 'Hello' },
-              children: [],
-            },
-          ],
-        },
+        }),
+        createComponent({
+          id: 'child',
+          parentId: 'parent',
+          content: { text: 'Hello' },
+        }),
       ];
 
       const tree = builder.buildTree(components);
@@ -56,16 +67,14 @@ describe('ComponentTreeBuilder', () => {
 
     it('should handle multiple root components', () => {
       const components: BaseComponent[] = [
-        {
+        createComponent({
           id: 'root1',
           type: 'container',
-          children: [],
-        },
-        {
+        }),
+        createComponent({
           id: 'root2',
           type: 'container',
-          children: [],
-        },
+        }),
       ];
 
       const tree = builder.buildTree(components);
@@ -77,24 +86,20 @@ describe('ComponentTreeBuilder', () => {
 
     it('should handle deeply nested components', () => {
       const components: BaseComponent[] = [
-        {
+        createComponent({
           id: 'level1',
           type: 'container',
-          children: [
-            {
-              id: 'level2',
-              type: 'container',
-              children: [
-                {
-                  id: 'level3',
-                  type: 'text',
-                  content: { text: 'Deep' },
-                  children: [],
-                },
-              ],
-            },
-          ],
-        },
+        }),
+        createComponent({
+          id: 'level2',
+          type: 'container',
+          parentId: 'level1',
+        }),
+        createComponent({
+          id: 'level3',
+          parentId: 'level2',
+          content: { text: 'Deep' },
+        }),
       ];
 
       const tree = builder.buildTree(components);
@@ -110,13 +115,12 @@ describe('ComponentTreeBuilder', () => {
 
     it('should preserve component properties', () => {
       const components: BaseComponent[] = [
-        {
+        createComponent({
           id: 'comp-1',
           type: 'button',
           content: { text: 'Click me' },
           styles: { color: 'blue' },
-          children: [],
-        },
+        }),
       ];
 
       const tree = builder.buildTree(components);
@@ -127,23 +131,19 @@ describe('ComponentTreeBuilder', () => {
 
     it('should set depth property correctly', () => {
       const components: BaseComponent[] = [
-        {
+        createComponent({
           id: 'parent',
           type: 'container',
-          children: [
-            {
-              id: 'child',
-              type: 'container',
-              children: [
-                {
-                  id: 'grandchild',
-                  type: 'text',
-                  children: [],
-                },
-              ],
-            },
-          ],
-        },
+        }),
+        createComponent({
+          id: 'child',
+          type: 'container',
+          parentId: 'parent',
+        }),
+        createComponent({
+          id: 'grandchild',
+          parentId: 'child',
+        }),
       ];
 
       const tree = builder.buildTree(components);

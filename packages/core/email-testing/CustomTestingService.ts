@@ -245,8 +245,10 @@ export class CustomTestingService extends EmailTestingService {
 
     // If no health endpoint works, try fetching clients
     try {
-      await this.getAvailableClients();
-      return true;
+      const clients = await this.getAvailableClients();
+      // Only consider it valid if we actually got clients back
+      // (getAvailableClients returns empty array on failure)
+      return clients.length > 0;
     } catch (error) {
       return false;
     }
@@ -313,12 +315,13 @@ export class CustomTestingService extends EmailTestingService {
   private mapTestStatus(status: string): TestStatus {
     const lowerStatus = status.toLowerCase();
 
-    if (lowerStatus.includes('pend') || lowerStatus.includes('queue')) {
-      return 'pending';
+    // Check 'processing' before 'pending' to avoid matching 'in_progress' as 'pending'
+    if (lowerStatus.includes('process') || lowerStatus.includes('running') || lowerStatus === 'in_progress') {
+      return 'processing';
     }
 
-    if (lowerStatus.includes('process') || lowerStatus.includes('running')) {
-      return 'processing';
+    if (lowerStatus.includes('pend') || lowerStatus.includes('queue') || lowerStatus.includes('waiting')) {
+      return 'pending';
     }
 
     if (lowerStatus.includes('complete') || lowerStatus.includes('done') || lowerStatus.includes('finish')) {

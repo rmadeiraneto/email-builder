@@ -345,13 +345,13 @@ export class TemplateExporter {
 
     // Canvas styles
     css += '    .email-canvas {\n';
-    if (generalStyles.canvasBackgroundColor) {
+    if (generalStyles?.canvasBackgroundColor) {
       css += `      background-color: ${generalStyles.canvasBackgroundColor};\n`;
     }
-    if (generalStyles.canvasBorder) {
+    if (generalStyles?.canvasBorder) {
       css += `      border: ${generalStyles.canvasBorder};\n`;
     }
-    if (settings.canvasDimensions.width) {
+    if (settings.canvasDimensions?.width) {
       css += `      width: ${settings.canvasDimensions.width}px;\n`;
       css += `      max-width: 100%;\n`;
     }
@@ -361,7 +361,7 @@ export class TemplateExporter {
     // Component base styles
     css += '    .component {\n';
     css += '      display: block;\n';
-    if (generalStyles.defaultComponentBackgroundColor) {
+    if (generalStyles?.defaultComponentBackgroundColor) {
       css += `      background-color: ${generalStyles.defaultComponentBackgroundColor};\n`;
     }
     css += '    }\n';
@@ -383,13 +383,13 @@ export class TemplateExporter {
     const { generalStyles, settings } = template;
     const styles: string[] = [];
 
-    if (generalStyles.canvasBackgroundColor) {
+    if (generalStyles?.canvasBackgroundColor) {
       styles.push(`background-color: ${generalStyles.canvasBackgroundColor}`);
     }
-    if (generalStyles.canvasBorder) {
+    if (generalStyles?.canvasBorder) {
       styles.push(`border: ${generalStyles.canvasBorder}`);
     }
-    if (settings.canvasDimensions.width) {
+    if (settings.canvasDimensions?.width) {
       styles.push(`width: ${settings.canvasDimensions.width}px`);
       styles.push('max-width: 100%');
     }

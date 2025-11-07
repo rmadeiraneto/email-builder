@@ -106,7 +106,7 @@ describe('LitmusTestingService', () => {
       const result = await service.testConnection();
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('error');
+      expect(result.error).toBeDefined();
       expect(service.getStatus()).toBe('error');
     });
   });

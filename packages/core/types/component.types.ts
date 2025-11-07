@@ -332,6 +332,7 @@ export interface BaseStyles {
 
 /**
  * Component visibility per device
+ * @deprecated Use ResponsiveVisibility from responsive.types.ts instead
  */
 export interface ResponsiveVisibility {
   desktop: boolean;
@@ -450,8 +451,14 @@ export interface BaseComponent<
 
   /**
    * Responsive visibility
+   * @deprecated Use responsive.visibility instead
    */
   visibility?: ResponsiveVisibility;
+
+  /**
+   * Responsive configuration
+   */
+  responsive?: import('./responsive.types').ComponentResponsiveConfig;
 
   /**
    * Creation timestamp

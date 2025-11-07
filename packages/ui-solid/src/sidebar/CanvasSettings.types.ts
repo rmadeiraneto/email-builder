@@ -13,8 +13,8 @@ export interface CanvasSettingsProps {
 export interface CanvasSettingDefinition {
   key: string;
   label: string;
-  type: 'number' | 'color' | 'text';
-  section: 'dimensions' | 'appearance';
+  type: 'number' | 'color' | 'text' | 'checkbox';
+  section: 'dimensions' | 'appearance' | 'responsive';
   min?: number;
   max?: number;
   placeholder?: string;

@@ -47,6 +47,7 @@ import { CompatibilityService, CompatibilityChecker } from '../compatibility';
 import type { CompatibilityReport } from '../compatibility';
 import { TestMode } from '../config/TestModeManager';
 import { initializeTestAPI } from '../config/TestAPI';
+import { BreakpointManager } from '../responsive';
 
 interface NormalizedConfig extends BuilderConfig {
   locale: string;
@@ -65,6 +66,7 @@ export class Builder {
   private presetManager: PresetManager;
   private compatibilityService: CompatibilityService;
   private compatibilityChecker: CompatibilityChecker;
+  private breakpointManager: BreakpointManager;
   private storageAdapter: StorageAdapter;
   private initialized: boolean = false;
   private state: Record<string, unknown> = {};
@@ -99,6 +101,9 @@ export class Builder {
 
     // Initialize compatibility checker
     this.compatibilityChecker = new CompatibilityChecker(this.compatibilityService);
+
+    // Initialize breakpoint manager
+    this.breakpointManager = new BreakpointManager();
 
     // Initialize test mode
     TestMode.initialize();
@@ -254,6 +259,23 @@ export class Builder {
    */
   public getCompatibilityService(): CompatibilityService {
     return this.compatibilityService;
+  }
+
+  /**
+   * Gets the breakpoint manager
+   *
+   * Provides access to responsive breakpoint management, device detection,
+   * and media query generation utilities.
+   *
+   * @example
+   * ```ts
+   * const breakpointManager = builder.getBreakpointManager();
+   * const device = breakpointManager.detectDevice(768);
+   * console.log(`Device: ${device}`); // 'tablet'
+   * ```
+   */
+  public getBreakpointManager(): BreakpointManager {
+    return this.breakpointManager;
   }
 
   /**

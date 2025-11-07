@@ -1,0 +1,85 @@
+/**
+ * Device Tab Selector Styles
+ */
+
+@import '@email-builder/design-tokens/scss/variables';
+
+.deviceTabSelector {
+  width: 100%;
+  margin-bottom: var(--spacing-md);
+}
+
+.tabContainer {
+  display: flex;
+  gap: var(--spacing-xs);
+  background-color: var(--color-gray-100);
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-md);
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: transparent;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  color: var(--color-gray-700);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+
+  i {
+    font-size: var(--font-size-lg);
+  }
+
+  &:hover:not(.active) {
+    background-color: var(--color-gray-200);
+    color: var(--color-gray-900);
+  }
+
+  &.active {
+    background-color: var(--color-accent-500);
+    color: var(--color-white);
+    box-shadow: var(--shadow-sm);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent-500);
+    outline-offset: 2px;
+  }
+}
+
+.tabLabel {
+  @media (max-width: 480px) {
+    display: none;
+  }
+}
+
+.disabledMessage {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background-color: var(--color-gray-100);
+  border-radius: var(--border-radius-md);
+  border-left: 3px solid var(--color-gray-400);
+  color: var(--color-gray-700);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+
+  i {
+    font-size: var(--font-size-lg);
+    color: var(--color-gray-500);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  span {
+    flex: 1;
+  }
+}

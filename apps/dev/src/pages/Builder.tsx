@@ -16,6 +16,7 @@ import { PreviewModal } from '../components/modals/PreviewModal';
 import { EmailTestingSettingsModal } from '../components/modals/EmailTestingSettingsModal';
 import { TestConfigModal } from '../components/modals/TestConfigModal';
 import { CompatibilityReportModal } from '../components/modals/CompatibilityReportModal';
+import { AccessibilityAnnouncer } from '@email-builder/ui-solid/visual-feedback';
 import type { ComponentDefinition, EmailTestingConfig, EmailTestRequest, CompatibilityReport } from '@email-builder/core';
 import styles from './Builder.module.scss';
 
@@ -30,9 +31,29 @@ const BuilderContent: Component = () => {
   const [compatibilityReport, setCompatibilityReport] = createSignal<CompatibilityReport | null>(null);
   const [pendingAction, setPendingAction] = createSignal<'export' | 'test' | null>(null);
 
+  // Accessibility: track current property being edited
+  const [currentEditingProperty, setCurrentEditingProperty] = createSignal<string | undefined>(undefined);
+  const [currentEditingValue, setCurrentEditingValue] = createSignal<any>(undefined);
+  const [isEditingProperty, setIsEditingProperty] = createSignal(false);
+
   // Handle canvas element ref for visual feedback
   const handleCanvasRef = (element: HTMLElement | null) => {
     actions.setCanvasElement(element);
+  };
+
+  // Wrap visual feedback handlers to update accessibility state
+  const handlePropertyEditStartWithA11y = (event: any) => {
+    setCurrentEditingProperty(event.propertyPath);
+    setCurrentEditingValue(event.currentValue);
+    setIsEditingProperty(true);
+    actions.onPropertyEditStart(event);
+  };
+
+  const handlePropertyEditEndWithA11y = (propertyPath: string) => {
+    setIsEditingProperty(false);
+    setCurrentEditingProperty(undefined);
+    setCurrentEditingValue(undefined);
+    actions.onPropertyEditEnd(propertyPath);
   };
 
   // Get the selected component from the template
@@ -397,13 +418,21 @@ const BuilderContent: Component = () => {
               visualFeedback={{
                 onPropertyHover: actions.onPropertyHover,
                 onPropertyUnhover: actions.onPropertyUnhover,
-                onPropertyEditStart: actions.onPropertyEditStart,
-                onPropertyEditEnd: actions.onPropertyEditEnd,
+                onPropertyEditStart: handlePropertyEditStartWithA11y,
+                onPropertyEditEnd: handlePropertyEditEndWithA11y,
               }}
             />
           </aside>
         </div>
       </div>
+
+      {/* Accessibility announcer for screen readers */}
+      <AccessibilityAnnouncer
+        currentProperty={currentEditingProperty()}
+        currentValue={currentEditingValue()}
+        isEditing={isEditingProperty()}
+        politeness="polite"
+      />
 
       <NewTemplateModal
         isOpen={isNewTemplateModalOpen()}

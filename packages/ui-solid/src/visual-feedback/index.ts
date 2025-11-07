@@ -18,3 +18,6 @@ export type { OffScreenIndicatorProps, OffScreenDirection } from './OffScreenInd
 
 export { PropertyIndicator } from './PropertyIndicator';
 export type { PropertyIndicatorProps, IndicatorPosition } from './PropertyIndicator';
+
+export { AccessibilityAnnouncer } from './AccessibilityAnnouncer';
+export type { AccessibilityAnnouncerProps } from './AccessibilityAnnouncer';

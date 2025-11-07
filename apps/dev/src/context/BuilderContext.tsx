@@ -885,42 +885,82 @@ export const BuilderProvider: ParentComponent = (props) => {
 
       if (!mapping) return;
 
-      // Get the target element
-      const targetElement = event.componentId
-        ? document.querySelector(`[data-component-id="${event.componentId}"]`) as HTMLElement
-        : null;
+      // Get affected elements (usually just the target component)
+      const affectedElements: HTMLElement[] = [];
 
-      if (!targetElement) return;
+      if (event.componentId) {
+        const targetElement = document.querySelector(`[data-component-id="${event.componentId}"]`) as HTMLElement;
+        if (targetElement) {
+          affectedElements.push(targetElement);
+        }
+      }
 
-      // Create overlay based on property type
+      if (affectedElements.length === 0) return;
+
+      // Filter to visible elements
+      const visibleElements = manager.getVisibleElements(affectedElements);
+
+      // Get off-screen elements
+      const offScreenElements = manager.getOffScreenElements(affectedElements);
+
+      // Get property type for overlay selection
       const propertyType = propertyMappingRegistry.getPropertyType(event.propertyPath);
 
-      if (propertyType === 'spacing' || propertyType === 'size') {
-        // Show measurement lines
-        manager.createOverlay('measurement', {
-          targetElement,
-          propertyPath: event.propertyPath,
-          value: event.currentValue,
-          visualMapping: mapping,
-          mode: 'hover',
+      // Create overlays for all visible elements
+      visibleElements.forEach((element) => {
+        if (propertyType === 'spacing' || propertyType === 'size') {
+          // Show measurement lines
+          manager.createOverlay('measurement', {
+            targetElement: element,
+            propertyPath: event.propertyPath,
+            value: event.currentValue,
+            visualMapping: mapping,
+            mode: 'hover',
+          });
+        } else if (propertyType === 'color' || propertyType === 'border' || propertyType === 'typography') {
+          // Show region highlight
+          manager.createOverlay('region', {
+            targetElement: element,
+            propertyPath: event.propertyPath,
+            value: event.currentValue,
+            visualMapping: mapping,
+            mode: 'hover',
+          });
+        } else if (propertyType === 'content') {
+          // Show property indicator
+          manager.createOverlay('indicator', {
+            targetElement: element,
+            propertyPath: event.propertyPath,
+            value: event.currentValue,
+            visualMapping: mapping,
+            mode: 'hover',
+          });
+        }
+      });
+
+      // Create off-screen indicators if elements are outside viewport
+      if (offScreenElements.length > 0) {
+        // Group by primary direction
+        const directionGroups = new Map<string, number>();
+
+        offScreenElements.forEach((offScreen) => {
+          // Use the first (primary) direction
+          const primaryDirection = offScreen.directions[0];
+          const count = directionGroups.get(primaryDirection) || 0;
+          directionGroups.set(primaryDirection, count + 1);
         });
-      } else if (propertyType === 'color' || propertyType === 'border' || propertyType === 'typography') {
-        // Show region highlight
-        manager.createOverlay('region', {
-          targetElement,
-          propertyPath: event.propertyPath,
-          value: event.currentValue,
-          visualMapping: mapping,
-          mode: 'hover',
-        });
-      } else if (propertyType === 'content') {
-        // Show property indicator
-        manager.createOverlay('indicator', {
-          targetElement,
-          propertyPath: event.propertyPath,
-          value: event.currentValue,
-          visualMapping: mapping,
-          mode: 'hover',
+
+        // Create an indicator for each direction group
+        directionGroups.forEach((count, direction) => {
+          manager.createOverlay('offscreen', {
+            targetElement: affectedElements[0], // Use first element as reference
+            propertyPath: event.propertyPath,
+            value: event.currentValue,
+            visualMapping: mapping,
+            mode: 'hover',
+            direction: direction as any,
+            count,
+          });
         });
       }
     },

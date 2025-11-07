@@ -1043,6 +1043,47 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
     props.onGeneralStyleChange(property.key, value);
   };
 
+  // Visual feedback event handlers
+  const handlePropertyHover = (property: PropertyDefinition) => {
+    if (!props.visualFeedback?.onPropertyHover) return;
+
+    const currentValue = props.selectedComponent
+      ? getNestedValue(props.selectedComponent, property.key)
+      : undefined;
+
+    props.visualFeedback.onPropertyHover({
+      propertyPath: property.key,
+      componentId: props.selectedComponent?.id,
+      currentValue,
+      propertyType: property.type,
+    });
+  };
+
+  const handlePropertyUnhover = (property: PropertyDefinition) => {
+    if (!props.visualFeedback?.onPropertyUnhover) return;
+    props.visualFeedback.onPropertyUnhover(property.key);
+  };
+
+  const handlePropertyEditStart = (property: PropertyDefinition) => {
+    if (!props.visualFeedback?.onPropertyEditStart) return;
+
+    const currentValue = props.selectedComponent
+      ? getNestedValue(props.selectedComponent, property.key)
+      : undefined;
+
+    props.visualFeedback.onPropertyEditStart({
+      propertyPath: property.key,
+      componentId: props.selectedComponent?.id,
+      isEditing: true,
+      currentValue,
+    });
+  };
+
+  const handlePropertyEditEnd = (property: PropertyDefinition) => {
+    if (!props.visualFeedback?.onPropertyEditEnd) return;
+    props.visualFeedback.onPropertyEditEnd(property.key);
+  };
+
   const renderPropertyEditor = (property: PropertyDefinition) => {
     if (!props.selectedComponent) return null;
 
@@ -1075,6 +1116,10 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               value={currentValue || ''}
               placeholder={property.placeholder}
               onInput={(e) => handlePropertyChange(property, e.currentTarget.value)}
+              onMouseEnter={() => handlePropertyHover(property)}
+              onMouseLeave={() => handlePropertyUnhover(property)}
+              onFocus={() => handlePropertyEditStart(property)}
+              onBlur={() => handlePropertyEditEnd(property)}
             />
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
@@ -1095,6 +1140,10 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               placeholder={property.placeholder}
               rows={4}
               onInput={(e) => handlePropertyChange(property, e.currentTarget.value)}
+              onMouseEnter={() => handlePropertyHover(property)}
+              onMouseLeave={() => handlePropertyUnhover(property)}
+              onFocus={() => handlePropertyEditStart(property)}
+              onBlur={() => handlePropertyEditEnd(property)}
             />
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
@@ -1153,6 +1202,10 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
                 const numValue = Number(e.currentTarget.value);
                 handlePropertyChange(property, isNaN(numValue) ? 0 : numValue);
               }}
+              onMouseEnter={() => handlePropertyHover(property)}
+              onMouseLeave={() => handlePropertyUnhover(property)}
+              onFocus={() => handlePropertyEditStart(property)}
+              onBlur={() => handlePropertyEditEnd(property)}
             />
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
@@ -1183,12 +1236,20 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               class={styles.propertyColorInput}
               value={currentValue || '#000000'}
               onInput={(e) => handlePropertyChange(property, e.currentTarget.value)}
+              onMouseEnter={() => handlePropertyHover(property)}
+              onMouseLeave={() => handlePropertyUnhover(property)}
+              onFocus={() => handlePropertyEditStart(property)}
+              onBlur={() => handlePropertyEditEnd(property)}
             />
             <input
               type="text"
               class={styles.propertyInput}
               value={currentValue || '#000000'}
               onInput={(e) => handlePropertyChange(property, e.currentTarget.value)}
+              onMouseEnter={() => handlePropertyHover(property)}
+              onMouseLeave={() => handlePropertyUnhover(property)}
+              onFocus={() => handlePropertyEditStart(property)}
+              onBlur={() => handlePropertyEditEnd(property)}
             />
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
@@ -1218,6 +1279,10 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               class={styles.propertySelect}
               value={currentValue}
               onChange={(e) => handlePropertyChange(property, e.currentTarget.value)}
+              onMouseEnter={() => handlePropertyHover(property)}
+              onMouseLeave={() => handlePropertyUnhover(property)}
+              onFocus={() => handlePropertyEditStart(property)}
+              onBlur={() => handlePropertyEditEnd(property)}
             >
               <For each={property.options}>
                 {(option) => (
@@ -1250,6 +1315,10 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
                         onChange={(e) =>
                           handlePropertyChange(property, e.currentTarget.value)
                         }
+                        onMouseEnter={() => handlePropertyHover(property)}
+                        onMouseLeave={() => handlePropertyUnhover(property)}
+                        onFocus={() => handlePropertyEditStart(property)}
+                        onBlur={() => handlePropertyEditEnd(property)}
                       />
                       {option.label}
                     </label>
@@ -1300,6 +1369,10 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               value={currentValue || ''}
               placeholder={property.placeholder}
               onInput={(e) => handleGeneralStyleChange(property, e.currentTarget.value)}
+              onMouseEnter={() => handlePropertyHover(property)}
+              onMouseLeave={() => handlePropertyUnhover(property)}
+              onFocus={() => handlePropertyEditStart(property)}
+              onBlur={() => handlePropertyEditEnd(property)}
             />
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
@@ -1335,6 +1408,10 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
                 const numValue = Number(e.currentTarget.value);
                 handleGeneralStyleChange(property, isNaN(numValue) ? 0 : numValue);
               }}
+              onMouseEnter={() => handlePropertyHover(property)}
+              onMouseLeave={() => handlePropertyUnhover(property)}
+              onFocus={() => handlePropertyEditStart(property)}
+              onBlur={() => handlePropertyEditEnd(property)}
             />
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
@@ -1365,12 +1442,20 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               class={styles.propertyColorInput}
               value={currentValue || '#000000'}
               onInput={(e) => handleGeneralStyleChange(property, e.currentTarget.value)}
+              onMouseEnter={() => handlePropertyHover(property)}
+              onMouseLeave={() => handlePropertyUnhover(property)}
+              onFocus={() => handlePropertyEditStart(property)}
+              onBlur={() => handlePropertyEditEnd(property)}
             />
             <input
               type="text"
               class={styles.propertyInput}
               value={currentValue || '#000000'}
               onInput={(e) => handleGeneralStyleChange(property, e.currentTarget.value)}
+              onMouseEnter={() => handlePropertyHover(property)}
+              onMouseLeave={() => handlePropertyUnhover(property)}
+              onFocus={() => handlePropertyEditStart(property)}
+              onBlur={() => handlePropertyEditEnd(property)}
             />
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
@@ -1400,6 +1485,10 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               class={styles.propertySelect}
               value={currentValue}
               onChange={(e) => handleGeneralStyleChange(property, e.currentTarget.value)}
+              onMouseEnter={() => handlePropertyHover(property)}
+              onMouseLeave={() => handlePropertyUnhover(property)}
+              onFocus={() => handlePropertyEditStart(property)}
+              onBlur={() => handlePropertyEditEnd(property)}
             >
               <For each={property.options}>
                 {(option) => (

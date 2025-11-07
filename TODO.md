@@ -232,47 +232,7 @@
 
 ---
 
-### 🎨 Priority 2: Framework Adapters (React, Next.js, Blazor)
-**Priority: HIGH** - REQUIREMENTS.md §11, §10
-**Status**: Not Started
-**Estimated Time**: 16-20 hours total
-
-#### Phase 1: React Adapter (6-8 hours)
-- [ ] Create `packages/adapters/react/` package
-- [ ] EmailBuilderProvider component (React Context)
-- [ ] useEmailBuilder hook for accessing builder instance
-- [ ] useTemplate hook for template state
-- [ ] useComponent hook for component operations
-- [ ] React component wrappers for UI components
-- [ ] Integration examples
-- [ ] Unit tests for adapter
-
-#### Phase 2: Next.js Adapter (4-6 hours)
-- [ ] Create `packages/adapters/next/` package
-- [ ] Server Components integration
-- [ ] Client Components integration
-- [ ] API Routes examples for headless API
-- [ ] SSR support for template rendering
-- [ ] Static generation examples
-- [ ] Integration guide
-
-#### Phase 3: Blazor Adapter (6-8 hours)
-- [ ] Create `packages/adapters/blazor/` package
-- [ ] Blazor component wrappers
-- [ ] C# API bindings for headless API
-- [ ] Interop layer with JavaScript core
-- [ ] Blazor examples
-- [ ] NuGet package configuration
-
-#### Deliverables:
-- 3 framework adapters
-- Integration guides for each framework
-- Working examples for each adapter
-- Unit tests for all adapters
-
----
-
-### 📱 Priority 3: Responsive Design System
+### 📱 Priority 2: Responsive Design System
 **Priority: MEDIUM-HIGH** - REQUIREMENTS.md §2.9
 **Status**: Not Started
 **Estimated Time**: 12-16 hours
@@ -311,7 +271,7 @@
 
 ---
 
-### 🔄 Priority 4: Data Injection System
+### 🔄 Priority 3: Data Injection System
 **Priority: MEDIUM** - REQUIREMENTS.md §2.8
 **Status**: Not Started
 **Estimated Time**: 10-14 hours
@@ -337,6 +297,7 @@
 - [ ] Data source testing/validation UI
 
 #### Phase 4: Processing Service (2-3 hours)
+
 - [ ] Create DataProcessingService (headless)
 - [ ] Template rendering with data
 - [ ] Handle missing data gracefully
@@ -344,10 +305,56 @@
 - [ ] Loop unrolling for lists
 
 #### Deliverables:
+
 - Complete data injection system
 - Support for dynamic content
 - UI for managing data sources
 - Headless API for data processing
+
+---
+
+### 🎨 Priority 4: Framework Adapters (React, Next.js, Blazor)
+
+**Priority: HIGH** - REQUIREMENTS.md §11, §10
+**Status**: Not Started
+**Estimated Time**: 16-20 hours total
+
+#### Phase 1: React Adapter (6-8 hours)
+
+- [ ] Create `packages/adapters/react/` package
+- [ ] EmailBuilderProvider component (React Context)
+- [ ] useEmailBuilder hook for accessing builder instance
+- [ ] useTemplate hook for template state
+- [ ] useComponent hook for component operations
+- [ ] React component wrappers for UI components
+- [ ] Integration examples
+- [ ] Unit tests for adapter
+
+#### Phase 2: Next.js Adapter (4-6 hours)
+
+- [ ] Create `packages/adapters/next/` package
+- [ ] Server Components integration
+- [ ] Client Components integration
+- [ ] API Routes examples for headless API
+- [ ] SSR support for template rendering
+- [ ] Static generation examples
+- [ ] Integration guide
+
+#### Phase 3: Blazor Adapter (6-8 hours)
+
+- [ ] Create `packages/adapters/blazor/` package
+- [ ] Blazor component wrappers
+- [ ] C# API bindings for headless API
+- [ ] Interop layer with JavaScript core
+- [ ] Blazor examples
+- [ ] NuGet package configuration
+
+#### Deliverables:
+
+- 3 framework adapters
+- Integration guides for each framework
+- Working examples for each adapter
+- Unit tests for all adapters
 
 ---
 

@@ -57,7 +57,6 @@ export type {
   PerformanceThresholds,
 
   // Manager configuration types
-  OverlayManagerConfig,
   AnimationControllerConfig,
   VisualFeedbackManagerConfig,
 } from './visual-feedback.types';
@@ -81,3 +80,7 @@ export {
 
 // Export AnimationController
 export { AnimationController } from './AnimationController';
+
+// Export OverlayManager
+export { OverlayManager } from './OverlayManager';
+export type { OverlayManagerConfig } from './OverlayManager';

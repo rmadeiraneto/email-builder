@@ -224,6 +224,137 @@
 
 ## 🎯 Next Priorities
 
+### 🎨 Priority 0: Visual Property Feedback System - IN PROGRESS
+**Priority: CRITICAL** - Dramatically improves UX and builder discoverability
+**Status**: Ready to implement
+**Time Estimate**: 16-20 hours
+**Requirements**: REQUIREMENTS.md §16
+
+#### Phase 1: Core Infrastructure (4-5 hours)
+- [ ] **Type Definitions & Configuration** (1 hour)
+  - [ ] Create `packages/core/visual-feedback/visual-feedback.types.ts`
+  - [ ] Define `VisualFeedbackConfig` interface
+  - [ ] Define `PropertyVisualMapping` interface
+  - [ ] Define overlay types and animation types
+  - [ ] Export from core package
+
+- [ ] **Property Mapping System** (1.5 hours)
+  - [ ] Create `packages/core/visual-feedback/PropertyMappingRegistry.ts`
+  - [ ] Default mappings for all base component properties
+  - [ ] Default mappings for all email component properties
+  - [ ] Mapping lookup and resolution logic
+  - [ ] Override mechanism for complex cases
+
+- [ ] **Animation Controller** (1.5-2 hours)
+  - [ ] Create `packages/core/visual-feedback/AnimationController.ts`
+  - [ ] Web Animations API integration
+  - [ ] Animation queue management
+  - [ ] Interruption handling (smooth transition to new target)
+  - [ ] Performance monitoring and fallbacks
+  - [ ] Easing curve application
+  - [ ] Respect `prefers-reduced-motion` setting
+  - [ ] Configuration-driven durations and easing
+
+#### Phase 2: Overlay System (5-6 hours)
+- [ ] **Overlay Manager Service** (2-3 hours)
+  - [ ] Create `packages/core/visual-feedback/OverlayManager.ts`
+  - [ ] Overlay lifecycle (create, update, destroy)
+  - [ ] Position calculation for canvas elements
+  - [ ] Viewport detection and clipping
+  - [ ] Z-index and layer management
+  - [ ] Multiple overlay coordination
+
+- [ ] **Measurement Line Renderer** (2 hours)
+  - [ ] Create `packages/ui-solid/src/visual-feedback/MeasurementOverlay.tsx`
+  - [ ] Figma-style measurement lines (SVG-based)
+  - [ ] Dimension labels with intelligent positioning
+  - [ ] Line caps/brackets
+  - [ ] Configurable colors and styles
+  - [ ] Responsive to zoom and canvas transforms
+
+- [ ] **Region Highlight Renderer** (1 hour)
+  - [ ] Create `packages/ui-solid/src/visual-feedback/RegionHighlight.tsx`
+  - [ ] Padding/margin area visualization
+  - [ ] Color-coded regions
+  - [ ] Semi-transparent overlays
+  - [ ] Border and content region highlights
+
+#### Phase 3: Property Control Integration (3-4 hours)
+- [ ] **PropertyPanel Event Emission** (1.5 hours)
+  - [ ] Add hover event handlers to all property inputs
+  - [ ] Add focus/blur event handlers
+  - [ ] Emit property hover events with mapping data
+  - [ ] Emit property edit start/end events
+  - [ ] Include property path, type, and current value
+
+- [ ] **Event Bus Integration** (1 hour)
+  - [ ] Create visual feedback event types
+  - [ ] Wire PropertyPanel events to OverlayManager
+  - [ ] Wire property change events to AnimationController
+  - [ ] Handle component selection changes
+
+- [ ] **Off-Screen Indicators** (1-1.5 hours)
+  - [ ] Create `packages/ui-solid/src/visual-feedback/OffScreenIndicator.tsx`
+  - [ ] Directional arrows at canvas edges
+  - [ ] Count display for multiple elements
+  - [ ] Positioning logic based on element locations
+
+#### Phase 4: Special Cases & Polish (2-3 hours)
+- [ ] **Non-Visual Property Indicators** (1 hour)
+  - [ ] Create `packages/ui-solid/src/visual-feedback/PropertyIndicator.tsx`
+  - [ ] Floating label component
+  - [ ] Auto-dismiss with configurable duration
+  - [ ] Positioning near affected component
+  - [ ] Fade in/out animations
+
+- [ ] **Multiple Element Handling** (1 hour)
+  - [ ] Viewport filtering logic
+  - [ ] Simultaneous highlight coordination
+  - [ ] General styles multi-component support
+  - [ ] Performance optimization for many elements
+
+- [ ] **Accessibility & Polish** (1 hour)
+  - [ ] `prefers-reduced-motion` detection
+  - [ ] ARIA live regions for screen readers
+  - [ ] Keyboard navigation support
+  - [ ] Visual polish and refinement
+
+#### Phase 5: Builder Integration & Testing (2-3 hours)
+- [ ] **Builder Class Integration** (1 hour)
+  - [ ] Add `VisualFeedbackManager` to Builder
+  - [ ] Configuration loading and validation
+  - [ ] Initialize OverlayManager and AnimationController
+  - [ ] Expose control methods via Builder API
+  - [ ] Runtime configuration updates
+
+- [ ] **BuilderContext Integration** (1 hour)
+  - [ ] Add visual feedback state to context
+  - [ ] Wire up event handlers
+  - [ ] Connect to PropertyPanel and Canvas
+  - [ ] Performance monitoring
+
+- [ ] **Testing & Bug Fixes** (1-2 hours)
+  - [ ] Manual testing of all property types
+  - [ ] Test animation interruptions
+  - [ ] Test multiple simultaneous highlights
+  - [ ] Test off-screen indicators
+  - [ ] Test performance with many elements
+  - [ ] Fix bugs and edge cases
+
+#### Deliverables:
+- ✅ Complete visual feedback system with highlights and animations
+- ✅ Figma-style measurement overlays
+- ✅ Configurable animation system
+- ✅ Property-to-visual mapping registry
+- ✅ Support for all animatable properties
+- ✅ Off-screen indicators
+- ✅ Non-visual property indicators
+- ✅ Accessibility compliance
+- ✅ Comprehensive configuration system
+- ✅ Ready for custom component builder
+
+---
+
 ### ✅ Priority 1: Headless API Documentation & Examples - COMPLETE
 **Priority: HIGH** - Enable developers to use the headless API effectively
 **Status**: ✅ Complete (Nov 2025)

@@ -1,0 +1,78 @@
+/**
+ * Off-Screen Indicator Styles
+ *
+ * Directional arrows and count badges at canvas edges
+ */
+
+.offScreenIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 6px;
+  padding: 4px 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  animation: pulse 2s ease-in-out infinite;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    animation: none;
+  }
+
+  &[data-direction='top'],
+  &[data-direction='bottom'] {
+    flex-direction: column;
+  }
+
+  &[data-direction='left'],
+  &[data-direction='right'] {
+    flex-direction: row;
+  }
+}
+
+.arrow {
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.countBadge {
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  padding: 0 4px;
+  margin-left: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+
+  .offScreenIndicator[data-direction='top'] &,
+  .offScreenIndicator[data-direction='bottom'] & {
+    margin-left: 0;
+    margin-top: 4px;
+  }
+}
+
+// Pulse animation to draw attention
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+}
+
+// Clickable cursor
+.offScreenIndicator[style*='pointer'] {
+  &:active {
+    transform: scale(0.95);
+  }
+}

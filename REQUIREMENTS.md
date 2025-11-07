@@ -1171,7 +1171,293 @@ async function testCreateTemplate() {
 - [ ] Integration guide for test frameworks
 - [ ] AI agent testing guide with examples
 
-## 16. Glossary
+## 16. Visual Property Feedback System
+
+### 16.1 Purpose
+Provide immediate, intuitive visual feedback when users interact with property controls, creating a direct connection between UI controls and their effects on the canvas. This enhances the user experience by making the builder more discoverable and delightful to use.
+
+### 16.2 Core Behavior
+
+#### 16.2.1 Hover State - Preview
+When a user hovers over any property input control:
+- **Visual Indicators**: Display measurement lines and visual overlays showing which parts of the component will be affected
+- **Style**: Design tool aesthetic (Figma-style red measurement lines)
+- **Scope**: Show indicators for all affected elements currently visible in the viewport
+- **Non-visual Properties**: For properties without visual representation (alt text, URLs), show a subtle indicator with property name near the component for 1 second (configurable duration)
+
+#### 16.2.2 Active Editing State - Feedback
+When a user is actively editing a property value:
+- **Enhanced Indicators**: Show measurement lines plus pixel/value labels
+- **Real-time Updates**: Update visual indicators instantly as value changes
+- **Performance Optimization**: For rapid changes (dragging sliders, holding increment buttons):
+  - Update instantly without animation during interaction
+  - Apply animation on interaction end if needed
+  - Implement debouncing if performance issues occur
+
+#### 16.2.3 Value Change - Animation
+When a property value changes:
+- **Animation Duration**: Quick, snappy animations (150-200ms default)
+- **Duration Configuration**: Different durations per property type (all configurable):
+  - Spacing properties: 150ms default
+  - Color properties: 200ms default
+  - Layout properties: 180ms default
+  - Typography properties: 150ms default
+- **Easing**: Use easing curves (ease-out default, configurable per property type)
+- **Implementation**: Web Animations API for native, performant animations
+- **Scope**: All properties that can be visually animated
+
+#### 16.2.4 Animation Behavior
+- **Continuous Changes**: If animation is running and value changes again, smoothly transition from current position to new target (no restart)
+- **Interruption Handling**: Cancel previous animation and start new one from current state
+- **Reduced Motion**: Automatically respect browser's `prefers-reduced-motion` setting (can be overridden via configuration)
+
+### 16.3 Visual Design
+
+#### 16.3.1 Highlight Overlays
+- **Rendering Method**: Separate overlay layer on top of canvas (non-intrusive)
+- **Color Scheme**: Different shades of a single accent color
+  - Lighter shades for hover state
+  - Darker/more saturated for active editing state
+  - Color variations to distinguish multiple simultaneous highlights
+- **Viewport Constraints**: Only highlight elements currently visible in viewport
+
+#### 16.3.2 Measurement Indicators
+- **Spacing Properties** (padding, margin, gaps):
+  - Figma-style measurement lines with pixel values
+  - Red lines (or configurable color) with dimension labels
+  - Brackets/caps on line ends
+  - Value labels positioned intelligently to avoid overlap
+- **Size Properties** (width, height):
+  - Dimension lines along edges
+  - Pixel values displayed
+- **Color Properties**:
+  - Subtle outline or glow on affected elements
+- **Typography Properties**:
+  - Highlight text content with property indicator
+
+#### 16.3.3 Off-Screen Indicators
+When affected elements are outside viewport:
+- Display directional indicator/arrow showing that elements off-screen will be affected
+- Show count if multiple elements affected
+- Position indicator at canvas edge pointing in direction of off-screen elements
+
+#### 16.3.4 Non-Visual Property Indicators
+For properties without visual representation:
+- Display floating label near component
+- Show property name and new value
+- Auto-dismiss after configurable duration (1 second default)
+- Subtle, non-intrusive styling
+
+### 16.4 Scope & Coverage
+
+#### 16.4.1 Property Types Supporting Animation
+- **Layout & Spacing**: padding, margin, gap, width, height, max-width, max-height
+- **Typography**: font-size, line-height, letter-spacing
+- **Colors**: color, background-color, border-color
+- **Borders**: border-width, border-radius
+- **Visual Effects**: opacity, box-shadow, text-shadow (where supported)
+- **Positioning**: top, left, right, bottom (for positioned elements)
+
+#### 16.4.2 Property Types with Visual Indicators Only
+- **Content**: text, alt text, URLs (show property name indicator)
+- **Structural**: layout type, component type (show indicator)
+- **Conditional**: visibility, display (highlight affected element)
+
+#### 16.4.3 Multiple Element Handling
+When a property affects multiple elements:
+- Highlight all affected elements visible in viewport
+- Animate all affected elements simultaneously
+- For general styles affecting many elements, prioritize visible ones
+- Show off-screen indicator if some elements are outside viewport
+
+### 16.5 Configuration System
+
+#### 16.5.1 Builder Configuration
+```typescript
+interface VisualFeedbackConfig {
+  // Global enable/disable
+  enabled: boolean; // default: true
+
+  // Animation configuration
+  animations: {
+    enabled: boolean; // default: true
+    durations: {
+      spacing: number; // default: 150
+      color: number; // default: 200
+      layout: number; // default: 180
+      typography: number; // default: 150
+      default: number; // default: 200
+    };
+    easing: {
+      spacing: string; // default: 'ease-out'
+      color: string; // default: 'ease-in-out'
+      layout: string; // default: 'ease-out'
+      typography: string; // default: 'ease-out'
+      default: string; // default: 'ease-out'
+    };
+  };
+
+  // Highlight configuration
+  highlights: {
+    enabled: boolean; // default: true
+    color: string; // default: theme accent color
+    opacity: number; // default: 0.8
+    showValues: boolean; // default: true
+  };
+
+  // Non-visual property indicators
+  propertyIndicators: {
+    enabled: boolean; // default: true
+    duration: number; // default: 1000 (ms)
+    position: 'near-component' | 'fixed-top' | 'fixed-bottom'; // default: 'near-component'
+  };
+
+  // Accessibility
+  respectReducedMotion: boolean; // default: true
+
+  // Performance
+  performance: {
+    debounceDelay: number; // default: 16 (ms) - for rapid changes
+    maxSimultaneousAnimations: number; // default: 10
+  };
+}
+```
+
+#### 16.5.2 Configuration Override
+- Host application provides configuration via Builder initialization
+- All configuration values have sensible defaults
+- Individual settings can be overridden without providing full configuration object
+- Configuration can be updated at runtime via Builder API
+
+### 16.6 Technical Architecture
+
+#### 16.6.1 Property-to-Visual Mapping
+- **Default Mapping**: Predefined configuration mapping property names to visual targets
+- **Override Mechanism**: PropertyPanel can pass explicit mapping information for complex cases
+- **Mapping Structure**:
+  ```typescript
+  interface PropertyVisualMapping {
+    propertyPath: string; // e.g., 'content.padding'
+    visualTarget: {
+      type: 'spacing' | 'size' | 'color' | 'border' | 'text' | 'indicator';
+      selector?: string; // CSS selector for target elements
+      region?: 'padding' | 'margin' | 'content' | 'border' | 'all';
+      measurementType?: 'horizontal' | 'vertical' | 'both';
+    };
+  }
+  ```
+
+#### 16.6.2 Component Integration
+- **Component Definitions**: Each component type defines its property mappings
+- **Custom Components**: Automatically inherit mapping system
+- **Base Components**: Standard mappings apply automatically
+- **Compound Components**: Mappings cascade to child components
+
+#### 16.6.3 Overlay Management
+- **OverlayManager Service**: Centralized service for managing highlight overlays
+  - Create/destroy overlays
+  - Update overlay positions
+  - Handle viewport changes
+  - Manage z-index and layering
+- **Overlay Types**:
+  - Measurement lines (spacing, sizing)
+  - Region highlights (padding, margin areas)
+  - Element outlines (borders, glows)
+  - Property indicators (floating labels)
+
+#### 16.6.4 Animation Controller
+- **AnimationController Service**: Manages all property change animations
+  - Queue and prioritize animations
+  - Handle animation interruptions
+  - Apply easing curves
+  - Respect performance constraints
+  - Integrate with Web Animations API
+- **Animation Registry**: Track active animations per element/property
+- **Performance Monitoring**: Detect performance issues and apply fallbacks
+
+#### 16.6.5 Event System Integration
+- **Property Hover Events**: Emitted from property controls
+- **Property Edit Events**: Emitted during active editing
+- **Property Change Events**: Emitted when value changes
+- **Canvas Events**: Subscribe to scroll, zoom, resize for overlay updates
+
+### 16.7 Modularity & Extensibility
+
+#### 16.7.1 Custom Component Support
+- System automatically works with any component following standard interface
+- No manual configuration required from custom component creators
+- Standard property types map automatically
+- Custom properties can define optional visual hints in component definition
+
+#### 16.7.2 Plugin Architecture
+- Visual feedback system implemented as modular plugin
+- Can be disabled entirely if not needed
+- Other plugins can register custom visual feedback behaviors
+- Extensible mapping system for custom property types
+
+#### 16.7.3 Framework Agnostic
+- Core logic in framework-agnostic code
+- UI overlay rendering abstracted
+- Animation system uses native Web APIs
+- Easy integration with React, Solid, Blazor adapters
+
+### 16.8 User Experience
+
+#### 16.8.1 Learning & Discovery
+- Immediate visual feedback helps users understand property effects
+- Reduces trial-and-error in customization
+- Makes complex spacing and layout properties more intuitive
+- Enhances perceived polish and quality of the builder
+
+#### 16.8.2 Performance Perception
+- Quick animations make the UI feel responsive
+- Smooth transitions feel professional and refined
+- Real-time feedback during editing feels direct and connected
+
+#### 16.8.3 Accessibility
+- Respects `prefers-reduced-motion` by default
+- All feedback is supplementary (not required for functionality)
+- Keyboard users receive same feedback as mouse users
+- Screen readers receive appropriate ARIA updates for property changes
+
+### 16.9 Success Criteria
+
+#### 16.9.1 Functional Requirements
+- [ ] Hover on any property control shows visual indicator on canvas
+- [ ] Active editing shows enhanced indicators with values
+- [ ] Property changes animate smoothly within configured duration
+- [ ] All animatable properties support animation
+- [ ] Non-visual properties show temporary indicator
+- [ ] Multiple affected elements highlight simultaneously
+- [ ] Off-screen indicators appear when elements are outside viewport
+- [ ] Configuration system allows full customization
+- [ ] Respects `prefers-reduced-motion` setting
+
+#### 16.9.2 Performance Requirements
+- [ ] Smooth 60fps animation performance
+- [ ] No janky or stuttering animations
+- [ ] Debouncing works correctly for rapid changes
+- [ ] No memory leaks from overlay management
+- [ ] Efficient overlay rendering (minimal repaints)
+- [ ] Graceful performance degradation under load
+
+#### 16.9.3 User Experience Requirements
+- [ ] Visual feedback feels immediate and responsive
+- [ ] Animations feel polished and professional
+- [ ] Measurement indicators are clear and readable
+- [ ] No visual clutter or confusion
+- [ ] Works seamlessly with existing drag-and-drop
+- [ ] Compatible with all component types
+
+#### 16.9.4 Code Quality Requirements
+- [ ] Modular, reusable architecture
+- [ ] TypeScript strict mode compliant
+- [ ] Comprehensive unit tests
+- [ ] Well-documented API
+- [ ] Easy to extend for custom properties
+- [ ] Works with custom component builder (future)
+
+## 17. Glossary
 
 - **Component**: Reusable building block (Header, Footer, Button, etc.)
 - **Template**: Complete email/page layout with components

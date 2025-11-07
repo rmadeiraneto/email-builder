@@ -1,0 +1,64 @@
+/**
+ * Region Highlight Styles
+ *
+ * Semi-transparent overlays for padding/margin regions and outlines
+ */
+
+.regionFill {
+  box-sizing: border-box;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.regionOutline {
+  box-sizing: border-box;
+  animation: fadeIn 0.15s ease-out;
+}
+
+// Animations for appearing/disappearing
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Hover state enhancements
+.regionFill[data-mode='hover'] {
+  transition: opacity 0.15s ease-out, background-color 0.15s ease-out;
+}
+
+.regionFill[data-mode='active'] {
+  transition: opacity 0.15s ease-out, background-color 0.15s ease-out;
+}
+
+.regionOutline[data-mode='hover'] {
+  transition: opacity 0.15s ease-out, border-color 0.15s ease-out;
+}
+
+.regionOutline[data-mode='active'] {
+  transition: opacity 0.15s ease-out, border-color 0.15s ease-out;
+  border-width: 2px;
+}
+
+// Region-specific styles
+.regionFill[data-region='padding'] {
+  // Slightly rounded corners for padding
+  border-radius: 2px;
+}
+
+.regionFill[data-region='margin'] {
+  // No border radius for margin (outside element)
+  border-radius: 0;
+}
+
+.regionOutline[data-region='content'] {
+  // Outline for content area
+  border-style: solid;
+}
+
+.regionOutline[data-region='border'] {
+  // Dashed outline for border region
+  border-style: dashed;
+}

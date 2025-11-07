@@ -1,4 +1,24 @@
-import type { BaseComponent, ComponentPreset, ComponentType, Template } from '@email-builder/core';
+import type { BaseComponent, ComponentPreset, ComponentType, Template, PropertyVisualMapping } from '@email-builder/core';
+
+/**
+ * Visual feedback event for property hover
+ */
+export interface PropertyHoverEvent {
+  propertyPath: string;
+  componentId?: string;
+  currentValue?: any;
+  propertyType: 'text' | 'number' | 'color' | 'select' | 'textarea' | 'url' | 'richtext' | 'radio';
+}
+
+/**
+ * Visual feedback event for property edit
+ */
+export interface PropertyEditEvent {
+  propertyPath: string;
+  componentId?: string;
+  isEditing: boolean;
+  currentValue?: any;
+}
 
 /**
  * Property Panel Props
@@ -46,6 +66,16 @@ export interface PropertyPanelProps {
     listPresets: (componentType?: ComponentType) => Promise<ComponentPreset[]>;
     exportPresets: () => Promise<void>;
     importPresets: (file: File) => Promise<void>;
+  };
+
+  /**
+   * Visual feedback callbacks (optional)
+   */
+  visualFeedback?: {
+    onPropertyHover?: (event: PropertyHoverEvent) => void;
+    onPropertyUnhover?: (propertyPath: string) => void;
+    onPropertyEditStart?: (event: PropertyEditEvent) => void;
+    onPropertyEditEnd?: (propertyPath: string) => void;
   };
 }
 

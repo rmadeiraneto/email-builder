@@ -9,3 +9,9 @@
 * We should have a documentation specifically for AI agents,so they would consume less tokens to complete a task
 
 * Translation Framework
+
+* Mobile mode
+
+* Change indicator
+
+

@@ -50,3 +50,6 @@ export * from '../tips';
 
 // Export compatibility
 export * from '../compatibility';
+
+// Export responsive
+export * from '../responsive';

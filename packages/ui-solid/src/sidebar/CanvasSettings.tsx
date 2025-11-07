@@ -39,6 +39,43 @@ const CANVAS_SETTINGS: CanvasSettingDefinition[] = [
     section: 'appearance',
     description: 'Canvas background color',
   },
+  {
+    key: 'settings.responsive',
+    label: 'Enable Responsive Design',
+    type: 'checkbox',
+    section: 'responsive',
+    description: 'Enable device-specific styles and breakpoints',
+  },
+  {
+    key: 'settings.breakpoints.mobile',
+    label: 'Mobile Breakpoint',
+    type: 'number',
+    section: 'responsive',
+    min: 0,
+    max: 767,
+    unit: 'px',
+    description: 'Maximum width for mobile devices (default: 767px)',
+  },
+  {
+    key: 'settings.breakpoints.tablet',
+    label: 'Tablet Breakpoint',
+    type: 'number',
+    section: 'responsive',
+    min: 768,
+    max: 1023,
+    unit: 'px',
+    description: 'Maximum width for tablet devices (default: 1023px)',
+  },
+  {
+    key: 'settings.breakpoints.desktop',
+    label: 'Desktop Breakpoint',
+    type: 'number',
+    section: 'responsive',
+    min: 1024,
+    max: 2000,
+    unit: 'px',
+    description: 'Minimum width for desktop devices (default: 1024px)',
+  },
 ];
 
 /**
@@ -54,9 +91,10 @@ function getNestedValue(obj: any, path: string): any {
  */
 export const CanvasSettings: Component<CanvasSettingsProps> = (props) => {
   const groupedSettings = createMemo(() => {
-    const grouped: Record<'dimensions' | 'appearance', CanvasSettingDefinition[]> = {
+    const grouped: Record<'dimensions' | 'appearance' | 'responsive', CanvasSettingDefinition[]> = {
       dimensions: [],
       appearance: [],
+      responsive: [],
     };
 
     CANVAS_SETTINGS.forEach((setting) => {
@@ -150,6 +188,25 @@ export const CanvasSettings: Component<CanvasSettingsProps> = (props) => {
           </div>
         );
 
+      case 'checkbox':
+        return (
+          <div class={styles.settingField}>
+            <label class={styles.checkboxLabel}>
+              <input
+                id={inputId}
+                type="checkbox"
+                class={styles.settingCheckbox}
+                checked={currentValue ?? false}
+                onChange={(e) => handleSettingChange(setting, e.currentTarget.checked)}
+              />
+              <span>{setting.label}</span>
+            </label>
+            <Show when={setting.description}>
+              <span class={styles.settingDescription}>{setting.description}</span>
+            </Show>
+          </div>
+        );
+
       default:
         return null;
     }
@@ -190,6 +247,19 @@ export const CanvasSettings: Component<CanvasSettingsProps> = (props) => {
             <div class={styles.settingSection}>
               <h4 class={styles.settingSectionTitle}>Appearance</h4>
               <For each={groupedSettings().appearance}>
+                {(setting) => renderSettingEditor(setting)}
+              </For>
+            </div>
+          </Show>
+
+          {/* Responsive Section */}
+          <Show when={groupedSettings().responsive.length > 0}>
+            <div class={styles.settingSection}>
+              <h4 class={styles.settingSectionTitle}>
+                <i class="ri-smartphone-line" style="margin-right: 8px;" />
+                Responsive Design
+              </h4>
+              <For each={groupedSettings().responsive}>
                 {(setting) => renderSettingEditor(setting)}
               </For>
             </div>

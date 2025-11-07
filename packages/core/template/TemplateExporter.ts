@@ -1,7 +1,7 @@
 /**
  * Template Exporter
  *
- * Handles template export to HTML and JSON formats
+ * Handles template export to HTML and JSON formats with responsive support
  */
 
 import type {
@@ -11,6 +11,9 @@ import type {
 } from '../types/template.types';
 import type { BaseComponent, BaseStyles } from '../types/component.types';
 import { ComponentTreeBuilder } from './ComponentTreeBuilder';
+import { BreakpointManager } from '../responsive/BreakpointManager';
+import { DeviceType, BreakpointStrategy } from '../types/responsive.types';
+import type { ResponsiveStyles } from '../types/responsive.types';
 
 /**
  * Export result
@@ -25,12 +28,15 @@ export interface ExportResult {
  * Template Exporter Service
  *
  * Exports templates to various formats (HTML, JSON) with customization options
+ * Supports responsive design with media query generation
  */
 export class TemplateExporter {
   private treeBuilder: ComponentTreeBuilder;
+  private breakpointManager: BreakpointManager;
 
   constructor() {
     this.treeBuilder = new ComponentTreeBuilder();
+    this.breakpointManager = new BreakpointManager();
   }
 
   /**
@@ -333,17 +339,17 @@ export class TemplateExporter {
   }
 
   /**
-   * Generate CSS for template
+   * Generate CSS for template with responsive media queries
    */
-  private generateCSS(template: Template, _options: TemplateExportOptions): string {
-    const { generalStyles, settings } = template;
+  private generateCSS(template: Template, options: TemplateExportOptions): string {
+    const { generalStyles, settings, components } = template;
     let css = '';
 
     // Reset styles
     css += '    * { margin: 0; padding: 0; box-sizing: border-box; }\n';
     css += '    body { font-family: Arial, sans-serif; }\n\n';
 
-    // Canvas styles
+    // Canvas styles (base/desktop)
     css += '    .email-canvas {\n';
     if (generalStyles?.canvasBackgroundColor) {
       css += `      background-color: ${generalStyles.canvasBackgroundColor};\n`;
@@ -364,7 +370,169 @@ export class TemplateExporter {
     if (generalStyles?.defaultComponentBackgroundColor) {
       css += `      background-color: ${generalStyles.defaultComponentBackgroundColor};\n`;
     }
-    css += '    }\n';
+    css += '    }\n\n';
+
+    // Generate responsive media queries if not in email-only mode
+    if (!options.emailOnly) {
+      css += this.generateResponsiveMediaQueries(template, components);
+    }
+
+    return css;
+  }
+
+  /**
+   * Generate responsive media queries for all components
+   */
+  private generateResponsiveMediaQueries(
+    template: Template,
+    components: BaseComponent[]
+  ): string {
+    let css = '';
+
+    // Check if any component has responsive config
+    const hasResponsiveComponents = components.some(
+      (c) => c.responsive?.enabled && c.responsive.styles
+    );
+
+    if (!hasResponsiveComponents) {
+      return css;
+    }
+
+    // Use desktop-first strategy by default (works better for web)
+    const strategy = BreakpointStrategy.DESKTOP_FIRST;
+
+    // Generate media queries for each device (mobile, tablet)
+    // Desktop is the base, so we only need queries for smaller devices
+    const devices = [DeviceType.TABLET, DeviceType.MOBILE];
+
+    for (const device of devices) {
+      const mediaQuery = this.breakpointManager.generateMediaQuery(device, strategy);
+
+      if (!mediaQuery) continue;
+
+      // Collect all components with responsive styles for this device
+      const deviceStyles: string[] = [];
+
+      for (const component of components) {
+        if (!component.responsive?.enabled || !component.responsive.styles) {
+          continue;
+        }
+
+        const componentCss = this.generateResponsiveComponentCSS(
+          component,
+          device,
+          component.responsive.styles
+        );
+
+        if (componentCss) {
+          deviceStyles.push(componentCss);
+        }
+      }
+
+      // Only add media query if there are styles for this device
+      if (deviceStyles.length > 0) {
+        css += `\n    /* ${device.charAt(0).toUpperCase() + device.slice(1)} Styles */\n`;
+        css += `    ${mediaQuery} {\n`;
+        deviceStyles.forEach((style) => {
+          css += style;
+        });
+        css += '    }\n';
+      }
+    }
+
+    return css;
+  }
+
+  /**
+   * Generate responsive CSS for a specific component and device
+   */
+  private generateResponsiveComponentCSS(
+    component: BaseComponent,
+    device: DeviceType,
+    responsiveStyles: ResponsiveStyles
+  ): string {
+    let css = '';
+    const selector = `      [data-component-id="${component.id}"]`;
+    const styles: string[] = [];
+
+    // Padding
+    if (responsiveStyles.padding) {
+      const padding = responsiveStyles.padding;
+      if (padding.top?.[device]) {
+        const val = padding.top[device];
+        styles.push(`padding-top: ${this.breakpointManager.cssValueToString(val)}`);
+      }
+      if (padding.right?.[device]) {
+        const val = padding.right[device];
+        styles.push(`padding-right: ${this.breakpointManager.cssValueToString(val)}`);
+      }
+      if (padding.bottom?.[device]) {
+        const val = padding.bottom[device];
+        styles.push(`padding-bottom: ${this.breakpointManager.cssValueToString(val)}`);
+      }
+      if (padding.left?.[device]) {
+        const val = padding.left[device];
+        styles.push(`padding-left: ${this.breakpointManager.cssValueToString(val)}`);
+      }
+    }
+
+    // Margin
+    if (responsiveStyles.margin) {
+      const margin = responsiveStyles.margin;
+      if (margin.top?.[device]) {
+        const val = margin.top[device];
+        styles.push(`margin-top: ${this.breakpointManager.cssValueToString(val)}`);
+      }
+      if (margin.right?.[device]) {
+        const val = margin.right[device];
+        styles.push(`margin-right: ${this.breakpointManager.cssValueToString(val)}`);
+      }
+      if (margin.bottom?.[device]) {
+        const val = margin.bottom[device];
+        styles.push(`margin-bottom: ${this.breakpointManager.cssValueToString(val)}`);
+      }
+      if (margin.left?.[device]) {
+        const val = margin.left[device];
+        styles.push(`margin-left: ${this.breakpointManager.cssValueToString(val)}`);
+      }
+    }
+
+    // Font size
+    if (responsiveStyles.fontSize?.[device]) {
+      const val = responsiveStyles.fontSize[device];
+      styles.push(`font-size: ${this.breakpointManager.cssValueToString(val)}`);
+    }
+
+    // Width
+    if (responsiveStyles.width?.[device]) {
+      const val = responsiveStyles.width[device];
+      styles.push(`width: ${this.breakpointManager.cssValueToString(val)}`);
+    }
+
+    // Height
+    if (responsiveStyles.height?.[device]) {
+      const val = responsiveStyles.height[device];
+      styles.push(`height: ${this.breakpointManager.cssValueToString(val)}`);
+    }
+
+    // Text align
+    if (responsiveStyles.textAlign?.[device]) {
+      styles.push(`text-align: ${responsiveStyles.textAlign[device]}`);
+    }
+
+    // Display
+    if (responsiveStyles.display?.[device]) {
+      styles.push(`display: ${responsiveStyles.display[device]}`);
+    }
+
+    // Only generate CSS if there are styles for this device
+    if (styles.length > 0) {
+      css += `${selector} {\n`;
+      styles.forEach((style) => {
+        css += `        ${style};\n`;
+      });
+      css += '      }\n';
+    }
 
     return css;
   }

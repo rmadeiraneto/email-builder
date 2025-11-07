@@ -2,36 +2,61 @@
  * Preview Modal Types
  */
 
-import type { Template } from '@email-builder/core';
+import type { Template, DeviceType } from '@email-builder/core';
 
-export type PreviewMode = 'web' | 'mobile' | 'email';
+/**
+ * Preview mode type
+ * - 'responsive': Shows template with responsive device simulation
+ * - 'email': Shows email client preview
+ */
+export type PreviewMode = 'responsive' | 'email';
 
+/**
+ * Preview modal props
+ */
 export interface PreviewModalProps {
+  /**
+   * Whether modal is open
+   */
   isOpen: boolean;
+
+  /**
+   * Template to preview
+   */
   template: Template | null;
+
+  /**
+   * Callback when modal closes
+   */
   onClose: () => void;
+
+  /**
+   * Initial preview mode
+   * @default 'responsive'
+   */
+  initialMode?: PreviewMode;
+
+  /**
+   * Initial device for responsive mode
+   * @default DeviceType.DESKTOP
+   */
+  initialDevice?: DeviceType;
 }
 
+/**
+ * Viewport dimensions for preview
+ */
 export interface ViewportDimensions {
   width: number;
   height: number;
   label: string;
 }
 
-export const VIEWPORT_DIMENSIONS: Record<PreviewMode, ViewportDimensions> = {
-  web: {
-    width: 1200,
-    height: 800,
-    label: 'Desktop (1200px)',
-  },
-  mobile: {
-    width: 375,
-    height: 667,
-    label: 'Mobile (375px)',
-  },
-  email: {
-    width: 600,
-    height: 800,
-    label: 'Email Client (600px)',
-  },
+/**
+ * Email preview viewport (standard email client width)
+ */
+export const EMAIL_VIEWPORT: ViewportDimensions = {
+  width: 600,
+  height: 800,
+  label: 'Email Client (600px)',
 };

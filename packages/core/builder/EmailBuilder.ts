@@ -543,6 +543,13 @@ export class EmailBuilder {
   }
 
   /**
+   * Checks if the builder is initialized
+   */
+  isInitialized(): boolean {
+    return this.initialized;
+  }
+
+  /**
    * Sets the template name
    */
   setName(name: string): this {
@@ -982,25 +989,35 @@ export class EmailBuilder {
     const list = createList();
 
     // Apply options
-    list.content.items = options.items.map((item, index) => ({
-      id: `list-item-${index}`,
-      title: {
-        html: item.title,
-        plainText: item.title,
-      },
-      description: item.description ? {
-        html: item.description,
-        plainText: item.description,
-      } : undefined,
-      image: item.icon ? {
-        src: item.icon,
-        alt: item.title,
-        title: item.title,
-      } : undefined,
-      showImage: !!item.icon,
-      showButton: false,
-      order: index,
-    }));
+    list.content.items = options.items.map((item, index) => {
+      const listItem: any = {
+        id: `list-item-${index}`,
+        title: {
+          html: item.title,
+          plainText: item.title,
+        },
+        showImage: !!item.icon,
+        showButton: false,
+        order: index,
+      };
+
+      if (item.description) {
+        listItem.description = {
+          html: item.description,
+          plainText: item.description,
+        };
+      }
+
+      if (item.icon) {
+        listItem.image = {
+          src: item.icon,
+          alt: item.title,
+          title: item.title,
+        };
+      }
+
+      return listItem;
+    });
 
     if (options.backgroundColor) {
       list.styles.backgroundColor = options.backgroundColor;
@@ -1184,6 +1201,43 @@ export class EmailBuilder {
       case 'spacer':
         const height = component.styles.height?.value || 20;
         return `<div style="height: ${height}px;"></div>`;
+
+      case 'header':
+        const header = component as any;
+        return `<div style="text-align: center;">
+          ${header.content.image?.src ? `<img src="${header.content.image.src}" alt="${header.content.image.alt}" style="max-width: 200px;" />` : ''}
+        </div>`;
+
+      case 'footer':
+        const footer = component as any;
+        return `<div style="text-align: center; color: #666;">
+          ${footer.content.textSections?.map((section: any) => section.html).join('') || ''}
+        </div>`;
+
+      case 'hero':
+        const hero = component as any;
+        return `<div style="text-align: ${component.styles.textAlign || 'center'};">
+          ${hero.content.heading?.html ? `<h1>${hero.content.heading.html}</h1>` : ''}
+          ${hero.content.description?.html ? `<p>${hero.content.description.html}</p>` : ''}
+          ${hero.content.image?.src ? `<img src="${hero.content.image.src}" alt="${hero.content.image.alt}" style="max-width: 100%;" />` : ''}
+        </div>`;
+
+      case 'cta':
+        const cta = component as any;
+        return `<div style="text-align: ${component.styles.textAlign || 'center'};">
+          ${cta.content.heading?.html ? `<h2>${cta.content.heading.html}</h2>` : ''}
+          ${cta.content.description?.html ? `<p>${cta.content.description.html}</p>` : ''}
+        </div>`;
+
+      case 'list':
+        const list = component as any;
+        const items = list.content.items?.map((item: any) => `
+          <div style="margin: 10px 0;">
+            <strong>${item.title?.html || ''}</strong>
+            ${item.description?.html ? `<p>${item.description.html}</p>` : ''}
+          </div>
+        `).join('') || '';
+        return items;
 
       default:
         return `<!-- ${component.type} component -->`;

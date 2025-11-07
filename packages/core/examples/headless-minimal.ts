@@ -6,21 +6,55 @@
  */
 
 import { EmailBuilder } from '../builder/EmailBuilder';
+import type { StorageAdapter } from '../types';
+
+/**
+ * Simple in-memory storage adapter for Node.js environments
+ */
+class MemoryStorageAdapter implements StorageAdapter {
+  private storage = new Map<string, any>();
+
+  async get<T = unknown>(key: string): Promise<T | null> {
+    return this.storage.get(key) || null;
+  }
+
+  async set<T = unknown>(key: string, value: T): Promise<void> {
+    this.storage.set(key, value);
+  }
+
+  async remove(key: string): Promise<void> {
+    this.storage.delete(key);
+  }
+
+  async clear(): Promise<void> {
+    this.storage.clear();
+  }
+
+  async keys(): Promise<string[]> {
+    return Array.from(this.storage.keys());
+  }
+}
 
 async function quickEmail() {
-  const builder = new EmailBuilder({ name: 'Quick Email' });
+  const builder = new EmailBuilder({
+    name: 'Quick Email',
+    storage: { method: 'custom', adapter: new MemoryStorageAdapter() },
+  });
   await builder.initialize();
 
-  await builder
-    .addText({ content: '<h1>Hello World!</h1><p>This is a minimal email template.</p>' })
-    .addButton({ text: 'Click Me', url: 'https://example.com' });
+  await builder.addText({
+    content: '<h1>Hello World!</h1><p>This is a minimal email template.</p>',
+  });
+  await builder.addButton({ text: 'Click Me', url: 'https://example.com' });
 
   return await builder.toHTML();
 }
 
 // One-liner usage (after initialization)
 async function oneLinerEmail() {
-  const builder = new EmailBuilder();
+  const builder = new EmailBuilder({
+    storage: { method: 'custom', adapter: new MemoryStorageAdapter() },
+  });
   await builder.initialize();
 
   await builder.addText({ content: '<p>Simple email content</p>' });
@@ -30,19 +64,18 @@ async function oneLinerEmail() {
 
 // With method chaining
 async function chainedEmail() {
-  const html = await new EmailBuilder({ name: 'Chained Email' })
-    .initialize()
-    .then(async (b) => {
-      await b
-        .addHeader({ logo: 'https://example.com/logo.png' })
-        .addText({ content: '<p>Welcome!</p>' })
-        .addButton({ text: 'Get Started', url: 'https://example.com/start' })
-        .addFooter({ companyName: 'Acme Inc.' });
+  const builder = new EmailBuilder({
+    name: 'Chained Email',
+    storage: { method: 'custom', adapter: new MemoryStorageAdapter() },
+  });
 
-      return b.toHTML();
-    });
+  await builder.initialize();
+  await builder.addHeader({ logo: 'https://example.com/logo.png' });
+  await builder.addText({ content: '<p>Welcome!</p>' });
+  await builder.addButton({ text: 'Get Started', url: 'https://example.com/start' });
+  await builder.addFooter({ companyName: 'Acme Inc.' });
 
-  return html;
+  return await builder.toHTML();
 }
 
 // Run examples

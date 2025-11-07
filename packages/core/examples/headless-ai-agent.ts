@@ -6,6 +6,34 @@
  */
 
 import { EmailBuilder } from '../builder/EmailBuilder';
+import type { StorageAdapter } from '../types';
+
+/**
+ * Simple in-memory storage adapter for Node.js environments
+ */
+class MemoryStorageAdapter implements StorageAdapter {
+  private storage = new Map<string, any>();
+
+  async get<T = unknown>(key: string): Promise<T | null> {
+    return this.storage.get(key) || null;
+  }
+
+  async set<T = unknown>(key: string, value: T): Promise<void> {
+    this.storage.set(key, value);
+  }
+
+  async remove(key: string): Promise<void> {
+    this.storage.delete(key);
+  }
+
+  async clear(): Promise<void> {
+    this.storage.clear();
+  }
+
+  async keys(): Promise<string[]> {
+    return Array.from(this.storage.keys());
+  }
+}
 
 /**
  * Interface for user data
@@ -40,6 +68,7 @@ class AIEmailGenerator {
   constructor() {
     this.builder = new EmailBuilder({
       debug: false,
+      storage: { method: 'custom', adapter: new MemoryStorageAdapter() },
     });
   }
 

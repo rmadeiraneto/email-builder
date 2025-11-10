@@ -7,3 +7,4 @@
 export * from './mobile.types';
 export * from './ModeManager';
 export * from './PropertyOverrideManager';
+export * from './MobileLayoutManager';

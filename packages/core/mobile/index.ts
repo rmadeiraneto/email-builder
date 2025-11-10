@@ -14,3 +14,4 @@ export * from './PropertyPanelIntegration';
 export * from './DiffCalculator';
 export * from './CanvasRenderer';
 export * from './CanvasManager';
+export * from './MobileDefaultsApplicator';

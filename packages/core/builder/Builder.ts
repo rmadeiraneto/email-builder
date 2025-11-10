@@ -49,6 +49,7 @@ import { TestMode } from '../config/TestModeManager';
 import { initializeTestAPI } from '../config/TestAPI';
 import { BreakpointManager } from '../responsive';
 import { DataSourceManager, DataProcessingService } from '../data-injection';
+import { TranslationManager } from '../i18n/TranslationManager';
 
 interface NormalizedConfig extends BuilderConfig {
   locale: string;
@@ -70,6 +71,7 @@ export class Builder {
   private breakpointManager: BreakpointManager;
   private dataSourceManager: DataSourceManager;
   private dataProcessingService: DataProcessingService;
+  private translationManager?: TranslationManager;
   private storageAdapter: StorageAdapter;
   private initialized: boolean = false;
   private state: Record<string, unknown> = {};
@@ -111,6 +113,14 @@ export class Builder {
     // Initialize data injection system
     this.dataSourceManager = new DataSourceManager();
     this.dataProcessingService = new DataProcessingService();
+
+    // Initialize translation system if configured
+    if (this.config.translation) {
+      this.translationManager = new TranslationManager(
+        this.config.translation,
+        this.eventEmitter
+      );
+    }
 
     // Initialize test mode
     TestMode.initialize();
@@ -324,6 +334,25 @@ export class Builder {
    */
   public getDataProcessingService(): DataProcessingService {
     return this.dataProcessingService;
+  }
+
+  /**
+   * Gets the translation manager
+   *
+   * Provides access to translation functionality for internationalizing
+   * the builder UI and content. Returns undefined if translations are not configured.
+   *
+   * @example
+   * ```ts
+   * const translationManager = builder.getTranslationManager();
+   * if (translationManager) {
+   *   const t = translationManager.getTranslateFunction();
+   *   console.log(t('ui.toolbar.new')); // 'New' or translated equivalent
+   * }
+   * ```
+   */
+  public getTranslationManager(): TranslationManager | undefined {
+    return this.translationManager;
   }
 
   /**

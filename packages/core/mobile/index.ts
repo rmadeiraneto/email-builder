@@ -17,3 +17,4 @@ export * from './CanvasManager';
 export * from './MobileDefaultsApplicator';
 export * from './MobileExportService';
 export * from './ValidationService';
+export * from './PerformanceOptimizer';

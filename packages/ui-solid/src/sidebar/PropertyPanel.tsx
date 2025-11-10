@@ -1,4 +1,4 @@
-import { Component, Show, For, createMemo, createSignal, createEffect } from 'solid-js';
+import { Component, Show, For, createMemo, createSignal, createEffect, untrack } from 'solid-js';
 import type {
   PropertyPanelProps,
   PropertyDefinition,
@@ -894,10 +894,17 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
   });
 
   // Load presets when component type changes
+  // Only track the component type, not the entire component object
+  // to prevent infinite re-runs when component properties change
   createEffect(() => {
-    const component = props.selectedComponent;
-    if (component && props.presetActions) {
-      props.presetActions.listPresets(component.type as any).then(setPresets);
+    const componentType = props.selectedComponent?.type;
+    if (componentType) {
+      // Use untrack to avoid tracking presetActions changes
+      untrack(() => {
+        if (props.presetActions) {
+          props.presetActions.listPresets(componentType as any).then(setPresets);
+        }
+      });
     } else {
       setPresets([]);
       setSelectedPresetId('');

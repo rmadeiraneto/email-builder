@@ -43,6 +43,11 @@ import {
   AnimationController,
   getPropertyMappingRegistry,
   DEFAULT_VISUAL_FEEDBACK_CONFIG,
+  // Translation imports
+  StaticTranslationProvider,
+  enUS,
+  esES,
+  type TranslationManager,
 } from '@email-builder/core';
 import type { PropertyHoverEvent, PropertyEditEvent } from '@email-builder/ui-solid/sidebar/PropertyPanel.types';
 
@@ -62,6 +67,7 @@ export interface BuilderContextValue {
   builder: Builder;
   state: BuilderState;
   componentDefinitions: ComponentDefinition[];
+  translationManager: TranslationManager | undefined;
   actions: {
     setTemplate: (template: Template | null) => void;
     selectComponent: (id: string | null) => void;
@@ -112,7 +118,13 @@ const EMAIL_TESTING_CONFIG_KEY = 'email-builder:email-testing-config';
 const DISMISSED_TIPS_KEY = 'email-builder:dismissed-tips';
 
 export const BuilderProvider: ParentComponent = (props) => {
-  // Initialize builder instance
+  // Initialize translation provider with default translations
+  const translationProvider = new StaticTranslationProvider({
+    'en-US': enUS,
+    'es-ES': esES,
+  });
+
+  // Initialize builder instance with translation support
   const builder = new Builder({
     target: 'email',
     storage: {
@@ -130,6 +142,13 @@ export const BuilderProvider: ParentComponent = (props) => {
       },
     },
     debug: false,
+    translation: {
+      defaultLocale: 'en-US',
+      locale: 'en-US',
+      providers: [translationProvider],
+      warnOnMissing: true,
+      fallbackToKey: true,
+    },
   });
 
   // Helper function to load email testing config from localStorage
@@ -1012,6 +1031,7 @@ export const BuilderProvider: ParentComponent = (props) => {
     builder,
     state,
     componentDefinitions: getAllComponentDefinitions(),
+    translationManager: builder.getTranslationManager(),
     actions,
   };
 

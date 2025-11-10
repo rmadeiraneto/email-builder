@@ -6,10 +6,12 @@
 
 import { type Component, Show, For, createSignal, createMemo, onMount, onCleanup } from 'solid-js';
 import { BuilderProvider, useBuilder } from '../context/BuilderContext';
+import { TranslationProvider } from '@email-builder/ui-solid/i18n';
 import { TemplateCanvas } from '@email-builder/ui-solid/canvas';
 import { ComponentPalette, PropertyPanel } from '@email-builder/ui-solid/sidebar';
 import { TemplateToolbar } from '@email-builder/ui-solid/toolbar';
 import { TipBanner } from '@email-builder/ui-solid/tips';
+import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { NewTemplateModal } from '../components/modals/NewTemplateModal';
 import { TemplatePickerModal } from '../components/modals/TemplatePickerModal';
 import { PreviewModal } from '../components/modals/PreviewModal';
@@ -21,7 +23,7 @@ import type { ComponentDefinition, EmailTestingConfig, EmailTestRequest, Compati
 import styles from './Builder.module.scss';
 
 const BuilderContent: Component = () => {
-  const { state, actions, componentDefinitions } = useBuilder();
+  const { state, actions, componentDefinitions, translationManager } = useBuilder();
   const [isNewTemplateModalOpen, setIsNewTemplateModalOpen] = createSignal(false);
   const [isTemplatePickerModalOpen, setIsTemplatePickerModalOpen] = createSignal(false);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = createSignal(false);
@@ -341,7 +343,14 @@ const BuilderContent: Component = () => {
     <>
       <div class={styles.builder}>
         <header class={styles.header}>
-          <h1>Email Builder</h1>
+          <div class={styles.headerLeft}>
+            <h1>Email Builder</h1>
+          </div>
+          <div class={styles.headerRight}>
+            <Show when={translationManager}>
+              <LanguageSwitcher />
+            </Show>
+          </div>
           <Show when={state.isInitialized} fallback={<span>Initializing...</span>}>
             <TemplateToolbar
               hasTemplate={state.template !== null}
@@ -482,8 +491,25 @@ const BuilderContent: Component = () => {
 const Builder: Component = () => {
   return (
     <BuilderProvider>
-      <BuilderContent />
+      {/* Get translation manager from context and wrap with TranslationProvider */}
+      <BuilderWithTranslation />
     </BuilderProvider>
+  );
+};
+
+// Separate component to access builder context
+const BuilderWithTranslation: Component = () => {
+  const { translationManager } = useBuilder();
+
+  return (
+    <Show
+      when={translationManager}
+      fallback={<BuilderContent />}
+    >
+      <TranslationProvider manager={translationManager!}>
+        <BuilderContent />
+      </TranslationProvider>
+    </Show>
   );
 };
 

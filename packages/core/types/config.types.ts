@@ -245,4 +245,35 @@ export interface BuilderConfig {
    * ```
    */
   translation?: TranslationConfig;
+
+  /**
+   * Mobile Development Mode configuration
+   *
+   * Configure the responsive editing system that allows users to create
+   * device-specific customizations with desktop-first inheritance.
+   *
+   * @example
+   * ```ts
+   * import { DEFAULT_MOBILE_DEV_MODE_CONFIG } from '@email-builder/core/mobile';
+   *
+   * const config = {
+   *   target: 'email',
+   *   mobileDevMode: {
+   *     ...DEFAULT_MOBILE_DEV_MODE_CONFIG,
+   *     breakpoints: {
+   *       mobile: 375
+   *     },
+   *     mobileDefaults: {
+   *       enabled: true,
+   *       transformations: {
+   *         paddingReduction: 0.5,
+   *         marginReduction: 0.5,
+   *         fontSizeReduction: 0.9
+   *       }
+   *     }
+   *   }
+   * };
+   * ```
+   */
+  mobileDevMode?: import('../mobile').MobileDevModeConfig;
 }

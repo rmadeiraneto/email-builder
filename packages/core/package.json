@@ -48,7 +48,10 @@
       "development": "./config/index.ts"
     }
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "vite build",
     "dev": "vite build --watch",
@@ -58,10 +61,15 @@
     "lint": "eslint src --ext .ts,.tsx",
     "lint:fix": "eslint src --ext .ts,.tsx --fix"
   },
-  "keywords": ["email-builder", "core", "framework-agnostic"],
+  "keywords": [
+    "email-builder",
+    "core",
+    "framework-agnostic"
+  ],
   "author": "Ricardo Madeira",
   "license": "MIT",
   "devDependencies": {
+    "happy-dom": "^20.0.10",
     "typescript": "^5.3.3",
     "vite": "^5.1.0",
     "vite-plugin-dts": "^3.7.3",

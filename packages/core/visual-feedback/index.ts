@@ -84,3 +84,6 @@ export { AnimationController } from './AnimationController';
 // Export OverlayManager
 export { OverlayManager } from './OverlayManager';
 export type { OverlayManagerConfig } from './OverlayManager';
+
+// Export VisualFeedbackManager
+export { VisualFeedbackManager, createVisualFeedbackManager } from './VisualFeedbackManager';

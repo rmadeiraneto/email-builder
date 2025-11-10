@@ -56,3 +56,7 @@ export * from '../responsive';
 
 // Export visual feedback
 export * from '../visual-feedback';
+
+// Export i18n (internationalization)
+export * from '../i18n';
+export * from '../i18n/locales';

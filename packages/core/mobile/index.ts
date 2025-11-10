@@ -5,3 +5,5 @@
  */
 
 export * from './mobile.types';
+export * from './ModeManager';
+export * from './PropertyOverrideManager';

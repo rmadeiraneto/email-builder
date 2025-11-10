@@ -2,6 +2,8 @@
  * Command pattern types
  */
 
+import type { DeviceMode } from '../mobile';
+
 /**
  * Command type identifiers
  */
@@ -24,6 +26,14 @@ export enum CommandType {
   UNDO = 'UNDO',
   REDO = 'REDO',
   PREVIEW = 'PREVIEW',
+
+  // Mobile Development Mode commands
+  SET_MOBILE_OVERRIDE = 'SET_MOBILE_OVERRIDE',
+  CLEAR_MOBILE_OVERRIDE = 'CLEAR_MOBILE_OVERRIDE',
+  SET_MOBILE_VISIBILITY = 'SET_MOBILE_VISIBILITY',
+  REORDER_MOBILE_COMPONENTS = 'REORDER_MOBILE_COMPONENTS',
+  APPLY_MOBILE_DEFAULTS = 'APPLY_MOBILE_DEFAULTS',
+  SWITCH_DEVICE_MODE = 'SWITCH_DEVICE_MODE',
 }
 
 /**
@@ -51,6 +61,13 @@ export interface Command<TPayload = unknown> {
    * Command ID for tracking
    */
   id: string;
+
+  /**
+   * Device mode this command applies to
+   * Optional for backward compatibility
+   * @default DeviceMode.DESKTOP
+   */
+  mode?: DeviceMode;
 }
 
 /**

@@ -70,7 +70,7 @@ export class Button {
     button.disabled = this.props.disabled!;
 
     // Set ARIA attributes
-    setAriaAttribute(button, 'aria-disabled', this.props.disabled);
+    setAriaAttribute(button, 'disabled', this.props.disabled);
 
     // Build button content
     this.buildContent(button);

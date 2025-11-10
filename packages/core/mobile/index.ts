@@ -16,3 +16,4 @@ export * from './CanvasRenderer';
 export * from './CanvasManager';
 export * from './MobileDefaultsApplicator';
 export * from './MobileExportService';
+export * from './ValidationService';

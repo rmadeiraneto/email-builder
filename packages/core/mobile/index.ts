@@ -10,3 +10,5 @@ export * from './PropertyOverrideManager';
 export * from './MobileLayoutManager';
 export * from './ModeSwitcher';
 export * from './KeyboardShortcuts';
+export * from './PropertyPanelIntegration';
+export * from './DiffCalculator';

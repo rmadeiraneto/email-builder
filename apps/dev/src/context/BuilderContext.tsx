@@ -11,6 +11,7 @@ import {
   createSignal,
   createEffect,
   onCleanup,
+  untrack,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import {
@@ -223,7 +224,11 @@ export const BuilderProvider: ParentComponent = (props) => {
   // Initialize visual feedback managers when canvas is available
   createEffect(() => {
     const canvas = canvasElement();
-    if (canvas && !overlayManager()) {
+    // Use untrack to prevent overlayManager from being a reactive dependency
+    // This prevents infinite recursion when cleanup sets it to null
+    const currentManager = untrack(overlayManager);
+
+    if (canvas && !currentManager) {
       // Initialize OverlayManager
       const manager = new OverlayManager({
         canvasElement: canvas,

@@ -835,10 +835,14 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
   const [compatibilityModalOpen, setCompatibilityModalOpen] = createSignal(false);
   const [selectedProperty, setSelectedProperty] = createSignal<string>('');
 
+  // Only track component TYPE, not the entire object
+  // This prevents infinite re-runs when component properties change
+  const componentType = createMemo(() => props.selectedComponent?.type.toLowerCase());
+
   const properties = createMemo(() => {
-    if (!props.selectedComponent) return [];
-    const componentType = props.selectedComponent.type.toLowerCase();
-    const definitions = componentType ? PROPERTY_DEFINITIONS[componentType] : undefined;
+    const type = componentType();
+    if (!type) return [];
+    const definitions = PROPERTY_DEFINITIONS[type];
     return definitions || [];
   });
 
@@ -897,12 +901,12 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
   // Only track the component type, not the entire component object
   // to prevent infinite re-runs when component properties change
   createEffect(() => {
-    const componentType = props.selectedComponent?.type;
-    if (componentType) {
+    const type = componentType();
+    if (type) {
       // Use untrack to avoid tracking presetActions changes
       untrack(() => {
         if (props.presetActions) {
-          props.presetActions.listPresets(componentType as any).then(setPresets);
+          props.presetActions.listPresets(type as any).then(setPresets);
         }
       });
     } else {

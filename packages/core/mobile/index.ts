@@ -12,3 +12,5 @@ export * from './ModeSwitcher';
 export * from './KeyboardShortcuts';
 export * from './PropertyPanelIntegration';
 export * from './DiffCalculator';
+export * from './CanvasRenderer';
+export * from './CanvasManager';

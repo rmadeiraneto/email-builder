@@ -1457,7 +1457,1083 @@ interface VisualFeedbackConfig {
 - [ ] Easy to extend for custom properties
 - [ ] Works with custom component builder (future)
 
-## 17. Glossary
+## 17. Mobile Development Mode
+
+### 17.1 Purpose
+Enable users to create device-specific customizations for their templates with granular control over layout, styling, and behavior across different screen sizes. Users can switch to a dedicated mobile editing mode to customize how components render on mobile devices while maintaining a desktop-first inheritance model.
+
+### 17.2 Problem Statement
+Default responsive behaviors don't fit every user's needs. For example:
+- Should a horizontal list wrap into rows on mobile or remain side-by-side?
+- Should mobile spacing increase or decrease compared to desktop?
+- Should certain components be hidden on specific devices?
+
+Users need explicit control over mobile presentation without managing two separate templates.
+
+### 17.3 Core Architecture
+
+#### 17.3.1 Inheritance Model
+**Desktop-First with Mobile Overrides**
+
+- Desktop mode defines the base styles and layout
+- Mobile mode provides an override layer
+- Mobile properties inherit from desktop by default
+- Clearing a mobile override returns to inherited desktop value
+- No property duplication - only overridden values stored in mobile data
+
+**Example:**
+```typescript
+component: {
+  id: "button1",
+  type: "button",
+  styles: {
+    desktop: {
+      padding: "20px",
+      backgroundColor: "#0066cc",
+      fontSize: "16px"
+    },
+    mobile: {
+      padding: "16px"  // Only override - fontSize and backgroundColor inherited
+    }
+  }
+}
+```
+
+#### 17.3.2 Data Structure
+
+**Component Styles:**
+```typescript
+interface ComponentStyles {
+  desktop: StyleProperties;
+  mobile?: Partial<StyleProperties>;  // Only overrides stored
+  // Future: tablet?: Partial<StyleProperties>;
+}
+```
+
+**Component Order:**
+```typescript
+interface Template {
+  componentOrder: {
+    desktop: string[];  // Array of component IDs
+    mobile?: string[];  // Mobile-specific order (if different)
+  };
+  components: {
+    [id: string]: Component;
+  };
+}
+```
+
+**Component Visibility:**
+```typescript
+interface ComponentVisibility {
+  desktop: boolean;  // Default true
+  mobile?: boolean;  // Override visibility for mobile
+}
+```
+
+#### 17.3.3 Property Scope
+**Only CSS-controllable properties can be overridden for mobile.**
+
+**Overridable (via media queries):**
+- Layout properties: padding, margin, width, height, max-width, display, flex properties
+- Typography: font-size, line-height, letter-spacing, text-align
+- Colors: color, background-color, border-color
+- Borders: border-width, border-radius, border-style
+- Visual effects: opacity, box-shadow (email-compatible properties only)
+- Positioning: position, top, left, right, bottom (web mode only)
+
+**Locked (cannot override):**
+- Content: text, image URLs, link URLs, alt text
+- Structure: number of nested items, component types
+- Technical: IDs, keys, data binding references
+- Accessibility: ARIA labels (same across devices)
+
+**Blacklist Approach:** Maintain a blacklist of non-overridable properties rather than whitelist for easier extensibility.
+
+### 17.4 User Interface
+
+#### 17.4.1 Mode Switcher
+
+**Location & Behavior:**
+- Positioned above the center of the canvas (between toolbar and canvas)
+- Sticky positioning: has natural position but sticks to top when scrolling
+- Sticks below main toolbar (maintains UI hierarchy)
+- Visual style: Toggle switch (Desktop ⟷ Mobile)
+
+**Mode States:**
+- **Desktop Mode** (default): Edit desktop base styles and layout
+- **Mobile Mode**: Edit mobile overrides and layout
+
+**Mode Switching Behavior:**
+- Selected component remains selected when switching modes
+- Canvas scroll position preserved
+- PropertyPanel state (tabs, expanded sections) maintained
+- Smooth transition animation (canvas width + background color/border change)
+- Preload mobile data on hover (anticipatory loading)
+- Show skeleton loading if data not yet loaded (graceful fallback)
+
+**Default State:**
+- Templates always open in Desktop mode
+- Mobile mode is not persisted across sessions
+- Consistent starting point for all editing sessions
+
+#### 17.4.2 Canvas Behavior
+
+**Desktop Mode Canvas:**
+- Standard desktop width (from BreakpointManager or canvas settings)
+- All components visible and editable
+- Standard canvas background and styling
+- Component dragging enabled from palette
+
+**Mobile Mode Canvas:**
+- Resized to mobile breakpoint width (from BreakpointManager, configurable)
+- Vertical scrolling (height remains flexible)
+- Visual distinction: different background color or border (configurable)
+- Component dragging from palette disabled (structure locked)
+- Hidden components displayed as ghosted/grayed out
+- Mobile indicator badge (📱) on component selection outline when component has overrides
+
+**Hidden Component Interaction:**
+- Ghosted/grayed out appearance with reduced opacity
+- Click reveals tooltip/popover: "Hidden in mobile" with quick "Show" button
+- Can still be selected and edited (visibility can be toggled via PropertyPanel)
+
+#### 17.4.3 Mobile Layout Manager
+
+**Trigger:** Appears in sidebar when in Mobile Dev Mode with no component selected
+
+**Replaces:** Components tab and General Styles tab (sidebar shows only Layout Manager)
+
+**Purpose:** Manage mobile-specific component order and visibility
+
+**UI Elements:**
+- List of all template components
+- Each item shows:
+  - Component name
+  - Drag handle for reordering
+  - Visibility toggle (show/hide in mobile)
+- Clean, minimal design - no thumbnails, icons, or badges
+- Drag-and-drop to reorder components
+- Reordering changes mobile component order only (desktop order unchanged)
+
+**"Apply Mobile-Optimized Defaults" Button:**
+- Appears in Mobile Layout Manager
+- Applies comprehensive mobile optimizations:
+  - Reduce padding/margin by configured percentage
+  - Adjust font sizes for mobile readability
+  - Enable wrapping on horizontal lists
+  - Apply component-type-specific mobile behaviors
+  - Set sensible mobile layouts
+- Single undo-able command
+- Can be applied anytime (not just first switch)
+
+**First-Time Prompt:**
+When user first switches to Mobile Dev Mode on a template:
+- Modal prompt: "Apply mobile-optimized defaults to this template?"
+- Two options:
+  - "Apply Defaults" - Run comprehensive optimization
+  - "Start from Desktop" - All mobile values inherit from desktop
+- Fallback button remains in Mobile Layout Manager for later application
+
+#### 17.4.4 PropertyPanel Integration
+
+**When Component Selected in Mobile Dev Mode:**
+
+**Content Tab:**
+- Content editing disabled (content locked across devices)
+- Show informational message: "Content is shared across all devices"
+
+**Style Tab:**
+- All CSS-controllable properties editable
+- Inherited properties show chain icon (🔗) next to value
+  - Example: "16px 🔗" indicates inherited from desktop
+- Overridden properties show no indicator (clean display)
+- Each property has small "X" or reset icon to clear override
+- "Mobile Behavior" section for component-specific mobile controls
+  - Lists: Mobile Layout dropdown (Wrap | Horizontal | Vertical)
+  - Headers: Mobile navigation style (web mode only)
+  - Other component-type-specific controls
+- Global "Reset All Mobile Overrides" button at bottom of panel
+
+**Property Reset Options:**
+
+**Individual Property Reset:**
+- Small "X" icon next to each overridden property
+- Click to clear override and return to inherited value
+- Single property-level control
+
+**Global Reset:**
+- "Reset All Mobile Overrides" button in PropertyPanel
+- Opens confirmation dialog with two paths:
+  1. **Quick Reset**: "Reset All" button - instant with single confirmation
+  2. **Selective Reset**: "Choose What to Reset" button
+     - Opens hierarchical selection UI with accordions:
+       ```
+       ☑ Header ⌄
+         ☑ Styles ⌄
+           ☑ Layout
+           ☑ Spacing
+           ☑ Typography
+         ☐ Visibility
+         ☐ Order
+       ☑ Hero ⌄
+         ☑ Styles ⌄
+           ...
+       ```
+     - Bulk selection at any level (component, category, or individual property)
+     - Preview of what will be reset before confirming
+
+#### 17.4.5 Mobile vs Desktop Diff View
+
+**Purpose:** Audit all mobile customizations in one view
+
+**Access:** Button in main toolbar (🔍 "Show Differences" or similar)
+
+**Presentation:**
+- **Desktop screens**: Slides in as additional sidebar panel (PropertyPanel remains visible)
+- **Mobile/tablet screens**: Replaces PropertyPanel temporarily
+
+**Content:**
+- Expandable hierarchical list showing all differences:
+  ```
+  ☐ Component Order (2 components reordered) ⌄
+    • Hero moved from position 2 to position 1
+    • Header moved from position 1 to position 2
+
+  ☐ Hidden Components (1 component) ⌄
+    • Sidebar component hidden in mobile
+
+  ☐ Header (3 properties overridden) ⌄
+    • Padding: 20px → 16px
+    • Font Size: 24px → 20px
+    • Layout: Horizontal → Stacked
+
+  ☐ Hero (5 properties overridden) ⌄
+    ...
+  ```
+- Starts collapsed (component-level summary)
+- Click to expand and see property-level detail
+- Color-coded badges for override categories
+- Quick action buttons per component (Reset Component Overrides)
+
+### 17.5 Component-Specific Mobile Controls
+
+#### 17.5.1 Target Mode Awareness
+Configuration: `target: 'web' | 'email' | 'hybrid'` (set at builder initialization)
+
+**Email Mode:**
+- Hide JavaScript-dependent controls (hamburger menus, interactive animations)
+- Show only email-safe mobile behaviors
+- Provide email-specific alternatives (stacked layouts vs interactive navigation)
+
+**Web Mode:**
+- Show all modern interaction controls
+- Enable advanced CSS features (transforms, animations)
+- Full JavaScript-powered behaviors available
+
+**Hybrid Mode:**
+- Show all controls
+- Add warnings on email-incompatible features
+- User can choose to use features understanding email limitations
+
+#### 17.5.2 Component Types with Mobile-Specific Controls
+
+**List Component:**
+- "Mobile Layout" dropdown in Mobile Behavior section:
+  - **Wrap**: Horizontal list wraps to multiple rows
+  - **Horizontal**: Force side-by-side (scroll if needed)
+  - **Vertical**: Stack items vertically
+
+**Header Component:**
+- "Mobile Navigation" dropdown (web mode only):
+  - **Stacked**: Stack logo and navigation vertically
+  - **Inline**: Keep horizontal (reduced spacing)
+  - **Hidden**: Hide navigation, show logo only
+
+**Extensibility:**
+- Start with List and Header (layout-critical)
+- Add more component-specific controls iteratively
+- System designed to easily add mobile behaviors to any component type
+
+### 17.6 Features
+
+#### 17.6.1 Component Reordering
+
+**Scope:** Top-level components only (canvas direct children)
+
+**Desktop Mode:**
+- Drag and drop components on canvas to reorder
+- Changes desktop component order
+- Reflected in `componentOrder.desktop` array
+
+**Mobile Mode:**
+- Reordering disabled on canvas (structure locked)
+- Use Mobile Layout Manager in sidebar
+- Drag and drop to reorder components in list
+- Changes mobile component order only
+- Reflected in `componentOrder.mobile` array
+- If `componentOrder.mobile` is undefined, inherits desktop order
+
+**Nested Components:**
+- Cannot reorder nested items via canvas in any mode
+- Reordering nested items happens through PropertyPanel
+- Example: List items reordered through List component properties
+- Consistent with existing architecture (top-level canvas interaction only)
+
+#### 17.6.2 Component Visibility
+
+**Per-Device Visibility Control:**
+- Each component has visibility settings: `{ desktop: boolean, mobile: boolean }`
+- Default: `{ desktop: true, mobile: true }` (visible everywhere)
+- User can toggle visibility independently per device
+
+**UI Controls:**
+- Mobile Layout Manager: Visibility toggle per component
+- PropertyPanel: Visibility settings in component properties
+
+**Canvas Display:**
+- Hidden components in current mode: ghosted/grayed with reduced opacity
+- Hover tooltip: "Hidden in [device]"
+- Click shows popover with quick "Show" button
+- Can still select and edit hidden components
+
+**Export Behavior:**
+- Hidden components use `display: none` in media queries
+- Also include `aria-hidden="true"` for accessibility
+- Component HTML still present in export (CSS controls visibility)
+
+#### 17.6.3 Property Overrides
+
+**Override Mechanism:**
+- In Mobile Dev Mode, editing a property creates/updates mobile override
+- Override stored in `styles.mobile[propertyName]`
+- Desktop value remains in `styles.desktop[propertyName]`
+
+**Inheritance Resolution:**
+Simple fallback:
+1. Check `styles.mobile[propertyName]`
+2. If undefined, use `styles.desktop[propertyName]`
+3. If both undefined, use component type default
+
+**Visual Indicators:**
+- Inherited values: chain icon (🔗) next to value
+- Overridden values: no indicator (standard display)
+- Both appear in PropertyPanel inputs
+
+**Reset Mechanism:**
+- Per-property reset: "X" icon next to input
+- Sets `styles.mobile[propertyName] = undefined`
+- Value immediately updates to inherited desktop value
+- Single undo-able action
+
+#### 17.6.4 Mobile-Optimized Defaults
+
+**Purpose:** Provide comprehensive mobile optimization as starting point
+
+**Scope:** Opinionated and comprehensive (not just token changes)
+
+**Default Transformation Rules:**
+- Reduce padding by 50% (configurable)
+- Reduce margin by 50% (configurable)
+- Reduce font sizes by 10% (configurable)
+- Enable wrapping on horizontal lists
+- Stack headers vertically
+- Make CTA buttons full-width
+- Increase touch target sizes (min 44px)
+- Component-type-specific optimizations
+
+**Configuration:**
+```typescript
+mobileDefaults: {
+  enabled: boolean;  // Enable/disable feature
+  paddingReduction: number;  // 0.5 = 50% reduction
+  marginReduction: number;
+  fontSizeReduction: number;  // 0.9 = 10% reduction
+  autoWrapHorizontalLists: boolean;
+  componentSpecific: {
+    [componentType: string]: {
+      // Component-type-specific default overrides
+    };
+  };
+};
+```
+
+**Application Behavior:**
+- First-time prompt when entering Mobile Dev Mode
+- User can choose to apply or skip
+- Fallback button in Mobile Layout Manager for later application
+- Single undo-able command (one entry in history)
+- Can be re-applied anytime (overwrites existing mobile overrides)
+- Users can inspect, modify, or revert the applied defaults
+
+#### 17.6.5 Canvas Settings Overrides
+
+**Scope:** Canvas settings also support mobile overrides
+
+**Overridable Settings:**
+- Canvas width / max-width
+- Canvas background color
+- Canvas padding
+- Default typography (body text, headings)
+- Default spacing (component gaps)
+
+**Configuration:** Specify which canvas settings can be overridden
+
+**UI Location:** General Styles tab when no component selected (Mobile Dev Mode)
+
+#### 17.6.6 Nested Component Overrides
+
+**Scope:** Nested components fully support mobile overrides
+
+**Example:** List with 3 items - each item can have different mobile padding
+
+**Mechanism:**
+- Nested components have same `styles: { desktop, mobile }` structure
+- Edited through PropertyPanel (not canvas)
+- Full inheritance model applies at all nesting levels
+
+**Limit:** No structural changes to nested items (add/remove/reorder happens in PropertyPanel for both modes)
+
+### 17.7 Validation & Warnings
+
+#### 17.7.1 Warning System
+
+**Severity Levels:**
+- **Info**: Helpful tips and suggestions (blue)
+- **Warning**: Potential issues, but not blocking (yellow)
+- **Critical**: Serious problems that may break layout (red)
+
+**Display:**
+- Immediate inline warnings (banners)
+- Accumulated warnings in dedicated "Validation" panel (toggle open)
+- Both systems work together (immediate feedback + comprehensive audit)
+
+**Warning Types:**
+- All components hidden in mobile
+- Font size too small (< 14px for body text)
+- Touch targets too small (< 44px for interactive elements)
+- Padding/margin causing layout overflow
+- Conflicting CSS properties
+- Email-incompatible properties used (in email/hybrid mode)
+
+**User Action:**
+- Warnings are informational only (Option A: show but allow)
+- User can proceed with export/test despite warnings
+- Warnings do not block any actions
+
+#### 17.7.2 Validation Panel
+
+**Purpose:** Comprehensive validation report for mobile customizations
+
+**Access:** Toggle button in toolbar or Mobile Layout Manager
+
+**Content:**
+- All validation warnings grouped by severity
+- Component-level grouping
+- Quick fix suggestions where applicable
+- Link to documentation for each warning type
+- "Fix All" button for auto-fixable issues (if applicable)
+
+### 17.8 Export Behavior
+
+#### 17.8.1 HTML Generation Strategy
+
+**Default Export Mode: Desktop-First with Media Queries**
+
+**Desktop Styles (Base):**
+- Inline styles in HTML for maximum email client compatibility
+- Desktop values applied as inline `style` attributes
+- Example: `<div style="padding: 20px; background: #fff;">`
+
+**Mobile Overrides (Media Queries):**
+- Embedded in `<style>` tag within `<head>`
+- Uses `@media (max-width: Xpx)` queries
+- Only includes overridden properties
+- Example:
+  ```css
+  @media (max-width: 768px) {
+    #component-1 { padding: 16px; }
+  }
+  ```
+
+**Component Order:**
+- HTML elements exported in mobile order if `componentOrder.mobile` exists
+- Desktop order used as fallback
+- OR use CSS `order` property in flexbox layouts (web mode only)
+
+**Component Visibility:**
+- Hidden components include inline `display: block` (desktop default)
+- Media query adds `display: none` for mobile
+- Include `aria-hidden="true"` when hidden
+
+**Email Client Compatibility:**
+- **Outlook 2016-2021 (Windows Desktop)**:
+  - Sees inline desktop styles (no media query support)
+  - Desktop users get desktop version ✓
+- **Outlook Mobile (iOS/Android)**:
+  - Modern WebKit with media query support
+  - Mobile users get mobile version ✓
+- **Gmail, Apple Mail, Yahoo, etc.**:
+  - Full media query support ✓
+
+**Export Modes (Configurable):**
+- **Hybrid** (default): Inline desktop + media queries for mobile
+- **Web**: Modern CSS with media queries, flexbox, grid
+- **Email-only**: Ultra-safe Outlook-focused (no responsive, just desktop)
+
+#### 17.8.2 Export Configuration
+
+```typescript
+export: {
+  mode: 'hybrid' | 'web' | 'email-only';
+  mobileBreakpoint: number;  // From BreakpointManager
+  inlineStyles: boolean;  // Inline desktop styles
+  generateMediaQueries: boolean;  // Generate mobile media queries
+  includeResponsive: boolean;  // Include mobile overrides in export
+};
+```
+
+**Export from Mobile Dev Mode:**
+- Always exports complete responsive HTML (both desktop + mobile)
+- Current editing mode doesn't affect export content (only editing context)
+- Export button behavior identical in both modes
+
+### 17.9 Command Pattern & Undo/Redo
+
+#### 17.9.1 Mode-Aware Commands
+
+**Command Structure:**
+All commands include `mode` parameter:
+```typescript
+interface Command {
+  execute(): void;
+  undo(): void;
+  mode: 'desktop' | 'mobile';
+}
+```
+
+**Example Commands:**
+- `UpdateComponentStyleCommand`: Updates desktop or mobile styles based on mode
+- `ReorderComponentsCommand`: Updates desktop or mobile order based on mode
+- `ToggleComponentVisibilityCommand`: Updates visibility for specific mode
+- `ApplyMobileDefaultsCommand`: Bulk application of mobile defaults
+
+**Command Execution:**
+- Command checks `mode` property
+- Modifies appropriate data structure (`styles.desktop` vs `styles.mobile`)
+- Stores original values for undo
+
+#### 17.9.2 Separate Undo/Redo Stacks
+
+**Implementation:**
+- Desktop mode maintains its own command history
+- Mobile mode maintains its own command history
+- Switching modes does not clear history
+- Each mode preserves its undo/redo stack
+
+**Behavior:**
+- In Desktop mode: Undo/Redo affects desktop changes only
+- In Mobile mode: Undo/Redo affects mobile changes only
+- Switching modes: Cannot undo across mode boundary
+- Clear mental model: Each mode is its own editing session
+
+**Example Scenario:**
+1. Desktop mode: Change button padding to 20px
+2. Switch to Mobile mode
+3. Mobile mode: Change mobile padding to 16px
+4. Undo in Mobile mode → Reverts mobile padding change (back to inherited 20px)
+5. Switch to Desktop mode
+6. Undo in Desktop mode → Reverts desktop padding change
+
+### 17.10 Performance Optimizations
+
+#### 17.10.1 Lazy Loading
+
+**Mobile Data Loading:**
+- Mobile overrides not loaded on initial template open
+- Preload triggered on mode switcher hover (anticipatory loading)
+- If not preloaded, load on mode switch with skeleton UI
+- Subsequent switches use cached data
+
+**Benefits:**
+- Faster initial template load
+- Reduced memory usage for desktop-only editing
+- Smooth user experience with preloading
+
+#### 17.10.2 Virtual Rendering
+
+**Large Templates (50+ components):**
+- Virtual scrolling in Mobile Layout Manager
+- Virtual rendering on canvas for off-screen components
+- Render only visible components + buffer
+- Improves performance with many components
+
+#### 17.10.3 Optimized Updates
+
+**Property Changes:**
+- Debounce property updates during rapid changes (default 16ms)
+- Batch render mobile overrides
+- Avoid unnecessary re-renders
+- Performance monitoring for complex templates
+
+**Optional Performance Mode:**
+- Configurable performance mode for complex templates
+- Reduces visual effects and animations
+- Prioritizes responsiveness over polish
+
+### 17.11 Keyboard Shortcuts
+
+**Mode Switching:**
+- `Ctrl/Cmd + M`: Toggle between Desktop and Mobile Dev Mode
+
+**Mobile Dev Mode Shortcuts:**
+- `Ctrl/Cmd + R`: Reset selected property override to desktop value
+- `Ctrl/Cmd + L`: Open Mobile Layout Manager (when no component selected)
+- `Ctrl/Cmd + Shift + R`: Open global reset dialog
+- `Ctrl/Cmd + D`: Duplicate component (copies mobile overrides too)
+
+**Standard Shortcuts (work in both modes):**
+- `Ctrl/Cmd + Z`: Undo (mode-specific)
+- `Ctrl/Cmd + Shift + Z` or `Ctrl/Cmd + Y`: Redo (mode-specific)
+- `Delete`: Delete selected component
+- `Esc`: Deselect component
+
+### 17.12 Configuration System
+
+#### 17.12.1 Builder Initialization Configuration
+
+```typescript
+interface MobileDevModeConfig {
+  // Feature toggle
+  enabled: boolean;  // Enable/disable Mobile Dev Mode entirely
+
+  // Breakpoints
+  breakpoints: {
+    mobile: number;  // Mobile breakpoint width (default: 375)
+    tablet?: number;  // Future: tablet breakpoint
+    // Extensible for custom breakpoints
+  };
+
+  // Mode switcher
+  modeSwitcher: {
+    sticky: boolean;  // Enable sticky positioning (default: true)
+    showLabels: boolean;  // Show "Desktop" / "Mobile" labels (default: true)
+  };
+
+  // Canvas appearance
+  canvas: {
+    mobileBackgroundColor?: string;  // Canvas background in mobile mode
+    mobileBorderColor?: string;  // Canvas border in mobile mode
+    transitionDuration: number;  // Mode switch animation duration (ms)
+  };
+
+  // Mobile-optimized defaults
+  mobileDefaults: {
+    enabled: boolean;  // Enable defaults feature
+    showPromptOnFirstSwitch: boolean;  // Show prompt first time
+    transformations: {
+      paddingReduction: number;  // 0.5 = reduce by 50%
+      marginReduction: number;
+      fontSizeReduction: number;  // 0.9 = reduce by 10%
+      autoWrapHorizontalLists: boolean;
+      stackHeadersVertically: boolean;
+      fullWidthButtons: boolean;
+      minTouchTargetSize: number;  // Minimum touch target (px)
+    };
+    componentSpecific: {
+      [componentType: string]: Partial<StyleProperties>;
+    };
+  };
+
+  // Property overrides
+  propertyBlacklist: string[];  // Properties that cannot be overridden
+  canvasSettingsOverridable: string[];  // Canvas settings that can be overridden
+
+  // Component-specific mobile controls
+  componentMobileControls: {
+    [componentType: string]: {
+      enabled: boolean;
+      controls: MobileControlDefinition[];
+    };
+  };
+
+  // Validation
+  validation: {
+    enabled: boolean;
+    rules: ValidationRule[];
+    showInlineWarnings: boolean;
+    showValidationPanel: boolean;
+  };
+
+  // Export
+  export: {
+    defaultMode: 'hybrid' | 'web' | 'email-only';
+    mobileBreakpoint: number;  // Media query breakpoint
+    inlineStyles: boolean;
+    generateMediaQueries: boolean;
+  };
+
+  // Performance
+  performance: {
+    lazyLoadMobileData: boolean;
+    preloadOnHover: boolean;
+    virtualRendering: boolean;
+    virtualRenderingThreshold: number;  // Component count threshold
+    debounceDelay: number;  // Property update debounce (ms)
+  };
+
+  // Target mode awareness
+  targetMode: 'web' | 'email' | 'hybrid';
+}
+```
+
+#### 17.12.2 Default Configuration
+
+Sensible defaults provided for all configuration options. Integrators can override any subset without providing full configuration object.
+
+#### 17.12.3 Runtime Configuration Updates
+
+- Configuration can be updated at runtime via Builder API
+- `builder.updateConfig({ mobileDevMode: { ... } })`
+- Useful for dynamic feature toggling or user preferences
+
+### 17.13 Integration with Existing Features
+
+#### 17.13.1 Style Presets System
+
+**Behavior:**
+- Applying a preset sets desktop values only
+- Mobile overrides start as inherited (no mobile values in preset)
+- User must manually customize mobile after applying preset
+
+**Rationale:**
+- Keeps presets simple and focused
+- Desktop-first approach (preset is the base)
+- User explicitly controls mobile customization
+
+#### 17.13.2 Preview System
+
+**Relationship:**
+- PreviewModal remains separate from Mobile Dev Mode
+- Preview is for viewing, Dev Mode is for editing
+- Preview shows final rendered output (Canvas HTML → Preview HTML transformation)
+
+**Preview from Mobile Dev Mode:**
+- Preview button available in both modes
+- Shows appropriate preview based on current mode:
+  - Desktop mode → Web/Email preview (desktop rendering)
+  - Mobile mode → Mobile preview (mobile rendering)
+- Preview uses exported HTML (with media queries, email-safe)
+
+#### 17.13.3 Email Testing Integration
+
+**Testing from Mobile Dev Mode:**
+- "Test in Email Clients" button available in both modes
+- Default behavior: Test responsive version (with media queries)
+- Configuration option: `emailTesting.mobileTestMode`
+  - `'responsive'` (default): Single test with media queries
+  - `'desktop-only'`: Test only desktop version
+  - `'mobile-only'`: Test only mobile version
+  - `'separate'`: Test both as separate campaigns (if service supports)
+
+#### 17.13.4 Data Injection System
+
+**Current State:**
+- Content is locked across devices (no mobile-specific content)
+- Template variables (`{{variable}}`) resolve identically in both modes
+
+**Future Consideration:**
+- Conditional content feature (device-specific content)
+- Would require extending data injection syntax
+- Example: `{{#if mobile}}Mobile content{{else}}Desktop content{{/if}}`
+- Architecture designed to accommodate this future enhancement
+
+#### 17.13.5 Visual Property Feedback System
+
+**Behavior in Mobile Dev Mode:**
+- Visual feedback (measurement overlays, highlights) shown on mobile canvas
+- Uses mobile values for feedback display
+- Hover on property → show mobile dimensions/spacing
+- Consistent with editing context (show what you're editing)
+
+#### 17.13.6 Compatibility System
+
+**Integration:**
+- Compatibility indicators work in both modes
+- Show same email client compatibility data
+- Mobile-specific properties (like wrap behavior) have their own compatibility data
+- Warnings adjust based on properties used in each mode
+
+#### 17.13.7 Custom Components
+
+**Automatic Support:**
+- Custom components automatically support mobile overrides
+- Same `styles: { desktop, mobile }` structure applies
+- No manual configuration needed from custom component creators
+- Mobile-specific controls can be optionally added per component type
+
+**Configuration:**
+- Custom components can define mobile-specific control definitions
+- Optional: specify default mobile transformations for component type
+
+### 17.14 Extensibility
+
+#### 17.14.1 Additional Breakpoints
+
+**Design for Future:**
+- System designed to support multiple breakpoints (tablet, custom)
+- Data structure supports: `styles: { desktop, tablet, mobile, custom1, custom2 }`
+- Mode switcher can expand: Desktop | Tablet | Mobile
+- Configuration allows defining custom breakpoint names and widths
+
+**Initial Implementation:**
+- Desktop + Mobile only
+- Foundation for additional breakpoints in place
+
+#### 17.14.2 Custom Property Types
+
+**Extensibility:**
+- Property blacklist allows adding non-overridable properties
+- Component-specific mobile controls can be added dynamically
+- System supports custom property definitions beyond standard CSS
+
+#### 17.14.3 Advanced Features (Future)
+
+**Conditional Content:**
+- Device-specific content (beyond just styling)
+- Would extend data injection system
+- Architecture accommodates future enhancement
+
+**Device Preview Frames:**
+- Optional device frame/bezel around canvas
+- Multiple device presets (iPhone, Android, iPad)
+- Currently simple resize, but extensible
+
+**AI-Powered Optimization:**
+- Analyze desktop layout and suggest mobile optimizations
+- Auto-generate mobile overrides using ML
+- Foundation in place with mobile defaults system
+
+### 17.15 Error Handling
+
+#### 17.15.1 Corrupted Data Recovery
+
+**Error Types:**
+- Invalid mobile override data
+- Corrupted component order arrays
+- Missing component references in mobile order
+
+**Recovery Strategy:**
+- Fall back to desktop values (Option D: fallback + notification)
+- Attempt auto-fix where possible:
+  - Remove invalid component IDs from mobile order
+  - Sanitize invalid CSS values
+  - Merge corrupt style objects
+- Show error notification with details
+- Allow user to continue editing (non-blocking)
+
+**Logging:**
+- Log all data errors for debugging
+- Provide export of problematic template data
+- Help users report issues with full context
+
+#### 17.15.2 Invalid Layout States
+
+**Detection:**
+- All components hidden in mobile (Warning, not blocking)
+- Component order references non-existent components (Auto-fix)
+- Circular dependencies in nested overrides (Should not occur, but detect)
+
+**Handling:**
+- Show appropriate warning severity
+- Provide "Fix" actions where applicable
+- Allow user to proceed (trust user intent)
+
+### 17.16 Accessibility
+
+#### 17.16.1 Standard Accessibility
+
+**Mode Switcher:**
+- Keyboard accessible (Tab to focus, Enter/Space to toggle)
+- ARIA labels: "Switch to Mobile Development Mode" / "Switch to Desktop Mode"
+- Focus management on mode switch
+
+**Mobile Layout Manager:**
+- Keyboard navigation for component list
+- Drag and drop accessible via keyboard (Space to grab, Arrow keys to move, Space to drop)
+- Screen reader announces reorder actions
+
+**PropertyPanel:**
+- All controls keyboard accessible
+- Chain icon for inherited properties has accessible label
+- Reset buttons have clear ARIA labels
+
+**Canvas:**
+- Hidden components have appropriate ARIA attributes
+- Mode changes announced to screen readers
+- Focus management maintained across mode switches
+
+#### 17.16.2 Mode-Specific Announcements
+
+**For Now (Option A):**
+- Apply standard accessibility patterns (same as desktop mode)
+- No enhanced mode-specific announcements initially
+
+**Future Enhancement:**
+- ARIA live regions announce mode switches
+- Screen reader descriptions differentiate desktop vs mobile controls
+- Enhanced announcements for mobile-specific actions
+
+### 17.17 Documentation
+
+#### 17.17.1 In-UI Documentation
+
+**Minimal In-UI Hints:**
+- Tooltips on mobile-specific controls explaining behavior
+- Info icons linking to external documentation
+- Onboarding tour for first-time Mobile Dev Mode users (optional)
+
+**External Documentation:**
+- Comprehensive mobile development guide
+- Best practices for mobile email design
+- Component-specific mobile optimization tips
+- Video tutorials for key workflows
+
+#### 17.17.2 Help Resources
+
+**Contextual Help:**
+- "?" icons on complex controls
+- Links to relevant documentation sections
+- Examples and common patterns
+
+**External Resources:**
+- Mobile email design best practices guide
+- Email client compatibility information
+- Troubleshooting guide for common issues
+
+### 17.18 Testing
+
+#### 17.18.1 Manual Testing Checklist
+
+**Core Functionality:**
+- [ ] Mode switching works (Desktop ⟷ Mobile)
+- [ ] Canvas resizes and style changes on mode switch
+- [ ] Component selection preserved across mode switches
+- [ ] PropertyPanel shows inherited vs overridden properties correctly
+- [ ] Property overrides save and load correctly
+- [ ] Reset individual property works
+- [ ] Reset all overrides works
+- [ ] Mobile Layout Manager reordering works
+- [ ] Component visibility toggle works
+- [ ] Hidden components display as ghosted
+- [ ] Mobile-optimized defaults apply correctly
+- [ ] Diff view shows all changes accurately
+- [ ] Export generates correct responsive HTML
+- [ ] Undo/Redo works independently per mode
+
+**UI/UX:**
+- [ ] Mode switcher sticky behavior works
+- [ ] Animations smooth (mode switch, property changes)
+- [ ] Loading states show during lazy load
+- [ ] Keyboard shortcuts work
+- [ ] Accessibility: keyboard navigation works
+- [ ] Validation warnings appear appropriately
+- [ ] Mobile indicator badge appears on components with overrides
+
+**Integration:**
+- [ ] Email testing works from Mobile Dev Mode
+- [ ] Preview shows correct mobile rendering
+- [ ] Style presets don't interfere with mobile overrides
+- [ ] Data injection resolves correctly in both modes
+- [ ] Visual feedback shows mobile values in Mobile Dev Mode
+- [ ] Compatibility indicators work in both modes
+
+**Edge Cases:**
+- [ ] Large templates (50+ components) perform well
+- [ ] Nested component overrides work correctly
+- [ ] Canvas settings overrides work
+- [ ] Corrupted template data recovers gracefully
+- [ ] All components hidden warning shows
+- [ ] Invalid CSS values handled
+
+#### 17.18.2 Automated Testing
+
+**Unit Tests:**
+- Property inheritance resolution
+- Command pattern mode awareness
+- Data structure serialization/deserialization
+- Validation rule execution
+- Mobile defaults transformation logic
+
+**Integration Tests:**
+- Mode switching workflow
+- Property override CRUD operations
+- Component reordering
+- Export HTML generation with media queries
+- Undo/Redo across mode switches
+
+**E2E Tests:**
+- Complete mobile customization workflow
+- Apply defaults → customize → export → test
+- Reset overrides workflow
+- Diff view workflow
+
+### 17.19 Success Criteria
+
+#### 17.19.1 Functional Requirements
+- [ ] Users can switch between Desktop and Mobile Dev Mode seamlessly
+- [ ] All CSS-controllable properties support mobile overrides
+- [ ] Component reordering works independently per mode
+- [ ] Component visibility can be toggled per device
+- [ ] Mobile-optimized defaults apply comprehensive optimizations
+- [ ] Property inheritance works (clear override → inherit desktop value)
+- [ ] Export generates desktop-first responsive HTML with media queries
+- [ ] Undo/Redo works independently per mode
+- [ ] Diff view shows all mobile customizations accurately
+- [ ] Validation warnings help users avoid problematic configurations
+- [ ] Mobile Layout Manager provides clean reordering interface
+- [ ] Nested components support mobile overrides
+- [ ] Canvas settings support mobile overrides
+
+#### 17.19.2 User Experience Requirements
+- [ ] Mode switching feels smooth and intuitive
+- [ ] Inherited properties clearly indicated with chain icon
+- [ ] Hidden components visible but ghosted on canvas
+- [ ] Mobile indicator badge shows which components have overrides
+- [ ] First-time prompt helps users get started with defaults
+- [ ] Reset options provide both quick and granular control
+- [ ] Keyboard shortcuts improve workflow efficiency
+- [ ] Large templates remain performant (virtual rendering works)
+- [ ] Visual feedback works correctly in Mobile Dev Mode
+
+#### 17.19.3 Technical Requirements
+- [ ] Data structure supports extensibility (additional breakpoints)
+- [ ] Configuration system provides full control over feature
+- [ ] Command pattern properly mode-aware
+- [ ] Lazy loading reduces initial load time
+- [ ] Export HTML compatible with all major email clients
+- [ ] TypeScript strict mode compliant
+- [ ] Comprehensive error handling and recovery
+- [ ] No performance degradation with mobile overrides
+
+#### 17.19.4 Integration Requirements
+- [ ] Works with existing style preset system
+- [ ] Works with existing preview system
+- [ ] Works with existing email testing integration
+- [ ] Works with existing data injection system
+- [ ] Works with existing visual property feedback system
+- [ ] Works with existing compatibility system
+- [ ] Works with future custom components system
+
+#### 17.19.5 Documentation Requirements
+- [ ] Comprehensive feature documentation
+- [ ] Configuration reference
+- [ ] Best practices guide for mobile optimization
+- [ ] Component-specific mobile behavior documentation
+- [ ] API documentation for programmatic access
+- [ ] Migration guide for existing templates
+
+## 18. Glossary
 
 - **Component**: Reusable building block (Header, Footer, Button, etc.)
 - **Template**: Complete email/page layout with components
@@ -1471,3 +2547,9 @@ interface VisualFeedbackConfig {
 - **Test ID**: Unique identifier (`data-testid`) used for element selection in tests
 - **Test Action**: Semantic label (`data-action`) describing what an element does
 - **Test API**: JavaScript API exposed for programmatic state inspection during testing
+- **Desktop Mode**: Base editing mode where desktop/default styles are defined
+- **Mobile Dev Mode**: Responsive editing mode where mobile-specific overrides are created
+- **Mobile Override**: Device-specific value that supersedes the desktop value on mobile devices
+- **Inheritance**: When a mobile property has no override, it inherits the desktop value
+- **Mobile Layout Manager**: Sidebar panel for reordering and managing component visibility in mobile mode
+- **Diff View**: Audit panel showing all mobile customizations compared to desktop

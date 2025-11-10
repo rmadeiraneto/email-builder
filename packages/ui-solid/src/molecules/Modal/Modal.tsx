@@ -233,6 +233,7 @@ export const Modal: Component<ModalProps> = (props) => {
 
   // Setup/cleanup positioning when modal state changes
   createEffect(() => {
+    console.log('[Modal] isOpen changed to:', local.isOpen);
     if (local.isOpen) {
       setupPositioning();
       local.onOpen?.();

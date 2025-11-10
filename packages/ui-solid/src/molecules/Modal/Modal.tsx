@@ -32,6 +32,7 @@ import {
   Show,
   onCleanup,
   createEffect,
+  createMemo,
   splitProps,
   mergeProps,
 } from 'solid-js';
@@ -191,9 +192,9 @@ export const Modal: Component<ModalProps> = (props) => {
   };
 
   /**
-   * Generate modal class names
+   * Generate modal class names (reactive memo)
    */
-  const getModalClasses = (): string => {
+  const getModalClasses = createMemo(() => {
     const classes = Array.isArray(local.modalClasses)
       ? local.modalClasses
       : [local.modalClasses];
@@ -204,7 +205,7 @@ export const Modal: Component<ModalProps> = (props) => {
       local.className,
       ...classes
     );
-  };
+  });
 
   /**
    * Generate modal dialog class names
@@ -233,7 +234,6 @@ export const Modal: Component<ModalProps> = (props) => {
 
   // Setup/cleanup positioning when modal state changes
   createEffect(() => {
-    console.log('[Modal] isOpen changed to:', local.isOpen);
     if (local.isOpen) {
       setupPositioning();
       local.onOpen?.();

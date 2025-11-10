@@ -181,9 +181,7 @@ const BuilderContent: Component = () => {
 
   // Toolbar handlers
   const handleNewTemplate = () => {
-    console.log('[Builder] handleNewTemplate called, current state:', isNewTemplateModalOpen());
     setIsNewTemplateModalOpen(true);
-    console.log('[Builder] after setState:', isNewTemplateModalOpen());
   };
 
   const handleCreateTemplate = async (name: string, type: 'email' | 'web') => {

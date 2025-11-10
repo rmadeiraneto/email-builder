@@ -2,6 +2,8 @@
  * Builder configuration types
  */
 
+import type { TranslationConfig } from '../i18n/types';
+
 /**
  * Rendering target for the builder
  */
@@ -216,4 +218,31 @@ export interface BuilderConfig {
    * @default false
    */
   debug?: boolean;
+
+  /**
+   * Translation configuration
+   *
+   * Configure how the builder handles translations:
+   * - Provide your own translations via providers
+   * - Enable auto-translation with Google Translate or other services
+   * - Set default locale and fallback behavior
+   *
+   * @example
+   * ```ts
+   * import { StaticTranslationProvider } from '@email-builder/core/i18n';
+   *
+   * const config = {
+   *   target: 'email',
+   *   translation: {
+   *     locale: 'es-ES',
+   *     providers: [
+   *       new StaticTranslationProvider({
+   *         'es-ES': { ui: { toolbar: { new: 'Nuevo' } } }
+   *       })
+   *     ]
+   *   }
+   * };
+   * ```
+   */
+  translation?: TranslationConfig;
 }

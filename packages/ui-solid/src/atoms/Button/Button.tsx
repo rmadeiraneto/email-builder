@@ -30,7 +30,7 @@ import styles from '@email-builder/ui-components/src/atoms/Button/button.module.
  * SolidJS-specific button props
  * Extends the base ButtonProps but adapts for SolidJS patterns
  */
-export interface ButtonProps extends Omit<BaseButtonProps, 'children' | 'onClick' | 'onFocus' | 'onBlur'> {
+export interface ButtonProps extends Omit<BaseButtonProps, 'children' | 'onClick' | 'onFocus' | 'onBlur' | 'className'> {
   /**
    * Button content (children)
    */
@@ -65,6 +65,26 @@ export interface ButtonProps extends Omit<BaseButtonProps, 'children' | 'onClick
    * Action identifier for automated testing
    */
   action?: string;
+
+  /**
+   * Additional CSS class names (SolidJS uses 'class' not 'className')
+   */
+  class?: string | undefined;
+
+  /**
+   * Title attribute for tooltip (HTML native attribute)
+   */
+  title?: string | undefined;
+
+  /**
+   * ARIA label for accessibility
+   */
+  'aria-label'?: string | undefined;
+
+  /**
+   * ARIA pressed state for toggle buttons
+   */
+  'aria-pressed'?: boolean | undefined;
 }
 
 /**
@@ -94,7 +114,7 @@ export const Button: Component<ButtonProps> = (props) => {
     'iconPosition',
     'fullWidth',
     'children',
-    'className',
+    'class',
     'testId',
     'action',
   ]);
@@ -115,7 +135,7 @@ export const Button: Component<ButtonProps> = (props) => {
         'full-width': local.fullWidth,
         disabled: buttonProps.disabled,
       },
-      local.className
+      local.class
     );
   };
 

@@ -5,7 +5,7 @@
  * Supports JSON, API, and custom data sources.
  */
 
-import { type Component, createSignal, Show, For } from 'solid-js';
+import { type Component, createSignal, Show } from 'solid-js';
 import type {
   DataSourceConfig,
   DataSourceType,
@@ -30,7 +30,7 @@ export const DataSourceConfigModal: Component<DataSourceConfigModalProps> = (pro
   const isEditing = () => !!props.initialConfig;
 
   // Form state
-  const [id, setId] = createSignal(props.initialConfig?.id ?? `ds-${Date.now()}`);
+  const [id] = createSignal(props.initialConfig?.id ?? `ds-${Date.now()}`);
   const [name, setName] = createSignal(props.initialConfig?.name ?? '');
   const [description, setDescription] = createSignal(props.initialConfig?.description ?? '');
   const [type, setType] = createSignal<DataSourceType>(props.initialConfig?.type ?? DSType.JSON);
@@ -248,7 +248,7 @@ export const DataSourceConfigModal: Component<DataSourceConfigModalProps> = (pro
             <Input
               type="text"
               value={name()}
-              onInput={(e) => setName(e.currentTarget.value)}
+              onInput={(e: Event & { currentTarget: HTMLInputElement }) => setName(e.currentTarget.value)}
               placeholder="My Data Source"
             />
           </div>
@@ -258,7 +258,7 @@ export const DataSourceConfigModal: Component<DataSourceConfigModalProps> = (pro
             <Input
               type="text"
               value={description()}
-              onInput={(e) => setDescription(e.currentTarget.value)}
+              onInput={(e: Event & { currentTarget: HTMLInputElement }) => setDescription(e.currentTarget.value)}
               placeholder="Optional description"
             />
           </div>
@@ -298,7 +298,7 @@ export const DataSourceConfigModal: Component<DataSourceConfigModalProps> = (pro
               <textarea
                 class={styles.textarea}
                 value={jsonData()}
-                onInput={(e) => setJsonData(e.currentTarget.value)}
+                onInput={(e: Event & { currentTarget: HTMLTextAreaElement }) => setJsonData(e.currentTarget.value)}
                 placeholder='{"name": "John", "email": "john@example.com"}'
                 rows={10}
               />
@@ -314,7 +314,7 @@ export const DataSourceConfigModal: Component<DataSourceConfigModalProps> = (pro
               <Input
                 type="url"
                 value={apiUrl()}
-                onInput={(e) => setApiUrl(e.currentTarget.value)}
+                onInput={(e: Event & { currentTarget: HTMLInputElement }) => setApiUrl(e.currentTarget.value)}
                 placeholder="https://api.example.com/data"
               />
             </div>
@@ -336,7 +336,7 @@ export const DataSourceConfigModal: Component<DataSourceConfigModalProps> = (pro
               <Input
                 type="text"
                 value={apiDataPath()}
-                onInput={(e) => setApiDataPath(e.currentTarget.value)}
+                onInput={(e: Event & { currentTarget: HTMLInputElement }) => setApiDataPath(e.currentTarget.value)}
                 placeholder="data.items"
               />
               <div class={styles.hint}>
@@ -349,7 +349,7 @@ export const DataSourceConfigModal: Component<DataSourceConfigModalProps> = (pro
               <textarea
                 class={styles.textarea}
                 value={apiHeaders()}
-                onInput={(e) => setApiHeaders(e.currentTarget.value)}
+                onInput={(e: Event & { currentTarget: HTMLTextAreaElement }) => setApiHeaders(e.currentTarget.value)}
                 placeholder='{"Authorization": "Bearer token"}'
                 rows={4}
               />
@@ -364,7 +364,7 @@ export const DataSourceConfigModal: Component<DataSourceConfigModalProps> = (pro
             <textarea
               class={styles.textarea}
               value={sampleData()}
-              onInput={(e) => setSampleData(e.currentTarget.value)}
+              onInput={(e: Event & { currentTarget: HTMLTextAreaElement }) => setSampleData(e.currentTarget.value)}
               placeholder='{"name": "John", "email": "john@example.com"}'
               rows={8}
             />

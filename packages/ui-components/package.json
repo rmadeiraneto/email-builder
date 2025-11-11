@@ -50,9 +50,14 @@
   "author": "Ricardo Madeira",
   "license": "MIT",
   "dependencies": {
-    "@email-builder/tokens": "workspace:*"
+    "@email-builder/tokens": "workspace:*",
+    "@floating-ui/dom": "^1.7.4",
+    "alwan": "^2.3.0",
+    "color2k": "^2.0.3",
+    "lodash-es": "^4.17.21"
   },
   "devDependencies": {
+    "@types/lodash-es": "^4.17.12",
     "jsdom": "^27.0.1",
     "sass": "^1.71.1",
     "typescript": "^5.3.3",

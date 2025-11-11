@@ -43,7 +43,7 @@ export const OffScreenIndicator: Component<OffScreenIndicatorProps> = (props) =>
     const base = {
       position: 'absolute' as const,
       'z-index': 1001,
-      'pointer-events': props.onClick ? 'auto' : 'none',
+      'pointer-events': (props.onClick ? 'auto' : 'none') as 'auto' | 'none',
       cursor: props.onClick ? 'pointer' : 'default',
     };
 

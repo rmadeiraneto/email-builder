@@ -18,7 +18,6 @@ import type { Template, BaseComponent, BaseStyles } from '../types';
 import type { ModeManager } from './ModeManager';
 import type { MobileLayoutManager } from './MobileLayoutManager';
 import type { MobileDevModeConfig } from './mobile.types';
-import { DeviceMode } from './mobile.types';
 
 /**
  * Export mode
@@ -152,12 +151,11 @@ export interface MobileExportServiceOptions {
  * Exports templates with mobile dev mode customizations
  */
 export class MobileExportService {
-  private modeManager: ModeManager;
   private layoutManager: MobileLayoutManager;
   private config: MobileDevModeConfig;
 
   constructor(options: MobileExportServiceOptions) {
-    this.modeManager = options.modeManager;
+    // modeManager is available in options but not currently used
     this.layoutManager = options.layoutManager;
     this.config = options.config;
   }
@@ -193,14 +191,19 @@ export class MobileExportService {
     // Calculate statistics
     const stats = this.calculateStats(template);
 
-    return {
+    const result: MobileExportResult = {
       html,
-      css: !exportOptions.inlineStyles ? this.generateCssFile(template, exportOptions) : undefined,
       inlineStyles,
       mediaQueries,
       mode: exportOptions.mode,
       stats,
     };
+
+    if (!exportOptions.inlineStyles) {
+      result.css = this.generateCssFile(template, exportOptions);
+    }
+
+    return result;
   }
 
   /**
@@ -331,7 +334,7 @@ ${cssRules}
    */
   private generateVisibilityRule(
     component: BaseComponent,
-    breakpoint: number
+    _breakpoint: number
   ): CSSRule | null {
     if (!component.visibility) {
       return null;
@@ -403,7 +406,7 @@ ${cssRules}
     template: Template,
     componentsHtml: string,
     mediaQueries: string,
-    options: MobileExportOptions
+    _options: MobileExportOptions
   ): string {
     const hasMediaQueries = mediaQueries.trim().length > 0;
 
@@ -412,7 +415,7 @@ ${cssRules}
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${template.name || 'Email Template'}</title>
+  <title>${(template as any).name || 'Email Template'}</title>
   ${hasMediaQueries ? `<style>${mediaQueries}</style>` : ''}
 </head>
 <body>

@@ -359,11 +359,16 @@ export class DataSourceManager {
   public generateSchema(data: Record<string, unknown>, description?: string): DataSchema {
     const variables = this.extractVariables(data, '');
 
-    return {
+    const schema: DataSchema = {
       variables,
       version: '1.0',
-      description,
     };
+
+    if (description !== undefined) {
+      schema.description = description;
+    }
+
+    return schema;
   }
 
   /**
@@ -381,7 +386,7 @@ export class DataSourceManager {
 
       const metadata: VariableMetadata = {
         path,
-        type: type === 'array' ? typeof value[0] : type,
+        type: type === 'array' && Array.isArray(value) && value.length > 0 ? typeof value[0] : type,
         example: value,
         isArray: Array.isArray(value),
       };

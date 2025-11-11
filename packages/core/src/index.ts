@@ -60,3 +60,6 @@ export * from '../visual-feedback';
 // Export i18n (internationalization)
 export * from '../i18n';
 export * from '../i18n/locales';
+
+// Export data injection
+export * from '../data-injection';

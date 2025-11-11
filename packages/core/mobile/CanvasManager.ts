@@ -129,13 +129,12 @@ export interface CanvasManagerOptions {
  */
 export class CanvasManager {
   private eventEmitter: EventEmitter;
-  private modeManager: ModeManager;
   private config: MobileDevModeConfig;
   private state: CanvasState;
 
   constructor(options: CanvasManagerOptions) {
     this.eventEmitter = options.eventEmitter;
-    this.modeManager = options.modeManager;
+    // modeManager is available in options but not currently used
     this.config = options.config;
 
     // Initialize state
@@ -263,7 +262,11 @@ export class CanvasManager {
    * @param color - Border color
    */
   public setBorderColor(color?: string): void {
-    this.state.borderColor = color;
+    if (color !== undefined) {
+      this.state.borderColor = color;
+    } else {
+      delete this.state.borderColor;
+    }
   }
 
   /**
@@ -290,7 +293,11 @@ export class CanvasManager {
    * @param componentId - Component ID
    */
   public setSelectedComponent(componentId?: string): void {
-    this.state.selectedComponentId = componentId;
+    if (componentId !== undefined) {
+      this.state.selectedComponentId = componentId;
+    } else {
+      delete this.state.selectedComponentId;
+    }
   }
 
   /**
@@ -402,6 +409,6 @@ export class CanvasManager {
    */
   public dispose(): void {
     // Clear state
-    this.state.selectedComponentId = undefined;
+    delete this.state.selectedComponentId;
   }
 }

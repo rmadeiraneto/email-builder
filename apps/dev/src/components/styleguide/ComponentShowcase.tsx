@@ -4,19 +4,16 @@
  * Displays all UI components with interactive examples
  */
 
-import { type Component, createSignal } from 'solid-js';
+import { type Component } from 'solid-js';
 import styles from './ComponentShowcase.module.scss';
-import { Button, Input, Icon } from '@email-builder/ui-solid/atoms';
-import { Alert } from '@email-builder/ui-solid/molecules';
+import { Button, Icon } from '@email-builder/ui-solid/atoms';
 
 interface ComponentShowcaseProps {
   onTokenClick?: (tokenPath: string[]) => void;
   onComponentClick?: (componentId: string) => void;
 }
 
-export const ComponentShowcase: Component<ComponentShowcaseProps> = (props) => {
-  const [modalOpen, setModalOpen] = createSignal(false);
-
+export const ComponentShowcase: Component<ComponentShowcaseProps> = (_props) => {
   return (
     <div class={styles.section}>
       <h2 class={styles.sectionTitle}>Components</h2>

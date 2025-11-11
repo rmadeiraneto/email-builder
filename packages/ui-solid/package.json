@@ -18,18 +18,34 @@
       "types": "./dist/sidebar.d.ts",
       "import": "./dist/sidebar.js"
     },
+    "./sidebar/PropertyPanel.types": {
+      "types": "./dist/sidebar/PropertyPanel.types.d.ts",
+      "import": "./dist/sidebar/PropertyPanel.types.js"
+    },
     "./toolbar": {
       "types": "./dist/toolbar.d.ts",
       "import": "./dist/toolbar.js"
     },
+    "./i18n": {
+      "types": "./dist/i18n.d.ts",
+      "import": "./dist/i18n.js"
+    },
+    "./tips": {
+      "types": "./dist/tips.d.ts",
+      "import": "./dist/tips.js"
+    },
+    "./visual-feedback": {
+      "types": "./dist/visual-feedback.d.ts",
+      "import": "./dist/visual-feedback.js"
+    },
     "./styles": "./dist/styles/style.css",
     "./molecules": {
-      "types": "./dist/molecules/index.d.ts",
-      "import": "./dist/molecules/index.js"
+      "types": "./dist/molecules.d.ts",
+      "import": "./dist/molecules.js"
     },
     "./atoms": {
-      "types": "./dist/atoms/index.d.ts",
-      "import": "./dist/atoms/index.js"
+      "types": "./dist/atoms.d.ts",
+      "import": "./dist/atoms.js"
     }
   },
   "files": [

@@ -11,12 +11,12 @@ import defaultSizes from '@email-builder/tokens/typography/sizes';
 import defaultWeights from '@email-builder/tokens/typography/weights';
 import defaultLineHeights from '@email-builder/tokens/typography/line-heights';
 
-interface TypographyToken {
-  name: string;
-  value: string;
-  description: string;
-  path: string[];
-}
+// interface TypographyToken {
+//   name: string;
+//   value: string;
+//   description: string;
+//   path: string[];
+// }
 
 interface TypographyTokensProps {
   fonts?: any;

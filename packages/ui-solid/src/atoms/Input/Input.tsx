@@ -114,14 +114,11 @@ export const Input: Component<InputProps> = (props) => {
    * Generate class names
    */
   const getClassNames = (): string => {
-    const modifiers = [
-      local.size,
-      local.validationState !== 'default' && local.validationState,
-      local.fullWidth && 'full-width',
-    ].filter(Boolean) as string[];
-
     return classNames(
-      bem(...modifiers),
+      bem(),
+      local.size && bem(local.size),
+      local.validationState !== 'default' && local.validationState && bem(local.validationState),
+      local.fullWidth && bem('full-width'),
       local.className
     );
   };

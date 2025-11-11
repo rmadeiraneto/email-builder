@@ -8,12 +8,12 @@ import { type Component, For, createMemo } from 'solid-js';
 import styles from './SpacingTokens.module.scss';
 import defaultSpacingData from '@email-builder/tokens/spacing/scale';
 
-interface SpacingToken {
-  name: string;
-  value: string;
-  description: string;
-  path: string[];
-}
+// interface SpacingToken {
+//   name: string;
+//   value: string;
+//   description: string;
+//   path: string[];
+// }
 
 interface SpacingTokensProps {
   spacingData?: any;

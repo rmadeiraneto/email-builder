@@ -12,7 +12,7 @@ export { PresetPreview } from './PresetPreview';
 export type { PresetPreviewProps } from './PresetPreview';
 
 export { PreviewModal } from './PreviewModal';
-export type { PreviewModalProps } from './PreviewModal';
+export type { PreviewModalProps } from './PreviewModal.types';
 
 export { EmailTestingSettingsModal } from './EmailTestingSettingsModal';
 export type { EmailTestingSettingsModalProps } from './EmailTestingSettingsModal';

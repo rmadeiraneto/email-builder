@@ -118,8 +118,8 @@ export const PropertyIndicator: Component<PropertyIndicatorProps> = (props) => {
     <div
       class={styles.propertyIndicator}
       classList={{
-        [styles.visible]: visible(),
-        [styles.hidden]: !visible(),
+        [styles.visible!]: visible(),
+        [styles.hidden!]: !visible(),
       }}
       style={{
         ...positionStyles(),

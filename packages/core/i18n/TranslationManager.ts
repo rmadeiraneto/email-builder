@@ -12,9 +12,9 @@ import type {
   AutoTranslationPlugin,
   InterpolationValues,
   TranslateFunction,
-  TranslationEvent,
   TranslationEventData,
 } from './types';
+import { TranslationEvent } from './types';
 import type { EventEmitter } from '../services/EventEmitter';
 
 /**
@@ -23,9 +23,9 @@ import type { EventEmitter } from '../services/EventEmitter';
 export class TranslationManager {
   private config: Required<TranslationConfig>;
   private providers: TranslationProvider[];
-  private autoTranslationPlugin?: AutoTranslationPlugin;
+  private autoTranslationPlugin: AutoTranslationPlugin | undefined;
   private cache: Map<string, Map<string, string>>; // locale -> key -> translation
-  private eventEmitter?: EventEmitter;
+  private eventEmitter: EventEmitter | undefined;
   private currentLocale: string;
   private defaultLocale: string;
 
@@ -35,18 +35,29 @@ export class TranslationManager {
     this.providers = config.providers ?? [];
     this.autoTranslationPlugin = config.autoTranslationPlugin;
     this.cache = new Map();
-    this.eventEmitter = eventEmitter;
+    if (eventEmitter !== undefined) {
+      this.eventEmitter = eventEmitter;
+    }
 
-    this.config = {
+    // Build config object, only adding optional properties if they're defined
+    const configBase = {
       defaultLocale: this.defaultLocale,
       locale: this.currentLocale,
       providers: this.providers,
-      autoTranslationPlugin: this.autoTranslationPlugin,
       enableAutoTranslation: config.enableAutoTranslation ?? false,
       enableCache: config.enableCache ?? true,
-      warnOnMissing: config.warnOnMissing ?? (process.env.NODE_ENV !== 'production'),
+      warnOnMissing: config.warnOnMissing ?? false,
       fallbackToKey: config.fallbackToKey ?? true,
     };
+
+    if (this.autoTranslationPlugin !== undefined) {
+      this.config = {
+        ...configBase,
+        autoTranslationPlugin: this.autoTranslationPlugin,
+      } as Required<TranslationConfig>;
+    } else {
+      this.config = configBase as Required<TranslationConfig>;
+    }
   }
 
   /**

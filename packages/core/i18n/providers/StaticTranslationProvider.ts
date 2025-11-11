@@ -105,7 +105,7 @@ export class StaticTranslationProvider implements TranslationProvider {
           targetValue as TranslationDictionary,
           sourceValue as TranslationDictionary
         );
-      } else {
+      } else if (sourceValue !== undefined) {
         result[key] = sourceValue;
       }
     }

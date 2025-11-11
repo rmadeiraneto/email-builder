@@ -38,7 +38,7 @@ export const TestConfigModal: Component<TestConfigModalProps> = (props) => {
       'mobile-android': [],
     };
 
-    COMMON_EMAIL_CLIENTS.forEach((client) => {
+    COMMON_EMAIL_CLIENTS.forEach((client: { platform: string; available: boolean }) => {
       if (client.available) {
         grouped[client.platform].push(client);
       }
@@ -61,7 +61,7 @@ export const TestConfigModal: Component<TestConfigModalProps> = (props) => {
   };
 
   const handleSelectAll = () => {
-    const allClientIds = COMMON_EMAIL_CLIENTS.filter((c) => c.available).map((c) => c.id);
+    const allClientIds = COMMON_EMAIL_CLIENTS.filter((c: { available: boolean }) => c.available).map((c: { id: string }) => c.id);
     setSelectedClients(allClientIds);
   };
 
@@ -151,7 +151,7 @@ export const TestConfigModal: Component<TestConfigModalProps> = (props) => {
                 id="testName"
                 type="text"
                 value={testName()}
-                onInput={(e) => setTestName(e.currentTarget.value)}
+                onInput={(e: Event & { currentTarget: HTMLInputElement }) => setTestName(e.currentTarget.value)}
                 placeholder="e.g., Newsletter Template Test"
                 disabled={isSubmitting()}
               />
@@ -165,7 +165,7 @@ export const TestConfigModal: Component<TestConfigModalProps> = (props) => {
                 id="subject"
                 type="text"
                 value={subject()}
-                onInput={(e) => setSubject(e.currentTarget.value)}
+                onInput={(e: Event & { currentTarget: HTMLInputElement }) => setSubject(e.currentTarget.value)}
                 placeholder="e.g., Weekly Newsletter"
                 disabled={isSubmitting()}
               />
@@ -179,7 +179,7 @@ export const TestConfigModal: Component<TestConfigModalProps> = (props) => {
                 id="description"
                 class={styles.formGroup__textarea}
                 value={description()}
-                onInput={(e) => setDescription(e.currentTarget.value)}
+                onInput={(e: Event & { currentTarget: HTMLTextAreaElement }) => setDescription(e.currentTarget.value)}
                 placeholder="Add any notes about this test..."
                 rows={3}
                 disabled={isSubmitting()}

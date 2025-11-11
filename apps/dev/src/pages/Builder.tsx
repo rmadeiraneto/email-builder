@@ -76,10 +76,6 @@ const BuilderContent: Component = () => {
     actions.deleteComponent(componentId);
   };
 
-  const handleCanvasSettingChange = (path: string, value: any) => {
-    actions.updateCanvasSetting(path, value);
-  };
-
   const handleGeneralStyleChange = (path: string, value: any) => {
     actions.updateCanvasSetting(path, value);
   };
@@ -138,7 +134,7 @@ const BuilderContent: Component = () => {
     window.removeEventListener('keydown', handleKeyDown);
   });
 
-  const handleComponentDragStart = (definition: ComponentDefinition, event: DragEvent) => {
+  const handleComponentDragStart = (_definition: ComponentDefinition, _event: DragEvent) => {
     // Component drag started
   };
 
@@ -356,7 +352,7 @@ const BuilderContent: Component = () => {
               hasTemplate={state.template !== null}
               canUndo={state.canUndo}
               canRedo={state.canRedo}
-              templateName={state.template?.name}
+              templateName={state.template?.metadata.name}
               onNewTemplate={handleNewTemplate}
               onSaveTemplate={handleSaveTemplate}
               onLoadTemplate={handleLoadTemplate}

@@ -7,8 +7,7 @@
  */
 
 import type { Template, BaseComponent } from '../types';
-import type { DiffResult, ComponentOrder, ComponentVisibility } from './mobile.types';
-import { DeviceMode, getComponentOrderForDevice, isComponentVisibleOnDevice } from './mobile.types';
+import type { DiffResult } from './mobile.types';
 
 /**
  * Property diff entry
@@ -200,9 +199,9 @@ export class DiffCalculator {
   /**
    * Calculate canvas setting overrides
    *
-   * @param template - Template to analyze
+   * @param _template - Template to analyze
    */
-  private static calculateCanvasOverrides(template: Template): Array<{
+  private static calculateCanvasOverrides(_template: Template): Array<{
     settingPath: string;
     settingLabel: string;
     desktopValue: any;
@@ -288,7 +287,7 @@ export class DiffCalculator {
    */
   private static getPropertyLabel(propertyPath: string): string {
     const parts = propertyPath.split('.');
-    const property = parts[parts.length - 1];
+    const property = parts[parts.length - 1] ?? '';
 
     return property
       .replace(/([A-Z])/g, ' $1')

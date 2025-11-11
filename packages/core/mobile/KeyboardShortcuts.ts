@@ -324,7 +324,7 @@ export class KeyboardShortcutsManager {
    */
   private matchesShortcut(event: KeyboardEvent, keys: string): boolean {
     const parts = keys.split('+').map((k) => k.trim());
-    const key = parts[parts.length - 1].toLowerCase();
+    const key = parts[parts.length - 1]?.toLowerCase() ?? '';
 
     // Check modifiers
     const needsMod = parts.includes('Mod');

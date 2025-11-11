@@ -22,11 +22,32 @@ export function classNames(...classes: (string | false | null | undefined)[]): s
  * bemToCamelCase('button--full-width') // 'buttonFullWidth'
  * bemToCamelCase('button__icon--right') // 'buttonIconRight'
  */
-function bemToCamelCase(str: string): string {
+export function bemToCamelCase(str: string): string {
   return str
     .replace(/--([a-z])/g, (_, letter) => letter.toUpperCase())
     .replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
     .replace(/__([a-z])/g, (_, letter) => letter.toUpperCase());
+}
+
+/**
+ * Gets a class name from a CSS modules styles object, automatically converting
+ * BEM-style class names to camelCase
+ *
+ * @param styles - CSS modules styles object
+ * @param className - BEM-style class name (e.g., 'modal--open', 'modal__dialog')
+ * @returns The corresponding class name from the styles object
+ *
+ * @example
+ * getStyleClass(styles, 'modal') // styles.modal
+ * getStyleClass(styles, 'modal--open') // styles.modalOpen
+ * getStyleClass(styles, 'modal__dialog') // styles.modalDialog
+ */
+export function getStyleClass(
+  styles: Record<string, string | undefined>,
+  className: string
+): string | undefined {
+  const camelCased = bemToCamelCase(className);
+  return styles[camelCased];
 }
 
 /**

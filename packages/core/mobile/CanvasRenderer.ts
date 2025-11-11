@@ -203,7 +203,7 @@ export class CanvasRenderer {
     // Render children recursively
     const children = this.renderChildren(component);
 
-    return {
+    const result: RenderedComponent = {
       id: component.id,
       type: component.type,
       content: 'content' in component ? component.content : undefined,
@@ -212,8 +212,13 @@ export class CanvasRenderer {
       order,
       hasOverrides: hasOverrides || false,
       metadata: component.metadata,
-      children,
     };
+
+    if (children !== undefined) {
+      result.children = children;
+    }
+
+    return result;
   }
 
   /**
@@ -224,13 +229,18 @@ export class CanvasRenderer {
     const breakpoint = this.config.breakpoints.mobile;
 
     if (currentMode === DeviceMode.MOBILE) {
-      return {
+      const viewport: CanvasViewport = {
         width: breakpoint,
         backgroundColor: this.config.canvas.mobileBackgroundColor || '#f5f5f5',
-        borderColor: this.config.canvas.mobileBorderColor,
         mode: currentMode,
         scale: 1,
       };
+
+      if (this.config.canvas.mobileBorderColor !== undefined) {
+        viewport.borderColor = this.config.canvas.mobileBorderColor;
+      }
+
+      return viewport;
     }
 
     // Desktop mode

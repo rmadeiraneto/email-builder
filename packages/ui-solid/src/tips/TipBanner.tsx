@@ -113,6 +113,8 @@ export const TipBanner: Component<TipBannerProps> = (props) => {
             />
           </svg>
         );
+      default:
+        return null;
     }
   };
 

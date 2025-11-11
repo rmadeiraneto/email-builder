@@ -11,6 +11,11 @@ export default defineConfig({
         canvas: resolve(__dirname, 'src/canvas/index.ts'),
         sidebar: resolve(__dirname, 'src/sidebar/index.ts'),
         toolbar: resolve(__dirname, 'src/toolbar/index.ts'),
+        i18n: resolve(__dirname, 'src/i18n/index.ts'),
+        tips: resolve(__dirname, 'src/tips/index.ts'),
+        'visual-feedback': resolve(__dirname, 'src/visual-feedback/index.ts'),
+        'atoms': resolve(__dirname, 'src/atoms/index.ts'),
+        'molecules': resolve(__dirname, 'src/molecules/index.ts'),
       },
       formats: ['es'],
       fileName: (format, entryName) => `${entryName}.js`,
@@ -48,12 +53,11 @@ export default defineConfig({
   },
   plugins: [
     solid(),
-    // Temporarily disable type generation to speed up development
-    // dts({
-    //   include: ['src/**/*'],
-    //   exclude: ['**/*.test.ts', '**/*.test.tsx'],
-    //   insertTypesEntry: true,
-    // }),
+    dts({
+      include: ['src/**/*'],
+      exclude: ['**/*.test.ts', '**/*.test.tsx'],
+      insertTypesEntry: true,
+    }),
   ],
   css: {
     modules: {

@@ -1,11 +1,11 @@
-import type { BaseComponent, ComponentPreset, ComponentType, Template, PropertyVisualMapping } from '@email-builder/core';
+import type { BaseComponent, ComponentPreset, ComponentType, Template } from '@email-builder/core';
 
 /**
  * Visual feedback event for property hover
  */
 export interface PropertyHoverEvent {
   propertyPath: string;
-  componentId?: string;
+  componentId: string | undefined;
   currentValue?: any;
   propertyType: 'text' | 'number' | 'color' | 'select' | 'textarea' | 'url' | 'richtext' | 'radio';
 }
@@ -15,7 +15,7 @@ export interface PropertyHoverEvent {
  */
 export interface PropertyEditEvent {
   propertyPath: string;
-  componentId?: string;
+  componentId: string | undefined;
   isEditing: boolean;
   currentValue?: any;
 }

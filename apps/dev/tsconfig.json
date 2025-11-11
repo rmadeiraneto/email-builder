@@ -4,6 +4,7 @@
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
     "noEmit": true,
+    "noPropertyAccessFromIndexSignature": false,
     "paths": {
       "@/*": ["./src/*"],
       "@tokens": ["../../packages/tokens/build/ts"]

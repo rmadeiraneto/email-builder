@@ -100,7 +100,9 @@ export class ClearMobileOverrideCommand
     // Restore all previous values
     for (const [key, value] of this.previousValues.entries()) {
       const [componentId, propertyPath] = key.split(':');
-      this.overrideManager.setOverride(componentId, propertyPath, value);
+      if (componentId && propertyPath) {
+        this.overrideManager.setOverride(componentId, propertyPath, value);
+      }
     }
   }
 

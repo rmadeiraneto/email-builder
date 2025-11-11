@@ -14,14 +14,12 @@
  * @module mobile
  */
 
-import type { BaseComponent, BaseStyles } from '../types';
+import type { BaseComponent } from '../types';
 import type {
-  DeviceMode,
   MobileDevModeConfig,
-  PropertyInheritanceInfo,
   MobileControlDefinition,
+  PropertyInheritanceInfo,
 } from './mobile.types';
-import { canOverrideProperty } from './mobile.types';
 import type { PropertyOverrideManager } from './PropertyOverrideManager';
 import type { ModeManager } from './ModeManager';
 
@@ -181,19 +179,25 @@ export class PropertyPanelIntegration {
 
     const category = this.getPropertyCategory(propertyPath);
     const showResetButton = isMobileMode && inheritanceInfo.isOverridden;
+    const overrideIndicator = this.getOverrideIndicator(inheritanceInfo, isMobileMode);
 
-    return {
+    const result: PropertyControlState = {
       propertyPath,
       label,
       value: inheritanceInfo.effectiveValue,
       desktopValue: inheritanceInfo.desktopValue,
       isOverridden: inheritanceInfo.isOverridden,
       canOverride: inheritanceInfo.canOverride,
-      overrideIndicator: this.getOverrideIndicator(inheritanceInfo, isMobileMode),
       showResetButton,
       isMobileMode,
       category,
     };
+
+    if (overrideIndicator !== undefined) {
+      result.overrideIndicator = overrideIndicator;
+    }
+
+    return result;
   }
 
   /**
@@ -392,7 +396,7 @@ export class PropertyPanelIntegration {
   /**
    * Get mobile layout controls
    */
-  private getMobileLayoutControls(componentType: string): MobileControlDefinition[] {
+  private getMobileLayoutControls(_componentType: string): MobileControlDefinition[] {
     return [
       {
         id: 'mobile-visible',
@@ -456,7 +460,7 @@ export class PropertyPanelIntegration {
    */
   private getPropertyLabel(propertyPath: string): string {
     const parts = propertyPath.split('.');
-    const property = parts[parts.length - 1];
+    const property = parts[parts.length - 1] || propertyPath;
 
     // Convert camelCase to Title Case
     return property

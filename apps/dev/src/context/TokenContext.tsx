@@ -2,8 +2,8 @@
  * Token Context for providing custom tokens to styleguide components
  */
 
-import { createContext, useContext, ParentComponent } from 'solid-js';
-import { CustomTokens } from '../utils/tokenStorage';
+import { createContext, useContext, type ParentComponent } from 'solid-js';
+import type { CustomTokens } from '../utils/tokenStorage';
 
 interface TokenContextValue {
   customTokens: CustomTokens;

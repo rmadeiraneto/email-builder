@@ -68,7 +68,9 @@ export class TemplateVariableParser {
 
         if (blockResult) {
           token.content = blockResult.content;
-          token.elseContent = blockResult.elseContent;
+          if (blockResult.elseContent !== undefined) {
+            token.elseContent = blockResult.elseContent;
+          }
           token.children = blockResult.children;
           position = blockResult.endPosition;
         } else {
@@ -166,7 +168,6 @@ export class TemplateVariableParser {
     errors: string[];
   } {
     const errors: string[] = [];
-    const delimiters = options?.delimiters || this.defaultDelimiters;
 
     try {
       const tokens = this.parse(template, options);
@@ -263,7 +264,7 @@ export class TemplateVariableParser {
       return {
         type: VariableType.HELPER,
         raw,
-        path: parts[0],
+        path: parts[0] || '',
         args: parts.slice(1),
         start,
         end,
@@ -351,12 +352,22 @@ export class TemplateVariableParser {
           // Parse children
           const children = this.parse(content, { delimiters });
 
-          return {
+          const result: {
+            content: string;
+            elseContent?: string;
+            children: VariableToken[];
+            endPosition: number;
+          } = {
             content,
-            elseContent,
             children,
             endPosition: nextClose + closeTag.length,
           };
+
+          if (elseContent !== undefined) {
+            result.elseContent = elseContent;
+          }
+
+          return result;
         } else {
           position = nextClose + closeTag.length;
         }

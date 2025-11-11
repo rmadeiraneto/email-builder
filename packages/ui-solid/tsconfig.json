@@ -12,8 +12,17 @@
       "@/*": ["./src/*"],
       "@tokens": ["../tokens/build/ts"],
       "@email-builder/core": ["../core/dist/index.d.ts"],
+      "@email-builder/core/*": ["../core/dist/*"],
       "@email-builder/core/compatibility": ["../core/dist/compatibility/index.d.ts"],
-      "@email-builder/core/tips": ["../core/dist/tips/index.d.ts"]
+      "@email-builder/core/tips": ["../core/dist/tips/index.d.ts"],
+      "@email-builder/core/utils": ["../core/dist/utils/index.d.ts"],
+      "@email-builder/core/i18n": ["../core/dist/i18n/index.d.ts"],
+      "@email-builder/core/config": ["../core/dist/config/index.d.ts"],
+      "@email-builder/ui-components": ["../ui-components/dist/index.d.ts"],
+      "@email-builder/ui-components/*": ["../ui-components/dist/*"],
+      "@email-builder/ui-components/atoms": ["../ui-components/dist/atoms/index.d.ts"],
+      "@email-builder/ui-components/molecules": ["../ui-components/dist/molecules/index.d.ts"],
+      "@email-builder/ui-components/utils": ["../ui-components/dist/utils/index.d.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],

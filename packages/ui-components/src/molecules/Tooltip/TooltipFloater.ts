@@ -106,12 +106,12 @@ class TooltipFloater {
 					flip(),
 					shift({ padding: mergedOptions.shiftPadding })
 				]
-			}).then(({ x, y, strategy }) => {
+			}).then((position: { x: number; y: number; strategy: string }) => {
 				if (!this.floater) return;
 
-				this.floater.style.setProperty('--tooltip-left', `${x}px`);
-				this.floater.style.setProperty('--tooltip-top', `${y}px`);
-				this.floater.style.setProperty('--tooltip-position', strategy);
+				this.floater.style.setProperty('--tooltip-left', `${position.x}px`);
+				this.floater.style.setProperty('--tooltip-top', `${position.y}px`);
+				this.floater.style.setProperty('--tooltip-position', position.strategy);
 			});
 		});
 	}

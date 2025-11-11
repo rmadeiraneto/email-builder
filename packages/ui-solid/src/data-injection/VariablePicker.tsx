@@ -5,8 +5,26 @@
  */
 
 import { type Component, createSignal, For, Show } from 'solid-js';
-import type { VariableMetadata, DataSchema } from '@email-builder/core';
 import styles from './VariablePicker.module.scss';
+
+/**
+ * Variable metadata interface
+ */
+export interface VariableMetadata {
+  path: string;
+  type: string;
+  description?: string;
+  isArray?: boolean;
+  required?: boolean;
+  children?: VariableMetadata[];
+}
+
+/**
+ * Data schema interface
+ */
+export interface DataSchema {
+  variables: VariableMetadata[];
+}
 
 export interface VariablePickerProps {
   /**

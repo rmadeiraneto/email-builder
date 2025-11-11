@@ -16,8 +16,6 @@
 
 import { EventEmitter } from '../services/EventEmitter';
 import type { Template, BaseComponent } from '../types';
-import type { ComponentOrder, ComponentVisibility, DiffResult } from './mobile.types';
-import { DeviceMode } from './mobile.types';
 
 /**
  * Mobile Layout Manager Events
@@ -218,6 +216,10 @@ export class MobileLayoutManager {
     // Remove from source position
     const [movedId] = mobileOrder.splice(fromIndex, 1);
 
+    if (!movedId) {
+      throw new Error(`Failed to move component at index ${fromIndex}`);
+    }
+
     // Insert at destination position
     mobileOrder.splice(toIndex, 0, movedId);
 
@@ -370,7 +372,7 @@ export class MobileLayoutManager {
    */
   public endDragging(): void {
     const componentId = this.draggingComponentId;
-    this.draggingComponentId = undefined;
+    delete this.draggingComponentId;
 
     this.eventEmitter.emit(MobileLayoutManagerEvent.REORDER_END, {
       componentId,

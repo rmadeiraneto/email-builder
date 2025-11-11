@@ -24,7 +24,6 @@ import {
   type ModeSwitchEvent,
   type PropertyInheritanceInfo,
   type MobileDevModeConfig,
-  type ComponentVisibility,
   type ComponentOrder,
   canOverrideProperty,
   resolveEffectiveValue,
@@ -113,8 +112,13 @@ export class ModeManager {
   constructor(options: ModeManagerOptions) {
     this.eventEmitter = options.eventEmitter;
     this.config = options.config;
-    this.desktopCommandManager = options.desktopCommandManager;
-    this.mobileCommandManager = options.mobileCommandManager;
+
+    if (options.desktopCommandManager !== undefined) {
+      this.desktopCommandManager = options.desktopCommandManager;
+    }
+    if (options.mobileCommandManager !== undefined) {
+      this.mobileCommandManager = options.mobileCommandManager;
+    }
 
     // Initialize state
     this.state = {
@@ -200,9 +204,12 @@ export class ModeManager {
       fromMode,
       toMode,
       timestamp: Date.now(),
-      selectedComponentId: options.selectedComponentId,
       scrollPosition: options.scrollPosition || { x: 0, y: 0 },
     };
+
+    if (options.selectedComponentId !== undefined) {
+      switchEvent.selectedComponentId = options.selectedComponentId;
+    }
 
     try {
       // Emit switch start event
@@ -352,17 +359,20 @@ export class ModeManager {
     // Effective value
     const effectiveValue = resolveEffectiveValue(desktopValue, mobileValue);
 
-    return {
+    const result: PropertyInheritanceInfo = {
       propertyPath,
       isOverridden,
       desktopValue,
       mobileValue,
       effectiveValue,
       canOverride,
-      cannotOverrideReason: !canOverride
-        ? 'This property cannot be overridden for mobile (blacklisted)'
-        : undefined,
     };
+
+    if (!canOverride) {
+      result.cannotOverrideReason = 'This property cannot be overridden for mobile (blacklisted)';
+    }
+
+    return result;
   }
 
   /**
@@ -490,8 +500,8 @@ export class ModeManager {
    */
   public dispose(): void {
     // Clear references
-    this.currentTemplate = undefined;
-    this.desktopCommandManager = undefined;
-    this.mobileCommandManager = undefined;
+    delete this.currentTemplate;
+    delete this.desktopCommandManager;
+    delete this.mobileCommandManager;
   }
 }

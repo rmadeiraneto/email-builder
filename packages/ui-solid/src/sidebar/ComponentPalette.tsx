@@ -35,7 +35,7 @@ export const ComponentPalette: Component<ComponentPaletteProps> = (props) => {
         (comp) =>
           comp.metadata.name.toLowerCase().includes(query) ||
           comp.metadata.description?.toLowerCase().includes(query) ||
-          comp.metadata.tags?.some((tag) => tag.toLowerCase().includes(query))
+          comp.metadata.tags?.some((tag: string) => tag.toLowerCase().includes(query))
       );
     }
 

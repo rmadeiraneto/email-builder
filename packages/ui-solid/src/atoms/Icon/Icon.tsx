@@ -93,7 +93,7 @@ export const Icon: Component<IconProps> = (props) => {
    */
   const getClassNames = (): string => {
     return classNames(
-      bem(local.onClick && 'clickable'),
+      bem(local.onClick ? 'clickable' : ''),
       `ri-${local.name}`,
       local.className
     );

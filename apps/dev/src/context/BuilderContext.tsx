@@ -131,13 +131,13 @@ export const BuilderProvider: ParentComponent = (props) => {
       method: 'local',
     },
     callbacks: {
-      onSaveTemplate: (template) => {
+      onSaveTemplate: (_template: Template) => {
         // Template saved successfully
       },
-      onLoadTemplate: (template) => {
+      onLoadTemplate: (template: Template) => {
         setState('template', template);
       },
-      onExportTemplate: (format, content) => {
+      onExportTemplate: (_format: string, _content: string) => {
         // Template exported successfully
       },
     },
@@ -420,10 +420,9 @@ export const BuilderProvider: ParentComponent = (props) => {
           name,
           settings: {
             target: type,
-            canvasDimensions: {
-              width: type === 'email' ? 600 : 1200,
-              maxWidth: type === 'email' ? 600 : undefined,
-            },
+            canvasDimensions: type === 'email'
+              ? { width: 600, maxWidth: 600 }
+              : { width: 1200 },
             breakpoints: {
               mobile: 480,
               tablet: 768,
@@ -512,18 +511,19 @@ export const BuilderProvider: ParentComponent = (props) => {
         if (!state.template) {
           throw new Error('No template to export');
         }
-        const exporter = builder.getTemplateExporter();
+        const { TemplateExporter } = await import('@email-builder/core');
+        const exporter = new TemplateExporter();
         let content: string;
         let filename: string;
         let mimeType: string;
 
         if (format === 'html') {
           content = await exporter.toHTML(state.template);
-          filename = `${state.template.name || 'template'}.html`;
+          filename = `${state.template.metadata.name || 'template'}.html`;
           mimeType = 'text/html';
         } else {
           content = await exporter.toJSON(state.template);
-          filename = `${state.template.name || 'template'}.json`;
+          filename = `${state.template.metadata.name || 'template'}.json`;
           mimeType = 'application/json';
         }
 
@@ -567,7 +567,7 @@ export const BuilderProvider: ParentComponent = (props) => {
       const presetManager = builder.getPresetManager();
 
       const command = new ApplyPresetCommand(
-        { componentId, componentType: component.type, presetId },
+        { componentId, componentType: component.type as ComponentType, presetId },
         presetManager,
         (id) => state.template?.components.find(c => c.id === id),
         (updatedComponent) => {
@@ -674,7 +674,7 @@ export const BuilderProvider: ParentComponent = (props) => {
 
         // Load full preset data for each preset
         const presets = await Promise.all(
-          presetListItems.map(item =>
+          presetListItems.map((item: { componentType: string; id: string }) =>
             presetManager.load(item.componentType, item.id)
           )
         );
@@ -794,7 +794,8 @@ export const BuilderProvider: ParentComponent = (props) => {
         }
 
         // Export template as HTML
-        const exporter = builder.getTemplateExporter();
+        const { TemplateExporter } = await import('@email-builder/core');
+        const exporter = new TemplateExporter();
         const htmlContent = await exporter.toHTML(state.template);
 
         // Transform HTML for email compatibility
@@ -803,7 +804,7 @@ export const BuilderProvider: ParentComponent = (props) => {
           useTableLayout: true,
           addOutlookFixes: true,
           removeIncompatibleCSS: true,
-          optimizeForEmail: true,
+          optimizeStructure: true,
         });
 
         const exportResult = emailExportService.export(htmlContent);

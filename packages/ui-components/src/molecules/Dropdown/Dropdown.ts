@@ -209,9 +209,9 @@ export class Dropdown {
     if (this.props.placement) {
       config.placement = this.props.placement;
     }
-    computePosition(this.control, this.itemsContainer, config).then(({ x, y }) => {
-      this.element.style.setProperty('--floater-coords-left', `${x}px`);
-      this.element.style.setProperty('--floater-coords-top', `${y}px`);
+    computePosition(this.control, this.itemsContainer, config).then((position: { x: number; y: number }) => {
+      this.element.style.setProperty('--floater-coords-left', `${position.x}px`);
+      this.element.style.setProperty('--floater-coords-top', `${position.y}px`);
     });
   }
 

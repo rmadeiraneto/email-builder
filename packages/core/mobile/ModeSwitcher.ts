@@ -133,7 +133,7 @@ export class ModeSwitcher {
   private config: MobileDevModeConfig;
   private keyboardShortcut: string;
   private state: ModeSwitcherState;
-  private hoverTimeoutId?: ReturnType<typeof setTimeout>;
+  private hoverTimeoutId: ReturnType<typeof setTimeout> | undefined;
   private keyboardListenerAttached = false;
 
   constructor(options: ModeSwitcherOptions) {
@@ -216,10 +216,19 @@ export class ModeSwitcher {
       }
 
       // Switch mode via ModeManager
-      await this.modeManager.switchMode(mode, {
-        selectedComponentId: options.selectedComponentId,
-        scrollPosition: options.scrollPosition,
-      });
+      const switchOptions: {
+        selectedComponentId?: string;
+        scrollPosition?: { x: number; y: number };
+      } = {};
+
+      if (options.selectedComponentId !== undefined) {
+        switchOptions.selectedComponentId = options.selectedComponentId;
+      }
+      if (options.scrollPosition !== undefined) {
+        switchOptions.scrollPosition = options.scrollPosition;
+      }
+
+      await this.modeManager.switchMode(mode, switchOptions);
 
       // Update state
       this.state.currentMode = mode;

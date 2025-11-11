@@ -341,7 +341,7 @@ export class TemplateExporter {
   /**
    * Generate CSS for template with responsive media queries
    */
-  private generateCSS(template: Template, options: TemplateExportOptions): string {
+  private generateCSS(template: Template, _options: TemplateExportOptions): string {
     const { generalStyles, settings, components } = template;
     let css = '';
 
@@ -372,10 +372,8 @@ export class TemplateExporter {
     }
     css += '    }\n\n';
 
-    // Generate responsive media queries if not in email-only mode
-    if (!options.emailOnly) {
-      css += this.generateResponsiveMediaQueries(template, components);
-    }
+    // Generate responsive media queries
+    css += this.generateResponsiveMediaQueries(template, components);
 
     return css;
   }
@@ -384,7 +382,7 @@ export class TemplateExporter {
    * Generate responsive media queries for all components
    */
   private generateResponsiveMediaQueries(
-    template: Template,
+    _template: Template,
     components: BaseComponent[]
   ): string {
     let css = '';

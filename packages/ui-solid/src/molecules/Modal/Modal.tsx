@@ -29,10 +29,8 @@
 import {
   Component,
   JSX,
-  Show,
   onCleanup,
   createEffect,
-  createMemo,
   splitProps,
   mergeProps,
 } from 'solid-js';
@@ -44,7 +42,7 @@ import {
   flip,
   type Placement,
 } from '@floating-ui/dom';
-import { classNames } from '../../utils';
+import { classNames, getStyleClass } from '../../utils';
 import styles from '@email-builder/ui-components/src/molecules/Modal/modal.module.scss';
 
 /**
@@ -192,20 +190,20 @@ export const Modal: Component<ModalProps> = (props) => {
   };
 
   /**
-   * Generate modal class names (reactive memo)
+   * Generate modal class names
    */
-  const getModalClasses = createMemo(() => {
+  const getModalClasses = () => {
     const classes = Array.isArray(local.modalClasses)
       ? local.modalClasses
       : [local.modalClasses];
 
     return classNames(
-      styles['modal'],
-      local.isOpen && styles['modal--open'],
+      getStyleClass(styles, 'modal'),
+      local.isOpen && getStyleClass(styles, 'modal--open'),
       local.className,
       ...classes
     );
-  });
+  };
 
   /**
    * Generate modal dialog class names
@@ -215,7 +213,7 @@ export const Modal: Component<ModalProps> = (props) => {
       ? local.modalDialogClasses
       : [local.modalDialogClasses];
 
-    return classNames(styles['modal__dialog'], ...classes);
+    return classNames(getStyleClass(styles, 'modal__dialog'), ...classes);
   };
 
   /**
@@ -248,16 +246,14 @@ export const Modal: Component<ModalProps> = (props) => {
   });
 
   return (
-    <Show when={local.isOpen}>
-      <div
-        ref={modalRef}
-        class={getModalClasses()}
-        onClick={handleBackdropClick}
-      >
-        <div class={getModalDialogClasses()} onClick={handleDialogClick}>
-          {local.children}
-        </div>
+    <div
+      ref={modalRef}
+      class={getModalClasses()}
+      onClick={handleBackdropClick}
+    >
+      <div class={getModalDialogClasses()} onClick={handleDialogClick}>
+        {local.children}
       </div>
-    </Show>
+    </div>
   );
 };

@@ -1054,45 +1054,69 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
     props.onGeneralStyleChange(property.key, value);
   };
 
+  // Track if we're currently in an edit to prevent recursive calls
+  const [isHandlingEdit, setIsHandlingEdit] = createSignal(false);
+
   // Visual feedback event handlers
   const handlePropertyHover = (property: PropertyDefinition) => {
     if (!props.visualFeedback?.onPropertyHover) return;
 
-    const currentValue = props.selectedComponent
-      ? getNestedValue(props.selectedComponent, property.key)
-      : undefined;
+    // Use untrack to prevent reactive dependencies
+    untrack(() => {
+      const currentValue = props.selectedComponent
+        ? getNestedValue(props.selectedComponent, property.key)
+        : undefined;
 
-    props.visualFeedback.onPropertyHover({
-      propertyPath: property.key,
-      componentId: props.selectedComponent?.id,
-      currentValue,
-      propertyType: property.type,
+      props.visualFeedback!.onPropertyHover({
+        propertyPath: property.key,
+        componentId: props.selectedComponent?.id,
+        currentValue,
+        propertyType: property.type,
+      });
     });
   };
 
   const handlePropertyUnhover = (property: PropertyDefinition) => {
     if (!props.visualFeedback?.onPropertyUnhover) return;
-    props.visualFeedback.onPropertyUnhover(property.key);
+
+    untrack(() => {
+      props.visualFeedback!.onPropertyUnhover(property.key);
+    });
   };
 
   const handlePropertyEditStart = (property: PropertyDefinition) => {
     if (!props.visualFeedback?.onPropertyEditStart) return;
 
-    const currentValue = props.selectedComponent
-      ? getNestedValue(props.selectedComponent, property.key)
-      : undefined;
+    // Prevent recursive calls
+    if (isHandlingEdit()) return;
 
-    props.visualFeedback.onPropertyEditStart({
-      propertyPath: property.key,
-      componentId: props.selectedComponent?.id,
-      isEditing: true,
-      currentValue,
+    setIsHandlingEdit(true);
+
+    // Use untrack to prevent reactive dependencies and defer to next tick
+    queueMicrotask(() => {
+      untrack(() => {
+        const currentValue = props.selectedComponent
+          ? getNestedValue(props.selectedComponent, property.key)
+          : undefined;
+
+        props.visualFeedback!.onPropertyEditStart({
+          propertyPath: property.key,
+          componentId: props.selectedComponent?.id,
+          isEditing: true,
+          currentValue,
+        });
+
+        setIsHandlingEdit(false);
+      });
     });
   };
 
   const handlePropertyEditEnd = (property: PropertyDefinition) => {
     if (!props.visualFeedback?.onPropertyEditEnd) return;
-    props.visualFeedback.onPropertyEditEnd(property.key);
+
+    untrack(() => {
+      props.visualFeedback!.onPropertyEditEnd(property.key);
+    });
   };
 
   const renderPropertyEditor = (property: PropertyDefinition) => {

@@ -198,8 +198,8 @@ export const Modal: Component<ModalProps> = (props) => {
       : [local.modalClasses];
 
     return classNames(
-      styles['modal'],
-      local.isOpen && styles['modal--open'],
+      styles.modal,
+      local.isOpen && styles.modalOpen,
       local.className,
       ...classes
     );
@@ -213,7 +213,7 @@ export const Modal: Component<ModalProps> = (props) => {
       ? local.modalDialogClasses
       : [local.modalDialogClasses];
 
-    return classNames(styles['modal__dialog'], ...classes);
+    return classNames(styles.modalDialog, ...classes);
   };
 
   /**

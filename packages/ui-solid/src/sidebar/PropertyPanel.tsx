@@ -1056,56 +1056,21 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
   };
 
   // Visual feedback event handlers using global event bus
-  // This prevents infinite recursion by decoupling from component props
-  // IMPORTANT: Must use untrack() to prevent reactive dependencies
+  // TEMPORARILY DISABLED to isolate the recursion issue
   const handlePropertyHover = (property: PropertyDefinition) => {
-    untrack(() => {
-      const currentValue = props.selectedComponent
-        ? getNestedValue(props.selectedComponent, property.key)
-        : undefined;
-
-      visualFeedbackEventBus.emit({
-        type: 'property:hover',
-        propertyPath: property.key,
-        componentId: props.selectedComponent?.id,
-        currentValue,
-        propertyType: property.type,
-      });
-    });
+    // Disabled
   };
 
   const handlePropertyUnhover = (property: PropertyDefinition) => {
-    untrack(() => {
-      visualFeedbackEventBus.emit({
-        type: 'property:unhover',
-        propertyPath: property.key,
-      });
-    });
+    // Disabled
   };
 
   const handlePropertyEditStart = (property: PropertyDefinition) => {
-    untrack(() => {
-      const currentValue = props.selectedComponent
-        ? getNestedValue(props.selectedComponent, property.key)
-        : undefined;
-
-      visualFeedbackEventBus.emit({
-        type: 'property:edit:start',
-        propertyPath: property.key,
-        componentId: props.selectedComponent?.id,
-        isEditing: true,
-        currentValue,
-      });
-    });
+    // Disabled
   };
 
   const handlePropertyEditEnd = (property: PropertyDefinition) => {
-    untrack(() => {
-      visualFeedbackEventBus.emit({
-        type: 'property:edit:end',
-        propertyPath: property.key,
-      });
-    });
+    // Disabled
   };
 
   const renderPropertyEditor = (property: PropertyDefinition) => {

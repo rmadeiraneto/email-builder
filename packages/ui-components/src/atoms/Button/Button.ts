@@ -30,7 +30,7 @@
 
 import type { ButtonProps } from './button.types';
 import styles from './button.module.scss';
-import { classNames, setAriaAttribute } from '../../utils';
+import { classNames, setAriaAttribute, createBEM } from '../../utils';
 
 export class Button {
   private props: ButtonProps;
@@ -84,6 +84,8 @@ export class Button {
    * @param button - Button element to populate
    */
   private buildContent(button: HTMLButtonElement): void {
+    const bem = createBEM(styles, 'button');
+
     // Clear existing content
     button.innerHTML = '';
 
@@ -94,7 +96,7 @@ export class Button {
 
     // Add text
     const textSpan = document.createElement('span');
-    textSpan.className = styles.button__text ?? '';
+    textSpan.className = bem.elem('text') ?? '';
     textSpan.textContent = this.props.children;
     button.appendChild(textSpan);
 
@@ -110,8 +112,9 @@ export class Button {
    * @returns Icon element
    */
   private createIcon(): HTMLElement {
+    const bem = createBEM(styles, 'button');
     const icon = document.createElement('i');
-    const iconClass = this.props.iconPosition === 'right' ? styles['button__icon--right'] : styles.button__icon;
+    const iconClass = this.props.iconPosition === 'right' ? bem.elem('icon', 'right') : bem.elem('icon');
     icon.className = `ri-${this.props.icon} ${iconClass}`;
     icon.setAttribute('aria-hidden', 'true');
     return icon;
@@ -123,12 +126,13 @@ export class Button {
    * @returns Space-separated class names
    */
   private getClassNames(): string {
+    const bem = createBEM(styles, 'button');
     return classNames(
-      styles.button,
-      this.props.variant && styles[`button--${this.props.variant}`],
-      this.props.size && styles[`button--${this.props.size}`],
-      this.props.fullWidth && styles['button--full-width'],
-      this.props.disabled && styles['button--disabled'],
+      bem(),
+      this.props.variant && bem(this.props.variant),
+      this.props.size && bem(this.props.size),
+      this.props.fullWidth && bem('full-width'),
+      this.props.disabled && bem('disabled'),
       this.props.className
     );
   }

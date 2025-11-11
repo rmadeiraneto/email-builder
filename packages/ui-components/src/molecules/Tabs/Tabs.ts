@@ -1,5 +1,6 @@
 import styles from './tabs.module.scss';
 import { TabsConfig, TabItem, TabItemConfig } from './tabs.types';
+import { createBEM } from '../../utils/classNames';
 
 /**
  * Tabs component for organizing content into tabbed panels
@@ -109,22 +110,25 @@ export class Tabs {
   }
 
   private createElement(): HTMLElement {
+    const bem = createBEM(styles, 'tabs');
     const element = document.createElement('div');
-    element.className = `${styles.tabs}${
+    element.className = `${bem()}${
       this.config.extendedClasses ? ' ' + this.config.extendedClasses : ''
     }`;
     return element;
   }
 
   private createTabsContainer(): HTMLElement {
+    const bem = createBEM(styles, 'tabs');
     const container = document.createElement('div');
-    container.className = styles.tabs__tabs ?? '';
+    container.className = bem.elem('tabs') ?? '';
     return container;
   }
 
   private createPanesContainer(): HTMLElement {
+    const bem = createBEM(styles, 'tabs');
     const container = document.createElement('div');
-    container.className = styles.tabs__contentWrapper ?? '';
+    container.className = bem.elem('content-wrapper') ?? '';
     return container;
   }
 
@@ -137,8 +141,9 @@ export class Tabs {
   }
 
   private addTab(tabItem: TabItem): void {
+    const bem = createBEM(styles, 'tabs');
     const tab = document.createElement('div');
-    tab.className = `${styles.tabs__tabItem}${
+    tab.className = `${bem.elem('tab-item')}${
       tabItem.tabExtendedClasses ? ' ' + tabItem.tabExtendedClasses : ''
     }`;
 
@@ -153,8 +158,9 @@ export class Tabs {
   }
 
   private addPane(tabItem: TabItem): void {
+    const bem = createBEM(styles, 'tabs');
     const pane = document.createElement('div');
-    pane.className = `${styles.tabs__tabPane}${
+    pane.className = `${bem.elem('tab-pane')}${
       tabItem.paneExtendedClasses ? ' ' + tabItem.paneExtendedClasses : ''
     }`;
 
@@ -189,9 +195,10 @@ export class Tabs {
   }
 
   private selectItem(item: TabItem): void {
+    const bem = createBEM(styles, 'tabs');
     item.setActive(true);
-    const activeTabClass = styles['tabs__tabItem--active'];
-    const activePaneClass = styles['tabs__tabPane--active'];
+    const activeTabClass = bem.elem('tab-item', 'active');
+    const activePaneClass = bem.elem('tab-pane', 'active');
     if (activeTabClass) {
       item.getTab().classList.add(activeTabClass);
     }
@@ -201,9 +208,10 @@ export class Tabs {
   }
 
   private deselectItem(item: TabItem): void {
+    const bem = createBEM(styles, 'tabs');
     item.setActive(false);
-    const activeTabClass = styles['tabs__tabItem--active'];
-    const activePaneClass = styles['tabs__tabPane--active'];
+    const activeTabClass = bem.elem('tab-item', 'active');
+    const activePaneClass = bem.elem('tab-pane', 'active');
     if (activeTabClass) {
       item.getTab().classList.remove(activeTabClass);
     }

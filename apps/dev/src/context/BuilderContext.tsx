@@ -11,6 +11,7 @@ import {
   createSignal,
   createEffect,
   onCleanup,
+  untrack,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import {
@@ -220,7 +221,11 @@ export const BuilderProvider: ParentComponent = (props) => {
   // Initialize visual feedback manager when canvas is available
   createEffect(() => {
     const canvas = canvasElement();
-    if (canvas && !visualFeedbackManager()) {
+    // Use untrack to prevent visualFeedbackManager from being a reactive dependency
+    // This prevents infinite recursion when cleanup sets it to null
+    const currentManager = untrack(visualFeedbackManager);
+
+    if (canvas && !currentManager) {
       // Initialize VisualFeedbackManager with default config
       const manager = createVisualFeedbackManager(canvas, DEFAULT_VISUAL_FEEDBACK_CONFIG);
       setVisualFeedbackManager(manager);

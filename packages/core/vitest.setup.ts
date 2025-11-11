@@ -48,3 +48,31 @@ if (typeof document === 'undefined') {
 
   global.document = documentMock as any;
 }
+
+// Mock Web Animations API (for happy-dom)
+if (typeof HTMLElement !== 'undefined' && !HTMLElement.prototype.animate) {
+  HTMLElement.prototype.animate = vi.fn().mockReturnValue({
+    cancel: vi.fn(),
+    finish: vi.fn(),
+    pause: vi.fn(),
+    play: vi.fn(),
+    reverse: vi.fn(),
+    updatePlaybackRate: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+    oncancel: null,
+    onfinish: null,
+    onremove: null,
+    ready: Promise.resolve(),
+    finished: Promise.resolve(),
+    id: '',
+    pending: false,
+    playState: 'finished',
+    playbackRate: 1,
+    startTime: 0,
+    currentTime: 0,
+    timeline: null,
+    effect: null,
+  } as any);
+}

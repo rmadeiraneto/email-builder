@@ -40,9 +40,8 @@ import {
   type Tip,
   type CompatibilityReport,
   // Visual feedback imports
-  OverlayManager,
-  AnimationController,
-  getPropertyMappingRegistry,
+  VisualFeedbackManager,
+  createVisualFeedbackManager,
   DEFAULT_VISUAL_FEEDBACK_CONFIG,
   // Translation imports
   StaticTranslationProvider,
@@ -193,9 +192,7 @@ export const BuilderProvider: ParentComponent = (props) => {
 
   // Visual feedback state
   const [canvasElement, setCanvasElement] = createSignal<HTMLElement | null>(null);
-  const [overlayManager, setOverlayManager] = createSignal<OverlayManager | null>(null);
-  const [animationController, setAnimationController] = createSignal<AnimationController | null>(null);
-  const propertyMappingRegistry = getPropertyMappingRegistry();
+  const [visualFeedbackManager, setVisualFeedbackManager] = createSignal<VisualFeedbackManager | null>(null);
 
   // Initialize builder on mount
   createEffect(async () => {
@@ -221,38 +218,24 @@ export const BuilderProvider: ParentComponent = (props) => {
     }
   });
 
-  // Initialize visual feedback managers when canvas is available
+  // Initialize visual feedback manager when canvas is available
   createEffect(() => {
     const canvas = canvasElement();
-    // Use untrack to prevent overlayManager from being a reactive dependency
+    // Use untrack to prevent visualFeedbackManager from being a reactive dependency
     // This prevents infinite recursion when cleanup sets it to null
-    const currentManager = untrack(overlayManager);
+    const currentManager = untrack(visualFeedbackManager);
 
     if (canvas && !currentManager) {
-      // Initialize OverlayManager
-      const manager = new OverlayManager({
-        canvasElement: canvas,
-        highlightConfig: DEFAULT_VISUAL_FEEDBACK_CONFIG.highlights,
-        zIndex: 9999,
-      });
-      setOverlayManager(manager);
+      // Initialize VisualFeedbackManager with default config
+      const manager = createVisualFeedbackManager(canvas, DEFAULT_VISUAL_FEEDBACK_CONFIG);
+      setVisualFeedbackManager(manager);
 
-      // Initialize AnimationController
-      const controller = new AnimationController(
-        DEFAULT_VISUAL_FEEDBACK_CONFIG.animations,
-        DEFAULT_VISUAL_FEEDBACK_CONFIG.performance,
-        DEFAULT_VISUAL_FEEDBACK_CONFIG.respectReducedMotion
-      );
-      setAnimationController(controller);
-
-      console.log('[BuilderContext] Visual feedback managers initialized');
+      console.log('[BuilderContext] VisualFeedbackManager initialized');
 
       // Cleanup on unmount
       onCleanup(() => {
         manager.destroy();
-        controller.destroy();
-        setOverlayManager(null);
-        setAnimationController(null);
+        setVisualFeedbackManager(null);
       });
     }
   });
@@ -895,139 +878,58 @@ export const BuilderProvider: ParentComponent = (props) => {
     },
 
     onPropertyHover: (event: PropertyHoverEvent) => {
-      const manager = overlayManager();
-      if (!manager || !state.template) return;
+      const manager = visualFeedbackManager();
+      if (!manager) return;
 
-      // Get the mapping for this property
-      const componentType = state.selectedComponentId
-        ? state.template.components.find(c => c.id === state.selectedComponentId)?.type
-        : undefined;
-
-      const mapping = componentType
-        ? propertyMappingRegistry.getMapping(componentType.toLowerCase(), event.propertyPath)
-        : null;
-
-      if (!mapping) return;
-
-      // Get affected elements (usually just the target component)
-      const affectedElements: HTMLElement[] = [];
-
-      if (event.componentId) {
-        const targetElement = document.querySelector(`[data-component-id="${event.componentId}"]`) as HTMLElement;
-        if (targetElement) {
-          affectedElements.push(targetElement);
-        }
-      }
-
-      if (affectedElements.length === 0) return;
-
-      // Filter to visible elements
-      const visibleElements = manager.getVisibleElements(affectedElements);
-
-      // Get off-screen elements
-      const offScreenElements = manager.getOffScreenElements(affectedElements);
-
-      // Get property type for overlay selection
-      const propertyType = propertyMappingRegistry.getPropertyType(event.propertyPath);
-
-      // Create overlays for all visible elements
-      visibleElements.forEach((element) => {
-        if (propertyType === 'spacing' || propertyType === 'size') {
-          // Show measurement lines
-          manager.createOverlay('measurement', {
-            targetElement: element,
-            propertyPath: event.propertyPath,
-            value: event.currentValue,
-            visualMapping: mapping,
-            mode: 'hover',
-          });
-        } else if (propertyType === 'color' || propertyType === 'border' || propertyType === 'typography') {
-          // Show region highlight
-          manager.createOverlay('region', {
-            targetElement: element,
-            propertyPath: event.propertyPath,
-            value: event.currentValue,
-            visualMapping: mapping,
-            mode: 'hover',
-          });
-        } else if (propertyType === 'content') {
-          // Show property indicator
-          manager.createOverlay('indicator', {
-            targetElement: element,
-            propertyPath: event.propertyPath,
-            value: event.currentValue,
-            visualMapping: mapping,
-            mode: 'hover',
-          });
-        }
+      // Use VisualFeedbackManager's handlePropertyHover method
+      manager.handlePropertyHover({
+        propertyPath: event.propertyPath,
+        componentId: event.componentId,
+        mapping: event.mapping,
+        mode: 'hover',
+        currentValue: event.currentValue,
       });
-
-      // Create off-screen indicators if elements are outside viewport
-      if (offScreenElements.length > 0) {
-        // Group by primary direction
-        const directionGroups = new Map<string, number>();
-
-        offScreenElements.forEach((offScreen) => {
-          // Use the first (primary) direction
-          const primaryDirection = offScreen.directions[0];
-          const count = directionGroups.get(primaryDirection) || 0;
-          directionGroups.set(primaryDirection, count + 1);
-        });
-
-        // Create an indicator for each direction group
-        directionGroups.forEach((count, direction) => {
-          manager.createOverlay('offscreen', {
-            targetElement: affectedElements[0], // Use first element as reference
-            propertyPath: event.propertyPath,
-            value: event.currentValue,
-            visualMapping: mapping,
-            mode: 'hover',
-            direction: direction as any,
-            count,
-          });
-        });
-      }
     },
 
     onPropertyUnhover: (propertyPath: string) => {
-      const manager = overlayManager();
+      const manager = visualFeedbackManager();
       if (!manager) return;
 
-      // Destroy all overlays for this property
-      const overlays = manager.getAllOverlays();
-      overlays.forEach(overlay => {
-        if (overlay.data.propertyPath === propertyPath) {
-          manager.destroyOverlay(overlay.id);
-        }
+      // Use VisualFeedbackManager's handlePropertyHover with 'off' mode
+      manager.handlePropertyHover({
+        propertyPath,
+        componentId: undefined,
+        mapping: {} as any, // Not needed for 'off' mode
+        mode: 'off',
+        currentValue: undefined,
       });
     },
 
     onPropertyEditStart: (event: PropertyEditEvent) => {
-      const manager = overlayManager();
-      if (!manager || !state.template) return;
+      const manager = visualFeedbackManager();
+      if (!manager) return;
 
-      // Update existing overlays to active mode
-      const overlays = manager.getAllOverlays();
-      overlays.forEach(overlay => {
-        if (overlay.data.propertyPath === event.propertyPath) {
-          manager.updateOverlay(overlay.id, {
-            ...overlay.data,
-            mode: 'active',
-          });
-        }
+      // Use VisualFeedbackManager's handlePropertyEdit method
+      manager.handlePropertyEdit({
+        propertyPath: event.propertyPath,
+        componentId: event.componentId,
+        oldValue: undefined, // Indicates edit is starting
+        newValue: event.newValue,
+        mapping: event.mapping,
       });
     },
 
     onPropertyEditEnd: (propertyPath: string) => {
-      const manager = overlayManager();
+      const manager = visualFeedbackManager();
       if (!manager) return;
 
-      // Update overlays back to hover mode or destroy them
-      const overlays = manager.getAllOverlays();
-      overlays.forEach(overlay => {
-        if (overlay.data.propertyPath === propertyPath) {
-          manager.destroyOverlay(overlay.id);
-        }
+      // Use VisualFeedbackManager's handlePropertyEdit method
+      manager.handlePropertyEdit({
+        propertyPath,
+        componentId: undefined,
+        oldValue: true, // Indicates edit is ending (non-undefined value)
+        newValue: undefined,
+        mapping: {} as any, // Not needed for edit end
       });
     },
   };

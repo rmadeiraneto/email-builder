@@ -1055,7 +1055,8 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
   };
 
   // Track if we're currently in an edit to prevent recursive calls
-  const [isHandlingEdit, setIsHandlingEdit] = createSignal(false);
+  // Using a plain variable instead of a signal to avoid reactive updates
+  let isHandlingEdit = false;
 
   // Visual feedback event handlers
   const handlePropertyHover = (property: PropertyDefinition) => {
@@ -1087,10 +1088,10 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
   const handlePropertyEditStart = (property: PropertyDefinition) => {
     if (!props.visualFeedback?.onPropertyEditStart) return;
 
-    // Prevent recursive calls
-    if (isHandlingEdit()) return;
+    // Prevent recursive calls using a plain variable (not a signal)
+    if (isHandlingEdit) return;
 
-    setIsHandlingEdit(true);
+    isHandlingEdit = true;
 
     // Use untrack to prevent reactive dependencies and defer to next tick
     queueMicrotask(() => {
@@ -1106,7 +1107,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
           currentValue,
         });
 
-        setIsHandlingEdit(false);
+        isHandlingEdit = false;
       });
     });
   };

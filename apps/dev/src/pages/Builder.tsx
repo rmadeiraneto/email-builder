@@ -4,7 +4,7 @@
  * Main page for the email/template builder application
  */
 
-import { type Component, Show, For, createSignal, createMemo, onMount, onCleanup } from 'solid-js';
+import { type Component, Show, For, createSignal, createMemo, onMount, onCleanup, batch } from 'solid-js';
 import { BuilderProvider, useBuilder } from '../context/BuilderContext';
 import { TranslationProvider } from '@email-builder/ui-solid/i18n';
 import { TemplateCanvas } from '@email-builder/ui-solid/canvas';
@@ -44,17 +44,22 @@ const BuilderContent: Component = () => {
   };
 
   // Wrap visual feedback handlers to update accessibility state
+  // Use batch to group state updates and prevent multiple re-renders
   const handlePropertyEditStartWithA11y = (event: any) => {
-    setCurrentEditingProperty(event.propertyPath);
-    setCurrentEditingValue(event.currentValue);
-    setIsEditingProperty(true);
+    batch(() => {
+      setCurrentEditingProperty(event.propertyPath);
+      setCurrentEditingValue(event.currentValue);
+      setIsEditingProperty(true);
+    });
     actions.onPropertyEditStart(event);
   };
 
   const handlePropertyEditEndWithA11y = (propertyPath: string) => {
-    setIsEditingProperty(false);
-    setCurrentEditingProperty(undefined);
-    setCurrentEditingValue(undefined);
+    batch(() => {
+      setIsEditingProperty(false);
+      setCurrentEditingProperty(undefined);
+      setCurrentEditingValue(undefined);
+    });
     actions.onPropertyEditEnd(propertyPath);
   };
 
@@ -63,6 +68,14 @@ const BuilderContent: Component = () => {
     if (!state.template || !state.selectedComponentId) return null;
     return state.template.components.find(c => c.id === state.selectedComponentId) || null;
   });
+
+  // Memoize visual feedback handlers to prevent unnecessary re-renders
+  const visualFeedbackHandlers = createMemo(() => ({
+    onPropertyHover: actions.onPropertyHover,
+    onPropertyUnhover: actions.onPropertyUnhover,
+    onPropertyEditStart: handlePropertyEditStartWithA11y,
+    onPropertyEditEnd: handlePropertyEditEndWithA11y,
+  }));
 
   const handleComponentSelect = (id: string | null) => {
     actions.selectComponent(id);
@@ -424,12 +437,7 @@ const BuilderContent: Component = () => {
                 exportPresets: actions.exportPresets,
                 importPresets: actions.importPresets,
               }}
-              visualFeedback={{
-                onPropertyHover: actions.onPropertyHover,
-                onPropertyUnhover: actions.onPropertyUnhover,
-                onPropertyEditStart: handlePropertyEditStartWithA11y,
-                onPropertyEditEnd: handlePropertyEditEndWithA11y,
-              }}
+              visualFeedback={visualFeedbackHandlers()}
             />
           </aside>
         </div>

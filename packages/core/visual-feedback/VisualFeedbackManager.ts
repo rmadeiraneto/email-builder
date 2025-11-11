@@ -198,6 +198,12 @@ export class VisualFeedbackManager {
     currentValue: any,
     mode: 'hover' | 'active'
   ): void {
+    // Guard against undefined mapping
+    if (!mapping || !mapping.visualTarget) {
+      // No mapping available, skip visual feedback
+      return;
+    }
+
     // Find target element(s)
     const targetElement = componentId ? this.findComponentElement(componentId) : null;
 

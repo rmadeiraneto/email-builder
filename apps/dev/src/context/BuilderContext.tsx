@@ -881,11 +881,12 @@ export const BuilderProvider: ParentComponent = (props) => {
       const manager = visualFeedbackManager();
       if (!manager) return;
 
-      // Use VisualFeedbackManager's handlePropertyHover method
+      // PropertyHoverEvent doesn't include mapping, so we skip visual overlays
+      // The manager will handle undefined mapping gracefully
       manager.handlePropertyHover({
         propertyPath: event.propertyPath,
         componentId: event.componentId,
-        mapping: event.mapping,
+        mapping: undefined as any, // PropertyPanel doesn't provide mapping
         mode: 'hover',
         currentValue: event.currentValue,
       });
@@ -909,13 +910,14 @@ export const BuilderProvider: ParentComponent = (props) => {
       const manager = visualFeedbackManager();
       if (!manager) return;
 
-      // Use VisualFeedbackManager's handlePropertyEdit method
+      // PropertyEditEvent doesn't include mapping, so we skip visual overlays
+      // The manager will handle undefined mapping gracefully
       manager.handlePropertyEdit({
         propertyPath: event.propertyPath,
         componentId: event.componentId,
         oldValue: undefined, // Indicates edit is starting
-        newValue: event.newValue,
-        mapping: event.mapping,
+        newValue: event.currentValue,
+        mapping: undefined as any, // PropertyPanel doesn't provide mapping
       });
     },
 

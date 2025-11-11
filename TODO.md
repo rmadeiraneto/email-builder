@@ -355,6 +355,361 @@
 
 ---
 
+### 📱 Priority 0.5: Mobile Development Mode - NOT STARTED
+**Priority: CRITICAL** - Core feature for responsive email building
+**Status**: Ready to implement (requirements complete)
+**Time Estimate**: 40-50 hours
+**Requirements**: REQUIREMENTS.md §17
+
+#### Overview
+Enable users to create device-specific customizations with desktop-first inheritance model. Users can switch to Mobile Dev Mode to customize component layout, styling, and visibility for mobile devices while maintaining a clean separation from desktop design.
+
+#### Phase 1: Core Data Structures & Types (4-6 hours)
+
+- [ ] **Type Definitions** (2-3 hours)
+  - [ ] Create `packages/core/mobile/mobile.types.ts`
+  - [ ] `DeviceMode` enum: desktop | mobile
+  - [ ] `ResponsiveStyles` interface: `{ desktop: StyleProperties, mobile?: Partial<StyleProperties> }`
+  - [ ] `ComponentOrder` interface: `{ desktop: string[], mobile?: string[] }`
+  - [ ] `ComponentVisibility` interface: `{ desktop: boolean, mobile?: boolean }`
+  - [ ] `MobileDevModeConfig` interface (comprehensive configuration)
+  - [ ] `MobileOverride` types for tracking changes
+  - [ ] Export all types from core package
+
+- [ ] **Data Structure Migration** (2-3 hours)
+  - [ ] Update `BaseComponent` interface to support responsive styles
+  - [ ] Update `Template` interface to support component order per device
+  - [ ] Update `Template` interface to support canvas settings per device
+  - [ ] Add visibility property to components
+  - [ ] Ensure backward compatibility with existing templates
+  - [ ] Create migration utilities for old templates
+
+#### Phase 2: Mode Management System (6-8 hours)
+
+- [ ] **Mode Manager Service** (3-4 hours)
+  - [ ] Create `packages/core/mobile/ModeManager.ts`
+  - [ ] Current mode state management
+  - [ ] Mode switching logic
+  - [ ] Event emission on mode change
+  - [ ] Lazy loading trigger for mobile data
+  - [ ] Property inheritance resolution (desktop → mobile fallback)
+  - [ ] Separate undo/redo stacks per mode
+  - [ ] Integration with Builder class
+
+- [ ] **Property Override System** (2-3 hours)
+  - [ ] Create `packages/core/mobile/PropertyOverrideManager.ts`
+  - [ ] Property blacklist configuration
+  - [ ] Set override (create/update mobile value)
+  - [ ] Clear override (reset to desktop inheritance)
+  - [ ] Get effective value (resolve inheritance)
+  - [ ] Bulk operations (apply defaults, reset all)
+  - [ ] Override tracking and diff calculation
+
+- [ ] **Command Pattern Updates** (1 hour)
+  - [ ] Update all commands to be mode-aware
+  - [ ] Add `mode: 'desktop' | 'mobile'` parameter to Command interface
+  - [ ] `UpdateComponentStyleCommand` - mode-aware style updates
+  - [ ] `ReorderComponentsCommand` - mode-aware reordering
+  - [ ] `ToggleComponentVisibilityCommand` - visibility per device
+  - [ ] `ApplyMobileDefaultsCommand` - bulk mobile optimization
+  - [ ] Update CommandManager for separate history per mode
+
+#### Phase 3: Mobile Layout Manager (6-8 hours)
+
+- [ ] **Layout Manager Service** (2-3 hours)
+  - [ ] Create `packages/core/mobile/LayoutManager.ts`
+  - [ ] Component reordering for mobile
+  - [ ] Component visibility management
+  - [ ] Validation (detect all hidden, invalid order)
+  - [ ] Integration with Template data structure
+
+- [ ] **Mobile Layout Manager UI** (4-5 hours)
+  - [ ] Create `packages/ui-solid/src/mobile/MobileLayoutManager.tsx`
+  - [ ] Create `packages/ui-solid/src/mobile/MobileLayoutManager.module.scss`
+  - [ ] Component list with drag-and-drop reordering
+  - [ ] Visibility toggles per component
+  - [ ] "Apply Mobile-Optimized Defaults" button
+  - [ ] First-time prompt modal
+  - [ ] Clean, minimal design (name + toggle + drag handle)
+  - [ ] Replaces sidebar content when in Mobile Dev Mode with no selection
+
+#### Phase 4: Mode Switcher UI (4-5 hours)
+
+- [ ] **Mode Switcher Component** (3-4 hours)
+  - [ ] Create `packages/ui-solid/src/mobile/ModeSwitcher.tsx`
+  - [ ] Create `packages/ui-solid/src/mobile/ModeSwitcher.module.scss`
+  - [ ] Toggle switch UI (Desktop ⟷ Mobile)
+  - [ ] Sticky positioning (natural position + sticky on scroll)
+  - [ ] Position below toolbar
+  - [ ] Keyboard accessible (Tab + Enter/Space)
+  - [ ] ARIA labels for accessibility
+  - [ ] Preload mobile data on hover
+  - [ ] Smooth transition animation
+
+- [ ] **Canvas Mode Integration** (1 hour)
+  - [ ] Canvas width adjustment on mode switch
+  - [ ] Canvas background/border visual distinction for mobile mode
+  - [ ] Animated transition (width + style changes)
+  - [ ] Preserve scroll position on mode switch
+  - [ ] Show skeleton loading if mobile data not ready
+
+#### Phase 5: PropertyPanel Integration (8-10 hours)
+
+- [ ] **Property Input Enhancements** (3-4 hours)
+  - [ ] Add inheritance indicator (chain icon 🔗) to inherited properties
+  - [ ] Add reset button ("X" icon) to overridden properties
+  - [ ] Update property input components to show indicators
+  - [ ] Disable content properties in Mobile Dev Mode
+  - [ ] Show informational message: "Content is shared across all devices"
+
+- [ ] **Mobile Behavior Section** (2-3 hours)
+  - [ ] Create collapsible "Mobile Behavior" section in Style tab
+  - [ ] List component: Mobile Layout dropdown (Wrap | Horizontal | Vertical)
+  - [ ] Header component: Mobile Navigation dropdown (web mode only)
+  - [ ] Extensible system for adding component-specific controls
+  - [ ] Target mode awareness (hide JS-dependent controls in email mode)
+
+- [ ] **Global Reset Dialog** (3 hours)
+  - [ ] Create `packages/ui-solid/src/mobile/ResetMobileOverridesModal.tsx`
+  - [ ] "Reset All" quick option with confirmation
+  - [ ] "Choose What to Reset" selective option
+  - [ ] Hierarchical selection UI with accordions
+  - [ ] Bulk selection at component/category/property levels
+  - [ ] Preview of what will be reset
+  - [ ] Execute reset and update UI
+
+#### Phase 6: Canvas Component Rendering (4-5 hours)
+
+- [ ] **Hidden Component Display** (2 hours)
+  - [ ] Ghosted/grayed out appearance for hidden components
+  - [ ] Reduced opacity styling
+  - [ ] Hover tooltip: "Hidden in [device]"
+  - [ ] Click popover with quick "Show" button
+  - [ ] Can still select and edit hidden components
+
+- [ ] **Mobile Indicator Badge** (1-2 hours)
+  - [ ] Add mobile indicator badge (📱) to component selection outline
+  - [ ] Show badge only when component has mobile overrides
+  - [ ] Visible in Desktop mode for components with mobile customizations
+  - [ ] Tooltip showing override count
+
+- [ ] **Component Rendering Updates** (1-2 hours)
+  - [ ] Update ComponentRenderer to use effective styles (resolved inheritance)
+  - [ ] Apply mobile-specific visibility
+  - [ ] Render components in mobile order when in Mobile Dev Mode
+  - [ ] Disable drag-from-palette in Mobile Dev Mode
+
+#### Phase 7: Mobile-Optimized Defaults (6-8 hours)
+
+- [ ] **Default Transformation System** (3-4 hours)
+  - [ ] Create `packages/core/mobile/MobileDefaults.ts`
+  - [ ] Default reduction percentages (padding, margin, font size)
+  - [ ] Component-type-specific defaults
+  - [ ] List: enable wrapping
+  - [ ] Header: stack vertically
+  - [ ] CTA: full-width buttons
+  - [ ] Touch target size enforcement (min 44px)
+  - [ ] Configurable transformation rules
+
+- [ ] **Application Logic** (2-3 hours)
+  - [ ] Apply defaults to all components
+  - [ ] Respect component types for specific transformations
+  - [ ] Create single undo-able command
+  - [ ] First-time modal prompt
+  - [ ] Fallback button in Mobile Layout Manager
+  - [ ] Can be re-applied (overwrites existing overrides)
+
+- [ ] **Configuration Integration** (1 hour)
+  - [ ] Add mobileDefaults to builder config
+  - [ ] Default values for all transformation rules
+  - [ ] Allow per-component-type customization
+  - [ ] Runtime configuration updates
+
+#### Phase 8: Diff View (5-6 hours)
+
+- [ ] **Diff Calculation Service** (2-3 hours)
+  - [ ] Create `packages/core/mobile/DiffCalculator.ts`
+  - [ ] Calculate component order differences
+  - [ ] Calculate hidden component differences
+  - [ ] Calculate property override differences (per component)
+  - [ ] Group by component and category
+  - [ ] Count overrides and changes
+
+- [ ] **Diff View UI** (3 hours)
+  - [ ] Create `packages/ui-solid/src/mobile/MobileDiffPanel.tsx`
+  - [ ] Create `packages/ui-solid/src/mobile/MobileDiffPanel.module.scss`
+  - [ ] Hierarchical expandable list
+  - [ ] Component order changes
+  - [ ] Hidden components
+  - [ ] Property overrides (component → category → property)
+  - [ ] Color-coded badges
+  - [ ] Quick action buttons (reset per component)
+  - [ ] Toolbar button to open diff panel
+  - [ ] Responsive: additional panel on desktop, replaces PropertyPanel on mobile
+
+#### Phase 9: Export System Integration (6-8 hours)
+
+- [ ] **Responsive HTML Export** (4-5 hours)
+  - [ ] Update `TemplateExporter` to support mobile overrides
+  - [ ] Generate inline desktop styles (base)
+  - [ ] Generate media query styles in `<style>` tag
+  - [ ] Only include overridden properties in media queries
+  - [ ] Use configured mobile breakpoint
+  - [ ] Export in mobile order if defined
+  - [ ] Handle component visibility with `display: none` + `aria-hidden`
+  - [ ] Media query format: `@media (max-width: Xpx) { ... }`
+
+- [ ] **Export Configuration** (1-2 hours)
+  - [ ] Add export configuration to builder config
+  - [ ] Default mode: 'hybrid' (inline + media queries)
+  - [ ] Alternative modes: 'web', 'email-only'
+  - [ ] Mobile breakpoint configuration
+  - [ ] Toggle inline styles / media query generation
+
+- [ ] **Canvas vs Export HTML** (1 hour)
+  - [ ] Document distinction: Canvas HTML (builder-optimized) vs Export HTML (email-optimized)
+  - [ ] Ensure EmailExportService strips builder attributes
+  - [ ] Ensure preview uses Export HTML transformation
+
+#### Phase 10: Validation & Warnings (4-5 hours)
+
+- [ ] **Validation Rules** (2-3 hours)
+  - [ ] Create `packages/core/mobile/ValidationRules.ts`
+  - [ ] All components hidden in mobile (Warning)
+  - [ ] Font size too small < 14px (Warning)
+  - [ ] Touch targets < 44px (Warning)
+  - [ ] Layout overflow detection (Warning)
+  - [ ] Email-incompatible properties in email mode (Critical)
+  - [ ] Severity levels: Info, Warning, Critical
+
+- [ ] **Validation UI** (2 hours)
+  - [ ] Inline warning banners (immediate feedback)
+  - [ ] Validation panel (accumulated warnings)
+  - [ ] Toggle button in toolbar or Mobile Layout Manager
+  - [ ] Component-level grouping
+  - [ ] Quick fix suggestions
+  - [ ] Link to documentation
+  - [ ] Non-blocking (warnings don't prevent actions)
+
+#### Phase 11: Keyboard Shortcuts (2 hours)
+
+- [ ] **Shortcut Implementation** (2 hours)
+  - [ ] `Ctrl/Cmd + M`: Toggle Desktop ⟷ Mobile Dev Mode
+  - [ ] `Ctrl/Cmd + R`: Reset selected property override
+  - [ ] `Ctrl/Cmd + L`: Open Mobile Layout Manager
+  - [ ] `Ctrl/Cmd + Shift + R`: Open global reset dialog
+  - [ ] `Ctrl/Cmd + D`: Duplicate component (with mobile overrides)
+  - [ ] Update existing shortcuts to work contextually in both modes
+  - [ ] Keyboard shortcuts help panel
+
+#### Phase 12: Performance Optimizations (3-4 hours)
+
+- [ ] **Lazy Loading** (1-2 hours)
+  - [ ] Implement lazy loading for mobile override data
+  - [ ] Preload on mode switcher hover
+  - [ ] Show skeleton UI during loading
+  - [ ] Cache mobile data after first load
+  - [ ] Update BuilderContext to support lazy data
+
+- [ ] **Virtual Rendering** (1-2 hours)
+  - [ ] Virtual scrolling in Mobile Layout Manager for 50+ components
+  - [ ] Virtual rendering on canvas for off-screen components
+  - [ ] Configurable threshold (virtualRenderingThreshold)
+  - [ ] Performance monitoring
+
+- [ ] **Optimized Updates** (1 hour)
+  - [ ] Debounce property updates (default 16ms)
+  - [ ] Batch render mobile overrides
+  - [ ] Avoid unnecessary re-renders
+  - [ ] Optional performance mode toggle
+
+#### Phase 13: Integration & Testing (6-8 hours)
+
+- [ ] **Integration with Existing Features** (3-4 hours)
+  - [ ] Preview system: Show mobile preview when in Mobile Dev Mode
+  - [ ] Email testing: Test responsive version by default (configurable)
+  - [ ] Visual Property Feedback: Use mobile values in Mobile Dev Mode
+  - [ ] Style presets: Apply to desktop only (mobile inherits)
+  - [ ] Data injection: Works identically in both modes (content locked)
+  - [ ] Compatibility system: Works in both modes
+
+- [ ] **Manual Testing** (2-3 hours)
+  - [ ] Test all core functionality (mode switching, overrides, reordering, visibility)
+  - [ ] Test UI/UX (animations, loading states, keyboard shortcuts)
+  - [ ] Test integration (preview, testing, export)
+  - [ ] Test edge cases (large templates, nested overrides, corrupted data)
+  - [ ] Cross-browser testing
+  - [ ] Accessibility testing
+
+- [ ] **Bug Fixes & Polish** (1-2 hours)
+  - [ ] Fix bugs discovered during testing
+  - [ ] Polish animations and transitions
+  - [ ] Refine validation messages
+  - [ ] Improve error handling
+
+#### Phase 14: Documentation (3-4 hours)
+
+- [ ] **User Documentation** (2 hours)
+  - [ ] Create MOBILE_DEV_MODE.md user guide
+  - [ ] Best practices for mobile optimization
+  - [ ] Component-specific mobile behaviors
+  - [ ] Export and email client compatibility
+  - [ ] Troubleshooting common issues
+
+- [ ] **Developer Documentation** (1-2 hours)
+  - [ ] API documentation for programmatic access
+  - [ ] Configuration reference
+  - [ ] Extending mobile-specific controls
+  - [ ] Adding custom validation rules
+  - [ ] Integration examples
+
+#### Deliverables
+
+**Core Functionality:**
+- ✅ Desktop ⟷ Mobile mode switching with smooth UX
+- ✅ Desktop-first inheritance model (mobile overrides desktop)
+- ✅ Property override system with visual indicators
+- ✅ Component reordering per device (Mobile Layout Manager)
+- ✅ Component visibility per device
+- ✅ Mobile-optimized defaults with comprehensive transformations
+- ✅ Diff view for auditing mobile customizations
+- ✅ Reset overrides (individual + global with selective options)
+
+**UI Components:**
+- ✅ Mode switcher (toggle, sticky positioning)
+- ✅ Mobile Layout Manager (sidebar panel)
+- ✅ PropertyPanel integration (inheritance indicators, mobile behavior section)
+- ✅ Canvas updates (width, visual distinction, ghosted components, badges)
+- ✅ Diff view panel
+- ✅ Validation panel
+- ✅ Reset dialog with hierarchical selection
+
+**Export & Integration:**
+- ✅ Responsive HTML export (inline desktop + media queries)
+- ✅ Desktop-first export strategy (email client compatible)
+- ✅ Integration with all existing features
+- ✅ Separate undo/redo per mode
+- ✅ Mode-aware command pattern
+
+**Performance:**
+- ✅ Lazy loading of mobile data
+- ✅ Virtual rendering for large templates
+- ✅ Debounced updates
+- ✅ Performance mode option
+
+**Configuration:**
+- ✅ Comprehensive configuration system
+- ✅ Extensible for additional breakpoints (tablet, custom)
+- ✅ Component-specific mobile control definitions
+- ✅ Target mode awareness (web/email/hybrid)
+
+**Documentation:**
+- ✅ User guide with best practices
+- ✅ Developer API documentation
+- ✅ Configuration reference
+
+---
+
 ### ✅ Priority 1: Headless API Documentation & Examples - COMPLETE
 **Priority: HIGH** - Enable developers to use the headless API effectively
 **Status**: ✅ Complete (Nov 2025)

@@ -354,9 +354,19 @@ export interface Template {
   generalStyles: GeneralStyles;
 
   /**
-   * Components (flat array, ordered)
+   * Components (flat array, no guaranteed order)
+   *
+   * Use `componentOrder` to determine display order per device.
    */
   components: BaseComponent[];
+
+  /**
+   * Component order per device (Mobile Dev Mode)
+   *
+   * Defines the display order of top-level components for each device.
+   * Desktop order is required, mobile is optional (inherits desktop if not specified).
+   */
+  componentOrder?: import('../mobile').ComponentOrder;
 
   /**
    * Component tree (for hierarchical rendering)
@@ -367,6 +377,33 @@ export interface Template {
    * Data injection configuration
    */
   dataInjection?: DataInjectionConfig;
+
+  /**
+   * Mobile development mode metadata
+   *
+   * Tracks mobile-specific customizations and state
+   */
+  mobileDevMode?: {
+    /**
+     * Mobile defaults applied
+     */
+    defaultsApplied: boolean;
+
+    /**
+     * Timestamp when mobile defaults were applied
+     */
+    defaultsAppliedAt?: number;
+
+    /**
+     * User has entered mobile dev mode at least once
+     */
+    hasEnteredMobileMode: boolean;
+
+    /**
+     * Mobile overrides metadata
+     */
+    overrides: import('../mobile').MobileOverride[];
+  };
 
   /**
    * Custom metadata

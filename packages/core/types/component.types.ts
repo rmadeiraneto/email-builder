@@ -430,9 +430,20 @@ export interface BaseComponent<
   metadata: ComponentMetadata;
 
   /**
-   * Base styles
+   * Base styles (desktop/default)
+   *
+   * For Mobile Dev Mode: This is the desktop/base style.
+   * Mobile overrides are stored in `mobileStyles`.
    */
   styles: TStyles;
+
+  /**
+   * Mobile style overrides (Mobile Dev Mode)
+   *
+   * Optional partial styles that override desktop styles on mobile.
+   * Properties not specified inherit from `styles` (desktop).
+   */
+  mobileStyles?: Partial<TStyles>;
 
   /**
    * Component-specific content
@@ -450,13 +461,13 @@ export interface BaseComponent<
   parentId?: string;
 
   /**
-   * Responsive visibility
-   * @deprecated Use responsive.visibility instead
+   * Component visibility per device (Mobile Dev Mode)
    */
-  visibility?: ResponsiveVisibility;
+  visibility?: import('../mobile').ComponentVisibility;
 
   /**
-   * Responsive configuration
+   * Responsive configuration (legacy system)
+   * @deprecated Use Mobile Dev Mode (mobileStyles, visibility) instead
    */
   responsive?: import('./responsive.types').ComponentResponsiveConfig;
 

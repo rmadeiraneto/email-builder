@@ -29,10 +29,8 @@
 import {
   Component,
   JSX,
-  Show,
   onCleanup,
   createEffect,
-  createMemo,
   splitProps,
   mergeProps,
 } from 'solid-js';
@@ -192,9 +190,9 @@ export const Modal: Component<ModalProps> = (props) => {
   };
 
   /**
-   * Generate modal class names (reactive memo)
+   * Generate modal class names
    */
-  const getModalClasses = createMemo(() => {
+  const getModalClasses = () => {
     const classes = Array.isArray(local.modalClasses)
       ? local.modalClasses
       : [local.modalClasses];
@@ -205,7 +203,7 @@ export const Modal: Component<ModalProps> = (props) => {
       local.className,
       ...classes
     );
-  });
+  };
 
   /**
    * Generate modal dialog class names
@@ -248,16 +246,14 @@ export const Modal: Component<ModalProps> = (props) => {
   });
 
   return (
-    <Show when={local.isOpen}>
-      <div
-        ref={modalRef}
-        class={getModalClasses()}
-        onClick={handleBackdropClick}
-      >
-        <div class={getModalDialogClasses()} onClick={handleDialogClick}>
-          {local.children}
-        </div>
+    <div
+      ref={modalRef}
+      class={getModalClasses()}
+      onClick={handleBackdropClick}
+    >
+      <div class={getModalDialogClasses()} onClick={handleDialogClick}>
+        {local.children}
       </div>
-    </Show>
+    </div>
   );
 };

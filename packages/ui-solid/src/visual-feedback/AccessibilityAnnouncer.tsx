@@ -7,19 +7,11 @@
  * @module visual-feedback
  */
 
-import { Component, createSignal, createEffect, onMount } from 'solid-js';
+import { Component, createSignal, createEffect, onMount, onCleanup } from 'solid-js';
+import { visualFeedbackEventBus } from '@email-builder/core';
 import styles from './AccessibilityAnnouncer.module.scss';
 
 export interface AccessibilityAnnouncerProps {
-  /** Current property being edited */
-  currentProperty?: string;
-
-  /** Current value being edited */
-  currentValue?: any;
-
-  /** Whether actively editing */
-  isEditing: boolean;
-
   /** Announcement politeness level */
   politeness?: 'polite' | 'assertive';
 }
@@ -29,14 +21,44 @@ export interface AccessibilityAnnouncerProps {
  *
  * Announces property changes to screen readers using ARIA live regions.
  * Automatically debounces rapid changes to avoid overwhelming users.
+ * Subscribes to visual feedback events internally to avoid causing parent re-renders.
  */
 export const AccessibilityAnnouncer: Component<AccessibilityAnnouncerProps> = (props) => {
   const [announcement, setAnnouncement] = createSignal('');
   const [debounceTimer, setDebounceTimer] = createSignal<NodeJS.Timeout | null>(null);
+  const [currentProperty, setCurrentProperty] = createSignal<string | undefined>(undefined);
+  const [currentValue, setCurrentValue] = createSignal<any>(undefined);
+  const [isEditing, setIsEditing] = createSignal(false);
+
+  // Subscribe to visual feedback events
+  onMount(() => {
+    const unsubscribeEditStart = visualFeedbackEventBus.on('property:edit:start', (event) => {
+      setCurrentProperty(event.propertyPath);
+      setCurrentValue(event.currentValue);
+      setIsEditing(true);
+    });
+
+    const unsubscribeEditEnd = visualFeedbackEventBus.on('property:edit:end', (event) => {
+      setIsEditing(false);
+      setCurrentProperty(undefined);
+      setCurrentValue(undefined);
+    });
+
+    onCleanup(() => {
+      unsubscribeEditStart();
+      unsubscribeEditEnd();
+
+      // Clear timer on unmount
+      const timer = debounceTimer();
+      if (timer) {
+        clearTimeout(timer);
+      }
+    });
+  });
 
   // Debounce announcements to avoid overwhelming screen readers
   createEffect(() => {
-    if (!props.isEditing || !props.currentProperty) {
+    if (!isEditing() || !currentProperty()) {
       setAnnouncement('');
       return;
     }
@@ -49,22 +71,12 @@ export const AccessibilityAnnouncer: Component<AccessibilityAnnouncerProps> = (p
 
     // Set new debounced announcement
     const newTimer = setTimeout(() => {
-      const formattedProperty = formatPropertyName(props.currentProperty!);
-      const formattedValue = formatValue(props.currentValue);
+      const formattedProperty = formatPropertyName(currentProperty()!);
+      const formattedValue = formatValue(currentValue());
       setAnnouncement(`Editing ${formattedProperty}: ${formattedValue}`);
     }, 500); // 500ms debounce
 
     setDebounceTimer(newTimer);
-  });
-
-  // Cleanup timer on unmount
-  onMount(() => {
-    return () => {
-      const timer = debounceTimer();
-      if (timer) {
-        clearTimeout(timer);
-      }
-    };
   });
 
   const politeness = () => props.politeness || 'polite';

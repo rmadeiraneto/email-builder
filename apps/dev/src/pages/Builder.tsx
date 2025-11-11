@@ -4,7 +4,7 @@
  * Main page for the email/template builder application
  */
 
-import { type Component, Show, For, createSignal, createMemo, onMount, onCleanup, batch } from 'solid-js';
+import { type Component, Show, For, createSignal, createMemo, onMount, onCleanup } from 'solid-js';
 import { BuilderProvider, useBuilder } from '../context/BuilderContext';
 import { TranslationProvider } from '@email-builder/ui-solid/i18n';
 import { TemplateCanvas } from '@email-builder/ui-solid/canvas';
@@ -19,7 +19,6 @@ import { EmailTestingSettingsModal } from '../components/modals/EmailTestingSett
 import { TestConfigModal } from '../components/modals/TestConfigModal';
 import { CompatibilityReportModal } from '../components/modals/CompatibilityReportModal';
 import { AccessibilityAnnouncer } from '@email-builder/ui-solid/visual-feedback';
-import { visualFeedbackEventBus } from '@email-builder/core';
 import type { ComponentDefinition, EmailTestingConfig, EmailTestRequest, CompatibilityReport } from '@email-builder/core';
 import styles from './Builder.module.scss';
 
@@ -34,42 +33,10 @@ const BuilderContent: Component = () => {
   const [compatibilityReport, setCompatibilityReport] = createSignal<CompatibilityReport | null>(null);
   const [pendingAction, setPendingAction] = createSignal<'export' | 'test' | null>(null);
 
-  // Accessibility: track current property being edited
-  const [currentEditingProperty, setCurrentEditingProperty] = createSignal<string | undefined>(undefined);
-  const [currentEditingValue, setCurrentEditingValue] = createSignal<any>(undefined);
-  const [isEditingProperty, setIsEditingProperty] = createSignal(false);
-
   // Handle canvas element ref for visual feedback
   const handleCanvasRef = (element: HTMLElement | null) => {
     actions.setCanvasElement(element);
   };
-
-  // Subscribe to visual feedback events for accessibility updates
-  // TEMPORARILY DISABLED to isolate the recursion issue
-  /*
-  onMount(() => {
-    const unsubscribeEditStart = visualFeedbackEventBus.on('property:edit:start', (event) => {
-      batch(() => {
-        setCurrentEditingProperty(event.propertyPath);
-        setCurrentEditingValue(event.currentValue);
-        setIsEditingProperty(true);
-      });
-    });
-
-    const unsubscribeEditEnd = visualFeedbackEventBus.on('property:edit:end', (event) => {
-      batch(() => {
-        setIsEditingProperty(false);
-        setCurrentEditingProperty(undefined);
-        setCurrentEditingValue(undefined);
-      });
-    });
-
-    onCleanup(() => {
-      unsubscribeEditStart();
-      unsubscribeEditEnd();
-    });
-  });
-  */
 
   // Get the selected component from the template
   const selectedComponent = createMemo(() => {
@@ -443,12 +410,7 @@ const BuilderContent: Component = () => {
       </div>
 
       {/* Accessibility announcer for screen readers */}
-      <AccessibilityAnnouncer
-        currentProperty={currentEditingProperty()}
-        currentValue={currentEditingValue()}
-        isEditing={isEditingProperty()}
-        politeness="polite"
-      />
+      <AccessibilityAnnouncer politeness="polite" />
 
       <NewTemplateModal
         isOpen={isNewTemplateModalOpen()}

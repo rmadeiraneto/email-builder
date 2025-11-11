@@ -1057,45 +1057,54 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
 
   // Visual feedback event handlers using global event bus
   // This prevents infinite recursion by decoupling from component props
+  // IMPORTANT: Must use untrack() to prevent reactive dependencies
   const handlePropertyHover = (property: PropertyDefinition) => {
-    const currentValue = props.selectedComponent
-      ? getNestedValue(props.selectedComponent, property.key)
-      : undefined;
+    untrack(() => {
+      const currentValue = props.selectedComponent
+        ? getNestedValue(props.selectedComponent, property.key)
+        : undefined;
 
-    visualFeedbackEventBus.emit({
-      type: 'property:hover',
-      propertyPath: property.key,
-      componentId: props.selectedComponent?.id,
-      currentValue,
-      propertyType: property.type,
+      visualFeedbackEventBus.emit({
+        type: 'property:hover',
+        propertyPath: property.key,
+        componentId: props.selectedComponent?.id,
+        currentValue,
+        propertyType: property.type,
+      });
     });
   };
 
   const handlePropertyUnhover = (property: PropertyDefinition) => {
-    visualFeedbackEventBus.emit({
-      type: 'property:unhover',
-      propertyPath: property.key,
+    untrack(() => {
+      visualFeedbackEventBus.emit({
+        type: 'property:unhover',
+        propertyPath: property.key,
+      });
     });
   };
 
   const handlePropertyEditStart = (property: PropertyDefinition) => {
-    const currentValue = props.selectedComponent
-      ? getNestedValue(props.selectedComponent, property.key)
-      : undefined;
+    untrack(() => {
+      const currentValue = props.selectedComponent
+        ? getNestedValue(props.selectedComponent, property.key)
+        : undefined;
 
-    visualFeedbackEventBus.emit({
-      type: 'property:edit:start',
-      propertyPath: property.key,
-      componentId: props.selectedComponent?.id,
-      isEditing: true,
-      currentValue,
+      visualFeedbackEventBus.emit({
+        type: 'property:edit:start',
+        propertyPath: property.key,
+        componentId: props.selectedComponent?.id,
+        isEditing: true,
+        currentValue,
+      });
     });
   };
 
   const handlePropertyEditEnd = (property: PropertyDefinition) => {
-    visualFeedbackEventBus.emit({
-      type: 'property:edit:end',
-      propertyPath: property.key,
+    untrack(() => {
+      visualFeedbackEventBus.emit({
+        type: 'property:edit:end',
+        propertyPath: property.key,
+      });
     });
   };
 

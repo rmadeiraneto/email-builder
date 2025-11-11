@@ -45,6 +45,8 @@ const BuilderContent: Component = () => {
   };
 
   // Subscribe to visual feedback events for accessibility updates
+  // TEMPORARILY DISABLED to isolate the recursion issue
+  /*
   onMount(() => {
     const unsubscribeEditStart = visualFeedbackEventBus.on('property:edit:start', (event) => {
       batch(() => {
@@ -67,6 +69,7 @@ const BuilderContent: Component = () => {
       unsubscribeEditEnd();
     });
   });
+  */
 
   // Get the selected component from the template
   const selectedComponent = createMemo(() => {

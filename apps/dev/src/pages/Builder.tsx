@@ -69,13 +69,9 @@ const BuilderContent: Component = () => {
     return state.template.components.find(c => c.id === state.selectedComponentId) || null;
   });
 
-  // Memoize visual feedback handlers to prevent unnecessary re-renders
-  const visualFeedbackHandlers = createMemo(() => ({
-    onPropertyHover: actions.onPropertyHover,
-    onPropertyUnhover: actions.onPropertyUnhover,
-    onPropertyEditStart: handlePropertyEditStartWithA11y,
-    onPropertyEditEnd: handlePropertyEditEndWithA11y,
-  }));
+  // Completely disable visual feedback to prevent infinite recursion
+  // The visual feedback system is causing reactive loops when inputs are focused
+  const visualFeedbackHandlers = undefined;
 
   const handleComponentSelect = (id: string | null) => {
     actions.selectComponent(id);
@@ -437,7 +433,7 @@ const BuilderContent: Component = () => {
                 exportPresets: actions.exportPresets,
                 importPresets: actions.importPresets,
               }}
-              visualFeedback={visualFeedbackHandlers()}
+              visualFeedback={visualFeedbackHandlers}
             />
           </aside>
         </div>

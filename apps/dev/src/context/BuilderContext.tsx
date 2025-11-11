@@ -43,13 +43,13 @@ import {
   VisualFeedbackManager,
   createVisualFeedbackManager,
   DEFAULT_VISUAL_FEEDBACK_CONFIG,
+  visualFeedbackEventBus,
   // Translation imports
   StaticTranslationProvider,
   enUS,
   esES,
   type TranslationManager,
 } from '@email-builder/core';
-import type { PropertyHoverEvent, PropertyEditEvent } from '@email-builder/ui-solid/sidebar/PropertyPanel.types';
 
 export interface BuilderState {
   template: Template | null;
@@ -103,10 +103,6 @@ export interface BuilderContextValue {
     dismissTip: (tipId: string) => void;
     // Visual feedback actions
     setCanvasElement: (element: HTMLElement | null) => void;
-    onPropertyHover: (event: PropertyHoverEvent) => void;
-    onPropertyUnhover: (propertyPath: string) => void;
-    onPropertyEditStart: (event: PropertyEditEvent) => void;
-    onPropertyEditEnd: (propertyPath: string) => void;
   };
 }
 
@@ -232,8 +228,53 @@ export const BuilderProvider: ParentComponent = (props) => {
 
       console.log('[BuilderContext] VisualFeedbackManager initialized');
 
+      // Subscribe to visual feedback events from the global event bus
+      const unsubscribeHover = visualFeedbackEventBus.on('property:hover', (event) => {
+        manager.handlePropertyHover({
+          propertyPath: event.propertyPath,
+          componentId: event.componentId,
+          mapping: undefined as any, // PropertyPanel doesn't provide mapping
+          mode: 'hover',
+          currentValue: event.currentValue,
+        });
+      });
+
+      const unsubscribeUnhover = visualFeedbackEventBus.on('property:unhover', (event) => {
+        manager.handlePropertyHover({
+          propertyPath: event.propertyPath,
+          componentId: undefined,
+          mapping: {} as any,
+          mode: 'off',
+          currentValue: undefined,
+        });
+      });
+
+      const unsubscribeEditStart = visualFeedbackEventBus.on('property:edit:start', (event) => {
+        manager.handlePropertyEdit({
+          propertyPath: event.propertyPath,
+          componentId: event.componentId,
+          oldValue: undefined, // Indicates edit is starting
+          newValue: event.currentValue,
+          mapping: undefined as any, // PropertyPanel doesn't provide mapping
+        });
+      });
+
+      const unsubscribeEditEnd = visualFeedbackEventBus.on('property:edit:end', (event) => {
+        manager.handlePropertyEdit({
+          propertyPath: event.propertyPath,
+          componentId: undefined,
+          oldValue: true, // Indicates edit is ending (non-undefined value)
+          newValue: undefined,
+          mapping: {} as any,
+        });
+      });
+
       // Cleanup on unmount
       onCleanup(() => {
+        unsubscribeHover();
+        unsubscribeUnhover();
+        unsubscribeEditStart();
+        unsubscribeEditEnd();
         manager.destroy();
         setVisualFeedbackManager(null);
       });
@@ -875,64 +916,6 @@ export const BuilderProvider: ParentComponent = (props) => {
     // Visual feedback action handlers
     setCanvasElement: (element: HTMLElement | null) => {
       setCanvasElement(element);
-    },
-
-    onPropertyHover: (event: PropertyHoverEvent) => {
-      const manager = visualFeedbackManager();
-      if (!manager) return;
-
-      // PropertyHoverEvent doesn't include mapping, so we skip visual overlays
-      // The manager will handle undefined mapping gracefully
-      manager.handlePropertyHover({
-        propertyPath: event.propertyPath,
-        componentId: event.componentId,
-        mapping: undefined as any, // PropertyPanel doesn't provide mapping
-        mode: 'hover',
-        currentValue: event.currentValue,
-      });
-    },
-
-    onPropertyUnhover: (propertyPath: string) => {
-      const manager = visualFeedbackManager();
-      if (!manager) return;
-
-      // Use VisualFeedbackManager's handlePropertyHover with 'off' mode
-      manager.handlePropertyHover({
-        propertyPath,
-        componentId: undefined,
-        mapping: {} as any, // Not needed for 'off' mode
-        mode: 'off',
-        currentValue: undefined,
-      });
-    },
-
-    onPropertyEditStart: (event: PropertyEditEvent) => {
-      const manager = visualFeedbackManager();
-      if (!manager) return;
-
-      // PropertyEditEvent doesn't include mapping, so we skip visual overlays
-      // The manager will handle undefined mapping gracefully
-      manager.handlePropertyEdit({
-        propertyPath: event.propertyPath,
-        componentId: event.componentId,
-        oldValue: undefined, // Indicates edit is starting
-        newValue: event.currentValue,
-        mapping: undefined as any, // PropertyPanel doesn't provide mapping
-      });
-    },
-
-    onPropertyEditEnd: (propertyPath: string) => {
-      const manager = visualFeedbackManager();
-      if (!manager) return;
-
-      // Use VisualFeedbackManager's handlePropertyEdit method
-      manager.handlePropertyEdit({
-        propertyPath,
-        componentId: undefined,
-        oldValue: true, // Indicates edit is ending (non-undefined value)
-        newValue: undefined,
-        mapping: {} as any, // Not needed for edit end
-      });
     },
   };
 

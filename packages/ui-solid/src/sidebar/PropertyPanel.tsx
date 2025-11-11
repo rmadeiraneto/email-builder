@@ -6,6 +6,7 @@ import type {
 } from './PropertyPanel.types';
 import type { ComponentPreset } from '@email-builder/core';
 import { getTestId, getTestAction, getTestState } from '@email-builder/core/utils';
+import { visualFeedbackEventBus } from '@email-builder/core';
 import { PresetPreview, PresetManager } from '../modals';
 import { RichTextEditor } from '../editors';
 import { CompatibilityIcon, CompatibilityModal } from '../compatibility';
@@ -1054,69 +1055,47 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
     props.onGeneralStyleChange(property.key, value);
   };
 
-  // Track if we're currently in an edit to prevent recursive calls
-  // Using a plain variable instead of a signal to avoid reactive updates
-  let isHandlingEdit = false;
-
-  // Visual feedback event handlers
+  // Visual feedback event handlers using global event bus
+  // This prevents infinite recursion by decoupling from component props
   const handlePropertyHover = (property: PropertyDefinition) => {
-    if (!props.visualFeedback?.onPropertyHover) return;
+    const currentValue = props.selectedComponent
+      ? getNestedValue(props.selectedComponent, property.key)
+      : undefined;
 
-    // Use untrack to prevent reactive dependencies
-    untrack(() => {
-      const currentValue = props.selectedComponent
-        ? getNestedValue(props.selectedComponent, property.key)
-        : undefined;
-
-      props.visualFeedback!.onPropertyHover({
-        propertyPath: property.key,
-        componentId: props.selectedComponent?.id,
-        currentValue,
-        propertyType: property.type,
-      });
+    visualFeedbackEventBus.emit({
+      type: 'property:hover',
+      propertyPath: property.key,
+      componentId: props.selectedComponent?.id,
+      currentValue,
+      propertyType: property.type,
     });
   };
 
   const handlePropertyUnhover = (property: PropertyDefinition) => {
-    if (!props.visualFeedback?.onPropertyUnhover) return;
-
-    untrack(() => {
-      props.visualFeedback!.onPropertyUnhover(property.key);
+    visualFeedbackEventBus.emit({
+      type: 'property:unhover',
+      propertyPath: property.key,
     });
   };
 
   const handlePropertyEditStart = (property: PropertyDefinition) => {
-    if (!props.visualFeedback?.onPropertyEditStart) return;
+    const currentValue = props.selectedComponent
+      ? getNestedValue(props.selectedComponent, property.key)
+      : undefined;
 
-    // Prevent recursive calls using a plain variable (not a signal)
-    if (isHandlingEdit) return;
-
-    isHandlingEdit = true;
-
-    // Use untrack to prevent reactive dependencies and defer to next tick
-    queueMicrotask(() => {
-      untrack(() => {
-        const currentValue = props.selectedComponent
-          ? getNestedValue(props.selectedComponent, property.key)
-          : undefined;
-
-        props.visualFeedback!.onPropertyEditStart({
-          propertyPath: property.key,
-          componentId: props.selectedComponent?.id,
-          isEditing: true,
-          currentValue,
-        });
-
-        isHandlingEdit = false;
-      });
+    visualFeedbackEventBus.emit({
+      type: 'property:edit:start',
+      propertyPath: property.key,
+      componentId: props.selectedComponent?.id,
+      isEditing: true,
+      currentValue,
     });
   };
 
   const handlePropertyEditEnd = (property: PropertyDefinition) => {
-    if (!props.visualFeedback?.onPropertyEditEnd) return;
-
-    untrack(() => {
-      props.visualFeedback!.onPropertyEditEnd(property.key);
+    visualFeedbackEventBus.emit({
+      type: 'property:edit:end',
+      propertyPath: property.key,
     });
   };
 

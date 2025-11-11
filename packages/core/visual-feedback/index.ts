@@ -87,3 +87,7 @@ export type { OverlayManagerConfig } from './OverlayManager';
 
 // Export VisualFeedbackManager
 export { VisualFeedbackManager, createVisualFeedbackManager } from './VisualFeedbackManager';
+
+// Export VisualFeedbackEventBus
+export { visualFeedbackEventBus } from './VisualFeedbackEventBus';
+export type { VisualFeedbackEvent, VisualFeedbackEventType } from './VisualFeedbackEventBus';

@@ -67,16 +67,6 @@ export interface PropertyPanelProps {
     exportPresets: () => Promise<void>;
     importPresets: (file: File) => Promise<void>;
   };
-
-  /**
-   * Visual feedback callbacks (optional)
-   */
-  visualFeedback?: {
-    onPropertyHover?: (event: PropertyHoverEvent) => void;
-    onPropertyUnhover?: (propertyPath: string) => void;
-    onPropertyEditStart?: (event: PropertyEditEvent) => void;
-    onPropertyEditEnd?: (propertyPath: string) => void;
-  };
 }
 
 /**

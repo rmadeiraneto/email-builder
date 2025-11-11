@@ -19,6 +19,7 @@ import { EmailTestingSettingsModal } from '../components/modals/EmailTestingSett
 import { TestConfigModal } from '../components/modals/TestConfigModal';
 import { CompatibilityReportModal } from '../components/modals/CompatibilityReportModal';
 import { AccessibilityAnnouncer } from '@email-builder/ui-solid/visual-feedback';
+import { visualFeedbackEventBus } from '@email-builder/core';
 import type { ComponentDefinition, EmailTestingConfig, EmailTestRequest, CompatibilityReport } from '@email-builder/core';
 import styles from './Builder.module.scss';
 
@@ -43,35 +44,35 @@ const BuilderContent: Component = () => {
     actions.setCanvasElement(element);
   };
 
-  // Wrap visual feedback handlers to update accessibility state
-  // Use batch to group state updates and prevent multiple re-renders
-  const handlePropertyEditStartWithA11y = (event: any) => {
-    batch(() => {
-      setCurrentEditingProperty(event.propertyPath);
-      setCurrentEditingValue(event.currentValue);
-      setIsEditingProperty(true);
+  // Subscribe to visual feedback events for accessibility updates
+  onMount(() => {
+    const unsubscribeEditStart = visualFeedbackEventBus.on('property:edit:start', (event) => {
+      batch(() => {
+        setCurrentEditingProperty(event.propertyPath);
+        setCurrentEditingValue(event.currentValue);
+        setIsEditingProperty(true);
+      });
     });
-    actions.onPropertyEditStart(event);
-  };
 
-  const handlePropertyEditEndWithA11y = (propertyPath: string) => {
-    batch(() => {
-      setIsEditingProperty(false);
-      setCurrentEditingProperty(undefined);
-      setCurrentEditingValue(undefined);
+    const unsubscribeEditEnd = visualFeedbackEventBus.on('property:edit:end', (event) => {
+      batch(() => {
+        setIsEditingProperty(false);
+        setCurrentEditingProperty(undefined);
+        setCurrentEditingValue(undefined);
+      });
     });
-    actions.onPropertyEditEnd(propertyPath);
-  };
+
+    onCleanup(() => {
+      unsubscribeEditStart();
+      unsubscribeEditEnd();
+    });
+  });
 
   // Get the selected component from the template
   const selectedComponent = createMemo(() => {
     if (!state.template || !state.selectedComponentId) return null;
     return state.template.components.find(c => c.id === state.selectedComponentId) || null;
   });
-
-  // Completely disable visual feedback to prevent infinite recursion
-  // The visual feedback system is causing reactive loops when inputs are focused
-  const visualFeedbackHandlers = undefined;
 
   const handleComponentSelect = (id: string | null) => {
     actions.selectComponent(id);
@@ -433,7 +434,6 @@ const BuilderContent: Component = () => {
                 exportPresets: actions.exportPresets,
                 importPresets: actions.importPresets,
               }}
-              visualFeedback={visualFeedbackHandlers}
             />
           </aside>
         </div>

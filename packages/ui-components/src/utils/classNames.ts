@@ -100,3 +100,82 @@ export function getComponentClasses(
 
   return classNames(...classes);
 }
+
+/**
+ * BEM helper function type with overloads for different usage patterns
+ */
+export interface BEMHelper {
+  /** Get the base block class */
+  (): string | undefined;
+  /** Get a modifier class (block--modifier) */
+  (modifier: string): string | undefined;
+  /** Get an element with modifier class (block__element--modifier) */
+  (element: string, modifier: string): string | undefined;
+  /** Explicitly get a modifier class (block--modifier) */
+  mod: (modifier: string) => string | undefined;
+  /** Get an element class (block__element) or element with modifier (block__element--modifier) */
+  elem: (element: string, modifier?: string) => string | undefined;
+}
+
+/**
+ * Creates a BEM helper function scoped to a specific block and styles object.
+ * This provides a more intuitive API for working with BEM class names in components.
+ *
+ * @param styles - CSS modules styles object
+ * @param block - The BEM block name (e.g., 'modal', 'button')
+ * @returns A BEM helper function with additional utility methods
+ *
+ * @example
+ * const bem = createBEM(styles, 'modal');
+ *
+ * // Get block class
+ * bem() // → styles.modal
+ *
+ * // Get modifier class (default behavior with one arg)
+ * bem('open') // → styles.modalOpen (modal--open)
+ *
+ * // Get element with modifier
+ * bem('dialog', 'large') // → styles.modalDialogLarge (modal__dialog--large)
+ *
+ * // Explicitly get element (recommended for clarity)
+ * bem.elem('dialog') // → styles.modalDialog (modal__dialog)
+ * bem.elem('header', 'sticky') // → styles.modalHeaderSticky (modal__header--sticky)
+ *
+ * // Explicitly get modifier (though bem('open') works too)
+ * bem.mod('open') // → styles.modalOpen (modal--open)
+ */
+export function createBEM(
+  styles: Record<string, string | undefined>,
+  block: string
+): BEMHelper {
+  function bem(arg1?: string, arg2?: string): string | undefined {
+    if (!arg1) {
+      // Just block: bem()
+      return getStyleClass(styles, block);
+    }
+
+    if (arg2) {
+      // Element with modifier: bem('dialog', 'large')
+      return getStyleClass(styles, `${block}__${arg1}--${arg2}`);
+    }
+
+    // Single argument - assume it's a modifier by default
+    // Users can use bem.elem() for explicit element access
+    return getStyleClass(styles, `${block}--${arg1}`);
+  }
+
+  // Explicit helper method for modifiers
+  bem.mod = (modifier: string) => {
+    return getStyleClass(styles, `${block}--${modifier}`);
+  };
+
+  // Explicit helper method for elements
+  bem.elem = (element: string, modifier?: string) => {
+    if (modifier) {
+      return getStyleClass(styles, `${block}__${element}--${modifier}`);
+    }
+    return getStyleClass(styles, `${block}__${element}`);
+  };
+
+  return bem as BEMHelper;
+}

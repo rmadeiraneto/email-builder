@@ -15,6 +15,7 @@
 
 import type { IconProps } from './icon.types';
 import styles from './icon.module.scss';
+import { createBEM } from '../../utils/classNames';
 
 export class Icon {
   private props: IconProps;
@@ -75,17 +76,18 @@ export class Icon {
   }
 
   private getClassNames(): string {
-    const classes = [styles.icon, `ri-${this.props.name}`];
+    const bem = createBEM(styles, 'icon');
+    const classes = [bem(), `ri-${this.props.name}`];
 
     if (this.props.onClick) {
-      classes.push(styles['icon--clickable']);
+      classes.push(bem('clickable'));
     }
 
     if (this.props.className) {
       classes.push(this.props.className);
     }
 
-    return classes.join(' ');
+    return classes.filter(Boolean).join(' ');
   }
 
   private attachEventListeners(): void {

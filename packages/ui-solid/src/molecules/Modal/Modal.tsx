@@ -42,7 +42,7 @@ import {
   flip,
   type Placement,
 } from '@floating-ui/dom';
-import { classNames, getStyleClass } from '../../utils';
+import { classNames, createBEM } from '../../utils';
 import styles from '@email-builder/ui-components/src/molecules/Modal/modal.module.scss';
 
 /**
@@ -135,6 +135,9 @@ export const Modal: Component<ModalProps> = (props) => {
   let modalRef: HTMLDivElement | undefined;
   let cleanupAutoUpdate: (() => void) | undefined;
 
+  // Create BEM helper for modal classes
+  const bem = createBEM(styles, 'modal');
+
   /**
    * Setup positioning when modal opens with trigger element
    */
@@ -198,8 +201,8 @@ export const Modal: Component<ModalProps> = (props) => {
       : [local.modalClasses];
 
     return classNames(
-      getStyleClass(styles, 'modal'),
-      local.isOpen && getStyleClass(styles, 'modal--open'),
+      bem(),
+      local.isOpen && bem('open'),
       local.className,
       ...classes
     );
@@ -213,7 +216,7 @@ export const Modal: Component<ModalProps> = (props) => {
       ? local.modalDialogClasses
       : [local.modalDialogClasses];
 
-    return classNames(getStyleClass(styles, 'modal__dialog'), ...classes);
+    return classNames(bem.elem('dialog'), ...classes);
   };
 
   /**

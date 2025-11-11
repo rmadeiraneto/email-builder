@@ -1,5 +1,6 @@
 import styles from './alert.module.scss';
 import type { AlertOptions, AlertConfig, AlertContent, AlertType } from './alert.types';
+import { createBEM } from '../../utils/classNames';
 
 /**
  * Alert component for displaying notifications and messages
@@ -94,8 +95,9 @@ export class Alert {
       return;
     }
 
+    const bem = createBEM(styles, 'alert');
     this.iconWrapper = document.createElement('div');
-    this.iconWrapper.className = styles.alert__icon ?? '';
+    this.iconWrapper.className = bem.elem('icon') ?? '';
     this.iconWrapper.setAttribute('data-testid', 'alert-icon');
 
     this.setIcon(this.options.icon);
@@ -109,8 +111,9 @@ export class Alert {
       return;
     }
 
+    const bem = createBEM(styles, 'alert');
     this.titleWrapper = document.createElement('div');
-    this.titleWrapper.className = styles.alert__title ?? '';
+    this.titleWrapper.className = bem.elem('title') ?? '';
     this.titleWrapper.setAttribute('data-testid', 'alert-title');
 
     this.setTitle(this.options.title);
@@ -124,8 +127,9 @@ export class Alert {
       return;
     }
 
+    const bem = createBEM(styles, 'alert');
     this.descriptionWrapper = document.createElement('div');
-    this.descriptionWrapper.className = styles.alert__description ?? '';
+    this.descriptionWrapper.className = bem.elem('description') ?? '';
     this.descriptionWrapper.setAttribute('data-testid', 'alert-description');
 
     this.setDescription(this.options.description);
@@ -135,13 +139,14 @@ export class Alert {
    * Create the main alert structure
    */
   private createAlert(): void {
+    const bem = createBEM(styles, 'alert');
     // Create main wrapper
-    this.alert.className = `${styles.alert} ${styles[`alert--${this.type}`] ?? ''}`;
+    this.alert.className = `${bem()} ${bem(this.type) ?? ''}`;
     this.alert.setAttribute('data-testid', 'alert');
     this.alert.setAttribute('role', 'alert');
 
     // Create left column (icon)
-    this.alertLeft.className = styles.alert__left ?? '';
+    this.alertLeft.className = bem.elem('left') ?? '';
     this.alertLeft.setAttribute('data-testid', 'alert-left');
 
     if (this.iconWrapper) {
@@ -149,7 +154,7 @@ export class Alert {
     }
 
     // Create right column (title + description)
-    this.alertRight.className = styles.alert__right ?? '';
+    this.alertRight.className = bem.elem('right') ?? '';
     this.alertRight.setAttribute('data-testid', 'alert-right');
 
     if (this.titleWrapper) {
@@ -170,12 +175,13 @@ export class Alert {
    * @param icon - HTMLElement to use as icon
    */
   public setIcon(icon: HTMLElement): void {
+    const bem = createBEM(styles, 'alert');
     this.icon = icon;
 
     if (!this.iconWrapper) {
       // Create the wrapper manually instead of using createIcon
       this.iconWrapper = document.createElement('div');
-      this.iconWrapper.className = styles.alert__icon ?? '';
+      this.iconWrapper.className = bem.elem('icon') ?? '';
       this.iconWrapper.setAttribute('data-testid', 'alert-icon');
 
       // Append to the left column
@@ -193,12 +199,13 @@ export class Alert {
    * @param title - String or HTMLElement to use as title
    */
   public setTitle(title: AlertContent): void {
+    const bem = createBEM(styles, 'alert');
     this.title = title;
 
     if (!this.titleWrapper) {
       // Create the wrapper manually instead of using createTitle
       this.titleWrapper = document.createElement('div');
-      this.titleWrapper.className = styles.alert__title ?? '';
+      this.titleWrapper.className = bem.elem('title') ?? '';
       this.titleWrapper.setAttribute('data-testid', 'alert-title');
 
       // Insert before description if it exists
@@ -223,12 +230,13 @@ export class Alert {
    * @param description - String or HTMLElement to use as description
    */
   public setDescription(description: AlertContent): void {
+    const bem = createBEM(styles, 'alert');
     this.description = description;
 
     if (!this.descriptionWrapper) {
       // Create the wrapper manually instead of using createDescription
       this.descriptionWrapper = document.createElement('div');
-      this.descriptionWrapper.className = styles.alert__description ?? '';
+      this.descriptionWrapper.className = bem.elem('description') ?? '';
       this.descriptionWrapper.setAttribute('data-testid', 'alert-description');
 
       // Append to the right column
@@ -249,8 +257,9 @@ export class Alert {
    * Show the alert
    */
   public show(): void {
+    const bem = createBEM(styles, 'alert');
     this.isHidden = false;
-    const hiddenClass = styles['alert--hidden'];
+    const hiddenClass = bem('hidden');
     if (hiddenClass) {
       this.alert.classList.remove(hiddenClass);
     }
@@ -260,8 +269,9 @@ export class Alert {
    * Hide the alert
    */
   public hide(): void {
+    const bem = createBEM(styles, 'alert');
     this.isHidden = true;
-    const hiddenClass = styles['alert--hidden'];
+    const hiddenClass = bem('hidden');
     if (hiddenClass) {
       this.alert.classList.add(hiddenClass);
     }

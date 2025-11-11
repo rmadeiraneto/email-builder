@@ -17,6 +17,7 @@
 
 import type { InputProps } from './input.types';
 import styles from './input.module.scss';
+import { createBEM } from '../../utils/classNames';
 
 export class Input {
   private props: InputProps;
@@ -117,21 +118,22 @@ export class Input {
    * @returns Space-separated class names
    */
   private getClassNames(): string {
-    const classes = [styles.input];
+    const bem = createBEM(styles, 'input');
+    const classes = [bem()];
 
     // Size
     if (this.props.size) {
-      classes.push(styles[`input--${this.props.size}`]);
+      classes.push(bem(this.props.size));
     }
 
     // Validation state
     if (this.props.validationState && this.props.validationState !== 'default') {
-      classes.push(styles[`input--${this.props.validationState}`]);
+      classes.push(bem(this.props.validationState));
     }
 
     // Full width
     if (this.props.fullWidth) {
-      classes.push(styles['input--full-width']);
+      classes.push(bem('full-width'));
     }
 
     // Custom class
@@ -139,7 +141,7 @@ export class Input {
       classes.push(this.props.className);
     }
 
-    return classes.join(' ');
+    return classes.filter(Boolean).join(' ');
   }
 
   /**

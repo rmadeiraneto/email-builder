@@ -23,7 +23,7 @@
 
 import { Component, JSX, mergeProps, splitProps } from 'solid-js';
 import type { ButtonProps as BaseButtonProps } from '@email-builder/ui-components/atoms';
-import { getComponentClasses } from '../../utils';
+import { getComponentClasses, getStyleClass } from '../../utils';
 import styles from '@email-builder/ui-components/src/atoms/Button/button.module.scss';
 
 /**
@@ -123,8 +123,8 @@ export const Button: Component<ButtonProps> = (props) => {
     if (!local.icon) return null;
 
     const iconClass = local.iconPosition === 'right'
-      ? styles.buttonIconRight
-      : styles.buttonIcon;
+      ? getStyleClass(styles, 'button__icon--right')
+      : getStyleClass(styles, 'button__icon');
 
     return <i class={`ri-${local.icon} ${iconClass}`} aria-hidden="true" />;
   };
@@ -138,7 +138,7 @@ export const Button: Component<ButtonProps> = (props) => {
       data-action={local.action}
     >
       {local.iconPosition === 'left' && renderIcon()}
-      <span class={styles.buttonText}>{local.children}</span>
+      <span class={getStyleClass(styles, 'button__text')}>{local.children}</span>
       {local.iconPosition === 'right' && renderIcon()}
     </button>
   );

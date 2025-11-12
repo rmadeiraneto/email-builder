@@ -58,6 +58,11 @@ class VisualFeedbackEventBus {
 
     // Debounce duplicate events to prevent infinite loops
     const now = Date.now();
+
+    // Debug logging to understand what's happening
+    const eventKey = `${event.type}:${event.propertyPath}:${event.componentId}`;
+    console.log(`[VisualFeedbackEventBus] emit() called - ${eventKey}`);
+
     if (
       this.lastEmittedEvent &&
       this.lastEmittedEvent.type === event.type &&
@@ -66,8 +71,11 @@ class VisualFeedbackEventBus {
       now - this.lastEmittedEvent.timestamp < this.DEBOUNCE_MS
     ) {
       // Skip duplicate event within debounce window
+      console.log(`[VisualFeedbackEventBus] DEBOUNCED (skipped) - ${eventKey}, time since last: ${now - this.lastEmittedEvent.timestamp}ms`);
       return;
     }
+
+    console.log(`[VisualFeedbackEventBus] EMITTING - ${eventKey}`);
 
     // Update last emitted event
     this.lastEmittedEvent = {
@@ -80,6 +88,7 @@ class VisualFeedbackEventBus {
     // Use setTimeout to schedule in a new task, completely breaking out of Solid.js reactive batching
     // This prevents infinite recursion when handlers update signals that trigger re-renders
     setTimeout(() => {
+      console.log(`[VisualFeedbackEventBus] Handler executing - ${eventKey}`);
       handlers.forEach(handler => {
         try {
           handler(event);
@@ -87,6 +96,7 @@ class VisualFeedbackEventBus {
           console.error(`[VisualFeedbackEventBus] Error in handler for ${event.type}:`, error);
         }
       });
+      console.log(`[VisualFeedbackEventBus] Handler completed - ${eventKey}`);
     }, 0);
   }
 

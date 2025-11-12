@@ -21,7 +21,7 @@
  * ```
  */
 
-import { Component, mergeProps, createEffect, createSignal } from 'solid-js';
+import { Component, mergeProps } from 'solid-js';
 import { LinkedInputs, LinkedInputItem } from '../LinkedInputs/LinkedInputs';
 import { InputLabel } from '../InputLabel/InputLabel';
 import type { Spacing, CSSValue, CSSUnit } from '@email-builder/core/types/component.types';

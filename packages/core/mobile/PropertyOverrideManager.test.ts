@@ -15,6 +15,8 @@ describe('PropertyOverrideManager', () => {
   let mockTemplate: Template;
   let mockConfig: MobileDevModeConfig;
 
+  const waitForEmit = () => new Promise(resolve => setTimeout(resolve, 10));
+
   beforeEach(() => {
     eventEmitter = new EventEmitter();
 
@@ -77,8 +79,8 @@ describe('PropertyOverrideManager', () => {
 
       overrideManager.setOverride('comp-1', 'styles.padding', '16px');
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -147,8 +149,8 @@ describe('PropertyOverrideManager', () => {
 
       overrideManager.clearOverride('comp-1', 'styles.padding');
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalledWith(
         expect.objectContaining({

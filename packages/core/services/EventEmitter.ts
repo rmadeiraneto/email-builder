@@ -47,9 +47,9 @@ export class EventEmitter implements IEventEmitter {
       return;
     }
 
-    // Use queueMicrotask to defer execution and break the synchronous call chain
-    // This prevents infinite recursion when emitting from within reactive event handlers
-    queueMicrotask(() => {
+    // Use setTimeout to schedule in a new task, completely breaking out of reactive batching cycles
+    // This prevents infinite recursion when handlers update state that triggers re-renders
+    setTimeout(() => {
       listeners.forEach((listener) => {
         try {
           listener(data);
@@ -57,7 +57,7 @@ export class EventEmitter implements IEventEmitter {
           console.error(`Error in event listener for "${event}":`, error);
         }
       });
-    });
+    }, 0);
   }
 
   public off(event?: string, listener?: EventListener): void {

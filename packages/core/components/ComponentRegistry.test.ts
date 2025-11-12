@@ -70,6 +70,8 @@ function createMockPreset(id: string, name: string): ComponentPreset {
 describe('ComponentRegistry', () => {
   let registry: ComponentRegistry;
 
+  const waitForEmit = () => new Promise(resolve => setTimeout(resolve, 10));
+
   beforeEach(() => {
     registry = new ComponentRegistry();
   });
@@ -120,8 +122,8 @@ describe('ComponentRegistry', () => {
 
       registry.register(definition);
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(eventData).toEqual({
         type: 'button',
@@ -174,8 +176,8 @@ describe('ComponentRegistry', () => {
 
       registry.unregister('button');
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(eventData).toEqual({ type: 'button' });
     });
@@ -469,8 +471,8 @@ describe('ComponentRegistry', () => {
 
       registry.addPreset('button', preset);
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(eventData).toEqual({
         type: 'button',
@@ -521,8 +523,8 @@ describe('ComponentRegistry', () => {
 
       registry.removePreset('button', 'preset1');
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(eventData).toEqual({
         type: 'button',
@@ -577,8 +579,8 @@ describe('ComponentRegistry', () => {
 
       registry.register(createMockDefinition('button'));
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(callCount).toBe(1);
 
@@ -586,8 +588,8 @@ describe('ComponentRegistry', () => {
 
       registry.register(createMockDefinition('text'));
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(callCount).toBe(1); // Should not increment
     });

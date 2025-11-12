@@ -5,6 +5,9 @@
 import { describe, it, expect, vi } from 'vitest';
 import { EventEmitter } from './EventEmitter';
 
+// Helper to wait for async event emissions
+const waitForEmit = () => new Promise(resolve => setTimeout(resolve, 10));
+
 describe('EventEmitter', () => {
   describe('on()', () => {
     it('should register event listener', async () => {
@@ -14,8 +17,8 @@ describe('EventEmitter', () => {
       emitter.on('test', listener);
       emitter.emit('test', { data: 'value' });
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalledWith({ data: 'value' });
       expect(listener).toHaveBeenCalledTimes(1);
@@ -30,8 +33,8 @@ describe('EventEmitter', () => {
       emitter.on('test', listener2);
       emitter.emit('test', { data: 'value' });
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(listener1).toHaveBeenCalledWith({ data: 'value' });
       expect(listener2).toHaveBeenCalledWith({ data: 'value' });
@@ -53,14 +56,14 @@ describe('EventEmitter', () => {
       const subscription = emitter.on('test', listener);
       emitter.emit('test', { data: 'first' });
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       subscription.unsubscribe();
       emitter.emit('test', { data: 'second' });
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalledTimes(1);
       expect(listener).toHaveBeenCalledWith({ data: 'first' });
@@ -75,13 +78,13 @@ describe('EventEmitter', () => {
       emitter.once('test', listener);
       emitter.emit('test', { data: 'first' });
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       emitter.emit('test', { data: 'second' });
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalledTimes(1);
       expect(listener).toHaveBeenCalledWith({ data: 'first' });
@@ -107,8 +110,8 @@ describe('EventEmitter', () => {
       emitter.on('test', listener);
       emitter.emit('test', { data: 'value' });
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalledWith({ data: 'value' });
     });
@@ -120,8 +123,8 @@ describe('EventEmitter', () => {
       emitter.on('test', listener);
       emitter.emit('test');
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalledWith(undefined);
     });
@@ -143,8 +146,8 @@ describe('EventEmitter', () => {
       emitter.on('test', successListener);
       emitter.emit('test', { data: 'value' });
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(errorListener).toHaveBeenCalled();
       expect(successListener).toHaveBeenCalled();

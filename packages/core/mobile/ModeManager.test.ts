@@ -16,6 +16,8 @@ describe('ModeManager', () => {
   let mobileCommandManager: CommandManager;
   let mockTemplate: Template;
 
+  const waitForEmit = () => new Promise(resolve => setTimeout(resolve, 10));
+
   beforeEach(() => {
     eventEmitter = new EventEmitter();
     desktopCommandManager = new CommandManager(eventEmitter);
@@ -134,8 +136,8 @@ describe('ModeManager', () => {
 
       await modeManager.switchMode(DeviceMode.MOBILE);
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(startListener).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -175,8 +177,8 @@ describe('ModeManager', () => {
 
       await modeManager.switchMode(DeviceMode.DESKTOP, options);
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(completeListener).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -192,8 +194,8 @@ describe('ModeManager', () => {
 
       await modeManager.switchMode(DeviceMode.MOBILE);
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalled();
     });
@@ -299,16 +301,16 @@ describe('ModeManager', () => {
 
       await modeManager.loadMobileData();
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalledTimes(1);
 
       // Second call should not trigger event
       await modeManager.loadMobileData();
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalledTimes(1);
     });
@@ -321,8 +323,8 @@ describe('ModeManager', () => {
 
       await modeManager.preloadMobileData();
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalled();
     });

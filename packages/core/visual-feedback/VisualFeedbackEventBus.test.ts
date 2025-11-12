@@ -10,6 +10,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { visualFeedbackEventBus } from './VisualFeedbackEventBus';
 import type { VisualFeedbackEvent } from './VisualFeedbackEventBus';
 
+// Helper to wait for async event emissions (setTimeout-based)
+const waitForEmit = () => new Promise(resolve => setTimeout(resolve, 10));
+
 describe('VisualFeedbackEventBus', () => {
   // Clean up after each test
   afterEach(() => {
@@ -27,8 +30,8 @@ describe('VisualFeedbackEventBus', () => {
         componentId: 'comp-1',
       });
 
-      // Wait for microtask to complete
-      await Promise.resolve();
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(handler).toHaveBeenCalledTimes(1);
       expect(handler).toHaveBeenCalledWith({
@@ -51,7 +54,7 @@ describe('VisualFeedbackEventBus', () => {
         componentId: 'comp-1',
       });
 
-      await Promise.resolve();
+      await waitForEmit();
 
       expect(handler1).toHaveBeenCalledTimes(1);
       expect(handler2).toHaveBeenCalledTimes(1);
@@ -70,7 +73,7 @@ describe('VisualFeedbackEventBus', () => {
         componentId: 'comp-1',
       });
 
-      await Promise.resolve();
+      await waitForEmit();
 
       expect(hoverHandler).toHaveBeenCalledTimes(1);
       expect(editStartHandler).not.toHaveBeenCalled();
@@ -94,7 +97,7 @@ describe('VisualFeedbackEventBus', () => {
         componentId: 'comp-1',
       });
 
-      await Promise.resolve();
+      await waitForEmit();
 
       expect(handler).toHaveBeenCalledTimes(1);
 
@@ -107,7 +110,7 @@ describe('VisualFeedbackEventBus', () => {
         componentId: 'comp-2',
       });
 
-      await Promise.resolve();
+      await waitForEmit();
 
       // Should still be called only once (from before unsubscribe)
       expect(handler).toHaveBeenCalledTimes(1);
@@ -130,7 +133,7 @@ describe('VisualFeedbackEventBus', () => {
 
       visualFeedbackEventBus.emit(event);
 
-      await Promise.resolve();
+      await waitForEmit();
 
       expect(handler).toHaveBeenCalledWith(event);
     });
@@ -152,7 +155,7 @@ describe('VisualFeedbackEventBus', () => {
       emitCompleted = true;
 
       // Wait for microtask
-      await Promise.resolve();
+      await waitForEmit();
 
       // Now handler should have been called
       expect(handler).toHaveBeenCalledTimes(1);
@@ -185,7 +188,7 @@ describe('VisualFeedbackEventBus', () => {
         componentId: 'comp-1',
       });
 
-      await Promise.resolve();
+      await waitForEmit();
 
       // Both handlers should have been called
       expect(errorHandler).toHaveBeenCalled();
@@ -218,7 +221,7 @@ describe('VisualFeedbackEventBus', () => {
       visualFeedbackEventBus.emit({ type: 'property:edit:start', propertyPath: 'test' });
       visualFeedbackEventBus.emit({ type: 'property:edit:end', propertyPath: 'test' });
 
-      await Promise.resolve();
+      await waitForEmit();
 
       expect(hoverHandler).toHaveBeenCalledTimes(1);
       expect(unhoverHandler).toHaveBeenCalledTimes(1);
@@ -244,7 +247,7 @@ describe('VisualFeedbackEventBus', () => {
         componentId: 'comp-1',
       });
 
-      await Promise.resolve();
+      await waitForEmit();
 
       expect(handler1).not.toHaveBeenCalled();
       expect(handler2).not.toHaveBeenCalled();
@@ -272,7 +275,7 @@ describe('VisualFeedbackEventBus', () => {
         componentId: 'comp-1',
       });
 
-      await Promise.resolve();
+      await waitForEmit();
 
       expect(hoverHandler).not.toHaveBeenCalled();
       expect(editHandler).toHaveBeenCalledTimes(1);
@@ -296,7 +299,7 @@ describe('VisualFeedbackEventBus', () => {
       visualFeedbackEventBus.emit({ type: 'property:unhover', propertyPath: 'test' });
       visualFeedbackEventBus.emit({ type: 'property:edit:start', propertyPath: 'test' });
 
-      await Promise.resolve();
+      await waitForEmit();
 
       expect(handler1).not.toHaveBeenCalled();
       expect(handler2).not.toHaveBeenCalled();
@@ -322,7 +325,7 @@ describe('VisualFeedbackEventBus', () => {
       // Handler should NOT have executed yet
       expect(executionOrder).toEqual(['before-emit', 'after-emit']);
 
-      await Promise.resolve();
+      await waitForEmit();
 
       // Now handler should have executed
       expect(executionOrder).toEqual(['before-emit', 'after-emit', 'handler']);
@@ -348,7 +351,7 @@ describe('VisualFeedbackEventBus', () => {
       // Handler hasn't run yet, so signalUpdates is still empty
       expect(signalUpdates).toEqual([]);
 
-      await Promise.resolve();
+      await waitForEmit();
 
       // Handler runs with final signal value
       expect(signalUpdates).toEqual(['final']);
@@ -401,7 +404,7 @@ describe('VisualFeedbackEventBus', () => {
       // No handlers should have executed yet
       expect(callOrder).toEqual([]);
 
-      await Promise.resolve();
+      await waitForEmit();
 
       // All handlers should have executed in order
       expect(callOrder).toEqual(['0', '1', '2', '3', '4']);
@@ -425,7 +428,7 @@ describe('VisualFeedbackEventBus', () => {
 
       visualFeedbackEventBus.emit(event);
 
-      await Promise.resolve();
+      await waitForEmit();
 
       expect(handler).toHaveBeenCalledWith(event);
       expect(handler.mock.calls[0][0]).toEqual(event);
@@ -443,7 +446,7 @@ describe('VisualFeedbackEventBus', () => {
 
       visualFeedbackEventBus.emit(event);
 
-      await Promise.resolve();
+      await waitForEmit();
 
       expect(handler).toHaveBeenCalledWith(event);
     });
@@ -459,7 +462,7 @@ describe('VisualFeedbackEventBus', () => {
         componentId: 'comp-1',
       });
 
-      await Promise.resolve();
+      await waitForEmit();
 
       expect(handler).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -487,7 +490,7 @@ describe('VisualFeedbackEventBus', () => {
         propertyPath: 'test',
       });
 
-      await Promise.resolve();
+      await waitForEmit();
 
       // All handlers should have been called
       handlers.forEach(handler => {
@@ -506,7 +509,7 @@ describe('VisualFeedbackEventBus', () => {
         propertyPath: 'test',
       });
 
-      await Promise.resolve();
+      await waitForEmit();
 
       // No handlers should have been called
       handlers.forEach(handler => {

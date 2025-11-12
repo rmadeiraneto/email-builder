@@ -36,6 +36,8 @@ describe('TemplateManager', () => {
   let registry: ComponentRegistry;
   let storage: TemplateStorage;
 
+  const waitForEmit = () => new Promise(resolve => setTimeout(resolve, 10));
+
   beforeEach(() => {
     registry = createDefaultRegistry();
     const adapter = new MockStorageAdapter();
@@ -89,6 +91,9 @@ describe('TemplateManager', () => {
           locale: 'en-US',
         },
       });
+
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(callback).toHaveBeenCalled();
     });
@@ -151,6 +156,9 @@ describe('TemplateManager', () => {
       templateManager.on(TemplateManagerEvent.TEMPLATE_LOADED, callback);
 
       await templateManager.load(created.metadata.id);
+
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(callback).toHaveBeenCalled();
     });
@@ -239,6 +247,9 @@ describe('TemplateManager', () => {
         metadata: { name: 'Updated' },
       });
 
+      // Wait for setTimeout to complete
+      await waitForEmit();
+
       expect(callback).toHaveBeenCalled();
     });
   });
@@ -278,6 +289,9 @@ describe('TemplateManager', () => {
       templateManager.on(TemplateManagerEvent.TEMPLATE_DELETED, callback);
 
       await templateManager.delete(created.metadata.id);
+
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(callback).toHaveBeenCalled();
     });
@@ -470,8 +484,8 @@ describe('TemplateManager', () => {
 
       templateManager.validate(template);
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(callback).toHaveBeenCalled();
     });

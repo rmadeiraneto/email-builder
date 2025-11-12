@@ -51,9 +51,9 @@ class VisualFeedbackEventBus {
   emit(event: VisualFeedbackEvent): void {
     const handlers = this.handlers.get(event.type);
     if (handlers) {
-      // Use queueMicrotask to defer execution and break the synchronous call chain
-      // This prevents infinite recursion when emitting from within Solid.js event handlers
-      queueMicrotask(() => {
+      // Use setTimeout to schedule in a new task, completely breaking out of Solid.js reactive batching
+      // This prevents infinite recursion when handlers update signals that trigger re-renders
+      setTimeout(() => {
         handlers.forEach(handler => {
           try {
             handler(event);
@@ -61,7 +61,7 @@ class VisualFeedbackEventBus {
             console.error(`[VisualFeedbackEventBus] Error in handler for ${event.type}:`, error);
           }
         });
-      });
+      }, 0);
     }
   }
 

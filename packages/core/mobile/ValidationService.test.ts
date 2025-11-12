@@ -15,6 +15,8 @@ describe('ValidationService', () => {
   let modeManager: ModeManager;
   let mockTemplate: Template;
 
+  const waitForEmit = () => new Promise(resolve => setTimeout(resolve, 10));
+
   beforeEach(() => {
     eventEmitter = new EventEmitter();
 
@@ -80,8 +82,8 @@ describe('ValidationService', () => {
 
       validationService.validate(mockTemplate);
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalled();
     });
@@ -92,8 +94,8 @@ describe('ValidationService', () => {
 
       validationService.validate(mockTemplate);
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -108,8 +110,8 @@ describe('ValidationService', () => {
 
       validationService.validate(mockTemplate);
 
-      // Wait for microtask to complete
-      await new Promise(resolve => queueMicrotask(resolve));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalled();
     });

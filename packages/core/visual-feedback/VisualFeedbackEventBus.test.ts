@@ -359,18 +359,16 @@ describe('VisualFeedbackEventBus', () => {
 
     it('should prevent re-entrant calls from causing recursion', async () => {
       let callCount = 0;
-      const maxCalls = 3;
 
       visualFeedbackEventBus.on('property:hover', () => {
         callCount++;
 
         // Simulate what caused the original bug: handler emits another event
-        if (callCount < maxCalls) {
-          visualFeedbackEventBus.emit({
-            type: 'property:hover',
-            propertyPath: 'test',
-          });
-        }
+        // With debouncing, duplicate events within 50ms will be ignored
+        visualFeedbackEventBus.emit({
+          type: 'property:hover',
+          propertyPath: 'test',
+        });
       });
 
       visualFeedbackEventBus.emit({
@@ -378,11 +376,11 @@ describe('VisualFeedbackEventBus', () => {
         propertyPath: 'test',
       });
 
-      // Wait for all microtasks to complete
-      await new Promise(resolve => setTimeout(resolve, 10));
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
-      // Should have been called exactly maxCalls times (not infinite)
-      expect(callCount).toBe(maxCalls);
+      // Should have been called only once due to debouncing (preventing infinite recursion)
+      expect(callCount).toBe(1);
     });
 
     it('should handle rapid successive emits correctly', async () => {

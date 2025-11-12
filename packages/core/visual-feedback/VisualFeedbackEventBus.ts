@@ -27,7 +27,8 @@ type EventHandler = (event: VisualFeedbackEvent) => void;
  */
 class VisualFeedbackEventBus {
   private handlers: Map<VisualFeedbackEventType, Set<EventHandler>> = new Map();
-
+  private lastEmittedEvent: { type: VisualFeedbackEventType; propertyPath: string; componentId?: string; timestamp: number } | null = null;
+  private readonly DEBOUNCE_MS = 50; // Prevent duplicate events within 50ms
   /**
    * Subscribe to an event type
    */
@@ -47,22 +48,46 @@ class VisualFeedbackEventBus {
   /**
    * Emit an event to all registered handlers
    * Handlers are called asynchronously to avoid interfering with Solid.js reactivity
+   * Debouncing prevents duplicate events from creating infinite loops
    */
   emit(event: VisualFeedbackEvent): void {
     const handlers = this.handlers.get(event.type);
-    if (handlers) {
-      // Use setTimeout to schedule in a new task, completely breaking out of Solid.js reactive batching
-      // This prevents infinite recursion when handlers update signals that trigger re-renders
-      setTimeout(() => {
-        handlers.forEach(handler => {
-          try {
-            handler(event);
-          } catch (error) {
-            console.error(`[VisualFeedbackEventBus] Error in handler for ${event.type}:`, error);
-          }
-        });
-      }, 0);
+    if (!handlers || handlers.size === 0) {
+      return;
     }
+
+    // Debounce duplicate events to prevent infinite loops
+    const now = Date.now();
+    if (
+      this.lastEmittedEvent &&
+      this.lastEmittedEvent.type === event.type &&
+      this.lastEmittedEvent.propertyPath === event.propertyPath &&
+      this.lastEmittedEvent.componentId === event.componentId &&
+      now - this.lastEmittedEvent.timestamp < this.DEBOUNCE_MS
+    ) {
+      // Skip duplicate event within debounce window
+      return;
+    }
+
+    // Update last emitted event
+    this.lastEmittedEvent = {
+      type: event.type,
+      propertyPath: event.propertyPath,
+      componentId: event.componentId,
+      timestamp: now,
+    };
+
+    // Use setTimeout to schedule in a new task, completely breaking out of Solid.js reactive batching
+    // This prevents infinite recursion when handlers update signals that trigger re-renders
+    setTimeout(() => {
+      handlers.forEach(handler => {
+        try {
+          handler(event);
+        } catch (error) {
+          console.error(`[VisualFeedbackEventBus] Error in handler for ${event.type}:`, error);
+        }
+      });
+    }, 0);
   }
 
   /**
@@ -77,6 +102,7 @@ class VisualFeedbackEventBus {
    */
   clear(): void {
     this.handlers.clear();
+    this.lastEmittedEvent = null;
   }
 }
 

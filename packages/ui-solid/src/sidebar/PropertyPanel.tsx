@@ -1056,21 +1056,42 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
   };
 
   // Visual feedback event handlers using global event bus
-  // TEMPORARILY DISABLED to isolate the recursion issue
   const handlePropertyHover = (property: PropertyDefinition) => {
-    // Disabled
+    if (!props.selectedComponent) return;
+
+    visualFeedbackEventBus.emit({
+      type: 'property:hover',
+      propertyPath: property.key,
+      componentId: props.selectedComponent.id,
+      currentValue: getNestedValue(props.selectedComponent, property.key),
+    });
   };
 
   const handlePropertyUnhover = (property: PropertyDefinition) => {
-    // Disabled
+    visualFeedbackEventBus.emit({
+      type: 'property:unhover',
+      propertyPath: property.key,
+    });
   };
 
   const handlePropertyEditStart = (property: PropertyDefinition) => {
-    // Disabled
+    if (!props.selectedComponent) return;
+
+    visualFeedbackEventBus.emit({
+      type: 'property:edit:start',
+      propertyPath: property.key,
+      componentId: props.selectedComponent.id,
+      currentValue: getNestedValue(props.selectedComponent, property.key),
+      isEditing: true,
+    });
   };
 
   const handlePropertyEditEnd = (property: PropertyDefinition) => {
-    // Disabled
+    visualFeedbackEventBus.emit({
+      type: 'property:edit:end',
+      propertyPath: property.key,
+      isEditing: false,
+    });
   };
 
   const renderPropertyEditor = (property: PropertyDefinition) => {

@@ -45,17 +45,22 @@ class VisualFeedbackEventBus {
   }
 
   /**
-   * Emit an event
+   * Emit an event to all registered handlers
+   * Handlers are called asynchronously to avoid interfering with Solid.js reactivity
    */
   emit(event: VisualFeedbackEvent): void {
     const handlers = this.handlers.get(event.type);
     if (handlers) {
-      handlers.forEach(handler => {
-        try {
-          handler(event);
-        } catch (error) {
-          console.error(`[VisualFeedbackEventBus] Error in handler for ${event.type}:`, error);
-        }
+      // Use queueMicrotask to defer execution and break the synchronous call chain
+      // This prevents infinite recursion when emitting from within Solid.js event handlers
+      queueMicrotask(() => {
+        handlers.forEach(handler => {
+          try {
+            handler(event);
+          } catch (error) {
+            console.error(`[VisualFeedbackEventBus] Error in handler for ${event.type}:`, error);
+          }
+        });
       });
     }
   }

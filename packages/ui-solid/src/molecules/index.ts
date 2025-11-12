@@ -18,6 +18,7 @@ export * from './InputLabel';
 export * from './InputNumber';
 export * from './CSSValueInput';
 export * from './BorderEditor';
+export * from './SpacingEditor';
 // Note: Label and Input molecules have the same names as atoms, so they're not re-exported here
 // Import them directly from './molecules/Label' or './molecules/Input' if needed
 // export * from './Label';

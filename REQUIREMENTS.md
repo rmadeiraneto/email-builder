@@ -2539,6 +2539,22 @@ Sensible defaults provided for all configuration options. Integrators can overri
 
 Based on analysis of leading email builders (Elastic Email, Mailchimp, SalesManago, Tabular, Stripo, Beefree), this section defines enhanced customization properties for existing components. **Priority is on making existing components more customizable** before adding new components.
 
+### 18.1.1 Email-First Prioritization
+
+**IMPORTANT**: Email component development is the **immediate priority** for production deployment. Web page builder features are planned for Q3 2026.
+
+**Priority Framework**:
+- **PHASE 1 - EMAIL CRITICAL**: Features with ✓ full/excellent email support that are essential for email marketing
+- **PHASE 2 - EMAIL IMPORTANT**: Features with ✓ good email support that enhance email campaigns
+- **PHASE 3 - WEB-FOCUSED**: Features with ✗ limited/no email support (web-only or requires fallbacks)
+
+**Email Compatibility Legend**:
+- ✓ **Good/Excellent** - Works across all major email clients including Outlook
+- ⚠ **Limited** - Works in modern webmail clients (Gmail, Apple Mail) but limited in Outlook
+- ✗ **Not Supported** - Web-only feature, requires email fallback strategy
+
+All prioritization decisions in this document are based on email client compatibility first.
+
 ### 18.2 Cross-Component Property Enhancements
 
 These properties should be available across **all components** where applicable:
@@ -3171,27 +3187,29 @@ These properties should be available across **all components** where applicable:
 
 ---
 
-### 18.4 Implementation Priority Matrix
+### 18.4 Implementation Priority Matrix (Email-First)
 
-| Component | Priority | Complexity | Impact | Recommended Phase |
-|-----------|----------|------------|--------|-------------------|
-| **Button** | HIGH | Medium | High | Phase 1 |
-| **Image** | HIGH | Medium | High | Phase 1 |
-| **Header** | HIGH | Medium | High | Phase 1 |
-| **Footer** | HIGH | Medium | High | Phase 1 |
-| **Hero** | HIGH | High | High | Phase 1 |
-| **List** | HIGH | High | High | Phase 2 |
-| **CTA** | HIGH | Medium | High | Phase 2 |
-| **Text** | MEDIUM | Low | Medium | Phase 2 |
-| **Separator** | LOW | Low | Low | Phase 3 |
-| **Spacer** | LOW | Low | Low | Phase 3 |
+| Component | Email Compat. | Priority | Complexity | Recommended Phase |
+|-----------|---------------|----------|------------|-------------------|
+| **Button** | ✓ Excellent | EMAIL CRITICAL | Medium | Phase 1 |
+| **Image** | ✓ Excellent | EMAIL CRITICAL | Medium | Phase 1 |
+| **Header** | ✓ Excellent | EMAIL CRITICAL | Medium | Phase 1 |
+| **Footer** | ✓ Excellent | EMAIL CRITICAL | Medium | Phase 1 |
+| **Hero** | ✓ Excellent | EMAIL CRITICAL | High | Phase 1 |
+| **CTA** | ✓ Excellent | EMAIL CRITICAL | Medium | Phase 1 |
+| **List** | ✓ Good | EMAIL IMPORTANT | High | Phase 2 |
+| **Text** | ✓ Good | EMAIL IMPORTANT | Low | Phase 2 |
+| **Separator** | ✓ Excellent | EMAIL IMPORTANT | Low | Phase 2 |
+| **Spacer** | ✓ Excellent | EMAIL IMPORTANT | Low | Phase 2 |
 
-**Cross-Component Properties**:
-- **Spacing (per-side)**: HIGH priority, Phase 1
-- **Border (per-side)**: HIGH priority, Phase 1
-- **Typography**: MEDIUM priority, Phase 2
-- **Shadow effects**: LOW priority, Phase 3
-- **Color/opacity**: MEDIUM priority, Phase 2
+**Cross-Component Properties** (Email-First):
+- **Spacing (per-side)**: ✓ Excellent support - **Phase 1 (EMAIL CRITICAL)**
+- **Border (per-side)**: ✓ Excellent support - **Phase 1 (EMAIL CRITICAL)**
+- **Typography** (letter-spacing, text-indent): ✓ Good support - **Phase 2 (EMAIL IMPORTANT)**
+- **Typography** (text-shadow): ✗ No Outlook support - **Phase 3 (WEB-FOCUSED)**
+- **Color/opacity**: ⚠ Limited Outlook support - **Phase 2 (EMAIL IMPORTANT, opacity only)**
+- **Gradients**: ✗ Very limited - **Phase 3 (WEB-FOCUSED)**
+- **Shadow effects**: ✗ No Outlook support - **Phase 3 (WEB-FOCUSED)**
 
 ---
 
@@ -3201,7 +3219,11 @@ These properties should be available across **all components** where applicable:
 
 Based on market research, the following new components should be added to enhance the builder's capabilities. **These are lower priority than enhancing existing components.**
 
-### 19.2 Priority 1 - Essential Components
+**Email-First Prioritization**: New components are prioritized based on email client compatibility and email marketing value. Components with excellent email support are prioritized for **immediate production deployment**. Web-only components are deferred to **Q3 2026**.
+
+**NOTE**: Sections 19.2-19.4 below contain detailed component specifications grouped for organizational purposes. **For correct email-first phase assignments and implementation priorities, refer to Section 19.5 (Priority Summary) and Section 19.6 (Implementation Notes).**
+
+### 19.2 Detailed Component Specifications
 
 #### 19.2.1 Divider Component (Enhanced Separator)
 
@@ -3327,9 +3349,7 @@ Based on market research, the following new components should be added to enhanc
 
 ---
 
-### 19.3 Priority 2 - Advanced Components
-
-#### 19.3.1 Social Proof Component
+#### 19.2.4 Social Proof Component
 
 **Purpose**: Display trust indicators and social validation
 
@@ -3516,7 +3536,7 @@ Based on market research, the following new components should be added to enhanc
 
 ---
 
-### 19.4 Priority 3 - Specialized Components
+### 19.4 Phase 3 - Web-Focused Components (Q3 2026)
 
 #### 19.4.1 Progress Bar Component
 
@@ -3611,42 +3631,48 @@ Based on market research, the following new components should be added to enhanc
 
 ---
 
-### 19.5 New Component Priority Summary
+### 19.5 New Component Priority Summary (Email-First)
 
-| Component | Priority | Email Support | Complexity | Phase |
-|-----------|----------|---------------|------------|-------|
-| **Video** | HIGH | Partial (poster) | Medium | Phase 1 |
-| **Countdown Timer** | HIGH | Good (external service) | High | Phase 1 |
-| **Product** | HIGH | Excellent | Medium | Phase 1 |
-| **Social Proof** | MEDIUM | Excellent | Low | Phase 2 |
-| **Icon List** | MEDIUM | Excellent | Low | Phase 2 |
-| **Columns/Grid** | MEDIUM | Excellent | Medium | Phase 2 |
-| **Table** | MEDIUM | Excellent | Medium | Phase 2 |
-| **Divider** | MEDIUM | Excellent | Low | Phase 2 |
-| **Progress Bar** | LOW | Good | Low | Phase 3 |
-| **Accordion** | LOW | Fallback only | Medium | Phase 3 |
-| **Form** | LOW | Web only | High | Phase 3 |
+| Component | Email Support | Priority | Complexity | Phase | Email Use Cases |
+|-----------|---------------|----------|------------|-------|----------------|
+| **Countdown Timer** | ✓ Good (external service) | EMAIL CRITICAL | High | Phase 1 | Promotions, flash sales, urgency |
+| **Product** | ✓ Excellent | EMAIL CRITICAL | Medium | Phase 1 | eCommerce, abandoned cart, recommendations |
+| **Table** | ✓ Excellent | EMAIL CRITICAL | Medium | Phase 1 | Pricing, order summaries, feature comparison |
+| **Social Proof** | ✓ Excellent | EMAIL IMPORTANT | Low | Phase 2 | Testimonials, reviews, trust building |
+| **Icon List** | ✓ Excellent | EMAIL IMPORTANT | Low | Phase 2 | Features, benefits, contact info |
+| **Columns/Grid** | ✓ Excellent | EMAIL IMPORTANT | Medium | Phase 2 | Multi-column layouts, side-by-side content |
+| **Divider** | ✓ Excellent | EMAIL IMPORTANT | Low | Phase 2 | Section breaks, visual separators |
+| **Progress Bar** | ✓ Good | EMAIL IMPORTANT | Low | Phase 2 | Fundraising, goal tracking, gamification |
+| **Video** | ⚠ Limited (poster only) | WEB-FOCUSED | Medium | Phase 3 | Web pages, fallback to linked poster |
+| **Accordion** | ✗ Web only (fallback) | WEB-FOCUSED | Medium | Phase 3 | Web FAQs, email shows all expanded |
+| **Form** | ✗ Web only | WEB-FOCUSED | High | Phase 3 | Web pages only, email links to landing page |
+
+**Note**: Email production launch is **immediate priority**. Web page builder features (Phase 3 items with ✗ or ⚠) are planned for **Q3 2026**.
 
 ---
 
-### 19.6 Implementation Notes
+### 19.6 Implementation Notes (Email-First Strategy)
 
-**Phase 1 Focus** (Immediate):
-1. Enhance existing components with priority properties
-2. Add Video, Countdown Timer, and Product components
+**Phase 1 Focus** (Immediate - Email Production):
+1. **Email-Critical Cross-Component Properties**: Per-side spacing, per-side borders
+2. **Email-Critical Component Enhancements**: Button, Image, Header, Footer, Hero, CTA
+3. **Email-Critical New Components**: Countdown Timer, Product, Table
 
-**Phase 2 Focus** (Short-term):
-3. Add Social Proof, Icon List, Columns, Table, Divider components
-4. Complete medium-priority property enhancements
+**Phase 2 Focus** (Short-term - Email Enhancements):
+1. **Email-Important Component Enhancements**: Text, List, Separator, Spacer
+2. **Email-Important Properties**: Advanced typography (letter-spacing, text-indent), size controls, opacity
+3. **Email-Important New Components**: Social Proof, Icon List, Columns/Grid, Divider, Progress Bar
 
-**Phase 3 Focus** (Long-term):
-5. Add specialized components (Progress Bar, Accordion, Form)
-6. Complete low-priority property enhancements
+**Phase 3 Focus** (Long-term - Web Features, Q3 2026):
+1. **Web-Only/Limited Email Support**: Video (poster fallback), shadow effects, gradients, text-shadow, CSS filters
+2. **Web-Only Components**: Accordion, Form
+3. **Web-Only Enhancements**: Carousel mode, parallax effects, hover states
 
 **Email Compatibility Strategy**:
-- All new components must have email-safe fallbacks
-- Web-only features clearly marked in UI
-- Automatic fallback generation for export
+- All Phase 1 & 2 components must work perfectly in Outlook 2016+ (VML for backgrounds where needed)
+- Phase 3 features require graceful email fallbacks (display poster, show all items, link to web form)
+- Table-based layouts for maximum email client compatibility
+- Inline styles as default, media queries for responsive behavior
 
 ---
 

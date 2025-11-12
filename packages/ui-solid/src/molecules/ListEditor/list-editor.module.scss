@@ -139,7 +139,7 @@
     }
 
     &:hover:not(:disabled) {
-      background: tokens.$color-semantic-error-lighter;
+      background: tokens.$color-neutral-100;
       color: tokens.$color-semantic-error-base;
     }
 

@@ -201,7 +201,10 @@ export const ColorPicker: Component<ColorPickerProps> = (props) => {
     const modes: ColorInputMode[] = ['hex', 'rgb', 'hsl'];
     const currentIndex = modes.indexOf(inputMode());
     const nextIndex = (currentIndex + 1) % modes.length;
-    setInputMode(modes[nextIndex]);
+    const nextMode = modes[nextIndex];
+    if (nextMode) {
+      setInputMode(nextMode);
+    }
   };
 
   /**

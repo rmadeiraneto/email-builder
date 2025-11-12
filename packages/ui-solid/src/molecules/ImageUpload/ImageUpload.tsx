@@ -21,8 +21,6 @@
  */
 
 import { Component, Show, createSignal, mergeProps } from 'solid-js';
-import { Tabs } from '../Tabs/Tabs';
-import { InputLabel } from '../InputLabel/InputLabel';
 import { classNames } from '../../utils';
 import styles from './image-upload.module.scss';
 
@@ -136,6 +134,7 @@ export const ImageUpload: Component<ImageUploadProps> = (props) => {
   const [isDragging, setIsDragging] = createSignal(false);
   const [uploadError, setUploadError] = createSignal<string | null>(null);
   const [isUploading, setIsUploading] = createSignal(false);
+  const [activeTab, setActiveTab] = createSignal<'upload' | 'url'>('upload');
 
   /**
    * Get current image data
@@ -278,9 +277,8 @@ export const ImageUpload: Component<ImageUploadProps> = (props) => {
       URL.revokeObjectURL(currentUrl);
     }
 
-    merged.onChange?.({
-      alt: getImageData().alt, // Preserve alt text
-    });
+    const currentAlt = getImageData().alt;
+    merged.onChange?.(currentAlt ? { alt: currentAlt } : {});
   };
 
   /**
@@ -292,7 +290,7 @@ export const ImageUpload: Component<ImageUploadProps> = (props) => {
 
   return (
     <div class={classNames(styles['image-upload'], merged.class)}>
-      {merged.label && <InputLabel>{merged.label}</InputLabel>}
+      {merged.label && <label class={styles['image-upload__label']}>{merged.label}</label>}
 
       {/* Image Preview */}
       <Show when={getImageData().url}>
@@ -305,7 +303,7 @@ export const ImageUpload: Component<ImageUploadProps> = (props) => {
           <button
             class={styles['image-upload__remove']}
             onClick={handleRemove}
-            disabled={merged.disabled}
+            disabled={merged.disabled ?? false}
             title="Remove image"
           >
             <i class="ri-close-line" />
@@ -315,71 +313,86 @@ export const ImageUpload: Component<ImageUploadProps> = (props) => {
 
       {/* Upload/URL Tabs */}
       <Show when={!getImageData().url}>
-        <Tabs
-          tabs={[
-            { id: 'upload', label: 'Upload' },
-            { id: 'url', label: 'URL' },
-          ]}
-          activeTab="upload"
-        >
-          {(activeTab) => (
-            <>
-              {/* Upload Tab */}
-              <Show when={activeTab() === 'upload'}>
-                <div
-                  class={classNames(
-                    styles['image-upload__dropzone'],
-                    isDragging() && styles['image-upload__dropzone--dragging'],
-                    merged.disabled && styles['image-upload__dropzone--disabled']
-                  )}
-                  onDragEnter={handleDragEnter}
-                  onDragLeave={handleDragLeave}
-                  onDragOver={handleDragOver}
-                  onDrop={handleDrop}
+        <div class={styles['image-upload__tabs']}>
+          {/* Tab buttons */}
+          <div class={styles['image-upload__tab-buttons']}>
+            <button
+              class={classNames(
+                styles['image-upload__tab-button'],
+                activeTab() === 'upload' && styles['image-upload__tab-button--active']
+              )}
+              onClick={() => setActiveTab('upload')}
+            >
+              Upload
+            </button>
+            <button
+              class={classNames(
+                styles['image-upload__tab-button'],
+                activeTab() === 'url' && styles['image-upload__tab-button--active']
+              )}
+              onClick={() => setActiveTab('url')}
+            >
+              URL
+            </button>
+          </div>
+
+          {/* Tab content */}
+          <div class={styles['image-upload__tab-content']}>
+            {/* Upload Tab */}
+            <Show when={activeTab() === 'upload'}>
+              <div
+                class={classNames(
+                  styles['image-upload__dropzone'],
+                  isDragging() && styles['image-upload__dropzone--dragging'],
+                  merged.disabled && styles['image-upload__dropzone--disabled']
+                )}
+                onDragEnter={handleDragEnter}
+                onDragLeave={handleDragLeave}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+              >
+                <input
+                  type="file"
+                  accept={getAcceptAttribute()}
+                  onChange={handleFileInputChange}
+                  disabled={(merged.disabled ?? false) || isUploading()}
+                  class={styles['image-upload__file-input']}
+                  id="image-file-input"
+                />
+
+                <label
+                  for="image-file-input"
+                  class={styles['image-upload__dropzone-label']}
                 >
-                  <input
-                    type="file"
-                    accept={getAcceptAttribute()}
-                    onChange={handleFileInputChange}
-                    disabled={merged.disabled || isUploading()}
-                    class={styles['image-upload__file-input']}
-                    id="image-file-input"
-                  />
+                  <i class="ri-upload-cloud-2-line" />
+                  <span class={styles['image-upload__dropzone-text']}>
+                    {isUploading()
+                      ? 'Uploading...'
+                      : 'Click to browse or drag & drop'}
+                  </span>
+                  <span class={styles['image-upload__dropzone-hint']}>
+                    {merged.acceptedFormats?.map((f) => f.split('/')[1]).join(', ')} up
+                    to {((merged.maxFileSize || 0) / (1024 * 1024)).toFixed(0)}MB
+                  </span>
+                </label>
+              </div>
+            </Show>
 
-                  <label
-                    for="image-file-input"
-                    class={styles['image-upload__dropzone-label']}
-                  >
-                    <i class="ri-upload-cloud-2-line" />
-                    <span class={styles['image-upload__dropzone-text']}>
-                      {isUploading()
-                        ? 'Uploading...'
-                        : 'Click to browse or drag & drop'}
-                    </span>
-                    <span class={styles['image-upload__dropzone-hint']}>
-                      {merged.acceptedFormats?.map((f) => f.split('/')[1]).join(', ')} up
-                      to {((merged.maxFileSize || 0) / (1024 * 1024)).toFixed(0)}MB
-                    </span>
-                  </label>
-                </div>
-              </Show>
-
-              {/* URL Tab */}
-              <Show when={activeTab() === 'url'}>
-                <div class={styles['image-upload__url-input']}>
-                  <input
-                    type="url"
-                    class={styles['image-upload__url-field']}
-                    placeholder="https://example.com/image.jpg"
-                    value={getImageData().url || ''}
-                    onInput={(e) => handleUrlChange(e.currentTarget.value)}
-                    disabled={merged.disabled}
-                  />
-                </div>
-              </Show>
-            </>
-          )}
-        </Tabs>
+            {/* URL Tab */}
+            <Show when={activeTab() === 'url'}>
+              <div class={styles['image-upload__url-input']}>
+                <input
+                  type="url"
+                  class={styles['image-upload__url-field']}
+                  placeholder="https://example.com/image.jpg"
+                  value={getImageData().url || ''}
+                  onInput={(e) => handleUrlChange(e.currentTarget.value)}
+                  disabled={merged.disabled ?? false}
+                />
+              </div>
+            </Show>
+          </div>
+        </div>
       </Show>
 
       {/* Error Message */}
@@ -393,18 +406,18 @@ export const ImageUpload: Component<ImageUploadProps> = (props) => {
       {/* Alt Text Input */}
       <Show when={merged.showAltText}>
         <div class={styles['image-upload__alt-text']}>
-          <InputLabel>
+          <label class={styles['image-upload__alt-label']}>
             Alt Text
             {merged.requireAltText && <span class={styles['image-upload__required']}>*</span>}
-          </InputLabel>
+          </label>
           <input
             type="text"
             class={styles['image-upload__alt-field']}
             placeholder="Describe the image for accessibility"
             value={getImageData().alt || ''}
             onInput={(e) => handleAltChange(e.currentTarget.value)}
-            disabled={merged.disabled}
-            required={merged.requireAltText}
+            disabled={merged.disabled ?? false}
+            required={merged.requireAltText ?? true}
           />
         </div>
       </Show>

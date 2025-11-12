@@ -20,7 +20,7 @@
  * ```
  */
 
-import { Component, For, createSignal, mergeProps, Show } from 'solid-js';
+import { Component, For, createSignal, mergeProps, Show, type JSX } from 'solid-js';
 import { classNames } from '../../utils';
 import styles from './list-editor.module.scss';
 

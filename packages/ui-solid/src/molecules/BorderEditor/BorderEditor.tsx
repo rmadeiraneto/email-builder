@@ -31,7 +31,6 @@ import { CSSValueInput } from '../CSSValueInput/CSSValueInput';
 import { ColorPicker } from '../ColorPicker/ColorPicker';
 import { ToggleableSection } from '../ToggleableSection/ToggleableSection';
 import { LinkedInputs } from '../LinkedInputs/LinkedInputs';
-import { InputLabel } from '../InputLabel/InputLabel';
 import type { Border, BorderStyle, BorderRadius, CSSValue } from '@email-builder/core/types/component.types';
 import { classNames } from '../../utils';
 import styles from './border-editor.module.scss';
@@ -241,29 +240,29 @@ export const BorderEditor: Component<BorderEditorProps> = (props) => {
     <div class={classNames(styles['border-editor'], merged.class)}>
       {/* Label */}
       <Show when={merged.label}>
-        <InputLabel>{merged.label}</InputLabel>
+        <label class={styles['border-editor__label']}>{merged.label}</label>
       </Show>
 
       {/* Border Width */}
       <div class={styles['border-editor__row']}>
-        <InputLabel>Width</InputLabel>
+        <label class={styles['border-editor__row-label']}>Width</label>
         <CSSValueInput
           value={getBorderValue().width}
           availableUnits={['px', 'em', 'rem']}
           min={0}
-          disabled={merged.disabled}
+          disabled={merged.disabled ?? false}
           onChange={handleWidthChange}
         />
       </div>
 
       {/* Border Style */}
       <div class={styles['border-editor__row']}>
-        <InputLabel>Style</InputLabel>
+        <label class={styles['border-editor__row-label']}>Style</label>
         <select
           class={styles['border-editor__select']}
           value={getBorderValue().style}
           onChange={handleStyleChange}
-          disabled={merged.disabled}
+          disabled={merged.disabled ?? false}
         >
           {BORDER_STYLE_OPTIONS.map((option) => (
             <option value={option.value}>{option.label}</option>
@@ -273,10 +272,9 @@ export const BorderEditor: Component<BorderEditorProps> = (props) => {
 
       {/* Border Color */}
       <div class={styles['border-editor__row']}>
-        <InputLabel>Color</InputLabel>
+        <label class={styles['border-editor__row-label']}>Color</label>
         <ColorPicker
           value={getBorderValue().color}
-          disabled={merged.disabled}
           onChange={handleColorChange}
         />
       </div>
@@ -285,7 +283,7 @@ export const BorderEditor: Component<BorderEditorProps> = (props) => {
       <Show when={merged.showRadius}>
         <ToggleableSection
           label={`Border Radius: ${getRadiusSummary()}`}
-          startOpen={merged.radiusStartOpen}
+          startOpen={merged.radiusStartOpen ?? false}
           toggleableContent={true}
         >
           <div class={styles['border-editor__radius']}>
@@ -297,7 +295,7 @@ export const BorderEditor: Component<BorderEditorProps> = (props) => {
                   radiusLinked() && styles['border-editor__link-button--active']
                 )}
                 onClick={toggleRadiusLinked}
-                disabled={merged.disabled}
+                disabled={merged.disabled ?? false}
                 title={radiusLinked() ? 'Unlink corners' : 'Link corners'}
               >
                 <i class={radiusLinked() ? 'ri-link' : 'ri-link-unlink'} />
@@ -307,45 +305,45 @@ export const BorderEditor: Component<BorderEditorProps> = (props) => {
             {/* Radius Corners */}
             <div class={styles['border-editor__corners']}>
               <div class={styles['border-editor__corner']}>
-                <InputLabel>Top Left</InputLabel>
+                <label class={styles['border-editor__corner-label']}>Top Left</label>
                 <CSSValueInput
                   value={getRadiusValue().topLeft}
                   availableUnits={['px', 'em', 'rem', '%']}
                   min={0}
-                  disabled={merged.disabled}
+                  disabled={merged.disabled ?? false}
                   onChange={(value) => handleRadiusChange('topLeft', value)}
                 />
               </div>
 
               <div class={styles['border-editor__corner']}>
-                <InputLabel>Top Right</InputLabel>
+                <label class={styles['border-editor__corner-label']}>Top Right</label>
                 <CSSValueInput
                   value={getRadiusValue().topRight}
                   availableUnits={['px', 'em', 'rem', '%']}
                   min={0}
-                  disabled={merged.disabled}
+                  disabled={merged.disabled ?? false}
                   onChange={(value) => handleRadiusChange('topRight', value)}
                 />
               </div>
 
               <div class={styles['border-editor__corner']}>
-                <InputLabel>Bottom Right</InputLabel>
+                <label class={styles['border-editor__corner-label']}>Bottom Right</label>
                 <CSSValueInput
                   value={getRadiusValue().bottomRight}
                   availableUnits={['px', 'em', 'rem', '%']}
                   min={0}
-                  disabled={merged.disabled}
+                  disabled={merged.disabled ?? false}
                   onChange={(value) => handleRadiusChange('bottomRight', value)}
                 />
               </div>
 
               <div class={styles['border-editor__corner']}>
-                <InputLabel>Bottom Left</InputLabel>
+                <label class={styles['border-editor__corner-label']}>Bottom Left</label>
                 <CSSValueInput
                   value={getRadiusValue().bottomLeft}
                   availableUnits={['px', 'em', 'rem', '%']}
                   min={0}
-                  disabled={merged.disabled}
+                  disabled={merged.disabled ?? false}
                   onChange={(value) => handleRadiusChange('bottomLeft', value)}
                 />
               </div>

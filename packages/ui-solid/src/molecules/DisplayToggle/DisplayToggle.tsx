@@ -16,7 +16,6 @@
 
 import { Component, Show, mergeProps } from 'solid-js';
 import { ToggleButton } from '../ToggleButton/ToggleButton';
-import { InputLabel } from '../InputLabel/InputLabel';
 import { classNames } from '../../utils';
 import styles from './display-toggle.module.scss';
 
@@ -97,9 +96,9 @@ export const DisplayToggle: Component<DisplayToggleProps> = (props) => {
     <div class={classNames(styles['display-toggle'], merged.class)}>
       <div class={styles['display-toggle__header']}>
         {merged.label && (
-          <InputLabel class={styles['display-toggle__label']}>
+          <label class={styles['display-toggle__label']}>
             {merged.label}
-          </InputLabel>
+          </label>
         )}
 
         <div class={styles['display-toggle__controls']}>
@@ -129,7 +128,7 @@ export const DisplayToggle: Component<DisplayToggleProps> = (props) => {
           {/* Toggle button */}
           <ToggleButton
             isActive={merged.value ?? true}
-            disabled={merged.disabled}
+            disabled={merged.disabled ?? false}
             onChange={handleChange}
             ariaLabel={`Toggle ${merged.label ?? 'visibility'}`}
           />

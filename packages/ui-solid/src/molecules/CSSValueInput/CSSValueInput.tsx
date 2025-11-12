@@ -130,12 +130,12 @@ export const CSSValueInput: Component<CSSValueInputProps> = (props) => {
     <InputNumber
       value={getNumericValue()}
       unit={getUnit()}
-      increment={merged.increment}
-      min={merged.min}
-      max={merged.max}
-      changeableUnit={merged.changeableUnit}
+      increment={merged.increment ?? 1}
+      min={merged.min ?? null}
+      max={merged.max ?? null}
+      changeableUnit={merged.changeableUnit ?? true}
       availableUnits={merged.availableUnits as readonly string[]}
-      disabled={merged.disabled}
+      disabled={merged.disabled ?? false}
       class={merged.class}
       inputClass={merged.inputClass}
       onChange={handleChange}

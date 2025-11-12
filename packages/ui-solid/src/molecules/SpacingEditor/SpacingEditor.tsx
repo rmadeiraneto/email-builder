@@ -23,7 +23,6 @@
 
 import { Component, mergeProps } from 'solid-js';
 import { LinkedInputs, LinkedInputItem } from '../LinkedInputs/LinkedInputs';
-import { InputLabel } from '../InputLabel/InputLabel';
 import type { Spacing, CSSValue, CSSUnit } from '@email-builder/core/types/component.types';
 import { classNames } from '../../utils';
 import styles from './spacing-editor.module.scss';
@@ -139,33 +138,33 @@ export const SpacingEditor: Component<SpacingEditorProps> = (props) => {
         label: 'Top',
         value: spacing.top.value === 'auto' ? 0 : spacing.top.value,
         unit: spacing.top.unit,
-        increment: merged.increment,
-        min: merged.min,
-        max: merged.max,
+        increment: merged.increment ?? 1,
+        min: merged.min ?? null,
+        max: merged.max ?? null,
       },
       {
         label: 'Right',
         value: spacing.right.value === 'auto' ? 0 : spacing.right.value,
         unit: spacing.right.unit,
-        increment: merged.increment,
-        min: merged.min,
-        max: merged.max,
+        increment: merged.increment ?? 1,
+        min: merged.min ?? null,
+        max: merged.max ?? null,
       },
       {
         label: 'Bottom',
         value: spacing.bottom.value === 'auto' ? 0 : spacing.bottom.value,
         unit: spacing.bottom.unit,
-        increment: merged.increment,
-        min: merged.min,
-        max: merged.max,
+        increment: merged.increment ?? 1,
+        min: merged.min ?? null,
+        max: merged.max ?? null,
       },
       {
         label: 'Left',
         value: spacing.left.value === 'auto' ? 0 : spacing.left.value,
         unit: spacing.left.unit,
-        increment: merged.increment,
-        min: merged.min,
-        max: merged.max,
+        increment: merged.increment ?? 1,
+        min: merged.min ?? null,
+        max: merged.max ?? null,
       },
     ];
   };
@@ -215,11 +214,11 @@ export const SpacingEditor: Component<SpacingEditorProps> = (props) => {
 
   return (
     <div class={classNames(styles['spacing-editor'], merged.class)}>
-      {merged.label && <InputLabel>{merged.label}</InputLabel>}
+      {merged.label && <label class={styles['spacing-editor__label']}>{merged.label}</label>}
 
       <LinkedInputs
         items={spacingToLinkedItems(getSpacingValue())}
-        startLinked={merged.startLinked}
+        startLinked={merged.startLinked ?? true}
         onChange={handleChange}
         onLink={handleLinkChange}
       />

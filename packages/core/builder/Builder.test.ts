@@ -7,6 +7,8 @@ import { Builder } from './Builder';
 import { BuilderEvent, CommandType } from '../types';
 import type { BuilderConfig, UndoableCommand } from '../types';
 
+const waitForEmit = () => new Promise(resolve => setTimeout(resolve, 10));
+
 class MockCommand implements UndoableCommand {
   type = CommandType.ADD_COMPONENT;
   timestamp = Date.now();
@@ -78,6 +80,7 @@ describe('Builder', () => {
 
       builder.on(BuilderEvent.INITIALIZED, listener);
       await builder.initialize();
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalledWith({
         config: expect.any(Object),
@@ -240,6 +243,7 @@ describe('Builder', () => {
 
       builder.on(BuilderEvent.INITIALIZED, listener);
       await builder.initialize();
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalled();
     });
@@ -250,6 +254,7 @@ describe('Builder', () => {
 
       builder.once(BuilderEvent.INITIALIZED, listener);
       await builder.initialize();
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalledTimes(1);
     });
@@ -360,6 +365,7 @@ describe('Builder', () => {
         await builder.initialize();
         await builder.initialize();
       } catch (error) {
+        await waitForEmit();
         expect(errorListener).toHaveBeenCalled();
         expect(errorConfig.callbacks?.onError).toHaveBeenCalled();
       }

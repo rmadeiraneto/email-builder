@@ -8,6 +8,9 @@ import { PresetStorage } from './PresetStorage';
 import type { ComponentRegistry } from '../components/ComponentRegistry';
 import type { ComponentPreset } from '../types/component.types';
 
+// Helper to wait for async event emissions
+const waitForEmit = () => new Promise(resolve => setTimeout(resolve, 10));
+
 describe('PresetManager', () => {
   let manager: PresetManager;
   let mockStorage: PresetStorage;
@@ -261,6 +264,9 @@ describe('PresetManager', () => {
         name: 'Test',
         styles: {},
       });
+
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(callback).toHaveBeenCalled();
     });

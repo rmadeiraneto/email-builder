@@ -13,6 +13,24 @@ import { CompatibilityIcon, CompatibilityModal } from '../compatibility';
 import styles from './PropertyPanel.module.scss';
 
 /**
+ * ⚠️ IMPORTANT FOR DEVELOPERS/AGENTS WORKING ON THIS FILE:
+ *
+ * When adding event handlers that update Solid.js signals, ALWAYS wrap
+ * signal updates with untrack() to prevent infinite reactive loops and
+ * stack overflow errors.
+ *
+ * Example:
+ *   visualFeedbackEventBus.on('event', (data) => {
+ *     untrack(() => {
+ *       setSignal(data);  // Wrap ALL signal updates
+ *     });
+ *   });
+ *
+ * See SOLID_REACTIVITY_GUIDE.md in the root directory for full details.
+ * This is critical to prevent "Maximum call stack size exceeded" errors.
+ */
+
+/**
  * General styles property definitions
  * These control canvas-wide and default component styles
  */

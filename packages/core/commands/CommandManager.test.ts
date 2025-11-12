@@ -8,6 +8,8 @@ import { EventEmitter } from '../services/EventEmitter';
 import { BuilderEvent, CommandType } from '../types';
 import type { UndoableCommand } from '../types';
 
+const waitForEmit = () => new Promise(resolve => setTimeout(resolve, 10));
+
 class MockCommand implements UndoableCommand {
   type = CommandType.ADD_COMPONENT;
   timestamp = Date.now();
@@ -57,6 +59,7 @@ describe('CommandManager', () => {
       eventEmitter.on(BuilderEvent.ERROR, errorListener);
 
       const result = await commandManager.execute(command);
+      await waitForEmit();
 
       expect(result.success).toBe(false);
       expect(result.error).toBe(error);
@@ -92,6 +95,7 @@ describe('CommandManager', () => {
       eventEmitter.on(BuilderEvent.UNDO, undoListener);
 
       await commandManager.undo();
+      await waitForEmit();
 
       expect(undoListener).toHaveBeenCalledWith({ command });
     });
@@ -112,6 +116,7 @@ describe('CommandManager', () => {
       eventEmitter.on(BuilderEvent.ERROR, errorListener);
 
       const result = await commandManager.undo();
+      await waitForEmit();
 
       expect(result).toBe(false);
       expect(errorListener).toHaveBeenCalledWith(error);
@@ -149,6 +154,7 @@ describe('CommandManager', () => {
       eventEmitter.on(BuilderEvent.REDO, redoListener);
 
       await commandManager.redo();
+      await waitForEmit();
 
       expect(redoListener).toHaveBeenCalledWith({ command });
     });
@@ -170,6 +176,7 @@ describe('CommandManager', () => {
       eventEmitter.on(BuilderEvent.ERROR, errorListener);
 
       const result = await commandManager.redo();
+      await waitForEmit();
 
       expect(result).toBe(false);
       expect(errorListener).toHaveBeenCalledWith(error);

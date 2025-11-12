@@ -2,6 +2,10 @@
  * Builder Context
  *
  * Provides global state management for the email builder
+ *
+ * ⚠️ CRITICAL: Visual feedback event handlers in this file use untrack()
+ * to prevent infinite reactive loops. Do NOT remove untrack() wrappers.
+ * See SOLID_REACTIVITY_GUIDE.md for details.
  */
 
 import {
@@ -190,6 +194,9 @@ export const BuilderProvider: ParentComponent = (props) => {
   const [canvasElement, setCanvasElement] = createSignal<HTMLElement | null>(null);
   const [visualFeedbackManager, setVisualFeedbackManager] = createSignal<VisualFeedbackManager | null>(null);
 
+  // Use a ref-like pattern to avoid reactive issues
+  let managerRef: VisualFeedbackManager | null = null;
+
   // Initialize builder on mount
   createEffect(async () => {
     try {
@@ -224,48 +231,60 @@ export const BuilderProvider: ParentComponent = (props) => {
     if (canvas && !currentManager) {
       // Initialize VisualFeedbackManager with default config
       const manager = createVisualFeedbackManager(canvas, DEFAULT_VISUAL_FEEDBACK_CONFIG);
+      managerRef = manager;
       setVisualFeedbackManager(manager);
-
-      console.log('[BuilderContext] VisualFeedbackManager initialized');
 
       // Subscribe to visual feedback events from the global event bus
       const unsubscribeHover = visualFeedbackEventBus.on('property:hover', (event) => {
-        manager.handlePropertyHover({
-          propertyPath: event.propertyPath,
-          componentId: event.componentId,
-          mapping: undefined as any, // PropertyPanel doesn't provide mapping
-          mode: 'hover',
-          currentValue: event.currentValue,
+        // Use untrack to prevent Solid's reactive tracking inside the handler
+        untrack(() => {
+          managerRef?.handlePropertyHover({
+            propertyPath: event.propertyPath,
+            componentId: event.componentId,
+            mapping: undefined as any, // PropertyPanel doesn't provide mapping
+            mode: 'hover',
+            currentValue: event.currentValue,
+          });
         });
       });
 
       const unsubscribeUnhover = visualFeedbackEventBus.on('property:unhover', (event) => {
-        manager.handlePropertyHover({
-          propertyPath: event.propertyPath,
-          componentId: undefined,
-          mapping: {} as any,
-          mode: 'off',
-          currentValue: undefined,
+        // Use untrack to prevent Solid's reactive tracking inside the handler
+        untrack(() => {
+          managerRef?.handlePropertyHover({
+            propertyPath: event.propertyPath,
+            componentId: undefined,
+            mapping: {} as any,
+            mode: 'off',
+            currentValue: undefined,
+          });
         });
       });
 
       const unsubscribeEditStart = visualFeedbackEventBus.on('property:edit:start', (event) => {
-        manager.handlePropertyEdit({
-          propertyPath: event.propertyPath,
-          componentId: event.componentId,
-          oldValue: undefined, // Indicates edit is starting
-          newValue: event.currentValue,
-          mapping: undefined as any, // PropertyPanel doesn't provide mapping
+        // Use untrack to prevent Solid's reactive tracking inside the handler
+        // This prevents infinite runUpdates/completeUpdates loops
+        untrack(() => {
+          managerRef?.handlePropertyEdit({
+            propertyPath: event.propertyPath,
+            componentId: event.componentId,
+            oldValue: undefined, // Indicates edit is starting
+            newValue: event.currentValue,
+            mapping: undefined as any, // PropertyPanel doesn't provide mapping
+          });
         });
       });
 
       const unsubscribeEditEnd = visualFeedbackEventBus.on('property:edit:end', (event) => {
-        manager.handlePropertyEdit({
-          propertyPath: event.propertyPath,
-          componentId: undefined,
-          oldValue: true, // Indicates edit is ending (non-undefined value)
-          newValue: undefined,
-          mapping: {} as any,
+        // Use untrack to prevent Solid's reactive tracking inside the handler
+        untrack(() => {
+          managerRef?.handlePropertyEdit({
+            propertyPath: event.propertyPath,
+            componentId: undefined,
+            oldValue: true, // Indicates edit is ending (non-undefined value)
+            newValue: undefined,
+            mapping: {} as any,
+          });
         });
       });
 
@@ -276,6 +295,7 @@ export const BuilderProvider: ParentComponent = (props) => {
         unsubscribeEditStart();
         unsubscribeEditEnd();
         manager.destroy();
+        managerRef = null;
         setVisualFeedbackManager(null);
       });
     }

@@ -67,7 +67,51 @@ someService.on('data-changed', (data) => {
 });
 ```
 
-### 3. When Signals Update Inside Reactive Context
+### 3. createEffect Self-Triggering (CRITICAL!)
+
+**⚠️ This is the most common and dangerous pattern!**
+
+When a `createEffect` reads and writes the same signal, it creates an infinite loop:
+
+```typescript
+// ❌ WRONG - Effect triggers itself infinitely!
+const [timer, setTimer] = createSignal<NodeJS.Timeout | null>(null);
+
+createEffect(() => {
+  const currentTimer = timer();  // ← READS signal (creates dependency)
+  if (currentTimer) {
+    clearTimeout(currentTimer);
+  }
+
+  const newTimer = setTimeout(() => { /* ... */ }, 500);
+  setTimer(newTimer);  // ← WRITES signal (triggers effect again!)
+});
+
+// Result: createEffect runs → reads timer → sets timer → effect runs → ... → STACK OVERFLOW
+```
+
+**✅ CORRECT - Use untrack() when reading:**
+
+```typescript
+const [timer, setTimer] = createSignal<NodeJS.Timeout | null>(null);
+
+createEffect(() => {
+  // Use untrack to read without creating a reactive dependency
+  const currentTimer = untrack(timer);  // ← No dependency created
+  if (currentTimer) {
+    clearTimeout(currentTimer);
+  }
+
+  const newTimer = setTimeout(() => { /* ... */ }, 500);
+  setTimer(newTimer);  // ← Won't trigger THIS effect
+});
+
+// Result: Effect only runs when other tracked signals change
+```
+
+**Key principle**: If an effect needs to read a signal's current value but shouldn't re-run when that signal changes, use `untrack()`.
+
+### 4. When Signals Update Inside Reactive Context
 If your component has `createEffect` that depends on signals you're updating in handlers:
 
 ```typescript
@@ -115,7 +159,7 @@ const handleSave = () => {
 
 ## Real-World Examples from This Codebase
 
-### ✅ Fixed: AccessibilityAnnouncer.tsx
+### ✅ Fixed: AccessibilityAnnouncer.tsx (Issue #1 - Event Handlers)
 ```typescript
 // Location: packages/ui-solid/src/visual-feedback/AccessibilityAnnouncer.tsx
 onMount(() => {
@@ -128,6 +172,41 @@ onMount(() => {
     });
   });
 });
+```
+
+### ✅ Fixed: AccessibilityAnnouncer.tsx (Issue #2 - createEffect Self-Triggering)
+```typescript
+// Location: packages/ui-solid/src/visual-feedback/AccessibilityAnnouncer.tsx
+const [debounceTimer, setDebounceTimer] = createSignal<NodeJS.Timeout | null>(null);
+const [isEditing, setIsEditing] = createSignal(false);
+const [currentProperty, setCurrentProperty] = createSignal<string | undefined>(undefined);
+
+// Debounce announcements to avoid overwhelming screen readers
+createEffect(() => {
+  if (!isEditing() || !currentProperty()) {
+    setAnnouncement('');
+    return;
+  }
+
+  // ✅ Use untrack to read timer without creating a reactive dependency
+  // This prevents infinite loops where the effect triggers itself
+  const timer = untrack(debounceTimer);  // ← Key fix!
+  if (timer) {
+    clearTimeout(timer);
+  }
+
+  // Set new debounced announcement
+  const newTimer = setTimeout(() => {
+    const formattedProperty = formatPropertyName(currentProperty()!);
+    const formattedValue = formatValue(currentValue());
+    setAnnouncement(`Editing ${formattedProperty}: ${formattedValue}`);
+  }, 500);
+
+  setDebounceTimer(newTimer);  // ← Won't trigger this effect
+});
+
+// This effect only re-runs when isEditing or currentProperty changes,
+// NOT when debounceTimer changes
 ```
 
 ### ✅ Fixed: BuilderContext.tsx
@@ -249,6 +328,16 @@ When adding new event handlers that update signals:
 - [ ] Verify no stack overflow errors in console
 - [ ] Add test coverage for the event handler
 
+## Checklist for New createEffect
+
+When adding new effects that use signals:
+
+- [ ] Identify which signals the effect should react to
+- [ ] Use `untrack()` when reading signals that the effect also writes
+- [ ] Use `untrack()` when reading "utility" signals (like timers, refs) that shouldn't trigger re-runs
+- [ ] Test that the effect only runs when intended signals change
+- [ ] Verify no infinite loops or stack overflow errors
+
 ## Common Mistakes to Avoid
 
 ### ❌ Mistake 1: Partial untrack()
@@ -298,6 +387,50 @@ visualFeedbackEventBus.on('event', (event) => {
 });
 ```
 
+### ❌ Mistake 4: createEffect reading and writing same signal (MOST COMMON!)
+
+```typescript
+// ❌ WRONG - Effect triggers itself infinitely
+const [counter, setCounter] = createSignal(0);
+
+createEffect(() => {
+  const current = counter();  // ← Creates dependency on counter
+  setCounter(current + 1);    // ← Triggers effect again!
+});
+
+// Result: Infinite loop → Stack overflow
+```
+
+```typescript
+// ❌ WRONG - Common with timers
+const [debounceTimer, setDebounceTimer] = createSignal<NodeJS.Timeout | null>(null);
+
+createEffect(() => {
+  const timer = debounceTimer();  // ← Tracks debounceTimer
+  if (timer) clearTimeout(timer);
+
+  setDebounceTimer(setTimeout(...));  // ← Triggers effect again!
+});
+
+// Result: Effect runs forever
+```
+
+```typescript
+// ✅ CORRECT - Use untrack when reading
+const [debounceTimer, setDebounceTimer] = createSignal<NodeJS.Timeout | null>(null);
+
+createEffect(() => {
+  const timer = untrack(debounceTimer);  // ← No dependency
+  if (timer) clearTimeout(timer);
+
+  setDebounceTimer(setTimeout(...));  // ← Won't trigger this effect
+});
+
+// Result: Effect only runs when other signals change
+```
+
+**Rule of thumb**: If you're reading a signal's current value in an effect just to clean it up or compare it (not to react to changes), use `untrack()`.
+
 ## Questions?
 
 If you're unsure whether to use `untrack()`, ask:
@@ -305,9 +438,13 @@ If you're unsure whether to use `untrack()`, ask:
 1. **Am I updating a Solid.js signal?** → Probably need `untrack()`
 2. **Is this inside an event handler?** → Probably need `untrack()`
 3. **Does my component have createEffect?** → Definitely need `untrack()`
-4. **Is this a DOM event in JSX?** → Usually don't need `untrack()`
+4. **Is my createEffect reading and writing the same signal?** → Definitely need `untrack()` when reading
+5. **Is this a DOM event in JSX?** → Usually don't need `untrack()`
 
-**When in doubt, use `untrack()` around signal updates in event handlers. It's safer to over-use it than to risk stack overflow.**
+**When in doubt:**
+- Use `untrack()` around signal updates in event handlers
+- Use `untrack()` when reading signals that an effect also writes
+- **It's safer to over-use `untrack()` than to risk stack overflow**
 
 ## References
 

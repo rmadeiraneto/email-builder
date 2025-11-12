@@ -7,18 +7,21 @@ import { EventEmitter } from './EventEmitter';
 
 describe('EventEmitter', () => {
   describe('on()', () => {
-    it('should register event listener', () => {
+    it('should register event listener', async () => {
       const emitter = new EventEmitter();
       const listener = vi.fn();
 
       emitter.on('test', listener);
       emitter.emit('test', { data: 'value' });
 
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
+
       expect(listener).toHaveBeenCalledWith({ data: 'value' });
       expect(listener).toHaveBeenCalledTimes(1);
     });
 
-    it('should register multiple listeners for same event', () => {
+    it('should register multiple listeners for same event', async () => {
       const emitter = new EventEmitter();
       const listener1 = vi.fn();
       const listener2 = vi.fn();
@@ -26,6 +29,9 @@ describe('EventEmitter', () => {
       emitter.on('test', listener1);
       emitter.on('test', listener2);
       emitter.emit('test', { data: 'value' });
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
 
       expect(listener1).toHaveBeenCalledWith({ data: 'value' });
       expect(listener2).toHaveBeenCalledWith({ data: 'value' });
@@ -40,15 +46,21 @@ describe('EventEmitter', () => {
       expect(typeof subscription.unsubscribe).toBe('function');
     });
 
-    it('should allow unsubscribing', () => {
+    it('should allow unsubscribing', async () => {
       const emitter = new EventEmitter();
       const listener = vi.fn();
 
       const subscription = emitter.on('test', listener);
       emitter.emit('test', { data: 'first' });
 
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
+
       subscription.unsubscribe();
       emitter.emit('test', { data: 'second' });
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
 
       expect(listener).toHaveBeenCalledTimes(1);
       expect(listener).toHaveBeenCalledWith({ data: 'first' });
@@ -56,13 +68,20 @@ describe('EventEmitter', () => {
   });
 
   describe('once()', () => {
-    it('should register event listener that fires once', () => {
+    it('should register event listener that fires once', async () => {
       const emitter = new EventEmitter();
       const listener = vi.fn();
 
       emitter.once('test', listener);
       emitter.emit('test', { data: 'first' });
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
+
       emitter.emit('test', { data: 'second' });
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
 
       expect(listener).toHaveBeenCalledTimes(1);
       expect(listener).toHaveBeenCalledWith({ data: 'first' });
@@ -81,22 +100,28 @@ describe('EventEmitter', () => {
   });
 
   describe('emit()', () => {
-    it('should emit event with data', () => {
+    it('should emit event with data', async () => {
       const emitter = new EventEmitter();
       const listener = vi.fn();
 
       emitter.on('test', listener);
       emitter.emit('test', { data: 'value' });
 
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
+
       expect(listener).toHaveBeenCalledWith({ data: 'value' });
     });
 
-    it('should emit event without data', () => {
+    it('should emit event without data', async () => {
       const emitter = new EventEmitter();
       const listener = vi.fn();
 
       emitter.on('test', listener);
       emitter.emit('test');
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
 
       expect(listener).toHaveBeenCalledWith(undefined);
     });
@@ -106,7 +131,7 @@ describe('EventEmitter', () => {
       expect(() => emitter.emit('test', { data: 'value' })).not.toThrow();
     });
 
-    it('should catch errors in listeners and continue', () => {
+    it('should catch errors in listeners and continue', async () => {
       const emitter = new EventEmitter();
       const errorListener = vi.fn(() => {
         throw new Error('Listener error');
@@ -117,6 +142,9 @@ describe('EventEmitter', () => {
       emitter.on('test', errorListener);
       emitter.on('test', successListener);
       emitter.emit('test', { data: 'value' });
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
 
       expect(errorListener).toHaveBeenCalled();
       expect(successListener).toHaveBeenCalled();

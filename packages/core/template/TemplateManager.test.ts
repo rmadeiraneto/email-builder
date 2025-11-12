@@ -470,6 +470,9 @@ describe('TemplateManager', () => {
 
       templateManager.validate(template);
 
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
+
       expect(callback).toHaveBeenCalled();
     });
   });

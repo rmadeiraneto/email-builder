@@ -2,6 +2,7 @@
  * ModeManager Tests
  */
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ModeManager, ModeManagerEvent } from './ModeManager';
 import { DeviceMode } from './mobile.types';
 import { EventEmitter } from '../services/EventEmitter';
@@ -125,13 +126,16 @@ describe('ModeManager', () => {
     });
 
     it('should emit mode switch events', async () => {
-      const startListener = jest.fn();
-      const completeListener = jest.fn();
+      const startListener = vi.fn();
+      const completeListener = vi.fn();
 
       eventEmitter.on(ModeManagerEvent.MODE_SWITCH_START, startListener);
       eventEmitter.on(ModeManagerEvent.MODE_SWITCH_COMPLETE, completeListener);
 
       await modeManager.switchMode(DeviceMode.MOBILE);
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
 
       expect(startListener).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -149,7 +153,7 @@ describe('ModeManager', () => {
     });
 
     it('should not switch if already in target mode', async () => {
-      const listener = jest.fn();
+      const listener = vi.fn();
       eventEmitter.on(ModeManagerEvent.MODE_SWITCH_START, listener);
 
       await modeManager.switchMode(DeviceMode.DESKTOP);
@@ -166,10 +170,13 @@ describe('ModeManager', () => {
       await modeManager.switchMode(DeviceMode.MOBILE, options);
 
       // Verify via event data
-      const completeListener = jest.fn();
+      const completeListener = vi.fn();
       eventEmitter.on(ModeManagerEvent.MODE_SWITCH_COMPLETE, completeListener);
 
       await modeManager.switchMode(DeviceMode.DESKTOP, options);
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
 
       expect(completeListener).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -180,10 +187,13 @@ describe('ModeManager', () => {
     });
 
     it('should emit first mobile entry event', async () => {
-      const listener = jest.fn();
+      const listener = vi.fn();
       eventEmitter.on(ModeManagerEvent.FIRST_MOBILE_ENTRY, listener);
 
       await modeManager.switchMode(DeviceMode.MOBILE);
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
 
       expect(listener).toHaveBeenCalled();
     });
@@ -284,24 +294,35 @@ describe('ModeManager', () => {
 
   describe('loadMobileData', () => {
     it('should load mobile data once', async () => {
-      const listener = jest.fn();
+      const listener = vi.fn();
       eventEmitter.on(ModeManagerEvent.MOBILE_DATA_LOADED, listener);
 
       await modeManager.loadMobileData();
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
+
       expect(listener).toHaveBeenCalledTimes(1);
 
       // Second call should not trigger event
       await modeManager.loadMobileData();
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
+
       expect(listener).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('preloadMobileData', () => {
     it('should preload mobile data', async () => {
-      const listener = jest.fn();
+      const listener = vi.fn();
       eventEmitter.on(ModeManagerEvent.MOBILE_DATA_PRELOADED, listener);
 
       await modeManager.preloadMobileData();
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
 
       expect(listener).toHaveBeenCalled();
     });

@@ -110,7 +110,7 @@ describe('ComponentRegistry', () => {
       );
     });
 
-    it('should emit event when component is registered', () => {
+    it('should emit event when component is registered', async () => {
       const definition = createMockDefinition('button');
       let eventData: unknown = null;
 
@@ -119,6 +119,9 @@ describe('ComponentRegistry', () => {
       });
 
       registry.register(definition);
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
 
       expect(eventData).toEqual({
         type: 'button',
@@ -159,7 +162,7 @@ describe('ComponentRegistry', () => {
       expect(result).toBe(false);
     });
 
-    it('should emit event when component is unregistered', () => {
+    it('should emit event when component is unregistered', async () => {
       const definition = createMockDefinition('button');
       let eventData: unknown = null;
 
@@ -170,6 +173,9 @@ describe('ComponentRegistry', () => {
       });
 
       registry.unregister('button');
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
 
       expect(eventData).toEqual({ type: 'button' });
     });
@@ -453,7 +459,7 @@ describe('ComponentRegistry', () => {
       expect(() => registry.addPreset('button', preset)).toThrow(RegistryError);
     });
 
-    it('should emit event when preset is added', () => {
+    it('should emit event when preset is added', async () => {
       const preset = createMockPreset('preset1', 'Preset');
       let eventData: unknown = null;
 
@@ -462,6 +468,9 @@ describe('ComponentRegistry', () => {
       });
 
       registry.addPreset('button', preset);
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
 
       expect(eventData).toEqual({
         type: 'button',
@@ -500,7 +509,7 @@ describe('ComponentRegistry', () => {
       expect(result).toBe(false);
     });
 
-    it('should emit event when preset is removed', () => {
+    it('should emit event when preset is removed', async () => {
       const preset = createMockPreset('preset1', 'Preset');
       let eventData: unknown = null;
 
@@ -511,6 +520,9 @@ describe('ComponentRegistry', () => {
       });
 
       registry.removePreset('button', 'preset1');
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
 
       expect(eventData).toEqual({
         type: 'button',
@@ -555,7 +567,7 @@ describe('ComponentRegistry', () => {
       expect(registry.getPresets('button')).toHaveLength(0);
     });
 
-    it('should handle event subscription and unsubscription', () => {
+    it('should handle event subscription and unsubscription', async () => {
       let callCount = 0;
       const listener = () => {
         callCount++;
@@ -564,11 +576,19 @@ describe('ComponentRegistry', () => {
       const subscription = registry.on(RegistryEvent.COMPONENT_REGISTERED, listener);
 
       registry.register(createMockDefinition('button'));
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
+
       expect(callCount).toBe(1);
 
       subscription.unsubscribe();
 
       registry.register(createMockDefinition('text'));
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
+
       expect(callCount).toBe(1); // Should not increment
     });
 

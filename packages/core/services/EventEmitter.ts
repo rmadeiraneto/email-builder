@@ -47,12 +47,16 @@ export class EventEmitter implements IEventEmitter {
       return;
     }
 
-    listeners.forEach((listener) => {
-      try {
-        listener(data);
-      } catch (error) {
-        console.error(`Error in event listener for "${event}":`, error);
-      }
+    // Use queueMicrotask to defer execution and break the synchronous call chain
+    // This prevents infinite recursion when emitting from within reactive event handlers
+    queueMicrotask(() => {
+      listeners.forEach((listener) => {
+        try {
+          listener(data);
+        } catch (error) {
+          console.error(`Error in event listener for "${event}":`, error);
+        }
+      });
     });
   }
 

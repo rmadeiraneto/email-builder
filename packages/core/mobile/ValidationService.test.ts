@@ -74,20 +74,26 @@ describe('ValidationService', () => {
       expect(result.issuesBySeverity).toHaveProperty('critical');
     });
 
-    it('should emit validation start event', () => {
-      const listener = jest.fn();
+    it('should emit validation start event', async () => {
+      const listener = vi.fn();
       eventEmitter.on(ValidationEvent.VALIDATION_START, listener);
 
       validationService.validate(mockTemplate);
 
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
+
       expect(listener).toHaveBeenCalled();
     });
 
-    it('should emit validation complete event', () => {
-      const listener = jest.fn();
+    it('should emit validation complete event', async () => {
+      const listener = vi.fn();
       eventEmitter.on(ValidationEvent.VALIDATION_COMPLETE, listener);
 
       validationService.validate(mockTemplate);
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
 
       expect(listener).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -96,11 +102,14 @@ describe('ValidationService', () => {
       );
     });
 
-    it('should emit issue found events', () => {
-      const listener = jest.fn();
+    it('should emit issue found events', async () => {
+      const listener = vi.fn();
       eventEmitter.on(ValidationEvent.ISSUE_FOUND, listener);
 
       validationService.validate(mockTemplate);
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
 
       expect(listener).toHaveBeenCalled();
     });

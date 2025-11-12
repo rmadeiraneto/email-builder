@@ -2,6 +2,7 @@
  * PropertyOverrideManager Tests
  */
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { PropertyOverrideManager, PropertyCategory } from './PropertyOverrideManager';
 import { ModeManagerEvent } from './ModeManager';
 import { EventEmitter } from '../services/EventEmitter';
@@ -70,11 +71,14 @@ describe('PropertyOverrideManager', () => {
       expect(component.mobileStyles?.padding).toBe('16px');
     });
 
-    it('should emit property override set event', () => {
-      const listener = jest.fn();
+    it('should emit property override set event', async () => {
+      const listener = vi.fn();
       eventEmitter.on(ModeManagerEvent.PROPERTY_OVERRIDE_SET, listener);
 
       overrideManager.setOverride('comp-1', 'styles.padding', '16px');
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
 
       expect(listener).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -137,11 +141,14 @@ describe('PropertyOverrideManager', () => {
       expect(component.mobileStyles?.fontSize).toBe('14px'); // Other override remains
     });
 
-    it('should emit property override cleared event', () => {
-      const listener = jest.fn();
+    it('should emit property override cleared event', async () => {
+      const listener = vi.fn();
       eventEmitter.on(ModeManagerEvent.PROPERTY_OVERRIDE_CLEARED, listener);
 
       overrideManager.clearOverride('comp-1', 'styles.padding');
+
+      // Wait for microtask to complete
+      await new Promise(resolve => queueMicrotask(resolve));
 
       expect(listener).toHaveBeenCalledWith(
         expect.objectContaining({

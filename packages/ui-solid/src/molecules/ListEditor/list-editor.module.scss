@@ -1,0 +1,192 @@
+/**
+ * ListEditor Styles
+ * Design tokens are automatically imported via Vite configuration
+ */
+
+.list-editor {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$spacing-2;
+
+  // Label
+  &__label {
+    font-size: tokens.$typography-font-size-sm;
+    font-weight: tokens.$typography-font-weight-semibold;
+    color: tokens.$color-neutral-900;
+    margin-bottom: tokens.$spacing-1;
+  }
+
+  // Items container
+  &__items {
+    display: flex;
+    flex-direction: column;
+    gap: tokens.$spacing-2;
+  }
+
+  // Empty state
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: tokens.$spacing-6 tokens.$spacing-4;
+    border: 2px dashed tokens.$color-neutral-200;
+    border-radius: tokens.$border-radius-md;
+    background: tokens.$color-ui-background-secondary;
+    color: tokens.$color-neutral-400;
+    gap: tokens.$spacing-2;
+
+    i {
+      font-size: tokens.$typography-font-size-3xl;
+    }
+
+    span {
+      font-size: tokens.$typography-font-size-sm;
+      font-weight: tokens.$typography-font-weight-medium;
+    }
+  }
+
+  // Individual item
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: tokens.$spacing-2;
+    padding: tokens.$spacing-2;
+    border: tokens.$border-width-base solid tokens.$color-neutral-200;
+    border-radius: tokens.$border-radius-md;
+    background: tokens.$color-ui-background-primary;
+    transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
+
+    &:hover:not(&--disabled) {
+      border-color: tokens.$color-brand-primary-300;
+      background: tokens.$color-brand-primary-50;
+    }
+
+    &--dragging {
+      opacity: 0.5;
+      transform: scale(0.98);
+    }
+
+    &--drag-over {
+      border-color: tokens.$color-brand-primary-500;
+      background: tokens.$color-brand-primary-100;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    &--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  // Drag handle
+  &__drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: tokens.$sizing-6;
+    height: tokens.$sizing-6;
+    color: tokens.$color-neutral-400;
+    cursor: grab;
+    flex-shrink: 0;
+    transition: color tokens.$animation-duration-fast tokens.$animation-easing-ease;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    &:hover {
+      color: tokens.$color-neutral-600;
+    }
+
+    i {
+      font-size: tokens.$typography-font-size-lg;
+    }
+  }
+
+  // Item wrapper (content area)
+  &__item-wrapper {
+    flex: 1;
+    min-width: 0; // Allow content to shrink
+  }
+
+  // Default item content
+  &__item-content {
+    padding: tokens.$spacing-1;
+    font-size: tokens.$typography-font-size-sm;
+    color: tokens.$color-neutral-700;
+  }
+
+  // Remove button
+  &__remove-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: tokens.$sizing-6;
+    height: tokens.$sizing-6;
+    padding: 0;
+    border: none;
+    border-radius: tokens.$border-radius-sm;
+    background: transparent;
+    color: tokens.$color-neutral-400;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
+
+    i {
+      font-size: tokens.$typography-font-size-lg;
+    }
+
+    &:hover:not(:disabled) {
+      background: tokens.$color-semantic-error-lighter;
+      color: tokens.$color-semantic-error-base;
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  // Add button
+  &__add-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: tokens.$spacing-2;
+    padding: tokens.$spacing-2 tokens.$spacing-3;
+    border: 2px dashed tokens.$color-neutral-200;
+    border-radius: tokens.$border-radius-md;
+    background: tokens.$color-ui-background-secondary;
+    color: tokens.$color-neutral-600;
+    font-size: tokens.$typography-font-size-sm;
+    font-weight: tokens.$typography-font-weight-medium;
+    cursor: pointer;
+    transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
+
+    i {
+      font-size: tokens.$typography-font-size-lg;
+    }
+
+    &:hover:not(:disabled) {
+      border-color: tokens.$color-brand-primary-500;
+      border-style: solid;
+      background: tokens.$color-brand-primary-50;
+      color: tokens.$color-brand-primary-600;
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}

@@ -21,6 +21,7 @@ export * from './BorderEditor';
 export * from './SpacingEditor';
 export * from './DisplayToggle';
 export * from './ImageUpload';
+export * from './ListEditor';
 // Note: Label and Input molecules have the same names as atoms, so they're not re-exported here
 // Import them directly from './molecules/Label' or './molecules/Input' if needed
 // export * from './Label';

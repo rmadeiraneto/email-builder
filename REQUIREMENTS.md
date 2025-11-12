@@ -3676,7 +3676,872 @@ Based on market research, the following new components should be added to enhanc
 
 ---
 
-## 20. Glossary
+## 20. Existing Feature Parity Requirements
+
+### 20.1 Overview
+
+This section documents **all features from the existing email builder** that must be maintained in the new version. These are **mandatory requirements** for feature parity - the new builder cannot ship without these capabilities.
+
+**Sections 18-19** document enhancements and new features beyond the current baseline. **Section 20** documents the baseline that must be preserved.
+
+**Implementation Priority**: All features in this section are **PHASE 1 - FEATURE PARITY CRITICAL**. These must be implemented before any enhancements from Sections 18-19.
+
+---
+
+### 20.2 Common Features & Patterns
+
+These patterns are used consistently across all components:
+
+#### 20.2.1 Border System
+
+**Border Properties** (available on most components):
+- `styles.border.width` - Border width (CSSValue with units: px, em, rem, pt)
+- `styles.border.color` - Border color (with empty/reset option)
+- `styles.border.style` - Border style dropdown:
+  - `none`
+  - `solid`
+  - `dashed`
+  - `dotted`
+  - `double`
+  - `groove`
+  - `ridge`
+  - `inset`
+  - `outset`
+- `styles.border.radius` - Toggleable section with 4 corner controls:
+  - `topLeft` (CSSValue)
+  - `topRight` (CSSValue)
+  - `bottomRight` (CSSValue)
+  - `bottomLeft` (CSSValue)
+
+**UI Requirements**:
+- Border radius section can be collapsed/expanded
+- Each corner has independent input with unit selector
+- Color picker includes "empty color" option (inherit/default)
+- Reset button returns to component default
+
+---
+
+#### 20.2.2 Margin System
+
+**Margin Properties** (available on all components):
+- `styles.marginMode` - "fit-to-container" or "with-margins"
+- `styles.margin.left` - Left margin (CSSValue with changeable units)
+- `styles.margin.right` - Right margin (CSSValue)
+- `styles.margin.top` - Top margin (CSSValue)
+- `styles.margin.bottom` - Bottom margin (CSSValue)
+
+**Optional Margin Colors** (for visual debugging):
+- `styles.margin.leftColor` - Left margin background color
+- `styles.margin.rightColor` - Right margin background color
+- `styles.margin.topColor` - Top margin background color
+- `styles.margin.bottomColor` - Bottom margin background color
+
+**UI Requirements**:
+- Toggle between "Fit to container" and "With margins" mode
+- When "Fit to container": margin inputs disabled
+- When "With margins": show individual margin controls
+- Optional: Linked inputs toggle (all margins change together)
+- Unit selector per margin (px, %, em, rem, pt)
+- Margin colors are optional/advanced feature
+
+---
+
+#### 20.2.3 Spacing System
+
+**Spacing Properties** (component-specific):
+- `styles.verticalSpacing` - Vertical spacing between child elements (CSSValue)
+- `styles.horizontalSpacing` - Horizontal spacing between child elements (CSSValue)
+- Component-specific spacing (e.g., `styles.spaceBetweenItems` for lists)
+
+---
+
+#### 20.2.4 Rich Text Editor
+
+**All rich text fields** support comprehensive editing:
+
+**Text Formatting**:
+- Bold, Italic, Underline, Strikethrough
+- Subscript, Superscript
+
+**Text Styling**:
+- Font family (dropdown with web-safe + web fonts marked with *)
+- Font size (dropdown + manual input)
+- Font weight (100-900, normal, bold)
+- Line height (number or CSSValue)
+- Text color (color picker)
+- Background color (color picker with empty option)
+
+**Alignment**:
+- Left align, Center align, Right align, Justify
+
+**Lists**:
+- Ordered lists (numbered: 1, 2, 3...)
+- Unordered lists (bulleted: •)
+
+**Headings**:
+- H1, H2, H3, H4, H5, H6
+- Paragraph (normal text)
+
+**Links**:
+- Insert hyperlink
+- Edit hyperlink
+- Remove hyperlink
+- Link URL input
+- Link target (same window, new window)
+
+**Code**:
+- Inline code (monospace styling)
+- Code blocks (multi-line code with syntax)
+
+**Editor State**:
+- Must preserve Lexical editor state for re-editing
+- Export to HTML for rendering
+- Import from HTML for loading templates
+
+**UI Requirements**:
+- Toolbar with all formatting options visible
+- Keyboard shortcuts for common operations
+- Real-time preview in editor
+- Paste from Word/Google Docs support (clean HTML)
+
+---
+
+#### 20.2.5 Color Picker
+
+**All color inputs** support:
+
+**Color Formats**:
+- Visual color picker (hue/saturation grid)
+- Hex code input (#RRGGBB, #RRGGBBAA)
+- RGB input (r, g, b values)
+- HSL input (h, s, l values)
+- Alpha/opacity slider (0-100% or 0-1)
+
+**Swatches**:
+- Recently used colors (last 10-20 colors)
+- Brand colors (configurable palette)
+- Default color suggestions
+
+**Special Options**:
+- "Empty color" option (use inherited/default color)
+- Reset button (return to component default)
+- Eyedropper tool (sample color from canvas - web only)
+
+**UI Requirements**:
+- Compact color preview swatch
+- Click to open full picker modal/popover
+- Hex input for quick manual entry
+- Alpha slider visible when supported
+
+---
+
+#### 20.2.6 Unit System
+
+**All numeric inputs** support multiple units:
+
+**Supported Units**:
+- `px` - Pixels
+- `%` - Percentage
+- `em` - Relative to font size
+- `rem` - Relative to root font size
+- `pt` - Points (72pt = 1 inch)
+- `auto` - Automatic sizing (for width/height only)
+
+**UI Requirements**:
+- Numeric input field with increment/decrement buttons
+- Unit dropdown adjacent to input
+- Slider for supported properties (0-100% range, 0-600px range, etc.)
+- Slider + input sync (changing either updates both)
+- Keyboard entry supported (type "20px" or "50%")
+
+---
+
+#### 20.2.7 Display Toggles
+
+**All optional content sections** have display toggles:
+
+**Implementation**:
+- `content.showX` - Boolean flag for each optional element
+- Examples: `showImage`, `showButton`, `showTitle`, `showDescription`, `showNavigation`, etc.
+
+**UI Requirements**:
+- Toggle switch (on/off) for each optional section
+- When off: section grayed out in editor but still editable
+- When off: section not included in export
+- Visual indicator in content tab (eye icon with slash)
+
+---
+
+#### 20.2.8 Drag & Drop Reordering
+
+**All list-based content** supports reordering:
+
+**Applies To**:
+- Navigation links
+- Footer links
+- Social media icons
+- List items
+- Any array of repeated content
+
+**UI Requirements**:
+- Drag handle icon on each item
+- Visual feedback during drag (ghost/preview)
+- Drop zones highlighted
+- Order automatically saved
+- Keyboard-accessible alternative (move up/down buttons)
+
+---
+
+#### 20.2.9 Image Upload/URL
+
+**All image inputs** support dual input methods:
+
+**Upload**:
+- File picker (click to browse)
+- Drag & drop image file
+- Supported formats: JPG, PNG, GIF, SVG
+- Image preview after upload
+- File size limit warning (configurable)
+
+**URL**:
+- Text input for image URL
+- URL validation
+- External image preview
+- HTTP/HTTPS support
+
+**UI Requirements**:
+- Tabbed interface: "Upload" tab and "URL" tab
+- Current image preview thumbnail
+- Remove image button
+- Alt text input (required for accessibility)
+
+---
+
+#### 20.2.10 Linked Inputs
+
+**Margin and padding inputs** support linking:
+
+**Behavior**:
+- Link icon/button between inputs
+- When linked: changing one input updates all
+- When unlinked: each input independent
+- Link state persists until user toggles
+
+**UI Requirements**:
+- Chain link icon (linked) or broken link icon (unlinked)
+- Visual connection lines between inputs (optional)
+- Click to toggle link state
+
+---
+
+#### 20.2.11 Toggleable Sections
+
+**Complex property groups** can be collapsed/expanded:
+
+**Examples**:
+- Border radius (4 corners)
+- Margin controls (4 sides)
+- Advanced options
+
+**UI Requirements**:
+- Section header with chevron icon (▼/▶)
+- Click header to toggle collapse/expand
+- State persists during editing session
+- Collapsed sections show summary (e.g., "Radius: 5px")
+
+---
+
+### 20.3 Header Component (Existing Features)
+
+#### 20.3.1 Style Tab
+
+**Layout**:
+- `content.layout` - Image position:
+  - `image-left` - Image on left, links on right
+  - `image-top` - Image on top, links below
+
+**Background**:
+- `styles.backgroundColor` - Background color (with empty color option)
+
+**Margins**:
+- `styles.marginMode` - "fit-to-container" or "with-margins"
+- `styles.margin.left`, `.right`, `.top`, `.bottom` - Individual margins (CSSValue with units)
+
+**Border**:
+- `styles.border.width` - Border width (CSSValue)
+- `styles.border.color` - Border color (with empty/reset option)
+- `styles.border.style` - Border style (none, solid, dashed, dotted, double, groove, ridge, inset, outset)
+- `styles.border.radius.topLeft`, `.topRight`, `.bottomRight`, `.bottomLeft` - Corner radius (toggleable section)
+
+**Spacing**:
+- `styles.verticalSpacing` - Vertical spacing between image and links (CSSValue)
+- `styles.horizontalSpacing` - Horizontal spacing between links (CSSValue)
+- `styles.navigationBarWidth` - Navigation bar width (% of container)
+- Alternative: `styles.spacingBetweenLinks` - Toggle between bar width or spacing between individual links
+
+**Image**:
+- `styles.image.width` - Image width (% slider, 0-100%)
+- `styles.image.alignment` - Image alignment (left, center, right)
+- `styles.image.border.width` - Image border width (CSSValue)
+- `styles.image.border.style` - Image border style
+- `styles.image.border.color` - Image border color
+- `styles.image.border.radius` - Image border radius (toggleable section with 4 corners)
+
+**Links**:
+- `styles.links.width` - Link width (CSSValue or auto)
+- `styles.links.alignment` - Links alignment (left, center, right)
+- `styles.links.fontFamily` - Font family (web safe fonts + web fonts*)
+- `styles.links.fontWeight` - Font weight (100-900, normal, bold)
+- `styles.links.letterSpacing` - Letter spacing (CSSValue)
+- `styles.links.color` - Text color
+- `styles.links.backgroundColor` - Background color
+- `styles.links.border.width` - Link border width
+- `styles.links.border.style` - Link border style
+- `styles.links.border.color` - Link border color
+- `styles.links.border.radius` - Link border radius (toggleable with 4 corners)
+
+#### 20.3.2 Content Tab
+
+**Image**:
+- `content.image.file` - Image upload
+- `content.image.url` - Image URL input
+- `content.image.alt` - Alt text (required)
+- `content.showImage` - Display toggle
+
+**Links List**:
+- `content.links` - Array of link objects:
+  - `text` - Link text (rich text editor)
+  - `url` - Link URL
+  - `show` - Display toggle
+  - `order` - Order index (for drag & drop)
+- Actions:
+  - Add new link
+  - Reorder links (drag & drop)
+  - Remove link
+  - Toggle link visibility
+
+---
+
+### 20.4 Footer Component (Existing Features)
+
+#### 20.4.1 Style Tab
+
+**Layout**:
+- `content.layout` - Layout variant selection (multiple pre-defined layouts)
+
+**Background**:
+- `styles.backgroundColor` - Background color
+
+**Margins**:
+- `styles.marginMode` - "fit-to-container" or "with-margins"
+- `styles.margin.left`, `.right`, `.top`, `.bottom` - Individual margins (CSSValue)
+
+**Border**:
+- `styles.border.width`, `.style`, `.color` - Border properties
+- `styles.border.radius` - Border radius (4 corners)
+
+**Spacing**:
+- `styles.verticalSpacing` - Vertical spacing between sections (CSSValue)
+- `styles.horizontalSpacing` - Horizontal spacing between elements (CSSValue)
+
+**Title**:
+- `styles.title.color` - Title text color
+- `styles.title.alignment` - Text alignment (left, center, right)
+
+**Description**:
+- `styles.description.color` - Description text color
+- `styles.description.alignment` - Text alignment (left, center, right)
+
+**Social Network List**:
+- `styles.socialList.alignment` - Horizontal alignment (left, center, right) - for horizontal layout
+- `styles.socialList.verticalAlignment` - Vertical alignment (top, middle, bottom) - for vertical layout
+- `styles.socialList.itemSpacing` - Space between social icons (CSSValue)
+- `styles.socialList.margin.left`, `.right`, `.top`, `.bottom` - List container margins
+- `styles.socialList.iconSize` - Icon size (width in px)
+- `styles.socialList.wrapOnMobile` - Wrap long icon lists on mobile (toggle, >7 icons)
+
+**Links**:
+- `styles.links.alignment` - Links text alignment (left, center, right)
+- `styles.links.color` - Links text color
+
+#### 20.4.2 Content Tab
+
+**Title**:
+- `content.title` - Title text (rich text editor)
+- `content.showTitle` - Display toggle
+
+**Description**:
+- `content.description` - Description text (rich text editor)
+- `content.showDescription` - Display toggle
+
+**Social Networks**:
+- `content.socialNetworks` - Array of social network objects:
+  - `icon` - Icon selection (facebook, twitter, instagram, linkedin, youtube, etc.)
+  - `url` - Social profile URL
+  - `show` - Display toggle
+  - `order` - Order index
+- Actions:
+  - Add new social network
+  - Reorder (drag & drop)
+  - Remove
+  - Toggle visibility
+
+**Links**:
+- `content.links` - Links text (rich text editor with multiple links)
+- `content.showLinks` - Display toggle
+
+---
+
+### 20.5 Hero Component (Existing Features)
+
+#### 20.5.1 Style Tab
+
+**Background**:
+- `styles.backgroundColor` - Background color
+
+**Margins**:
+- `styles.marginMode` - "fit-to-container" or "with-margins"
+- `styles.margin.left`, `.right`, `.top`, `.bottom` - Individual margins (CSSValue)
+
+**Border**:
+- `styles.border.width`, `.style`, `.color`, `.radius` - Full border configuration (4 corners)
+
+**Spacing**:
+- `styles.spaceBetweenElements` - Vertical spacing between hero sections (CSSValue)
+
+**Image**:
+- `styles.image.width` - Image width (% slider, 0-100%)
+- `styles.image.alignment` - Image alignment (left, center, right)
+- `styles.image.border.width`, `.style`, `.color` - Image border
+- `styles.image.border.radius` - Image border radius (toggleable with 4 corners)
+
+**Heading**:
+- `styles.heading.color` - Heading text color
+- `styles.heading.alignment` - Text alignment (left, center, right)
+
+**Text**:
+- `styles.text.color` - Text color
+- `styles.text.alignment` - Text alignment (left, center, right)
+
+**Button**:
+- `styles.button.width` - Width (auto or custom with unit)
+- `styles.button.alignment` - Alignment (left, center, right)
+- `styles.button.height` - Height (auto or custom with unit)
+- `styles.button.fontFamily` - Font family (web safe + web fonts*)
+- `styles.button.fontWeight` - Font weight
+- `styles.button.color` - Text color
+- `styles.button.backgroundColor` - Background color
+- `styles.button.border.width`, `.style`, `.color` - Border properties
+- `styles.button.border.radius` - Border radius (toggleable with 4 corners)
+- `styles.button.forceOutlookBorderRadius` - Force Outlook border-radius support (toggle)
+- `styles.button.outlookButtonWidth` - Outlook button width for border-radius (CSSValue)
+
+#### 20.5.2 Content Tab
+
+**Image**:
+- `content.image.file` - Image upload
+- `content.image.url` - Image URL
+- `content.image.alt` - Alt text
+- `content.showImage` - Display toggle
+
+**Title**:
+- `content.title` - Title text (rich text editor)
+- `content.showTitle` - Display toggle
+
+**Text**:
+- `content.text` - Text content (rich text editor)
+- `content.showText` - Display toggle
+
+**Button**:
+- `content.button.text` - Button text (rich text editor)
+- `content.button.url` - Button URL
+- `content.showButton` - Display toggle
+
+---
+
+### 20.6 Call to Action Component (Existing Features)
+
+#### 20.6.1 Style Tab
+
+**Background**:
+- `styles.backgroundColor` - Background color
+
+**Margins**:
+- `styles.marginMode` - "fit-to-container" or "with-margins"
+- `styles.margin.left`, `.right`, `.top`, `.bottom` - Individual margins (CSSValue)
+
+**Border**:
+- `styles.border.width`, `.style`, `.color`, `.radius` - Full border configuration (4 corners)
+
+**Spacing**:
+- `styles.spaceBetweenElements` - Vertical spacing between text and button (CSSValue)
+
+**Text**:
+- `styles.text.color` - Text color
+- `styles.text.alignment` - Text alignment (left, center, right)
+
+**Button**:
+- `styles.button.width` - Width (auto or custom with unit)
+- `styles.button.alignment` - Alignment (left, center, right)
+- `styles.button.height` - Height (auto or custom)
+- `styles.button.fontFamily` - Font family
+- `styles.button.fontWeight` - Font weight
+- `styles.button.color` - Text color
+- `styles.button.backgroundColor` - Background color
+- `styles.button.border.width`, `.style`, `.color` - Border properties
+- `styles.button.border.radius` - Border radius (toggleable with 4 corners)
+- `styles.button.forceOutlookBorderRadius` - Force Outlook border-radius (toggle)
+- `styles.button.outlookButtonWidth` - Outlook button width for border-radius
+
+#### 20.6.2 Content Tab
+
+**Text**:
+- `content.text` - Text content (rich text editor)
+- `content.showText` - Display toggle
+
+**Button**:
+- `content.button.text` - Button text (rich text editor)
+- `content.button.url` - Button URL
+- `content.showButton` - Display toggle
+
+---
+
+### 20.7 Duo Panel Component (Existing Features)
+
+**Purpose**: Side-by-side comparison component (e.g., sports matchups, product comparisons)
+
+#### 20.7.1 Style Tab
+
+**Layout**:
+- `content.layout` - Layout selection:
+  - `left-side` - Items side by side
+  - `top` - Items stacked vertically
+
+**Margins**:
+- **Panel Margins**:
+  - `styles.margin.left`, `.right`, `.top`, `.bottom` - Panel container margins
+- **Image Margins** (per item):
+  - `styles.imageMargin.left`, `.right`, `.top`, `.bottom` - Margins around images
+- **Text Margins** (per item):
+  - `styles.textMargin.left`, `.right`, `.top`, `.bottom` - Margins around text labels
+
+**Background**:
+- `styles.backgroundColor` - Panel background color
+- `styles.itemsBackgroundColor` - Individual items background color
+
+**Border**:
+- `styles.border.width`, `.style`, `.color`, `.radius` - Full border configuration (4 corners)
+
+**Image**:
+- `styles.image.size` - Image size (0-600px slider)
+- `styles.image.border.radius` - Image border radius (4 corners independently)
+
+#### 20.7.2 Content Tab
+
+**Delimiter**:
+- `content.delimiter.vs` - VS Separator text (rich text editor, e.g., "VS", "vs", "-")
+- `content.delimiter.score` - Score Separator text (rich text editor, only visible in Top layout)
+- `content.showDelimiter` - Display toggle
+
+**Item A**:
+- `content.itemA.label` - Primary label (rich text editor, e.g., team name, product name)
+- `content.itemA.image.file` - Image upload
+- `content.itemA.image.url` - Image URL
+- `content.itemA.image.alt` - Alt text
+- `content.showItemA` - Display toggle
+
+**Item B**:
+- `content.itemB.label` - Primary label (rich text editor)
+- `content.itemB.image.file` - Image upload
+- `content.itemB.image.url` - Image URL
+- `content.itemB.image.alt` - Alt text
+- `content.showItemB` - Display toggle
+
+**Use Cases**:
+- Sports matchups (Team A vs Team B)
+- Product comparisons (Product A vs Product B)
+- Before/After comparisons
+- Choice presentations (Option A vs Option B)
+
+---
+
+### 20.8 Spaced Text Component (Existing Features)
+
+**Purpose**: Left-right justified text layout (e.g., label-value pairs, key-value displays)
+
+#### 20.8.1 Style Tab
+
+**Background**:
+- `styles.backgroundColor` - Background color
+
+**Margins**:
+- `styles.marginMode` - "fit-to-container" or "with-margins"
+- `styles.margin.left`, `.right`, `.top`, `.bottom` - Individual margins (CSSValue)
+
+**Border**:
+- `styles.border.width`, `.style`, `.color`, `.radius` - Full border configuration (4 corners)
+
+**Spacing**:
+- `styles.spaceBetweenElements` - Spacing between left and right text (CSSValue)
+
+**Vertical Alignment**:
+- `styles.verticalAlignment` - Vertical alignment (top, middle, bottom)
+
+**Table Layout**:
+- `styles.tableLayout` - Table layout options:
+  - `auto` - Automatic column widths
+  - `fixed` - Fixed column widths (50/50 split)
+  - Custom percentages
+
+#### 20.8.2 Content Tab
+
+**Left Text**:
+- `content.leftText` - Left-aligned text (rich text editor)
+- Default alignment: left
+
+**Right Text**:
+- `content.rightText` - Right-aligned text (rich text editor)
+- Default alignment: right
+
+**Use Cases**:
+- Label-value pairs (Name: John Doe, Email: john@example.com)
+- Price displays (Product name | $99.99)
+- Date-time displays (Event | March 15, 2024)
+- Two-column content layouts
+
+---
+
+### 20.9 List Component (Existing Features)
+
+#### 20.9.1 Style Tab
+
+**Layout**:
+- `content.layout` - Image placement:
+  - `left-side` - Image on left, content on right
+  - `top` - Image on top, content below
+
+**Background**:
+- `styles.backgroundColor` - Component background color
+- `styles.itemsBackgroundColor` - Individual items background color
+
+**Margins**:
+- **List Container Margins**:
+  - `styles.marginMode` - "fit-to-container" or "with-margins"
+  - `styles.margin.left`, `.right`, `.top`, `.bottom` - Container margins (CSSValue)
+  - Optional: `styles.margin.leftColor`, `.rightColor`, `.topColor`, `.bottomColor` - Margin colors per side
+- **Items' Element Margins** (per element within each item):
+  - `styles.titleMargin.left`, `.right`, `.top`, `.bottom` - Title margins
+  - `styles.descriptionMargin.left`, `.right`, `.top`, `.bottom` - Description margins
+  - `styles.buttonMargin.left`, `.right`, `.top`, `.bottom` - Button margins
+  - `styles.imageMargin.left`, `.right`, `.top`, `.bottom` - Image margins
+
+**Border**:
+- `styles.border.width`, `.style`, `.color`, `.radius` - Full border configuration (4 corners)
+
+**Spacing**:
+- `styles.spaceBetweenItems` - Space between list items (CSSValue)
+- `styles.verticalSpacing` - Vertical spacing between elements within item (CSSValue)
+- `styles.horizontalSpacing` - Horizontal spacing between image and content (CSSValue)
+- `styles.itemSize` - Item size (0-600px slider with auto toggle)
+
+**Image**:
+- `styles.image.contentRatio` - Image/Content ratio (0-100% slider)
+  - 0% = minimal image, 100% content
+  - 50% = equal split
+  - 100% = full width image, minimal content
+- `styles.image.alignment` - Image alignment (left, center, right)
+- `styles.image.border.radius` - Image border radius (toggleable with 4 corners)
+
+**Alignment**:
+- `styles.items.horizontalAlignment` - Items' horizontal alignment (left, center, right)
+- `styles.items.verticalAlignment` - Items' vertical alignment (top, middle, bottom)
+
+**Button**:
+- `styles.button.backgroundColor` - Background color
+- `styles.button.width` - Width (with unit)
+- `styles.button.alignment` - Alignment (left, center, right)
+- `styles.button.textAlignment` - Text alignment within button
+- `styles.button.height` - Height (auto or custom)
+- `styles.button.fontFamily` - Font family
+- `styles.button.fontWeight` - Font weight
+- `styles.button.color` - Text color
+- `styles.button.border.width`, `.style`, `.color` - Border properties
+- `styles.button.border.radius` - Border radius (toggleable with 4 corners)
+
+**Advanced** (only visible when mobile optimized):
+- `styles.wrapList` - Wrap list items on mobile (toggle)
+- `styles.wrapListItemsElements` - Wrap elements within list items (toggle)
+
+#### 20.9.2 Content Tab
+
+**Items List**:
+- `content.items` - Array of list item objects:
+  - `title` - Item title (rich text editor)
+  - `description` - Item description (rich text editor)
+  - `button.text` - Button text (rich text editor)
+  - `button.url` - Button URL
+  - `image.file` - Image upload
+  - `image.url` - Image URL
+  - `image.alt` - Alt text
+  - `showTitle` - Title display toggle
+  - `showDescription` - Description display toggle
+  - `showButton` - Button display toggle
+  - `showImage` - Image display toggle
+  - `order` - Order index
+- Actions:
+  - Add new item
+  - Reorder items (drag & drop)
+  - Remove item
+  - Toggle individual element visibility per item
+
+---
+
+### 20.10 Links List Component (Existing Features)
+
+**Purpose**: Standalone component for displaying a list of links (e.g., navigation, quick links, footer links)
+
+#### 20.10.1 Style Tab
+
+**Links** (same styling as Header Links):
+- `styles.links.width` - Link width (CSSValue or auto)
+- `styles.links.alignment` - Links alignment (left, center, right)
+- `styles.links.fontFamily` - Font family (web safe fonts + web fonts*)
+- `styles.links.fontWeight` - Font weight
+- `styles.links.letterSpacing` - Letter spacing (CSSValue)
+- `styles.links.color` - Text color
+- `styles.links.backgroundColor` - Background color
+- `styles.links.border.width`, `.style`, `.color` - Border properties
+- `styles.links.border.radius` - Border radius (toggleable with 4 corners)
+
+**Margins**:
+- `styles.marginMode` - "fit-to-container" or "with-margins"
+- `styles.margin.left`, `.right`, `.top`, `.bottom` - Individual margins
+
+**Spacing**:
+- `styles.spaceBetweenLinks` - Space between individual links (CSSValue)
+
+#### 20.10.2 Content Tab
+
+**Links**:
+- `content.links` - Array of link objects:
+  - `text` - Link text (plain text or rich text)
+  - `url` - Link URL
+  - `show` - Display toggle
+  - `order` - Order index
+- Actions:
+  - Add new link
+  - Reorder links (drag & drop)
+  - Remove link
+  - Toggle link visibility
+
+---
+
+### 20.11 Code Component (Existing Features)
+
+**Purpose**: Custom HTML/CSS injection for advanced users
+
+#### 20.11.1 Style Tab
+
+**Background**:
+- `styles.backgroundColor` - Background color
+
+**Margins**:
+- `styles.marginMode` - "fit-to-container" or "with-margins"
+- `styles.margin.left`, `.right`, `.top`, `.bottom` - Individual margins (CSSValue)
+
+**Border**:
+- `styles.border.width`, `.style`, `.color`, `.radius` - Full border configuration (4 corners)
+
+#### 20.11.2 Content Tab
+
+**Code Editor**:
+- `content.html` - Custom HTML code (code editor with syntax highlighting)
+- `content.css` - Custom CSS code (code editor with syntax highlighting)
+
+**UI Requirements**:
+- Syntax highlighting for HTML/CSS
+- Line numbers
+- Auto-indentation
+- Code validation warnings (non-blocking)
+- Preview button to test rendering
+- Warning message about email client compatibility
+
+**Email Rendering**:
+- Inline CSS automatically
+- Validate against email-safe HTML
+- Warn about unsupported tags/properties
+- Option to bypass warnings (advanced users)
+
+---
+
+### 20.12 Feature Parity Summary
+
+#### 20.12.1 Component Count
+
+**Existing Components** (must maintain):
+1. Header
+2. Footer
+3. Hero
+4. Call to Action
+5. Duo Panel
+6. Spaced Text
+7. List
+8. Links List
+9. Code
+
+**Total: 9 components** (plus base components like Button, Text, Image, Separator, Spacer from Section 2.2.2)
+
+#### 20.12.2 Critical Features
+
+**Must-Have UI Patterns**:
+- ✓ Fit to container vs With margins toggle
+- ✓ Linked inputs for margins/padding
+- ✓ Toggleable sections (border radius, advanced options)
+- ✓ Per-corner border radius controls
+- ✓ Rich text editor with full formatting toolbar
+- ✓ Drag & drop reordering for all lists
+- ✓ Display toggles for all optional content
+- ✓ Image upload + URL dual input
+- ✓ Color picker with empty/reset options
+- ✓ Unit selectors for all measurements
+- ✓ Web fonts marked with asterisk
+
+**Must-Have Component Features**:
+- ✓ Per-element margins within list items (title, description, button, image margins)
+- ✓ Force Outlook border-radius option for buttons
+- ✓ Image/Content ratio slider for List component
+- ✓ Vertical and horizontal spacing controls
+- ✓ Wrap list options for mobile
+- ✓ Margin colors for visual debugging
+- ✓ Table layout options for Spaced Text
+- ✓ Social network icon size and wrapping for Footer
+- ✓ Navigation bar width or spacing toggle for Header
+
+**Must-Have Styling Options**:
+- ✓ All 9 border styles (none, solid, dashed, dotted, double, groove, ridge, inset, outset)
+- ✓ Font weight full range (100-900)
+- ✓ Letter spacing for typography
+- ✓ Button height control (auto or custom)
+- ✓ Button text alignment within button
+- ✓ Vertical alignment (top, middle, bottom)
+- ✓ Background color on text (rich text editor)
+- ✓ Line height control in rich text editor
+- ✓ Code blocks and subscript/superscript in rich text
+
+#### 20.12.3 Implementation Priority
+
+**ALL features in Section 20 are PHASE 1 - FEATURE PARITY CRITICAL**.
+
+These must be implemented **before** any enhancements from Sections 18-19. Without these features, we don't have parity with the existing builder.
+
+**Recommended Implementation Order**:
+1. Common systems (Section 20.2): Border, Margin, Spacing, Rich Text Editor, Color Picker
+2. Existing components (Sections 20.3-20.11) in order of usage frequency
+3. Verify complete feature parity before moving to enhancements
+
+---
+
+## 21. Glossary
 
 - **Component**: Reusable building block (Header, Footer, Button, etc.)
 - **Template**: Complete email/page layout with components

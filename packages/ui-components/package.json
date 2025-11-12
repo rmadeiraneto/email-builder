@@ -23,8 +23,8 @@
       "import": "./dist/organisms/index.js"
     },
     "./utils": {
-      "types": "./dist/utils/index.d.ts",
-      "import": "./dist/utils/index.js"
+      "types": "./dist/utils.d.ts",
+      "import": "./dist/utils.js"
     },
     "./styles": "./dist/styles/index.css",
     "./src/*": "./src/*"
@@ -61,8 +61,8 @@
     "jsdom": "^27.0.1",
     "sass": "^1.71.1",
     "typescript": "^5.3.3",
-    "vite": "^5.1.0",
+    "vite": "^6.0.0",
     "vite-plugin-dts": "^3.7.3",
-    "vitest": "^1.3.0"
+    "vitest": "^3.0.0"
   }
 }

@@ -10,6 +10,7 @@ export default defineConfig({
         atoms: resolve(__dirname, 'src/atoms/index.ts'),
         molecules: resolve(__dirname, 'src/molecules/index.ts'),
         organisms: resolve(__dirname, 'src/organisms/index.ts'),
+        utils: resolve(__dirname, 'src/utils/index.ts'),
       },
       formats: ['es'],
       fileName: (format, entryName) => `${entryName}.js`,

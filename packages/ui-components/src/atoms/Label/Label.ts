@@ -15,6 +15,7 @@
 
 import type { LabelProps } from './label.types';
 import styles from './label.module.scss';
+import { createBEM } from '../../utils/classNames';
 
 export class Label {
   private props: LabelProps;
@@ -31,6 +32,7 @@ export class Label {
   }
 
   private createLabel(): HTMLLabelElement {
+    const bem = createBEM(styles, 'label');
     const label = document.createElement('label');
 
     label.className = this.getClassNames();
@@ -42,7 +44,7 @@ export class Label {
 
     if (this.props.required) {
       const required = document.createElement('span');
-      required.className = styles.label__required ?? '';
+      required.className = bem.elem('required') ?? '';
       required.textContent = '*';
       required.setAttribute('aria-hidden', 'true');
       label.appendChild(required);
@@ -52,13 +54,14 @@ export class Label {
   }
 
   private getClassNames(): string {
-    const classes = [styles.label];
+    const bem = createBEM(styles, 'label');
+    const classes = [bem()];
 
     if (this.props.className) {
       classes.push(this.props.className);
     }
 
-    return classes.join(' ');
+    return classes.filter(Boolean).join(' ');
   }
 
   private attachEventListeners(): void {
@@ -74,6 +77,7 @@ export class Label {
   }
 
   public update(props: Partial<LabelProps>): void {
+    const bem = createBEM(styles, 'label');
     this.removeEventListeners();
     this.props = { ...this.props, ...props };
 
@@ -84,7 +88,7 @@ export class Label {
 
       if (this.props.required) {
         const required = document.createElement('span');
-        required.className = styles.label__required ?? '';
+        required.className = bem.elem('required') ?? '';
         required.textContent = '*';
         required.setAttribute('aria-hidden', 'true');
         this.element.appendChild(required);

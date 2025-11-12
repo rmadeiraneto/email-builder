@@ -3,7 +3,8 @@
  * This ensures proper module resolution
  */
 
-// Re-export all utilities from the base package source files (for Vite dev mode compatibility)
-export { classNames, getComponentClasses, bemToCamelCase, getStyleClass } from '../../../ui-components/src/utils/classNames';
-export { getValidationAriaProps, getAriaProps, setAriaAttribute } from '../../../ui-components/src/utils/aria';
-export { mergeProps as mergePropsUtil, pickDefined, pickEventHandlers, omitEventHandlers } from '../../../ui-components/src/utils/props';
+// Re-export all utilities from the ui-components package
+export { classNames, getComponentClasses, bemToCamelCase, getStyleClass, createBEM } from '@email-builder/ui-components/utils';
+export type { BEMHelper } from '@email-builder/ui-components/utils';
+export { getValidationAriaProps, getAriaProps, setAriaAttribute } from '@email-builder/ui-components/utils';
+export { mergeProps as mergePropsUtil, pickDefined, pickEventHandlers, omitEventHandlers } from '@email-builder/ui-components/utils';

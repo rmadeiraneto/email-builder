@@ -62,7 +62,7 @@ export const NewTemplateModal: Component<NewTemplateModalProps> = (props) => {
               type="text"
               placeholder="My Email Template"
               value={templateName()}
-              onInput={(e) => {
+              onInput={(e: Event & { currentTarget: HTMLInputElement }) => {
                 setTemplateName(e.currentTarget.value);
                 setError('');
               }}
@@ -91,7 +91,7 @@ export const NewTemplateModal: Component<NewTemplateModalProps> = (props) => {
                 },
               ]}
               singleSelection
-              onChange={(values) => setTemplateType(values[0] as 'email' | 'web')}
+              onChange={(values: string[]) => setTemplateType(values[0] as 'email' | 'web')}
             />
           </div>
 

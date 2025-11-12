@@ -10,7 +10,10 @@ import { HelperFunction } from './data-injection.types';
 /**
  * Format a date using a simple format string
  */
-export const formatDate: HelperFunction = (date: unknown, format?: string): string => {
+export const formatDate: HelperFunction = (...args: unknown[]): string => {
+  const date = args[0];
+  const format = args[1];
+
   if (!date) return '';
 
   const dateObj = date instanceof Date ? date : new Date(String(date));

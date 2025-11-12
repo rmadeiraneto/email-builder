@@ -23,14 +23,14 @@
 
 import { Component, JSX, mergeProps, splitProps } from 'solid-js';
 import type { ButtonProps as BaseButtonProps } from '@email-builder/ui-components/atoms';
-import { getComponentClasses, getStyleClass } from '../../utils';
+import { getComponentClasses, createBEM } from '../../utils';
 import styles from '@email-builder/ui-components/src/atoms/Button/button.module.scss';
 
 /**
  * SolidJS-specific button props
  * Extends the base ButtonProps but adapts for SolidJS patterns
  */
-export interface ButtonProps extends Omit<BaseButtonProps, 'children' | 'onClick' | 'onFocus' | 'onBlur'> {
+export interface ButtonProps extends Omit<BaseButtonProps, 'children' | 'onClick' | 'onFocus' | 'onBlur' | 'className'> {
   /**
    * Button content (children)
    */
@@ -65,6 +65,26 @@ export interface ButtonProps extends Omit<BaseButtonProps, 'children' | 'onClick
    * Action identifier for automated testing
    */
   action?: string;
+
+  /**
+   * Additional CSS class names (SolidJS uses 'class' not 'className')
+   */
+  class?: string | undefined;
+
+  /**
+   * Title attribute for tooltip (HTML native attribute)
+   */
+  title?: string | undefined;
+
+  /**
+   * ARIA label for accessibility
+   */
+  'aria-label'?: string | undefined;
+
+  /**
+   * ARIA pressed state for toggle buttons
+   */
+  'aria-pressed'?: boolean | undefined;
 }
 
 /**
@@ -94,10 +114,13 @@ export const Button: Component<ButtonProps> = (props) => {
     'iconPosition',
     'fullWidth',
     'children',
-    'className',
+    'class',
     'testId',
     'action',
   ]);
+
+  // Create BEM helper for button classes
+  const bem = createBEM(styles, 'button');
 
   /**
    * Generate class names
@@ -112,7 +135,7 @@ export const Button: Component<ButtonProps> = (props) => {
         'full-width': local.fullWidth,
         disabled: buttonProps.disabled,
       },
-      local.className
+      local.class
     );
   };
 
@@ -123,8 +146,8 @@ export const Button: Component<ButtonProps> = (props) => {
     if (!local.icon) return null;
 
     const iconClass = local.iconPosition === 'right'
-      ? getStyleClass(styles, 'button__icon--right')
-      : getStyleClass(styles, 'button__icon');
+      ? bem.elem('icon', 'right')
+      : bem.elem('icon');
 
     return <i class={`ri-${local.icon} ${iconClass}`} aria-hidden="true" />;
   };
@@ -138,7 +161,7 @@ export const Button: Component<ButtonProps> = (props) => {
       data-action={local.action}
     >
       {local.iconPosition === 'left' && renderIcon()}
-      <span class={getStyleClass(styles, 'button__text')}>{local.children}</span>
+      <span class={bem.elem('text')}>{local.children}</span>
       {local.iconPosition === 'right' && renderIcon()}
     </button>
   );

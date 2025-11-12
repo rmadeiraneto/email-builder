@@ -5,7 +5,7 @@
  * in a way that's friendly to AI-driven testing.
  */
 
-import { render as solidRender, RenderResult } from '@solidjs/testing-library';
+import { render as solidRender } from '@solidjs/testing-library';
 import { Component, JSX } from 'solid-js';
 import '@testing-library/jest-dom';
 
@@ -17,10 +17,10 @@ export { screen, waitFor, within, fireEvent } from '@solidjs/testing-library';
 /**
  * Enhanced render function with common setup
  */
-export function render<T>(
+export function render(
   component: () => JSX.Element,
   options?: Parameters<typeof solidRender>[1]
-): RenderResult {
+): ReturnType<typeof solidRender> {
   return solidRender(component, options);
 }
 

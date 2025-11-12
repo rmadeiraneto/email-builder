@@ -16,11 +16,9 @@
  */
 
 import { EventEmitter } from '../services/EventEmitter';
-import type { Template, BaseComponent, BaseStyles } from '../types';
+import type { Template, BaseComponent } from '../types';
 import type {
   MobileDevModeConfig,
-  MobileOverride,
-  PropertyInheritanceInfo,
 } from './mobile.types';
 import { canOverrideProperty } from './mobile.types';
 import { ModeManagerEvent } from './ModeManager';

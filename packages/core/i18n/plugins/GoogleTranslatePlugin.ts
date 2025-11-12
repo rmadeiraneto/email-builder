@@ -262,7 +262,7 @@ export class GoogleTranslatePlugin implements AutoTranslationPlugin {
   ): Promise<string> {
     try {
       return await this.callGoogleTranslateAPI([text], sourceLang, targetLang).then(
-        (results) => results[0]
+        (results) => results[0] || ''
       );
     } catch (error) {
       if (this.config.retry && attempt < this.config.maxRetries) {
@@ -345,7 +345,7 @@ export class GoogleTranslatePlugin implements AutoTranslationPlugin {
    * @private
    */
   private normalizeLocale(locale: string): string {
-    return LOCALE_MAPPINGS[locale] ?? locale.split('-')[0];
+    return LOCALE_MAPPINGS[locale] ?? locale.split('-')[0] ?? locale;
   }
 
   /**

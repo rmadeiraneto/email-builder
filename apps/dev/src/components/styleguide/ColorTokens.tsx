@@ -17,10 +17,10 @@ interface ColorToken {
   path: string[];
 }
 
-interface ColorScale {
-  name: string;
-  colors: ColorToken[];
-}
+// interface ColorScale {
+//   name: string;
+//   colors: ColorToken[];
+// }
 
 interface ColorTokensProps {
   brandColors?: any;

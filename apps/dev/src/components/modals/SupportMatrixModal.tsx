@@ -17,7 +17,7 @@ export interface SupportMatrixModalProps {
 
 export const SupportMatrixModal: Component<SupportMatrixModalProps> = (props) => {
   const [selectedProperty, setSelectedProperty] = createSignal<string | null>(null);
-  const [selectedClient, setSelectedClient] = createSignal<EmailClient | null>(null);
+  const [_selectedClient, _setSelectedClient] = createSignal<EmailClient | null>(null);
   const [showCompatibilityModal, setShowCompatibilityModal] = createSignal(false);
 
   /**

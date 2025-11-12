@@ -102,7 +102,7 @@ function formatPropertyName(propertyPath: string): string {
   // e.g., "backgroundColor" -> "background color"
 
   const parts = propertyPath.split('.');
-  const lastPart = parts[parts.length - 1];
+  const lastPart = parts[parts.length - 1] || propertyPath;
 
   // Add spaces before capital letters
   return lastPart

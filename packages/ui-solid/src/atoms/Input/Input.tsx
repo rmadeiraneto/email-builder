@@ -27,7 +27,7 @@
 
 import { Component, JSX, mergeProps, splitProps } from 'solid-js';
 import type { InputProps as BaseInputProps } from '@email-builder/ui-components/atoms';
-import { getComponentClasses, getValidationAriaProps } from '../../utils';
+import { createBEM, classNames, getValidationAriaProps } from '../../utils';
 import styles from '@email-builder/ui-components/src/atoms/Input/input.module.scss';
 
 /**
@@ -107,18 +107,18 @@ export const Input: Component<InputProps> = (props) => {
     'testId',
   ]);
 
+  // Create BEM helper
+  const bem = createBEM(styles, 'input');
+
   /**
    * Generate class names
    */
   const getClassNames = (): string => {
-    return getComponentClasses(
-      styles,
-      'input',
-      {
-        [local.size!]: true,
-        [local.validationState!]: local.validationState !== 'default',
-        'full-width': local.fullWidth,
-      },
+    return classNames(
+      bem(),
+      local.size && bem(local.size),
+      local.validationState !== 'default' && local.validationState && bem(local.validationState),
+      local.fullWidth && bem('full-width'),
       local.className
     );
   };

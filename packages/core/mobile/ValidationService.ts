@@ -116,7 +116,7 @@ export const DEFAULT_VALIDATION_RULES: ValidationRule[] = [
     name: 'Minimum Touch Target Size',
     description: 'Interactive elements should be at least 44x44px for touch targets',
     severity: 'warning',
-    validate: (template: Template, mode: DeviceMode) => {
+    validate: (template: Template, _mode: DeviceMode) => {
       const issues: ValidationIssue[] = [];
       const minSize = 44;
       const interactiveTypes = ['button', 'link', 'cta'];
@@ -126,7 +126,7 @@ export const DEFAULT_VALIDATION_RULES: ValidationRule[] = [
           continue;
         }
 
-        const styles = component.mobileStyles || component.styles;
+        const styles = (component.mobileStyles || component.styles) as any;
         const height = parseInt(String(styles.height || styles.minHeight || '0'));
 
         if (height > 0 && height < minSize) {
@@ -154,7 +154,7 @@ export const DEFAULT_VALIDATION_RULES: ValidationRule[] = [
     name: 'Minimum Font Size',
     description: 'Text should be at least 14px on mobile for readability',
     severity: 'warning',
-    validate: (template: Template, mode: DeviceMode) => {
+    validate: (template: Template, _mode: DeviceMode) => {
       const issues: ValidationIssue[] = [];
       const minFontSize = 14;
 
@@ -183,11 +183,11 @@ export const DEFAULT_VALIDATION_RULES: ValidationRule[] = [
     name: 'Overflow Hidden Content',
     description: 'Components with overflow:hidden may hide important content on mobile',
     severity: 'info',
-    validate: (template: Template, mode: DeviceMode) => {
+    validate: (template: Template, _mode: DeviceMode) => {
       const issues: ValidationIssue[] = [];
 
       for (const component of template.components) {
-        const styles = component.mobileStyles || component.styles;
+        const styles = (component.mobileStyles || component.styles) as any;
 
         if (styles.overflow === 'hidden') {
           issues.push({
@@ -210,7 +210,7 @@ export const DEFAULT_VALIDATION_RULES: ValidationRule[] = [
     name: 'All Components Hidden',
     description: 'All components are hidden on mobile',
     severity: 'critical',
-    validate: (template: Template, mode: DeviceMode) => {
+    validate: (template: Template, _mode: DeviceMode) => {
       const issues: ValidationIssue[] = [];
       const topLevelComponents = template.components.filter((c) => !c.parentId);
 
@@ -238,7 +238,7 @@ export const DEFAULT_VALIDATION_RULES: ValidationRule[] = [
     name: 'Excessive Width',
     description: 'Component width exceeds mobile viewport',
     severity: 'warning',
-    validate: (template: Template, mode: DeviceMode) => {
+    validate: (template: Template, _mode: DeviceMode) => {
       const issues: ValidationIssue[] = [];
       const mobileBreakpoint = 375; // Typical mobile width
 
@@ -267,11 +267,11 @@ export const DEFAULT_VALIDATION_RULES: ValidationRule[] = [
     name: 'Fixed Positioning',
     description: 'Fixed positioning may not work correctly in email clients',
     severity: 'warning',
-    validate: (template: Template, mode: DeviceMode) => {
+    validate: (template: Template, _mode: DeviceMode) => {
       const issues: ValidationIssue[] = [];
 
       for (const component of template.components) {
-        const styles = component.mobileStyles || component.styles;
+        const styles = (component.mobileStyles || component.styles) as any;
 
         if (styles.position === 'fixed' || styles.position === 'sticky') {
           issues.push({
@@ -477,9 +477,9 @@ export class ValidationService {
   /**
    * Enable rule
    *
-   * @param ruleId - Rule ID
+   * @param _ruleId - Rule ID
    */
-  public enableRule(ruleId: string): void {
+  public enableRule(_ruleId: string): void {
     // Rule enablement would be tracked in config
     // This is a simplified implementation
   }
@@ -487,9 +487,9 @@ export class ValidationService {
   /**
    * Disable rule
    *
-   * @param ruleId - Rule ID
+   * @param _ruleId - Rule ID
    */
-  public disableRule(ruleId: string): void {
+  public disableRule(_ruleId: string): void {
     // Rule disablement would be tracked in config
     // This is a simplified implementation
   }

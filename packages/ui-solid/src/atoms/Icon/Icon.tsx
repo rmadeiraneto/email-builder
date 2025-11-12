@@ -17,7 +17,7 @@
 
 import { Component, JSX, mergeProps, splitProps, createMemo } from 'solid-js';
 import type { IconProps as BaseIconProps, IconSize } from '@email-builder/ui-components/atoms';
-import { classNames } from '../../utils';
+import { createBEM, classNames } from '../../utils';
 import styles from '@email-builder/ui-components/src/atoms/Icon/icon.module.scss';
 
 /**
@@ -85,14 +85,16 @@ export const Icon: Component<IconProps> = (props) => {
     'testId',
   ]);
 
+  // Create BEM helper
+  const bem = createBEM(styles, 'icon');
+
   /**
    * Generate class names
    */
   const getClassNames = (): string => {
     return classNames(
-      styles.icon,
+      bem(local.onClick ? 'clickable' : ''),
       `ri-${local.name}`,
-      local.onClick && styles['icon--clickable'],
       local.className
     );
   };

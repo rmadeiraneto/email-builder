@@ -16,7 +16,7 @@
  */
 
 import { EventEmitter } from '../services/EventEmitter';
-import type { Template, BaseComponent, BaseStyles } from '../types';
+import type { Template, BaseComponent } from '../types';
 import type { PropertyOverrideManager } from './PropertyOverrideManager';
 import type { ModeManager } from './ModeManager';
 import type { MobileDevModeConfig } from './mobile.types';
@@ -171,9 +171,9 @@ export class MobileDefaultsApplicator {
   /**
    * Apply mobile defaults to all components
    *
-   * @param options - Application options
+   * @param _options - Application options
    */
-  public async applyDefaults(options: {
+  public async applyDefaults(_options: {
     skipPrompt?: boolean;
   } = {}): Promise<DefaultsApplicationResult> {
     if (!this.config.mobileDefaults.enabled) {
@@ -456,9 +456,9 @@ export class MobileDefaultsApplicator {
 
     if (typeof value === 'string') {
       const match = value.match(/^([\d.]+)(.*)$/);
-      if (match) {
+      if (match && match[1]) {
         const numValue = parseFloat(match[1]);
-        const unit = match[2];
+        const unit = match[2] ?? '';
         const reduced = numValue * factor;
         return `${reduced}${unit}`;
       }

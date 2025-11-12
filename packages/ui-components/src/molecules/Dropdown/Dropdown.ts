@@ -22,6 +22,7 @@ import { computePosition, flip, offset } from '@floating-ui/dom';
 import type { DropdownProps } from './dropdown.types';
 import { DropdownItem } from './DropdownItem';
 import styles from './dropdown.module.scss';
+import { createBEM } from '../../utils/classNames';
 
 export class Dropdown {
   private props: Required<Omit<DropdownProps, 'activeItem' | 'onChange' | 'onReset' | 'onControlClick' | 'placement'>
@@ -77,7 +78,8 @@ export class Dropdown {
       ...props,
     };
 
-    this.className = `${styles.dropdown}`;
+    const bem = createBEM(styles, 'dropdown');
+    this.className = bem() ?? '';
     this.items = [];
     this.isOpen = this.props.startOpened;
     this.resettable = this.props.resettable;
@@ -125,11 +127,12 @@ export class Dropdown {
    * Create the main wrapper element
    */
   private createElement(): HTMLDivElement {
+    const bem = createBEM(styles, 'dropdown');
     const el = document.createElement('div');
     el.className = this.className;
 
     // Add size modifier
-    const sizeClass = styles[`dropdown--${this.props.size}`];
+    const sizeClass = bem(this.props.size);
     if (sizeClass) {
       el.classList.add(sizeClass);
     }
@@ -206,9 +209,9 @@ export class Dropdown {
     if (this.props.placement) {
       config.placement = this.props.placement;
     }
-    computePosition(this.control, this.itemsContainer, config).then(({ x, y }) => {
-      this.element.style.setProperty('--floater-coords-left', `${x}px`);
-      this.element.style.setProperty('--floater-coords-top', `${y}px`);
+    computePosition(this.control, this.itemsContainer, config).then((position: { x: number; y: number }) => {
+      this.element.style.setProperty('--floater-coords-left', `${position.x}px`);
+      this.element.style.setProperty('--floater-coords-top', `${position.y}px`);
     });
   }
 
@@ -216,9 +219,10 @@ export class Dropdown {
    * Setup items with click handlers
    */
   private setupItems(): void {
+    const bem = createBEM(styles, 'dropdown');
     this.items.forEach(item => {
       const el = item.getEl();
-      const itemClass = styles.dropdown__item;
+      const itemClass = bem.elem('item');
       if (itemClass) {
         el.classList.add(itemClass);
       }
@@ -245,7 +249,8 @@ export class Dropdown {
    * Deactivate all items
    */
   private deactivateAllItems(): void {
-    const activeClass = styles['dropdown__item--active'];
+    const bem = createBEM(styles, 'dropdown');
+    const activeClass = bem.elem('item', 'active');
     this.items.forEach(item => {
       if (activeClass) {
         item.getEl().classList.remove(activeClass);
@@ -336,7 +341,8 @@ export class Dropdown {
     }
 
     // Add active class and select
-    const activeClass = styles['dropdown__item--active'];
+    const bem = createBEM(styles, 'dropdown');
+    const activeClass = bem.elem('item', 'active');
     if (activeClass) {
       item.getEl().classList.add(activeClass);
     }
@@ -349,8 +355,9 @@ export class Dropdown {
    * Create control element
    */
   private createControl(): void {
+    const bem = createBEM(styles, 'dropdown');
     this.control = document.createElement('div');
-    const controlClass = styles.dropdown__control;
+    const controlClass = bem.elem('control');
     if (controlClass) {
       this.control.classList.add(controlClass);
     }
@@ -367,8 +374,9 @@ export class Dropdown {
    * Create control content element
    */
   private createControlContent(): void {
+    const bem = createBEM(styles, 'dropdown');
     this.controlContent = document.createElement('div');
-    const contentClass = styles['dropdown__control-content'];
+    const contentClass = bem.elem('control-content');
     if (contentClass) {
       this.controlContent.classList.add(contentClass);
     }
@@ -378,22 +386,23 @@ export class Dropdown {
    * Create control arrow elements
    */
   private createControlArrow(): void {
+    const bem = createBEM(styles, 'dropdown');
     this.controlArrowUp = document.createElement('div');
-    const arrowUpClass = styles['dropdown__control-arrow-up'];
+    const arrowUpClass = bem.elem('control-arrow-up');
     if (arrowUpClass) {
       this.controlArrowUp.classList.add(arrowUpClass);
     }
     this.setContent(this.controlArrowUp, this.props.arrowUp);
 
     this.controlArrowDown = document.createElement('div');
-    const arrowDownClass = styles['dropdown__control-arrow-down'];
+    const arrowDownClass = bem.elem('control-arrow-down');
     if (arrowDownClass) {
       this.controlArrowDown.classList.add(arrowDownClass);
     }
     this.setContent(this.controlArrowDown, this.props.arrowDown);
 
     this.controlArrow = document.createElement('div');
-    const arrowClass = styles['dropdown__control-arrow'];
+    const arrowClass = bem.elem('control-arrow');
     if (arrowClass) {
       this.controlArrow.classList.add(arrowClass);
     }
@@ -432,8 +441,9 @@ export class Dropdown {
    * Create items container
    */
   private createItemsContainer(): void {
+    const bem = createBEM(styles, 'dropdown');
     this.itemsContainer = document.createElement('div');
-    const optionsClass = styles.dropdown__options;
+    const optionsClass = bem.elem('options');
     if (optionsClass) {
       this.itemsContainer.classList.add(optionsClass);
     }
@@ -521,7 +531,8 @@ export class Dropdown {
    * Open the dropdown
    */
   public open(): void {
-    const openClass = styles['dropdown--open'];
+    const bem = createBEM(styles, 'dropdown');
+    const openClass = bem('open');
     if (openClass) {
       this.element.classList.add(openClass);
     }
@@ -537,7 +548,8 @@ export class Dropdown {
    * Close the dropdown
    */
   public close(): void {
-    const openClass = styles['dropdown--open'];
+    const bem = createBEM(styles, 'dropdown');
+    const openClass = bem('open');
     if (openClass) {
       this.element.classList.remove(openClass);
     }

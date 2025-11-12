@@ -125,7 +125,7 @@ export const PreviewModal: Component<PreviewModalProps> = (props) => {
             <div class={styles.modal__title}>
               <h2>Preview Template</h2>
               <span class={styles.modal__subtitle}>
-                {props.template?.name || 'Untitled Template'}
+                {props.template?.metadata.name || 'Untitled Template'}
               </span>
             </div>
 

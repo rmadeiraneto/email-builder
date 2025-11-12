@@ -183,7 +183,7 @@ export const EmailTestingSettingsModal: Component<EmailTestingSettingsModalProps
                 type="url"
                 placeholder="https://api.litmus.com/v1"
                 value={apiEndpoint()}
-                onInput={(e) => {
+                onInput={(e: Event & { currentTarget: HTMLInputElement }) => {
                   setApiEndpoint(e.currentTarget.value);
                   setError('');
                 }}
@@ -219,7 +219,7 @@ export const EmailTestingSettingsModal: Component<EmailTestingSettingsModalProps
                   type="password"
                   placeholder="Enter your API key"
                   value={apiKey()}
-                  onInput={(e) => {
+                  onInput={(e: Event & { currentTarget: HTMLInputElement }) => {
                     setApiKey(e.currentTarget.value);
                     setError('');
                   }}
@@ -237,7 +237,7 @@ export const EmailTestingSettingsModal: Component<EmailTestingSettingsModalProps
                   type="text"
                   placeholder="your-email@example.com"
                   value={username()}
-                  onInput={(e) => {
+                  onInput={(e: Event & { currentTarget: HTMLInputElement }) => {
                     setUsername(e.currentTarget.value);
                     setError('');
                   }}
@@ -253,7 +253,7 @@ export const EmailTestingSettingsModal: Component<EmailTestingSettingsModalProps
                   type="password"
                   placeholder="Enter your password or API key"
                   value={password()}
-                  onInput={(e) => {
+                  onInput={(e: Event & { currentTarget: HTMLInputElement }) => {
                     setPassword(e.currentTarget.value);
                     setError('');
                   }}
@@ -271,7 +271,7 @@ export const EmailTestingSettingsModal: Component<EmailTestingSettingsModalProps
                   type="password"
                   placeholder="Enter your OAuth token"
                   value={oauthToken()}
-                  onInput={(e) => {
+                  onInput={(e: Event & { currentTarget: HTMLInputElement }) => {
                     setOauthToken(e.currentTarget.value);
                     setError('');
                   }}

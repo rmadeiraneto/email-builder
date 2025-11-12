@@ -5,8 +5,38 @@
  */
 
 import { createContext, useContext, createSignal, onMount, type ParentComponent } from 'solid-js';
-import type { TranslationContextValue, TranslateFunction } from '@email-builder/core/i18n';
-import type { TranslationManager } from '@email-builder/core/i18n';
+
+/**
+ * Translation function type
+ */
+export type TranslateFunction = (
+  key: string,
+  interpolation?: Record<string, string>,
+  fallback?: string
+) => string;
+
+/**
+ * Translation context value
+ */
+export interface TranslationContextValue {
+  t: TranslateFunction;
+  locale: () => string;
+  setLocale: (locale: string) => Promise<void>;
+  getAvailableLocales: () => string[];
+  isLocaleLoaded: (locale: string) => boolean;
+}
+
+/**
+ * Translation manager interface
+ */
+export interface TranslationManager {
+  getLocale(): string;
+  setLocale(locale: string): void;
+  translate(key: string, interpolation?: Record<string, string>, fallback?: string): string;
+  loadLocale(locale: string): Promise<void>;
+  isLocaleLoaded(locale: string): boolean;
+  getAvailableLocales(): string[];
+}
 
 const TranslationContext = createContext<TranslationContextValue>();
 
@@ -43,7 +73,7 @@ export const TranslationProvider: ParentComponent<TranslationProviderProps> = (p
   const [locale, setLocale] = createSignal(props.manager.getLocale());
 
   // Create translate function that uses the current locale
-  const t: TranslateFunction = (key, interpolation, fallback) => {
+  const t: TranslateFunction = (key: string, interpolation?: Record<string, string>, fallback?: string) => {
     // Force re-evaluation when locale changes
     locale();
     return props.manager.translate(key, interpolation, fallback);

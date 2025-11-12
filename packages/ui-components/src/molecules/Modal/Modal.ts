@@ -40,6 +40,7 @@ import {
 } from '@floating-ui/dom';
 import type { ModalProps } from './modal.types';
 import styles from './modal.module.scss';
+import { createBEM } from '../../utils/classNames';
 
 export class Modal {
   private props: Required<Omit<ModalProps, 'triggerElement' | 'targetElement' | 'placement' | 'onOpen' | 'onClose'>> & Pick<ModalProps, 'triggerElement' | 'targetElement' | 'placement' | 'onOpen' | 'onClose'>;
@@ -140,8 +141,9 @@ export class Modal {
    * Create the modal backdrop element
    */
   private createModalElement(): HTMLDivElement {
+    const bem = createBEM(styles, 'modal');
     const modal = document.createElement('div');
-    modal.className = styles.modal ?? '';
+    modal.className = bem() ?? '';
 
     // Add extended classes
     if (this.props.modalExtendedClasses && this.props.modalExtendedClasses.length > 0) {
@@ -165,8 +167,9 @@ export class Modal {
    * Create the modal dialog element
    */
   private createModalDialogElement(): HTMLDivElement {
+    const bem = createBEM(styles, 'modal');
     const dialog = document.createElement('div');
-    dialog.className = styles.modal__dialog ?? '';
+    dialog.className = bem.elem('dialog') ?? '';
 
     // Add extended classes
     if (this.props.modalDialogExtendedClasses && this.props.modalDialogExtendedClasses.length > 0) {
@@ -229,6 +232,7 @@ export class Modal {
    * Open the modal
    */
   public open(): void {
+    const bem = createBEM(styles, 'modal');
     // Clear target element
     if (this.targetElement.hasChildNodes()) {
       this.targetElement.innerHTML = '';
@@ -238,7 +242,7 @@ export class Modal {
     this.targetElement.appendChild(this.modal);
 
     // Add open class
-    const openClass = styles['modal--open'] ?? '';
+    const openClass = bem('open') ?? '';
     if (openClass) {
       this.modal.classList.add(openClass);
     }
@@ -253,7 +257,8 @@ export class Modal {
    * Close the modal
    */
   public close(): void {
-    const openClass = styles['modal--open'] ?? '';
+    const bem = createBEM(styles, 'modal');
+    const openClass = bem('open') ?? '';
     if (openClass) {
       this.modal.classList.remove(openClass);
     }
@@ -268,7 +273,8 @@ export class Modal {
    * Toggle modal open/closed state
    */
   public toggle(): void {
-    const openClass = styles['modal--open'] ?? '';
+    const bem = createBEM(styles, 'modal');
+    const openClass = bem('open') ?? '';
     if (openClass && this.modal.classList.contains(openClass)) {
       this.close();
     } else {
@@ -280,7 +286,8 @@ export class Modal {
    * Check if modal is currently open
    */
   public isOpen(): boolean {
-    const openClass = styles['modal--open'] ?? '';
+    const bem = createBEM(styles, 'modal');
+    const openClass = bem('open') ?? '';
     return openClass ? this.modal.classList.contains(openClass) : false;
   }
 

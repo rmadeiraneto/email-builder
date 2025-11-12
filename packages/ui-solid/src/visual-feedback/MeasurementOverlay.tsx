@@ -89,7 +89,7 @@ export const MeasurementOverlay: Component<MeasurementOverlayProps> = (props) =>
 
   // Calculate cap positions (perpendicular to line)
   const capLength = 6;
-  const getCapCoordinates = (x: number, y: number, isStart: boolean) => {
+  const getCapCoordinates = (x: number, y: number, _isStart: boolean) => {
     if (isHorizontal()) {
       return {
         x1: x,

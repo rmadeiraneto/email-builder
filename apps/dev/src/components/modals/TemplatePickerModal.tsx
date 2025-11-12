@@ -4,7 +4,7 @@
  * Modal for loading and managing saved templates
  */
 
-import { type Component, createSignal, Show, For, onMount, createEffect } from 'solid-js';
+import { type Component, createSignal, Show, For, createEffect } from 'solid-js';
 import type { TemplateListItem } from '@email-builder/core';
 import styles from './TemplatePickerModal.module.scss';
 import { Button, Input, Icon } from '@email-builder/ui-solid/atoms';
@@ -51,7 +51,7 @@ export const TemplatePickerModal: Component<TemplatePickerModalProps> = (props) 
 
     return templates().filter(
       (template) =>
-        template.name.toLowerCase().includes(query) ||
+        template.metadata.name.toLowerCase().includes(query) ||
         template.description?.toLowerCase().includes(query) ||
         template.tags?.some((tag) => tag.toLowerCase().includes(query))
     );
@@ -66,7 +66,7 @@ export const TemplatePickerModal: Component<TemplatePickerModalProps> = (props) 
     event.stopPropagation();
 
     const confirmed = confirm(
-      `Are you sure you want to delete "${template.name}"? This action cannot be undone.`
+      `Are you sure you want to delete "${template.metadata.name}"? This action cannot be undone.`
     );
 
     if (!confirmed) return;
@@ -119,7 +119,7 @@ export const TemplatePickerModal: Component<TemplatePickerModalProps> = (props) 
                 type="text"
                 placeholder="Search templates..."
                 value={searchQuery()}
-                onInput={(e) => setSearchQuery(e.currentTarget.value)}
+                onInput={(e: Event & { currentTarget: HTMLInputElement }) => setSearchQuery(e.currentTarget.value)}
               />
             </div>
 
@@ -160,7 +160,7 @@ export const TemplatePickerModal: Component<TemplatePickerModalProps> = (props) 
                       onClick={() => handleLoad(template)}
                     >
                       <div class={styles.templateCard__content}>
-                        <h3 class={styles.templateCard__name}>{template.name}</h3>
+                        <h3 class={styles.templateCard__name}>{template.metadata.name}</h3>
                         <Show when={template.description}>
                           <p class={styles.templateCard__description}>
                             {template.description}
@@ -190,7 +190,7 @@ export const TemplatePickerModal: Component<TemplatePickerModalProps> = (props) 
                           class={styles.templateCard__deleteButton}
                           onClick={(e) => handleDelete(template, e)}
                           title="Delete template"
-                          aria-label={`Delete ${template.name}`}
+                          aria-label={`Delete ${template.metadata.name}`}
                           variant="ghost"
                           icon="delete-bin-line"
                         />

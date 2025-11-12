@@ -129,7 +129,8 @@ export class ColorPicker {
 		};
 
 		// Merge options with custom array handling
-		this.options = mergeWith(defaults, options, (objValue, srcValue) => {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		this.options = mergeWith(defaults, options, (objValue: any, srcValue: any) => {
 			if (Array.isArray(objValue)) {
 				return srcValue?.length ? srcValue : objValue;
 			}

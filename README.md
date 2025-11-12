@@ -114,9 +114,21 @@ pnpm typecheck
 
 ## Documentation
 
+### Essential Documents
 - [Requirements](./REQUIREMENTS.md) - Complete requirements and specifications
-- [Development Guidelines](./claude/claude.md) - Coding standards and best practices
+- [Development Guidelines](./.claude/claude.md) - Coding standards and best practices
 - [Project Notes](./NOTES.md) - Quick reference and decisions
+
+### Organized Documentation
+All additional documentation is organized in the [`docs/`](./docs/) directory:
+- **[Architecture](./docs/architecture/)** - System design and API references
+- **[Implementation](./docs/implementation/)** - Migration guides and setup instructions
+- **[Testing](./docs/testing/)** - Testing strategies and QA documentation
+- **[Planning](./docs/planning/)** - Current tasks and future ideas
+- **[Reference](./docs/reference/)** - Quick command reference
+- **[Sessions](./docs/sessions/)** - Development history and progress
+
+See [docs/README.md](./docs/README.md) for complete documentation index.
 
 ## Contributing
 

@@ -124,7 +124,12 @@ export class VisualFeedbackManager {
    * Handle property edit start/end
    */
   public handlePropertyEdit(event: PropertyEditEvent): void {
+    console.log('[VisualFeedbackManager] handlePropertyEdit called');
+    console.log('[VisualFeedbackManager] Event:', event);
+    console.log('[VisualFeedbackManager] config.enabled:', this.config.enabled);
+
     if (!this.config.enabled) {
+      console.log('[VisualFeedbackManager] System disabled, returning');
       return;
     }
 
@@ -132,26 +137,46 @@ export class VisualFeedbackManager {
 
     // Determine if editing started or ended
     const isStarting = oldValue === undefined;
+    console.log('[VisualFeedbackManager] isStarting:', isStarting);
+    console.log('[VisualFeedbackManager] currentEditPropertyPath:', this.currentEditPropertyPath);
+    console.log('[VisualFeedbackManager] currentHoverPropertyPath:', this.currentHoverPropertyPath);
 
     if (isStarting) {
       // Edit started
+      console.log('[VisualFeedbackManager] Edit started for:', propertyPath);
       this.currentEditPropertyPath = propertyPath;
 
       // Show overlays if not already shown by hover
       if (this.currentHoverPropertyPath !== propertyPath) {
-        this.showOverlaysForProperty(propertyPath, componentId, mapping, newValue, 'active');
+        console.log('[VisualFeedbackManager] Calling showOverlaysForProperty');
+        try {
+          this.showOverlaysForProperty(propertyPath, componentId, mapping, newValue, 'active');
+          console.log('[VisualFeedbackManager] showOverlaysForProperty completed');
+        } catch (error) {
+          console.error('[VisualFeedbackManager] Error in showOverlaysForProperty:', error);
+          throw error;
+        }
+      } else {
+        console.log('[VisualFeedbackManager] Skipping showOverlaysForProperty (already shown by hover)');
       }
     } else {
       // Edit ended
+      console.log('[VisualFeedbackManager] Edit ended for:', propertyPath);
       if (this.currentEditPropertyPath === propertyPath) {
         this.currentEditPropertyPath = null;
 
         // Clear overlays if not hovering
         if (this.currentHoverPropertyPath !== propertyPath) {
+          console.log('[VisualFeedbackManager] Calling clearOverlaysForProperty');
           this.clearOverlaysForProperty(propertyPath);
+          console.log('[VisualFeedbackManager] clearOverlaysForProperty completed');
+        } else {
+          console.log('[VisualFeedbackManager] Skipping clearOverlaysForProperty (still hovering)');
         }
       }
     }
+
+    console.log('[VisualFeedbackManager] handlePropertyEdit completed');
   }
 
   /**

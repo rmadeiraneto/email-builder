@@ -142,3 +142,206 @@
     }
   }
 }
+
+/**
+ * Enhanced ColorPicker Styles
+ * For the enhanced SolidJS ColorPicker with swatches and mode switcher
+ */
+.color-picker {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$spacing-2;
+
+  // Controls row (swatch + input + buttons)
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: tokens.$spacing-2;
+  }
+
+  // Color swatch with picker
+  &__swatch {
+    position: relative;
+    width: tokens.$sizing-10;
+    height: tokens.$sizing-10;
+    border: tokens.$border-width-base solid tokens.$color-neutral-200;
+    border-radius: tokens.$border-radius-md;
+    cursor: pointer;
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: border-color tokens.$animation-duration-fast tokens.$animation-easing-ease;
+
+    &:hover {
+      border-color: tokens.$color-brand-primary-500;
+    }
+
+    // Checkerboard background for transparency
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-conic-gradient(
+          tokens.$color-neutral-300 0% 25%,
+          tokens.$color-neutral-100 0% 50%
+        )
+        50% / 8px 8px;
+      z-index: 0;
+    }
+
+    // Empty state
+    &--empty {
+      .color-picker__swatch-empty-indicator {
+        display: block;
+      }
+    }
+  }
+
+  &__swatch-empty-indicator {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: tokens.$color-semantic-error-base;
+    clip-path: polygon(
+      calc(100% - 2px) 0,
+      100% 2px,
+      2px 100%,
+      0 calc(100% - 2px)
+    );
+    z-index: 2;
+  }
+
+  // Hidden native color input
+  &__color-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  // Input group (text input + mode toggle)
+  &__input-group {
+    display: flex;
+    flex: 1;
+    gap: tokens.$spacing-1;
+  }
+
+  // Text input
+  &__text-input {
+    flex: 1;
+    padding: tokens.$spacing-2;
+    border: tokens.$border-width-base solid tokens.$color-neutral-200;
+    border-radius: tokens.$border-radius-md;
+    font-size: tokens.$typography-font-size-sm;
+    font-family: inherit;
+    background: tokens.$color-ui-background-primary;
+    transition: border-color tokens.$animation-duration-fast tokens.$animation-easing-ease;
+
+    &:focus {
+      outline: none;
+      border-color: tokens.$color-brand-primary-500;
+    }
+
+    &::placeholder {
+      color: tokens.$color-neutral-400;
+    }
+  }
+
+  // Mode toggle button (HEX/RGB/HSL)
+  &__mode-toggle {
+    padding: tokens.$spacing-2;
+    border: tokens.$border-width-base solid tokens.$color-neutral-200;
+    border-radius: tokens.$border-radius-md;
+    background: tokens.$color-ui-background-secondary;
+    font-size: tokens.$typography-font-size-xs;
+    font-weight: tokens.$typography-font-weight-semibold;
+    cursor: pointer;
+    min-width: 48px;
+    color: tokens.$color-neutral-700;
+    transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
+
+    &:hover {
+      background: tokens.$color-neutral-100;
+      border-color: tokens.$color-brand-primary-500;
+      color: tokens.$color-brand-primary-600;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  // Empty/transparent button
+  &__empty-button {
+    padding: tokens.$spacing-2;
+    width: tokens.$sizing-10;
+    height: tokens.$sizing-10;
+    border: tokens.$border-width-base solid tokens.$color-neutral-200;
+    border-radius: tokens.$border-radius-md;
+    background: tokens.$color-ui-background-secondary;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
+    flex-shrink: 0;
+
+    i {
+      font-size: tokens.$typography-font-size-lg;
+      color: tokens.$color-neutral-500;
+    }
+
+    &:hover {
+      border-color: tokens.$color-brand-primary-500;
+      background: tokens.$color-brand-primary-50;
+
+      i {
+        color: tokens.$color-brand-primary-600;
+      }
+    }
+
+    &--active {
+      border-color: tokens.$color-brand-primary-500;
+      background: tokens.$color-brand-primary-100;
+
+      i {
+        color: tokens.$color-brand-primary-700;
+      }
+    }
+  }
+
+  // Color swatches grid
+  &__swatches {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: tokens.$spacing-1;
+    padding: tokens.$spacing-2;
+    background: tokens.$color-ui-background-secondary;
+    border-radius: tokens.$border-radius-md;
+  }
+
+  &__swatch-item {
+    width: 100%;
+    aspect-ratio: 1;
+    border: tokens.$border-width-base solid tokens.$color-neutral-200;
+    border-radius: tokens.$border-radius-sm;
+    cursor: pointer;
+    padding: 0;
+    transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
+
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-color: tokens.$color-neutral-400;
+      z-index: 1;
+    }
+
+    &--active {
+      border-width: 2px;
+      border-color: tokens.$color-brand-primary-600;
+      box-shadow: 0 0 0 2px tokens.$color-brand-primary-200;
+    }
+  }
+}

@@ -230,126 +230,58 @@ export const BuilderProvider: ParentComponent = (props) => {
       managerRef = manager;
       setVisualFeedbackManager(manager);
 
-      console.log('[BuilderContext] VisualFeedbackManager initialized');
-
       // Subscribe to visual feedback events from the global event bus
-      // Use untrack for the entire handler to completely break out of reactive context
       const unsubscribeHover = visualFeedbackEventBus.on('property:hover', (event) => {
-        console.log('[BuilderContext] property:hover handler called');
-        // Use managerRef to avoid any signal access
-        if (!managerRef) {
-          console.warn('[BuilderContext] managerRef is null in hover handler');
-          return;
-        }
-
-        try {
-          // Run completely outside reactive context
-          queueMicrotask(() => {
-            untrack(() => {
-              console.log('[BuilderContext] Calling handlePropertyHover');
-              managerRef?.handlePropertyHover({
-                propertyPath: event.propertyPath,
-                componentId: event.componentId,
-                mapping: undefined as any, // PropertyPanel doesn't provide mapping
-                mode: 'hover',
-                currentValue: event.currentValue,
-              });
-              console.log('[BuilderContext] handlePropertyHover completed');
-            });
+        // Use untrack to prevent Solid's reactive tracking inside the handler
+        untrack(() => {
+          managerRef?.handlePropertyHover({
+            propertyPath: event.propertyPath,
+            componentId: event.componentId,
+            mapping: undefined as any, // PropertyPanel doesn't provide mapping
+            mode: 'hover',
+            currentValue: event.currentValue,
           });
-        } catch (error) {
-          console.error('[BuilderContext] Error in hover handler:', error);
-        }
+        });
       });
 
       const unsubscribeUnhover = visualFeedbackEventBus.on('property:unhover', (event) => {
-        console.log('[BuilderContext] property:unhover handler called');
-        if (!managerRef) {
-          console.warn('[BuilderContext] managerRef is null in unhover handler');
-          return;
-        }
-
-        try {
-          queueMicrotask(() => {
-            untrack(() => {
-              console.log('[BuilderContext] Calling handlePropertyHover (unhover)');
-              managerRef?.handlePropertyHover({
-                propertyPath: event.propertyPath,
-                componentId: undefined,
-                mapping: {} as any,
-                mode: 'off',
-                currentValue: undefined,
-              });
-              console.log('[BuilderContext] handlePropertyHover (unhover) completed');
-            });
+        // Use untrack to prevent Solid's reactive tracking inside the handler
+        untrack(() => {
+          managerRef?.handlePropertyHover({
+            propertyPath: event.propertyPath,
+            componentId: undefined,
+            mapping: {} as any,
+            mode: 'off',
+            currentValue: undefined,
           });
-        } catch (error) {
-          console.error('[BuilderContext] Error in unhover handler:', error);
-        }
+        });
       });
 
       const unsubscribeEditStart = visualFeedbackEventBus.on('property:edit:start', (event) => {
-        console.log('[BuilderContext] ===== property:edit:start handler called =====');
-        console.log('[BuilderContext] Event:', event);
-        console.log('[BuilderContext] managerRef:', managerRef ? 'exists' : 'null');
-
-        if (!managerRef) {
-          console.warn('[BuilderContext] managerRef is null in edit start handler');
-          return;
-        }
-
-        try {
-          // Use double async boundary: queueMicrotask + untrack
-          queueMicrotask(() => {
-            console.log('[BuilderContext] Inside queueMicrotask for edit start');
-            untrack(() => {
-              console.log('[BuilderContext] Inside untrack for edit start');
-              console.log('[BuilderContext] About to call handlePropertyEdit');
-
-              try {
-                managerRef?.handlePropertyEdit({
-                  propertyPath: event.propertyPath,
-                  componentId: event.componentId,
-                  oldValue: undefined, // Indicates edit is starting
-                  newValue: event.currentValue,
-                  mapping: undefined as any, // PropertyPanel doesn't provide mapping
-                });
-                console.log('[BuilderContext] handlePropertyEdit completed successfully');
-              } catch (innerError) {
-                console.error('[BuilderContext] Error inside handlePropertyEdit:', innerError);
-                throw innerError;
-              }
-            });
+        // Use untrack to prevent Solid's reactive tracking inside the handler
+        // This prevents infinite runUpdates/completeUpdates loops
+        untrack(() => {
+          managerRef?.handlePropertyEdit({
+            propertyPath: event.propertyPath,
+            componentId: event.componentId,
+            oldValue: undefined, // Indicates edit is starting
+            newValue: event.currentValue,
+            mapping: undefined as any, // PropertyPanel doesn't provide mapping
           });
-        } catch (error) {
-          console.error('[BuilderContext] Error in edit start handler:', error);
-        }
+        });
       });
 
       const unsubscribeEditEnd = visualFeedbackEventBus.on('property:edit:end', (event) => {
-        console.log('[BuilderContext] property:edit:end handler called');
-        if (!managerRef) {
-          console.warn('[BuilderContext] managerRef is null in edit end handler');
-          return;
-        }
-
-        try {
-          queueMicrotask(() => {
-            untrack(() => {
-              console.log('[BuilderContext] Calling handlePropertyEdit (edit end)');
-              managerRef?.handlePropertyEdit({
-                propertyPath: event.propertyPath,
-                componentId: undefined,
-                oldValue: true, // Indicates edit is ending (non-undefined value)
-                newValue: undefined,
-                mapping: {} as any,
-              });
-              console.log('[BuilderContext] handlePropertyEdit (edit end) completed');
-            });
+        // Use untrack to prevent Solid's reactive tracking inside the handler
+        untrack(() => {
+          managerRef?.handlePropertyEdit({
+            propertyPath: event.propertyPath,
+            componentId: undefined,
+            oldValue: true, // Indicates edit is ending (non-undefined value)
+            newValue: undefined,
+            mapping: {} as any,
           });
-        } catch (error) {
-          console.error('[BuilderContext] Error in edit end handler:', error);
-        }
+        });
       });
 
       // Cleanup on unmount

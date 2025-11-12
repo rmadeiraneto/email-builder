@@ -74,8 +74,9 @@ export const AccessibilityAnnouncer: Component<AccessibilityAnnouncerProps> = (p
       return;
     }
 
-    // Clear existing timer
-    const timer = debounceTimer();
+    // Use untrack to read timer without creating a reactive dependency
+    // This prevents infinite loops where the effect triggers itself
+    const timer = untrack(debounceTimer);
     if (timer) {
       clearTimeout(timer);
     }

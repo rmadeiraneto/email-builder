@@ -6,6 +6,7 @@ import type {
 } from './PropertyPanel.types';
 import type { ComponentPreset } from '@email-builder/core';
 import { getTestId, getTestAction, getTestState } from '@email-builder/core/utils';
+import { visualFeedbackEventBus } from '@email-builder/core';
 import { PresetPreview, PresetManager } from '../modals';
 import { RichTextEditor } from '../editors';
 import { CompatibilityIcon, CompatibilityModal } from '../compatibility';
@@ -1054,45 +1055,43 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
     props.onGeneralStyleChange(property.key, value);
   };
 
-  // Visual feedback event handlers
+  // Visual feedback event handlers using global event bus
   const handlePropertyHover = (property: PropertyDefinition) => {
-    if (!props.visualFeedback?.onPropertyHover) return;
+    if (!props.selectedComponent) return;
 
-    const currentValue = props.selectedComponent
-      ? getNestedValue(props.selectedComponent, property.key)
-      : undefined;
-
-    props.visualFeedback.onPropertyHover({
+    visualFeedbackEventBus.emit({
+      type: 'property:hover',
       propertyPath: property.key,
-      componentId: props.selectedComponent?.id,
-      currentValue,
-      propertyType: property.type,
+      componentId: props.selectedComponent.id,
+      currentValue: getNestedValue(props.selectedComponent, property.key),
     });
   };
 
   const handlePropertyUnhover = (property: PropertyDefinition) => {
-    if (!props.visualFeedback?.onPropertyUnhover) return;
-    props.visualFeedback.onPropertyUnhover(property.key);
+    visualFeedbackEventBus.emit({
+      type: 'property:unhover',
+      propertyPath: property.key,
+    });
   };
 
   const handlePropertyEditStart = (property: PropertyDefinition) => {
-    if (!props.visualFeedback?.onPropertyEditStart) return;
+    if (!props.selectedComponent) return;
 
-    const currentValue = props.selectedComponent
-      ? getNestedValue(props.selectedComponent, property.key)
-      : undefined;
-
-    props.visualFeedback.onPropertyEditStart({
+    visualFeedbackEventBus.emit({
+      type: 'property:edit:start',
       propertyPath: property.key,
-      componentId: props.selectedComponent?.id,
+      componentId: props.selectedComponent.id,
+      currentValue: getNestedValue(props.selectedComponent, property.key),
       isEditing: true,
-      currentValue,
     });
   };
 
   const handlePropertyEditEnd = (property: PropertyDefinition) => {
-    if (!props.visualFeedback?.onPropertyEditEnd) return;
-    props.visualFeedback.onPropertyEditEnd(property.key);
+    visualFeedbackEventBus.emit({
+      type: 'property:edit:end',
+      propertyPath: property.key,
+      isEditing: false,
+    });
   };
 
   const renderPropertyEditor = (property: PropertyDefinition) => {

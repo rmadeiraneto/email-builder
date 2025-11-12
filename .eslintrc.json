@@ -17,8 +17,9 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "plugins": ["@typescript-eslint", "solid"],
+  "plugins": ["@typescript-eslint", "solid", "eslint-plugin-local"],
   "rules": {
+    "local/no-sync-event-emit-in-handlers": "warn",
     "no-console": ["warn", { "allow": ["warn", "error"] }],
     "no-debugger": "error",
     "@typescript-eslint/no-explicit-any": "error",

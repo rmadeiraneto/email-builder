@@ -14,4 +14,4 @@
 
 * Change indicator
 
-
+* Feedback loop AI emails support

@@ -4,6 +4,10 @@
  * Provides ARIA live region for announcing property changes to screen readers.
  * Hidden visually but accessible to assistive technologies.
  *
+ * ⚠️ CRITICAL: All event handlers in this file use untrack() to prevent
+ * infinite reactive loops. Do NOT remove untrack() wrappers - they prevent
+ * stack overflow errors. See SOLID_REACTIVITY_GUIDE.md for details.
+ *
  * @module visual-feedback
  */
 

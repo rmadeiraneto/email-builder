@@ -2,6 +2,10 @@
  * Builder Context
  *
  * Provides global state management for the email builder
+ *
+ * ⚠️ CRITICAL: Visual feedback event handlers in this file use untrack()
+ * to prevent infinite reactive loops. Do NOT remove untrack() wrappers.
+ * See SOLID_REACTIVITY_GUIDE.md for details.
  */
 
 import {

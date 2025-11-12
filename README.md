@@ -117,6 +117,7 @@ pnpm typecheck
 ### Essential Documents
 - [Requirements](./REQUIREMENTS.md) - Complete requirements and specifications
 - [Development Guidelines](./.claude/claude.md) - Coding standards and best practices
+- [Solid.js Reactivity Guide](./SOLID_REACTIVITY_GUIDE.md) - **⚠️ REQUIRED READING** for anyone working with event handlers and signals
 - [Project Notes](./NOTES.md) - Quick reference and decisions
 
 ### Organized Documentation

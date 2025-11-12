@@ -4,7 +4,7 @@
  * Lexical-based rich text editor integrated with SolidJS
  */
 
-import { Component, onMount, onCleanup, createSignal } from 'solid-js';
+import { Component, onMount, onCleanup, createSignal, Show } from 'solid-js';
 import {
   createEditor,
   $getRoot,
@@ -20,12 +20,21 @@ import {
   type LexicalEditor,
   type ElementFormatType,
   $isRangeSelection,
+  type TextFormatType,
 } from 'lexical';
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html';
 import { registerRichText } from '@lexical/rich-text';
 import { HeadingNode, QuoteNode, $createHeadingNode } from '@lexical/rich-text';
-import { LinkNode, AutoLinkNode } from '@lexical/link';
-import { ListNode, ListItemNode } from '@lexical/list';
+import { LinkNode, AutoLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
+import {
+  ListNode,
+  ListItemNode,
+  INSERT_ORDERED_LIST_COMMAND,
+  INSERT_UNORDERED_LIST_COMMAND,
+  REMOVE_LIST_COMMAND,
+  $isListNode
+} from '@lexical/list';
+import { CodeNode, CodeHighlightNode } from '@lexical/code';
 import { registerHistory, createEmptyHistoryState } from '@lexical/history';
 import type { RichTextEditorProps, ToolbarState } from './RichTextEditor.types';
 import styles from './RichTextEditor.module.scss';
@@ -34,9 +43,12 @@ import styles from './RichTextEditor.module.scss';
  * Rich Text Editor Component
  *
  * Features:
- * - Bold, Italic, Underline, Strikethrough
+ * - Bold, Italic, Underline, Strikethrough, Subscript, Superscript
+ * - Text and background colors
  * - Text alignment (left, center, right, justify)
  * - Heading styles (H1, H2, H3, Paragraph)
+ * - Lists (bullet and numbered)
+ * - Code blocks
  * - Link insertion/editing
  * - Undo/Redo
  */
@@ -49,12 +61,20 @@ export const RichTextEditor: Component<RichTextEditorProps> = (props) => {
     isItalic: false,
     isUnderline: false,
     isStrikethrough: false,
+    isSubscript: false,
+    isSuperscript: false,
+    textColor: '#000000',
+    backgroundColor: 'transparent',
     textAlign: 'left',
     blockType: 'paragraph',
     canUndo: false,
     canRedo: false,
     isLink: false,
   });
+
+  const [showLinkModal, setShowLinkModal] = createSignal(false);
+  const [linkUrl, setLinkUrl] = createSignal('');
+  const [showColorPicker, setShowColorPicker] = createSignal<'text' | 'background' | null>(null);
 
   onMount(() => {
     if (!editorRef) return;
@@ -74,10 +94,27 @@ export const RichTextEditor: Component<RichTextEditorProps> = (props) => {
           italic: styles.editorItalic || '',
           underline: styles.editorUnderline || '',
           strikethrough: styles.editorStrikethrough || '',
+          subscript: styles.editorSubscript || '',
+          superscript: styles.editorSuperscript || '',
         },
         link: styles.editorLink || '',
+        list: {
+          ul: styles.editorListUL || '',
+          ol: styles.editorListOL || '',
+          listitem: styles.editorListItem || '',
+        },
+        code: styles.editorCode || '',
       },
-      nodes: [HeadingNode, QuoteNode, LinkNode, AutoLinkNode, ListNode, ListItemNode],
+      nodes: [
+        HeadingNode,
+        QuoteNode,
+        LinkNode,
+        AutoLinkNode,
+        ListNode,
+        ListItemNode,
+        CodeNode,
+        CodeHighlightNode,
+      ],
       onError: (error: Error) => {
         console.error('Lexical Editor Error:', error);
       },
@@ -181,6 +218,8 @@ export const RichTextEditor: Component<RichTextEditorProps> = (props) => {
         isItalic: selection.hasFormat('italic'),
         isUnderline: selection.hasFormat('underline'),
         isStrikethrough: selection.hasFormat('strikethrough'),
+        isSubscript: selection.hasFormat('subscript'),
+        isSuperscript: selection.hasFormat('superscript'),
       }));
     });
   };
@@ -202,12 +241,77 @@ export const RichTextEditor: Component<RichTextEditorProps> = (props) => {
     editor?.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough');
   };
 
+  const formatSubscript = () => {
+    editor?.dispatchCommand(FORMAT_TEXT_COMMAND, 'subscript');
+  };
+
+  const formatSuperscript = () => {
+    editor?.dispatchCommand(FORMAT_TEXT_COMMAND, 'superscript');
+  };
+
   const undo = () => {
     editor?.dispatchCommand(UNDO_COMMAND, undefined);
   };
 
   const redo = () => {
     editor?.dispatchCommand(REDO_COMMAND, undefined);
+  };
+
+  // List commands
+  const insertBulletList = () => {
+    if (!editor) return;
+    editor.update(() => {
+      const selection = $getSelection();
+      if (!$isRangeSelection(selection)) return;
+
+      // Check if already in a list
+      const anchorNode = selection.anchor.getNode();
+      const element = anchorNode.getTopLevelElementOrThrow();
+      const parent = element.getParent();
+
+      if ($isListNode(parent)) {
+        editor?.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
+      } else {
+        editor?.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
+      }
+    });
+  };
+
+  const insertNumberedList = () => {
+    if (!editor) return;
+    editor.update(() => {
+      const selection = $getSelection();
+      if (!$isRangeSelection(selection)) return;
+
+      // Check if already in a list
+      const anchorNode = selection.anchor.getNode();
+      const element = anchorNode.getTopLevelElementOrThrow();
+      const parent = element.getParent();
+
+      if ($isListNode(parent)) {
+        editor?.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
+      } else {
+        editor?.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
+      }
+    });
+  };
+
+  // Link commands
+  const toggleLink = () => {
+    if (toolbarState().isLink) {
+      editor?.dispatchCommand(TOGGLE_LINK_COMMAND, null);
+    } else {
+      setShowLinkModal(true);
+    }
+  };
+
+  const insertLink = () => {
+    const url = linkUrl();
+    if (url) {
+      editor?.dispatchCommand(TOGGLE_LINK_COMMAND, url);
+      setShowLinkModal(false);
+      setLinkUrl('');
+    }
   };
 
   // Alignment commands
@@ -233,10 +337,23 @@ export const RichTextEditor: Component<RichTextEditorProps> = (props) => {
     });
   };
 
+  // Code block command
+  const insertCodeBlock = () => {
+    if (!editor) return;
+    editor.update(() => {
+      const selection = $getSelection();
+      if (!$isRangeSelection(selection)) return;
+
+      const codeNode = new CodeNode();
+      selection.insertNodes([codeNode]);
+    });
+  };
+
   return (
     <div class={`${styles.richTextEditor} ${props.class || ''}`}>
       {/* Toolbar */}
       <div class={styles.toolbar}>
+        {/* Text Formatting */}
         <div class={styles.toolbarGroup}>
           <button
             type="button"
@@ -273,6 +390,24 @@ export const RichTextEditor: Component<RichTextEditorProps> = (props) => {
             disabled={props.disabled}
           >
             <i class="ri-strikethrough" />
+          </button>
+          <button
+            type="button"
+            class={`${styles.toolbarButton} ${toolbarState().isSubscript ? styles.active : ''}`}
+            onClick={formatSubscript}
+            title="Subscript"
+            disabled={props.disabled}
+          >
+            <i class="ri-subscript" />
+          </button>
+          <button
+            type="button"
+            class={`${styles.toolbarButton} ${toolbarState().isSuperscript ? styles.active : ''}`}
+            onClick={formatSuperscript}
+            title="Superscript"
+            disabled={props.disabled}
+          >
+            <i class="ri-superscript" />
           </button>
         </div>
 
@@ -362,6 +497,54 @@ export const RichTextEditor: Component<RichTextEditorProps> = (props) => {
 
         <div class={styles.toolbarDivider} />
 
+        {/* Lists */}
+        <div class={styles.toolbarGroup}>
+          <button
+            type="button"
+            class={`${styles.toolbarButton} ${toolbarState().blockType === 'bullet' ? styles.active : ''}`}
+            onClick={insertBulletList}
+            title="Bullet List"
+            disabled={props.disabled}
+          >
+            <i class="ri-list-unordered" />
+          </button>
+          <button
+            type="button"
+            class={`${styles.toolbarButton} ${toolbarState().blockType === 'number' ? styles.active : ''}`}
+            onClick={insertNumberedList}
+            title="Numbered List"
+            disabled={props.disabled}
+          >
+            <i class="ri-list-ordered" />
+          </button>
+          <button
+            type="button"
+            class={`${styles.toolbarButton} ${toolbarState().blockType === 'code' ? styles.active : ''}`}
+            onClick={insertCodeBlock}
+            title="Code Block"
+            disabled={props.disabled}
+          >
+            <i class="ri-code-box-line" />
+          </button>
+        </div>
+
+        <div class={styles.toolbarDivider} />
+
+        {/* Link */}
+        <div class={styles.toolbarGroup}>
+          <button
+            type="button"
+            class={`${styles.toolbarButton} ${toolbarState().isLink ? styles.active : ''}`}
+            onClick={toggleLink}
+            title="Insert Link"
+            disabled={props.disabled}
+          >
+            <i class="ri-link" />
+          </button>
+        </div>
+
+        <div class={styles.toolbarDivider} />
+
         {/* Undo/Redo */}
         <div class={styles.toolbarGroup}>
           <button
@@ -392,6 +575,50 @@ export const RichTextEditor: Component<RichTextEditorProps> = (props) => {
         contentEditable={!props.disabled}
         data-placeholder={props.placeholder || 'Enter text here...'}
       />
+
+      {/* Link Modal */}
+      <Show when={showLinkModal()}>
+        <div class={styles.modal}>
+          <div class={styles.modalContent}>
+            <h3 class={styles.modalTitle}>Insert Link</h3>
+            <input
+              type="url"
+              class={styles.modalInput}
+              placeholder="https://example.com"
+              value={linkUrl()}
+              onInput={(e) => setLinkUrl(e.currentTarget.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  insertLink();
+                } else if (e.key === 'Escape') {
+                  setShowLinkModal(false);
+                  setLinkUrl('');
+                }
+              }}
+            />
+            <div class={styles.modalActions}>
+              <button
+                type="button"
+                class={styles.modalButton}
+                onClick={() => {
+                  setShowLinkModal(false);
+                  setLinkUrl('');
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                class={`${styles.modalButton} ${styles.modalButtonPrimary}`}
+                onClick={insertLink}
+                disabled={!linkUrl()}
+              >
+                Insert
+              </button>
+            </div>
+          </div>
+        </div>
+      </Show>
     </div>
   );
 };

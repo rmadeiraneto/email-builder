@@ -50,6 +50,10 @@ export type ToolbarButtonType =
   | 'italic'
   | 'underline'
   | 'strikethrough'
+  | 'subscript'
+  | 'superscript'
+  | 'textColor'
+  | 'backgroundColor'
   | 'alignLeft'
   | 'alignCenter'
   | 'alignRight'
@@ -58,6 +62,9 @@ export type ToolbarButtonType =
   | 'h1'
   | 'h2'
   | 'h3'
+  | 'bulletList'
+  | 'numberedList'
+  | 'codeBlock'
   | 'link'
   | 'undo'
   | 'redo';
@@ -70,8 +77,12 @@ export interface ToolbarState {
   isItalic: boolean;
   isUnderline: boolean;
   isStrikethrough: boolean;
+  isSubscript: boolean;
+  isSuperscript: boolean;
+  textColor: string;
+  backgroundColor: string;
   textAlign: 'left' | 'center' | 'right' | 'justify';
-  blockType: 'paragraph' | 'h1' | 'h2' | 'h3';
+  blockType: 'paragraph' | 'h1' | 'h2' | 'h3' | 'bullet' | 'number' | 'code';
   canUndo: boolean;
   canRedo: boolean;
   isLink: boolean;

@@ -117,6 +117,16 @@
   text-decoration: line-through;
 }
 
+.editorSubscript {
+  vertical-align: sub;
+  font-size: 0.75em;
+}
+
+.editorSuperscript {
+  vertical-align: super;
+  font-size: 0.75em;
+}
+
 // Editor block elements
 .editorParagraph {
   margin: 0 0 tokens.$spacing-3 0;
@@ -172,7 +182,129 @@
   }
 }
 
+// Lists
+.editorListUL,
+.editorListOL {
+  margin: 0 0 tokens.$spacing-3 tokens.$spacing-4;
+  padding: 0;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.editorListUL {
+  list-style-type: disc;
+}
+
+.editorListOL {
+  list-style-type: decimal;
+}
+
+.editorListItem {
+  margin: 0 0 tokens.$spacing-1 0;
+}
+
+// Code blocks
+.editorCode {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  background: tokens.$color-neutral-100;
+  border: tokens.$border-width-base solid tokens.$color-neutral-200;
+  border-radius: tokens.$border-radius-md;
+  padding: tokens.$spacing-3;
+  margin: 0 0 tokens.$spacing-3 0;
+  font-size: tokens.$typography-font-size-sm;
+  line-height: tokens.$typography-line-height-relaxed;
+  overflow-x: auto;
+  white-space: pre;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
 // Selection highlighting
 .editorContainer ::selection {
   background: tokens.$color-brand-primary-200;
+}
+
+// Link Modal
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: tokens.$color-ui-background-primary;
+  border-radius: tokens.$border-radius-lg;
+  padding: tokens.$spacing-4;
+  min-width: 400px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modalTitle {
+  margin: 0 0 tokens.$spacing-3 0;
+  font-size: tokens.$typography-font-size-lg;
+  font-weight: tokens.$typography-font-weight-semibold;
+  color: tokens.$color-neutral-900;
+}
+
+.modalInput {
+  width: 100%;
+  padding: tokens.$spacing-2;
+  border: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  border-radius: tokens.$border-radius-md;
+  font-size: tokens.$typography-font-size-sm;
+  margin-bottom: tokens.$spacing-3;
+
+  &:focus {
+    outline: none;
+    border-color: tokens.$color-brand-primary-500;
+  }
+}
+
+.modalActions {
+  display: flex;
+  gap: tokens.$spacing-2;
+  justify-content: flex-end;
+}
+
+.modalButton {
+  padding: tokens.$spacing-2 tokens.$spacing-4;
+  border: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  border-radius: tokens.$border-radius-md;
+  background: tokens.$color-ui-background-secondary;
+  color: tokens.$color-neutral-700;
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-medium;
+  cursor: pointer;
+  transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
+
+  &:hover:not(:disabled) {
+    background: tokens.$color-ui-border-base;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.modalButtonPrimary {
+  background: tokens.$color-brand-primary-500;
+  color: white;
+  border-color: tokens.$color-brand-primary-500;
+
+  &:hover:not(:disabled) {
+    background: tokens.$color-brand-primary-600;
+    border-color: tokens.$color-brand-primary-600;
+  }
 }

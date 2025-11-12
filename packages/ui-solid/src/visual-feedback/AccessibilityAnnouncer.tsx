@@ -7,7 +7,7 @@
  * @module visual-feedback
  */
 
-import { Component, createSignal, createEffect, onMount, onCleanup } from 'solid-js';
+import { Component, createSignal, createEffect, onMount, onCleanup, untrack } from 'solid-js';
 import { visualFeedbackEventBus, type VisualFeedbackEvent } from '@email-builder/core';
 import styles from './AccessibilityAnnouncer.module.scss';
 
@@ -33,15 +33,22 @@ export const AccessibilityAnnouncer: Component<AccessibilityAnnouncerProps> = (p
   // Subscribe to visual feedback events
   onMount(() => {
     const unsubscribeEditStart = visualFeedbackEventBus.on('property:edit:start', (event: VisualFeedbackEvent) => {
-      setCurrentProperty(event.propertyPath);
-      setCurrentValue(event.currentValue);
-      setIsEditing(true);
+      // Use untrack to prevent reactive tracking and infinite loops
+      // This prevents the signal updates from triggering createEffect recursively
+      untrack(() => {
+        setCurrentProperty(event.propertyPath);
+        setCurrentValue(event.currentValue);
+        setIsEditing(true);
+      });
     });
 
     const unsubscribeEditEnd = visualFeedbackEventBus.on('property:edit:end', () => {
-      setIsEditing(false);
-      setCurrentProperty(undefined);
-      setCurrentValue(undefined);
+      // Use untrack to prevent reactive tracking and infinite loops
+      untrack(() => {
+        setIsEditing(false);
+        setCurrentProperty(undefined);
+        setCurrentValue(undefined);
+      });
     });
 
     onCleanup(() => {

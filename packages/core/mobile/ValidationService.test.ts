@@ -15,6 +15,8 @@ describe('ValidationService', () => {
   let modeManager: ModeManager;
   let mockTemplate: Template;
 
+  const waitForEmit = () => new Promise(resolve => setTimeout(resolve, 10));
+
   beforeEach(() => {
     eventEmitter = new EventEmitter();
 
@@ -74,20 +76,26 @@ describe('ValidationService', () => {
       expect(result.issuesBySeverity).toHaveProperty('critical');
     });
 
-    it('should emit validation start event', () => {
-      const listener = jest.fn();
+    it('should emit validation start event', async () => {
+      const listener = vi.fn();
       eventEmitter.on(ValidationEvent.VALIDATION_START, listener);
 
       validationService.validate(mockTemplate);
 
+      // Wait for setTimeout to complete
+      await waitForEmit();
+
       expect(listener).toHaveBeenCalled();
     });
 
-    it('should emit validation complete event', () => {
-      const listener = jest.fn();
+    it('should emit validation complete event', async () => {
+      const listener = vi.fn();
       eventEmitter.on(ValidationEvent.VALIDATION_COMPLETE, listener);
 
       validationService.validate(mockTemplate);
+
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -96,11 +104,14 @@ describe('ValidationService', () => {
       );
     });
 
-    it('should emit issue found events', () => {
-      const listener = jest.fn();
+    it('should emit issue found events', async () => {
+      const listener = vi.fn();
       eventEmitter.on(ValidationEvent.ISSUE_FOUND, listener);
 
       validationService.validate(mockTemplate);
+
+      // Wait for setTimeout to complete
+      await waitForEmit();
 
       expect(listener).toHaveBeenCalled();
     });

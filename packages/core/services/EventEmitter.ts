@@ -47,13 +47,17 @@ export class EventEmitter implements IEventEmitter {
       return;
     }
 
-    listeners.forEach((listener) => {
-      try {
-        listener(data);
-      } catch (error) {
-        console.error(`Error in event listener for "${event}":`, error);
-      }
-    });
+    // Use setTimeout to schedule in a new task, completely breaking out of reactive batching cycles
+    // This prevents infinite recursion when handlers update state that triggers re-renders
+    setTimeout(() => {
+      listeners.forEach((listener) => {
+        try {
+          listener(data);
+        } catch (error) {
+          console.error(`Error in event listener for "${event}":`, error);
+        }
+      });
+    }, 0);
   }
 
   public off(event?: string, listener?: EventListener): void {

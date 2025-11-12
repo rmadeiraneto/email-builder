@@ -2,10 +2,11 @@
  * ValidationService Tests
  */
 
-import { ValidationService, ValidationEvent, DEFAULT_VALIDATION_RULES } from '../ValidationService';
-import { EventEmitter } from '../../services/EventEmitter';
-import { ModeManager } from '../ModeManager';
-import { DeviceMode } from '../mobile.types';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { ValidationService, ValidationEvent, DEFAULT_VALIDATION_RULES } from './ValidationService';
+import { EventEmitter } from '../services/EventEmitter';
+import { ModeManager } from './ModeManager';
+import { DeviceMode } from './mobile.types';
 import type { Template, ValidationRule } from '../../types';
 
 describe('ValidationService', () => {
@@ -18,7 +19,7 @@ describe('ValidationService', () => {
     eventEmitter = new EventEmitter();
 
     modeManager = {
-      getCurrentMode: jest.fn().mockReturnValue(DeviceMode.MOBILE),
+      getCurrentMode: vi.fn().mockReturnValue(DeviceMode.MOBILE),
     } as any;
 
     mockTemplate = {

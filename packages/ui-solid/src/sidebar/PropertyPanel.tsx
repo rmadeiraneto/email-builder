@@ -4,7 +4,7 @@ import type {
   PropertyDefinition,
   ComponentPropertyMap,
 } from './PropertyPanel.types';
-import type { ComponentPreset } from '@email-builder/core';
+import type { ComponentPreset, VisualFeedbackEvent } from '@email-builder/core';
 import { getTestId, getTestAction, getTestState } from '@email-builder/core/utils';
 import { visualFeedbackEventBus } from '@email-builder/core';
 import { PresetPreview, PresetManager } from '../modals';

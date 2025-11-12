@@ -2,10 +2,10 @@
  * ModeManager Tests
  */
 
-import { ModeManager, ModeManagerEvent } from '../ModeManager';
-import { DeviceMode } from '../mobile.types';
-import { EventEmitter } from '../../services/EventEmitter';
-import { CommandManager } from '../../commands/CommandManager';
+import { ModeManager, ModeManagerEvent } from './ModeManager';
+import { DeviceMode } from './mobile.types';
+import { EventEmitter } from '../services/EventEmitter';
+import { CommandManager } from '../commands/CommandManager';
 import type { Template } from '../../types';
 
 describe('ModeManager', () => {

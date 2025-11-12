@@ -8,7 +8,7 @@
  */
 
 import { Component, createSignal, createEffect, onMount, onCleanup } from 'solid-js';
-import { visualFeedbackEventBus } from '@email-builder/core';
+import { visualFeedbackEventBus, type VisualFeedbackEvent } from '@email-builder/core';
 import styles from './AccessibilityAnnouncer.module.scss';
 
 export interface AccessibilityAnnouncerProps {
@@ -32,13 +32,13 @@ export const AccessibilityAnnouncer: Component<AccessibilityAnnouncerProps> = (p
 
   // Subscribe to visual feedback events
   onMount(() => {
-    const unsubscribeEditStart = visualFeedbackEventBus.on('property:edit:start', (event) => {
+    const unsubscribeEditStart = visualFeedbackEventBus.on('property:edit:start', (event: VisualFeedbackEvent) => {
       setCurrentProperty(event.propertyPath);
       setCurrentValue(event.currentValue);
       setIsEditing(true);
     });
 
-    const unsubscribeEditEnd = visualFeedbackEventBus.on('property:edit:end', (event) => {
+    const unsubscribeEditEnd = visualFeedbackEventBus.on('property:edit:end', () => {
       setIsEditing(false);
       setCurrentProperty(undefined);
       setCurrentValue(undefined);

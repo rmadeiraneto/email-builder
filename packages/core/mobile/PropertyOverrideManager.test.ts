@@ -2,9 +2,9 @@
  * PropertyOverrideManager Tests
  */
 
-import { PropertyOverrideManager, PropertyCategory } from '../PropertyOverrideManager';
-import { ModeManagerEvent } from '../ModeManager';
-import { EventEmitter } from '../../services/EventEmitter';
+import { PropertyOverrideManager, PropertyCategory } from './PropertyOverrideManager';
+import { ModeManagerEvent } from './ModeManager';
+import { EventEmitter } from '../services/EventEmitter';
 import type { Template } from '../../types';
 import type { MobileDevModeConfig } from '../mobile.types';
 

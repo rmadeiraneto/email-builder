@@ -2533,7 +2533,1124 @@ Sensible defaults provided for all configuration options. Integrators can overri
 - [ ] API documentation for programmatic access
 - [ ] Migration guide for existing templates
 
-## 18. Glossary
+## 18. Enhanced Component Customization Properties
+
+### 18.1 Overview
+
+Based on analysis of leading email builders (Elastic Email, Mailchimp, SalesManago, Tabular, Stripo, Beefree), this section defines enhanced customization properties for existing components. **Priority is on making existing components more customizable** before adding new components.
+
+### 18.2 Cross-Component Property Enhancements
+
+These properties should be available across **all components** where applicable:
+
+#### 18.2.1 Advanced Spacing Controls
+
+**Current State**: Basic padding control with unified values
+**Enhancement**: Granular spacing control per side
+
+**New Properties**:
+- `styles.padding.top` - Top padding (CSSValue)
+- `styles.padding.right` - Right padding (CSSValue)
+- `styles.padding.bottom` - Bottom padding (CSSValue)
+- `styles.padding.left` - Left padding (CSSValue)
+- `styles.padding.lock` - Lock/unlock unified padding (boolean)
+- `styles.margin.top` - Top margin (CSSValue)
+- `styles.margin.right` - Right margin (CSSValue)
+- `styles.margin.bottom` - Bottom margin (CSSValue)
+- `styles.margin.left` - Left margin (CSSValue)
+- `styles.margin.lock` - Lock/unlock unified margin (boolean)
+
+**UI/UX**:
+- Visual padding/margin editor with lock icon (like Figma)
+- Click lock to apply value to all sides uniformly
+- Unlock for individual side control
+- Email compatibility: ✓ Full support
+
+**Priority**: **HIGH** - Fundamental control expected in modern builders
+
+---
+
+#### 18.2.2 Enhanced Border Controls
+
+**Current State**: Unified border properties
+**Enhancement**: Per-side border control and advanced styling
+
+**New Properties**:
+- `styles.border.top` - Top border (width, style, color)
+- `styles.border.right` - Right border
+- `styles.border.bottom` - Bottom border
+- `styles.border.left` - Left border
+- `styles.border.lock` - Lock/unlock unified border (boolean)
+- `styles.borderRadius.topLeft` - Top-left corner radius (CSSValue)
+- `styles.borderRadius.topRight` - Top-right corner radius
+- `styles.borderRadius.bottomRight` - Bottom-right corner radius
+- `styles.borderRadius.bottomLeft` - Bottom-left corner radius
+- `styles.borderRadius.lock` - Lock/unlock unified radius (boolean)
+
+**Additional Border Styles**:
+- `groove` - 3D grooved border
+- `ridge` - 3D ridged border
+- `inset` - 3D inset border
+- `outset` - 3D outset border
+
+**UI/UX**:
+- Visual border editor showing all sides
+- Individual corner radius controls
+- Border style preview in dropdown
+
+**Email Compatibility**:
+- ✓ Basic border styles (solid, dashed, dotted, double)
+- ⚠ 3D styles (groove, ridge, inset, outset) limited in Outlook
+- ⚠ Individual corner radius limited in Outlook 2016-2021
+
+**Priority**: **HIGH** - Requested feature for design flexibility
+
+---
+
+#### 18.2.3 Advanced Typography Controls
+
+**Current State**: Basic font properties (family, size, weight, color)
+**Enhancement**: Professional typography controls
+
+**New Properties for All Text-Containing Components**:
+
+**Character Spacing**:
+- `styles.letterSpacing` - Space between characters (CSSValue with px, em, rem)
+- `styles.wordSpacing` - Space between words (CSSValue)
+
+**Text Effects**:
+- `styles.textShadow` - Text shadow configuration
+  - `offsetX` (CSSValue)
+  - `offsetY` (CSSValue)
+  - `blurRadius` (CSSValue)
+  - `color` (string)
+- `styles.textStroke` - Text outline (web mode only)
+  - `width` (CSSValue)
+  - `color` (string)
+
+**Advanced Text Formatting**:
+- `styles.textIndent` - First line indent (CSSValue)
+- `styles.whiteSpace` - Whitespace handling (normal, nowrap, pre, pre-wrap)
+- `styles.verticalAlign` - Vertical alignment (baseline, top, middle, bottom, sub, super)
+
+**Web Typography** (Web mode only):
+- `styles.fontVariant` - Font variant (normal, small-caps)
+- `styles.fontStretch` - Font stretch (normal, condensed, expanded, etc.)
+- `styles.textRendering` - Text rendering optimization (auto, optimizeSpeed, optimizeLegibility, geometricPrecision)
+
+**Email Compatibility**:
+- ✓ Letter-spacing: Good support (Outlook 2016+ partial)
+- ⚠ Text shadow: Limited (no Outlook Windows desktop support)
+- ✗ Text stroke: Web only
+- ✓ Text indent: Good support
+- ✓ Vertical align: Good support
+
+**Priority**: **MEDIUM** - Professional typography is important for brand consistency
+
+---
+
+#### 18.2.4 Advanced Color Controls
+
+**Current State**: Simple color pickers
+**Enhancement**: Advanced color options with transparency
+
+**New Properties**:
+- `styles.opacity` - Element opacity (0-1 or 0-100%)
+- Color format support:
+  - Hex: `#RRGGBB`
+  - Hex with alpha: `#RRGGBBAA`
+  - RGB: `rgb(r, g, b)`
+  - RGBA: `rgba(r, g, b, a)`
+  - HSL: `hsl(h, s%, l%)`
+  - HSLA: `hsla(h, s%, l%, a)`
+
+**Gradient Support** (Web mode only):
+- `styles.backgroundGradient` - Gradient configuration
+  - `type` - linear, radial, conic
+  - `angle` - Gradient angle for linear
+  - `stops` - Array of color stops with position
+
+**UI/UX**:
+- Color picker with opacity slider
+- Gradient builder interface (visual editor)
+- Recent/saved colors palette
+- Brand color palette integration
+
+**Email Compatibility**:
+- ⚠ Opacity: Limited in Outlook (some support via filters)
+- ✗ Gradients: Very limited (use fallback solid colors)
+
+**Priority**: **MEDIUM** - Opacity is important, gradients are nice-to-have
+
+---
+
+#### 18.2.5 Shadow Effects
+
+**Current State**: No shadow support
+**Enhancement**: Box shadow for depth and emphasis
+
+**New Properties**:
+- `styles.boxShadow` - Box shadow configuration (array for multiple shadows)
+  - `offsetX` (CSSValue)
+  - `offsetY` (CSSValue)
+  - `blurRadius` (CSSValue)
+  - `spreadRadius` (CSSValue)
+  - `color` (string with alpha support)
+  - `inset` (boolean)
+
+**Preset Shadow Options**:
+- None (default)
+- Subtle - Small soft shadow
+- Medium - Standard card shadow
+- Large - Elevated card shadow
+- Extra Large - Modal/dialog shadow
+- Custom - User-defined values
+
+**UI/UX**:
+- Shadow preset selector
+- Visual shadow editor with live preview
+- Multiple shadow layers support
+
+**Email Compatibility**:
+- ✗ Box shadow: Not supported in Outlook Windows desktop
+- ✓ Good support in Gmail, Apple Mail, Yahoo, webmail clients
+- Provide fallback: Solid border or no shadow
+
+**Priority**: **LOW** - Nice visual enhancement but limited email support
+
+---
+
+#### 18.2.6 Size & Dimension Controls
+
+**Current State**: Basic width/height
+**Enhancement**: Advanced sizing options
+
+**New Properties**:
+- `styles.minWidth` - Minimum width (CSSValue)
+- `styles.maxWidth` - Maximum width (CSSValue)
+- `styles.minHeight` - Minimum height (CSSValue)
+- `styles.maxHeight` - Maximum height (CSSValue)
+- `styles.aspectRatio` - Aspect ratio (e.g., "16:9", "4:3", "1:1")
+
+**Box Sizing**:
+- `styles.boxSizing` - Box sizing model (content-box, border-box)
+
+**Email Compatibility**:
+- ✓ Min/max width: Good support
+- ⚠ Min/max height: Limited in some email clients
+- ✗ Aspect ratio: CSS property too new for email
+
+**Priority**: **MEDIUM** - Max-width especially important for responsive emails
+
+---
+
+#### 18.2.7 Conditional Visibility
+
+**Current State**: Device visibility (desktop/mobile) via Mobile Dev Mode
+**Enhancement**: Additional visibility conditions
+
+**New Properties**:
+- `content.visibilityConditions` - Array of visibility rules
+  - `type` - device, breakpoint, data-condition
+  - `rule` - Specific condition (e.g., "mobile", ">768px", "{{user.premium}}")
+  - `show` - Show (true) or hide (false) when condition met
+
+**Use Cases**:
+- Show content only for premium users
+- Display based on user preferences
+- Conditional content for A/B testing
+- Show/hide based on custom data fields
+
+**Email Compatibility**:
+- ✓ Device-based: Media queries supported
+- ⚠ Data-based: Requires server-side processing before send
+
+**Priority**: **LOW** - Advanced feature, implement after core enhancements
+
+---
+
+### 18.3 Component-Specific Property Enhancements
+
+#### 18.3.1 Button Component Enhancements
+
+**Current Properties**: 18 properties (content + styles)
+**New Properties**: +12 properties
+
+**Icon Enhancements**:
+- `content.iconSize` - Icon size (CSSValue, default inherits font size)
+- `content.iconColor` - Icon color override (separate from text color)
+- `content.iconHoverColor` - Icon hover color
+
+**Advanced Styling**:
+- `styles.minWidth` - Minimum button width (for consistency)
+- `styles.maxWidth` - Maximum button width (prevent stretching)
+- `styles.textTransform` - Text transform (none, uppercase, lowercase, capitalize)
+- `styles.letterSpacing` - Button text letter spacing
+- `styles.boxShadow` - Button shadow (array of shadows)
+- `styles.hoverBoxShadow` - Hover shadow effect
+- `styles.transition` - Transition timing (duration, easing) for hover effects
+
+**Full Width Option**:
+- `styles.fullWidth` - Make button full width of container (boolean)
+- `styles.fullWidthMobile` - Full width on mobile only (boolean)
+
+**Advanced States** (Web mode only):
+- `styles.activeBackgroundColor` - Active/pressed state background
+- `styles.activeBorderColor` - Active/pressed state border
+- `styles.disabledOpacity` - Disabled state opacity
+
+**Email Compatibility**:
+- ✓ Min/max width: Good support
+- ✓ Text transform, letter spacing: Good support
+- ✗ Box shadow: Limited (Outlook Windows)
+- ⚠ Hover effects: Limited interactivity in email
+- **Solution**: Use "bulletproof button" pattern for maximum compatibility
+
+**New Presets**:
+- Ghost (outlined with transparent background)
+- Pill (fully rounded corners)
+- Gradient (web mode only)
+- 3D Raised (with shadow)
+
+**Priority**: **HIGH** - Buttons are critical CTA elements
+
+---
+
+#### 18.3.2 Text Component Enhancements
+
+**Current Properties**: 12 properties
+**New Properties**: +8 properties
+
+**Advanced Typography**:
+- `styles.textIndent` - First line indent
+- `styles.textShadow` - Text shadow effect
+- `styles.wordSpacing` - Space between words
+- `styles.whiteSpace` - Whitespace handling
+- `styles.overflow` - Text overflow behavior (visible, hidden, ellipsis)
+- `styles.textOverflow` - Text overflow style (clip, ellipsis)
+- `styles.maxLines` - Maximum number of lines (with ellipsis)
+
+**List Styling** (when content type is list):
+- `styles.listStyleType` - List marker type (disc, circle, square, decimal, etc.)
+- `styles.listStylePosition` - List marker position (inside, outside)
+
+**Drop Cap** (Web mode only):
+- `content.enableDropCap` - Enable drop cap on first letter
+- `styles.dropCapSize` - Drop cap size multiplier
+- `styles.dropCapColor` - Drop cap color
+
+**Email Compatibility**:
+- ✓ Text indent, word spacing: Good support
+- ⚠ Text shadow: Limited (no Outlook Windows)
+- ✗ Text overflow ellipsis: Very limited in email
+- ✓ List styling: Good support
+
+**Priority**: **MEDIUM** - Text component is heavily used
+
+---
+
+#### 18.3.3 Image Component Enhancements
+
+**Current Properties**: 14 properties
+**New Properties**: +15 properties
+
+**Advanced Image Properties**:
+- `content.caption` - Image caption text (displayed below image)
+- `content.loading` - Loading strategy (lazy, eager, auto)
+- `content.decoding` - Decoding hint (async, sync, auto)
+- `content.srcset` - Responsive image sources (array of {url, descriptor})
+- `content.sizes` - Sizes attribute for responsive images
+
+**Image Styling**:
+- `styles.filter` - CSS filters (grayscale, blur, brightness, contrast, etc.)
+  - `grayscale` (0-100%)
+  - `blur` (px)
+  - `brightness` (0-200%)
+  - `contrast` (0-200%)
+  - `saturate` (0-200%)
+  - `sepia` (0-100%)
+  - `hueRotate` (0-360deg)
+- `styles.boxShadow` - Image shadow
+- `styles.border` - Image border (per-side support)
+- `styles.borderRadius` - Corner rounding (per-corner support)
+- `styles.opacity` - Image opacity
+
+**Image Effects** (Web mode only):
+- `styles.transform` - Image transforms (rotate, scale, skew)
+- `styles.clipPath` - Custom clipping paths (circle, polygon, etc.)
+- `styles.mixBlendMode` - Blend mode with background
+
+**Overlay Support**:
+- `content.overlay` - Image overlay configuration
+  - `enabled` (boolean)
+  - `color` (color with alpha)
+  - `opacity` (0-1)
+  - `blendMode` (multiply, overlay, darken, lighten, etc.)
+
+**Caption Styling**:
+- `styles.captionFontFamily` - Caption font
+- `styles.captionFontSize` - Caption size
+- `styles.captionColor` - Caption color
+- `styles.captionAlign` - Caption alignment
+
+**Email Compatibility**:
+- ✓ Alt text, lazy loading: Good support
+- ⚠ Srcset: Limited (some modern clients)
+- ✗ CSS filters: Not supported in email
+- ⚠ Border radius: Limited in Outlook 2016-2021
+- ✓ Caption via table structure: Good support
+
+**Priority**: **HIGH** - Images are core content elements
+
+---
+
+#### 18.3.4 Header Component Enhancements
+
+**Current Properties**: 12 properties
+**New Properties**: +10 properties
+
+**Logo/Image Enhancements**:
+- `content.image.caption` - Logo/image alt text (accessibility)
+- `content.image.retina` - Retina/2x image URL
+- `styles.imageBorder` - Logo border styling
+- `styles.imageBorderRadius` - Logo border radius
+- `styles.imageBoxShadow` - Logo shadow
+
+**Navigation Enhancements**:
+- `content.navigationAlignment` - Navigation alignment (left, center, right, space-between)
+- `styles.navigationPadding` - Padding around navigation area
+- `styles.navigationBackgroundColor` - Navigation background (separate from header)
+- `styles.linkActiveColor` - Active link color
+- `styles.linkUnderlineStyle` - Link underline (none, always, hover-only)
+- `styles.linkUnderlineThickness` - Underline thickness
+- `styles.mobileBehavior` - Mobile navigation behavior (stack, inline, hamburger, hidden)
+
+**Sticky Header** (Web mode only):
+- `content.sticky` - Enable sticky header (boolean)
+- `styles.stickyOffset` - Offset from top when sticky
+
+**Divider/Border**:
+- `content.showDivider` - Show bottom divider (boolean)
+- `styles.dividerColor` - Divider color
+- `styles.dividerThickness` - Divider thickness
+- `styles.dividerStyle` - Divider style (solid, dashed, dotted)
+
+**Email Compatibility**:
+- ✓ Logo, navigation links: Full support
+- ✗ Sticky header: Web only
+- ✗ Hamburger menu: Web only (use stacked for email)
+- ✓ Divider: Full support
+
+**New Layouts**:
+- **logo-left-nav-right**: Logo left, navigation right (common pattern)
+- **logo-center-nav-below**: Centered logo, navigation below
+- **full-width-background**: Header with full-width colored background
+
+**Priority**: **HIGH** - Header customization is critical for branding
+
+---
+
+#### 18.3.5 Footer Component Enhancements
+
+**Current Properties**: 13 properties
+**New Properties**: +12 properties
+
+**Layout Options**:
+- `content.layout` - Footer layout (single-column, two-column, three-column, four-column)
+- `content.alignment` - Footer content alignment (left, center, right)
+
+**Divider Support**:
+- `content.showDivider` - Show top divider (boolean)
+- `styles.dividerColor` - Divider color
+- `styles.dividerThickness` - Divider thickness
+- `styles.dividerStyle` - Divider style
+
+**Social Link Enhancements**:
+- `content.socialLinkStyle` - Social icon style (icon-only, icon-with-label, label-only)
+- `styles.socialIconShape` - Icon shape (circle, square, rounded-square)
+- `styles.socialIconBackground` - Icon background color
+- `styles.socialIconBorder` - Icon border
+- `styles.socialIconPadding` - Padding inside icon container
+
+**Unsubscribe/Legal**:
+- `content.unsubscribeText` - Unsubscribe link text (required for email compliance)
+- `content.unsubscribeUrl` - Unsubscribe URL placeholder (e.g., `{{unsubscribe_url}}`)
+- `styles.unsubscribeFontSize` - Unsubscribe text size
+- `styles.unsubscribeColor` - Unsubscribe text color
+
+**Multi-Column Footer**:
+- `content.columns` - Array of footer columns
+  - Each column: heading, links[], content
+- `styles.columnGap` - Gap between columns
+- `styles.columnAlignment` - Column content alignment
+
+**Email Compatibility**:
+- ✓ Multi-column layouts: Use table structure
+- ✓ Social icons: Full support
+- ✓ Unsubscribe link: Required, full support
+- ⚠ Icon shapes: Use images for circle/rounded shapes
+
+**Priority**: **HIGH** - Footer is required for email compliance
+
+---
+
+#### 18.3.6 Hero Component Enhancements
+
+**Current Properties**: 14 properties
+**New Properties**: +14 properties
+
+**Background Enhancements**:
+- `content.backgroundType` - Background type (color, image, gradient, video)
+- `content.backgroundVideo` - Background video URL (web mode only)
+- `content.backgroundVideoPoster` - Video poster image (fallback for email)
+- `styles.backgroundPosition` - Background image position (top, center, bottom, custom)
+- `styles.backgroundSize` - Background size (cover, contain, custom)
+- `styles.backgroundRepeat` - Background repeat (no-repeat, repeat, repeat-x, repeat-y)
+- `styles.backgroundAttachment` - Background attachment (scroll, fixed) - web only
+
+**Overlay Enhancements**:
+- `styles.overlayGradient` - Gradient overlay (instead of solid color)
+- `styles.overlayBlur` - Background blur effect (web mode only)
+
+**Content Positioning**:
+- `styles.contentVerticalAlign` - Vertical alignment (top, center, bottom)
+- `styles.contentHorizontalAlign` - Horizontal alignment (left, center, right)
+- `styles.contentPadding` - Padding around content area
+- `styles.minHeight` - Minimum hero height (CSSValue)
+
+**CTA Button Enhancements**:
+- `content.secondaryButton` - Optional secondary button
+- `content.buttonLayout` - Button layout (stacked, horizontal)
+- `styles.buttonGap` - Gap between buttons
+
+**Parallax** (Web mode only):
+- `content.parallax` - Enable parallax scrolling effect (boolean)
+- `styles.parallaxSpeed` - Parallax scroll speed (0-1)
+
+**Email Compatibility**:
+- ✓ Background image: Good support (with VML for Outlook)
+- ✗ Background video: Web only (use poster as fallback)
+- ⚠ Overlay: Good support with opacity
+- ✗ Parallax: Web only
+- ✗ Background blur: Web only
+
+**Priority**: **HIGH** - Hero is a primary conversion component
+
+---
+
+#### 18.3.7 List Component Enhancements
+
+**Current Properties**: 17 properties
+**New Properties**: +11 properties
+
+**Grid Layout**:
+- `content.gridColumns` - Number of columns for grid layout (1-6)
+- `content.gridGap` - Gap between grid items (row and column)
+- `styles.gridAutoFlow` - Grid auto flow (row, column, dense)
+
+**Item Styling Enhancements**:
+- `styles.itemBoxShadow` - Shadow on list items
+- `styles.itemBorderRadius` - Item corner rounding
+- `styles.itemHoverBackgroundColor` - Item hover background (web)
+- `styles.itemHoverTransform` - Item hover transform (web, e.g., scale(1.05))
+
+**Image Enhancements**:
+- `styles.imageAspectRatio` - Enforce aspect ratio for item images
+- `styles.imageObjectFit` - How image fits container (cover, contain, fill)
+- `styles.imageBorderRadius` - Item image corner rounding
+
+**Typography Control**:
+- `styles.titleFontFamily` - Title font family override
+- `styles.titleTextTransform` - Title text transform
+- `styles.descriptionMaxLines` - Max lines before truncation (web)
+
+**Carousel Mode** (Web mode only):
+- `content.carouselMode` - Enable carousel/slider mode (boolean)
+- `content.autoplay` - Autoplay carousel (boolean)
+- `content.autoplayInterval` - Autoplay interval (ms)
+
+**Email Compatibility**:
+- ✓ Grid layout: Use table structure
+- ⚠ Box shadow: Limited in Outlook
+- ✗ Hover effects: Web only
+- ✗ Carousel: Web only (display all items in email)
+- ✓ Image aspect ratio: Via fixed dimensions
+
+**Priority**: **HIGH** - List/grid components are very common
+
+---
+
+#### 18.3.8 Call to Action (CTA) Component Enhancements
+
+**Current Properties**: 12 properties
+**New Properties**: +10 properties
+
+**Background Enhancements**:
+- `content.backgroundType` - Background type (color, image, gradient)
+- `content.backgroundImage` - Background image URL
+- `styles.backgroundPosition` - Background position
+- `styles.backgroundSize` - Background size
+- `styles.backgroundOverlay` - Overlay configuration
+
+**Border & Visual**:
+- `styles.border` - CTA container border (per-side)
+- `styles.borderRadius` - Corner rounding
+- `styles.boxShadow` - Container shadow
+
+**Icon Support**:
+- `content.icon` - Icon above/beside heading
+- `content.iconPosition` - Icon position (top, left, right)
+- `styles.iconSize` - Icon size
+- `styles.iconColor` - Icon color
+
+**Button Arrangement**:
+- `content.buttonStack` - Stack buttons vertically on mobile (boolean)
+- `styles.buttonAlignment` - Button alignment (left, center, right)
+- `styles.buttonFullWidthMobile` - Full-width buttons on mobile
+
+**Countdown Timer** (Advanced):
+- `content.showCountdown` - Enable countdown timer (boolean)
+- `content.countdownEndDate` - End date/time for countdown
+- `styles.countdownPosition` - Position (above-heading, below-heading, above-buttons)
+
+**Email Compatibility**:
+- ✓ Background image: Good support
+- ⚠ Box shadow: Limited in Outlook
+- ✗ Countdown timer: Requires dynamic images/external service
+- ✓ Icons: Use image-based icons
+
+**Priority**: **HIGH** - CTA is conversion-critical
+
+---
+
+#### 18.3.9 Separator Component Enhancements
+
+**Current Properties**: 4 properties
+**New Properties**: +8 properties
+
+**Visual Enhancements**:
+- `content.pattern` - Separator pattern (solid, dashed, dotted, double, wave, zigzag)
+- `content.icon` - Optional icon in center of separator
+- `styles.gradient` - Gradient separator (array of color stops)
+- `styles.shadow` - Separator shadow effect
+
+**Spacing**:
+- `styles.marginTop` - Top margin
+- `styles.marginBottom` - Bottom margin
+
+**Decorative Styles**:
+- `content.decorativeStyle` - Decorative separator style (none, dots, stars, custom)
+- `content.symmetrical` - Symmetrical decorative pattern (boolean)
+
+**Email Compatibility**:
+- ✓ Basic styles: Full support
+- ⚠ Wave, zigzag: Use SVG images or Unicode characters
+- ✗ Gradient: Limited, use solid color fallback
+- ✓ Icons: Image-based icons supported
+
+**Priority**: **LOW** - Decorative enhancement, not critical
+
+---
+
+#### 18.3.10 Spacer Component Enhancements
+
+**Current Properties**: 2 properties
+**New Properties**: +3 properties
+
+**Responsive Spacing**:
+- `content.mobileHeight` - Height override for mobile
+- `content.tabletHeight` - Height override for tablet (future)
+
+**Visual Debug** (Builder only, not exported):
+- `content.showGuides` - Show visual guides in builder (boolean)
+
+**Email Compatibility**:
+- ✓ Full support (simple empty table cell)
+
+**Priority**: **LOW** - Component is simple and functional
+
+---
+
+### 18.4 Implementation Priority Matrix
+
+| Component | Priority | Complexity | Impact | Recommended Phase |
+|-----------|----------|------------|--------|-------------------|
+| **Button** | HIGH | Medium | High | Phase 1 |
+| **Image** | HIGH | Medium | High | Phase 1 |
+| **Header** | HIGH | Medium | High | Phase 1 |
+| **Footer** | HIGH | Medium | High | Phase 1 |
+| **Hero** | HIGH | High | High | Phase 1 |
+| **List** | HIGH | High | High | Phase 2 |
+| **CTA** | HIGH | Medium | High | Phase 2 |
+| **Text** | MEDIUM | Low | Medium | Phase 2 |
+| **Separator** | LOW | Low | Low | Phase 3 |
+| **Spacer** | LOW | Low | Low | Phase 3 |
+
+**Cross-Component Properties**:
+- **Spacing (per-side)**: HIGH priority, Phase 1
+- **Border (per-side)**: HIGH priority, Phase 1
+- **Typography**: MEDIUM priority, Phase 2
+- **Shadow effects**: LOW priority, Phase 3
+- **Color/opacity**: MEDIUM priority, Phase 2
+
+---
+
+## 19. New Out-of-the-Box Components
+
+### 19.1 Overview
+
+Based on market research, the following new components should be added to enhance the builder's capabilities. **These are lower priority than enhancing existing components.**
+
+### 19.2 Priority 1 - Essential Components
+
+#### 19.2.1 Divider Component (Enhanced Separator)
+
+**Purpose**: More advanced separator with decorative options
+
+**Content Properties**:
+- `content.type` - Divider type (line, dotted-line, stars, custom-image)
+- `content.text` - Optional text in center
+- `content.icon` - Optional icon in center
+- `content.alignment` - Content alignment (left, center, right)
+
+**Style Properties**:
+- All separator properties plus:
+- `styles.textStyles` - Styling for center text
+- `styles.iconSize` - Icon size
+- `styles.iconColor` - Icon color
+- `styles.sidePadding` - Padding on left/right of center content
+
+**Use Cases**:
+- Section breaks with decorative elements
+- "OR" dividers in forms/CTAs
+- Chapter/section markers
+
+**Email Compatibility**: ✓ Good (table-based structure)
+
+**Priority**: **MEDIUM** - Nice enhancement but not critical
+
+---
+
+#### 19.2.2 Video Component
+
+**Purpose**: Embed video content (with email fallback)
+
+**Content Properties**:
+- `content.videoUrl` - Video URL (YouTube, Vimeo, MP4, etc.)
+- `content.posterImage` - Thumbnail/poster image (required for email)
+- `content.platform` - Video platform (youtube, vimeo, html5, custom)
+- `content.videoId` - Video ID for platform embeds
+- `content.autoplay` - Autoplay video (web only)
+- `content.controls` - Show video controls (boolean)
+- `content.loop` - Loop video (boolean)
+- `content.muted` - Mute by default (boolean)
+
+**Style Properties**:
+- `styles.width` - Video width
+- `styles.height` - Video height
+- `styles.aspectRatio` - Video aspect ratio (16:9, 4:3, 1:1, custom)
+- `styles.borderRadius` - Corner rounding
+- `styles.border` - Video border
+- `styles.playButtonStyle` - Play button overlay style (icon, custom-image)
+- `styles.playButtonSize` - Play button size
+- `styles.playButtonColor` - Play button color
+
+**Email Behavior**:
+- Display poster image with play button overlay
+- Link to video landing page (opens in browser)
+- Optional: Animated GIF preview (first few seconds)
+
+**Web Behavior**:
+- Inline video player
+- Lightbox modal option
+- Full HTML5 video support
+
+**Email Compatibility**:
+- ✗ Inline video: Not supported
+- ✓ Linked poster image: Full support
+- ⚠ Animated GIF: Supported but large file size
+
+**Priority**: **HIGH** - Video content is increasingly important
+
+---
+
+#### 19.2.3 Countdown Timer Component
+
+**Purpose**: Urgency-driven countdown for promotions
+
+**Content Properties**:
+- `content.endDate` - Countdown end date/time
+- `content.timezone` - Timezone for end date
+- `content.completionText` - Text shown when timer expires
+- `content.showDays` - Show days (boolean)
+- `content.showHours` - Show hours (boolean)
+- `content.showMinutes` - Show minutes (boolean)
+- `content.showSeconds` - Show seconds (boolean)
+- `content.labels` - Custom labels (days, hours, minutes, seconds)
+
+**Style Properties**:
+- `styles.layout` - Layout (horizontal, vertical, grid)
+- `styles.digitFontFamily` - Font for numbers
+- `styles.digitFontSize` - Number size
+- `styles.digitColor` - Number color
+- `styles.labelFontFamily` - Font for labels
+- `styles.labelFontSize` - Label size
+- `styles.labelColor` - Label color
+- `styles.backgroundColor` - Digit background
+- `styles.borderRadius` - Digit container rounding
+- `styles.digitPadding` - Padding inside digit containers
+- `styles.digitGap` - Gap between digit groups
+- `styles.separator` - Separator between units (colon, dot, none, custom)
+
+**Email Implementation**:
+- Use external service (Countdown Mail, Sendtric, etc.)
+- Generate dynamic image via API
+- Image updates each time email is opened
+- Fallback: Static expiration date text
+
+**Web Implementation**:
+- Live JavaScript countdown
+- Real-time updates every second
+- Smooth animations
+
+**Email Compatibility**:
+- ⚠ Dynamic countdown: Requires external service
+- ✓ Static countdown image: Full support
+- ✗ Live countdown: Web only
+
+**Integration**:
+- Configuration for external countdown service API
+- Built-in integration with popular services
+- Fallback to static text for unsupported scenarios
+
+**Priority**: **HIGH** - Proven to increase conversions (up to 332% CTR boost)
+
+---
+
+### 19.3 Priority 2 - Advanced Components
+
+#### 19.3.1 Social Proof Component
+
+**Purpose**: Display trust indicators and social validation
+
+**Content Properties**:
+- `content.type` - Social proof type (testimonial, review, rating, statistic, logo-cloud)
+- `content.message` - Social proof message
+- `content.author` - Author name (for testimonials)
+- `content.authorTitle` - Author title/role
+- `content.authorImage` - Author photo URL
+- `content.rating` - Star rating (0-5)
+- `content.logo` - Company logo (for testimonials)
+- `content.logos` - Array of logos (for logo cloud)
+- `content.statistic` - Numeric statistic
+- `content.statisticLabel` - Statistic label
+
+**Style Properties**:
+- `styles.layout` - Layout (card, inline, sidebar)
+- `styles.backgroundColor` - Background color
+- `styles.border` - Border styling
+- `styles.borderRadius` - Corner rounding
+- `styles.padding` - Internal padding
+- `styles.authorImageSize` - Author image size
+- `styles.authorImageShape` - Image shape (circle, square, rounded-square)
+- `styles.starColor` - Star rating color
+- `styles.starSize` - Star size
+- `styles.quoteIcon` - Show quote icon (boolean)
+- `styles.quoteIconColor` - Quote icon color
+
+**Use Cases**:
+- Customer testimonials
+- Product reviews
+- Trust badges
+- Client logo displays
+- Usage statistics ("Join 10,000+ customers")
+
+**Email Compatibility**: ✓ Good (table-based structure with images)
+
+**Priority**: **MEDIUM** - Valuable for trust-building
+
+---
+
+#### 19.3.2 Product Component
+
+**Purpose**: Display product information (eCommerce focus)
+
+**Content Properties**:
+- `content.productId` - Product ID (for data injection)
+- `content.productName` - Product name
+- `content.productImage` - Product image URL
+- `content.productPrice` - Product price
+- `content.productOriginalPrice` - Original price (for sale display)
+- `content.productDescription` - Product description
+- `content.productRating` - Star rating
+- `content.productReviewCount` - Number of reviews
+- `content.productBadge` - Badge text (e.g., "Sale", "New", "Bestseller")
+- `content.ctaText` - CTA button text
+- `content.ctaUrl` - CTA button URL
+
+**Style Properties**:
+- `styles.layout` - Layout (image-left, image-right, image-top, image-background)
+- `styles.imageWidth` - Product image width
+- `styles.imageAspectRatio` - Image aspect ratio
+- `styles.imageBorderRadius` - Image corner rounding
+- `styles.backgroundColor` - Product card background
+- `styles.border` - Card border
+- `styles.borderRadius` - Card corner rounding
+- `styles.padding` - Card padding
+- `styles.titleStyles` - Product name styling
+- `styles.priceStyles` - Price styling
+- `styles.salePriceColor` - Sale price color
+- `styles.badgeBackgroundColor` - Badge background
+- `styles.badgeColor` - Badge text color
+- `styles.badgePosition` - Badge position (top-left, top-right, bottom-left, bottom-right)
+
+**Use Cases**:
+- Promotional emails
+- Product launches
+- Abandoned cart emails
+- Product recommendations
+
+**Email Compatibility**: ✓ Good (table-based structure)
+
+**Integration**:
+- Support for dynamic product data injection
+- Compatible with eCommerce platform APIs
+- Template variables for product fields
+
+**Priority**: **HIGH** - Critical for eCommerce use cases
+
+---
+
+#### 19.3.3 Accordion/Collapsible Component (Web Only)
+
+**Purpose**: Expandable content sections
+
+**Content Properties**:
+- `content.items` - Array of accordion items
+  - `title` - Item title
+  - `content` - Item content (HTML)
+  - `expanded` - Default expanded state
+  - `icon` - Optional icon
+- `content.allowMultiple` - Allow multiple items open (boolean)
+- `content.defaultExpanded` - Default first item expanded (boolean)
+
+**Style Properties**:
+- `styles.itemBackgroundColor` - Item background
+- `styles.itemHoverBackgroundColor` - Item hover background
+- `styles.itemBorder` - Item border
+- `styles.itemPadding` - Item padding
+- `styles.itemGap` - Gap between items
+- `styles.titleStyles` - Title text styling
+- `styles.contentStyles` - Content text styling
+- `styles.expandIcon` - Expand/collapse icon
+- `styles.expandIconColor` - Icon color
+- `styles.expandIconPosition` - Icon position (left, right)
+
+**Email Compatibility**:
+- ✗ Interactive accordion: Web only
+- **Email Fallback**: Display all items expanded (no interactivity)
+
+**Priority**: **LOW** - Web-specific feature
+
+---
+
+#### 19.3.4 Columns/Grid Component
+
+**Purpose**: Custom multi-column layouts
+
+**Content Properties**:
+- `content.columnCount` - Number of columns (2-6)
+- `content.columns` - Array of column definitions
+  - Each column contains nested components
+- `content.stackOnMobile` - Stack columns on mobile (boolean)
+
+**Style Properties**:
+- `styles.columnGap` - Gap between columns
+- `styles.columnWidths` - Array of column widths (% or px)
+- `styles.verticalAlign` - Vertical alignment (top, middle, bottom)
+- `styles.backgroundColor` - Container background
+- `styles.padding` - Container padding
+
+**Use Cases**:
+- Multi-column layouts
+- Side-by-side content
+- Magazine-style layouts
+- Feature comparisons
+
+**Email Compatibility**: ✓ Good (nested table structure)
+
+**Priority**: **MEDIUM** - Useful for advanced layouts
+
+---
+
+#### 19.3.5 Icon List Component
+
+**Purpose**: List with icons instead of bullets
+
+**Content Properties**:
+- `content.items` - Array of list items
+  - `icon` - Icon name or image URL
+  - `text` - Item text
+  - `link` - Optional link URL
+- `content.layout` - Layout (vertical, horizontal, grid)
+
+**Style Properties**:
+- `styles.iconSize` - Icon size
+- `styles.iconColor` - Icon color
+- `styles.itemGap` - Gap between items
+- `styles.iconTextGap` - Gap between icon and text
+- `styles.textStyles` - Text styling
+- `styles.iconPosition` - Icon position (left, right, top)
+- `styles.iconBackgroundColor` - Icon background (for circular/square icons)
+- `styles.iconShape` - Icon container shape (none, circle, square, rounded-square)
+
+**Use Cases**:
+- Feature lists
+- Benefits/advantages
+- Step-by-step instructions
+- Contact information
+
+**Email Compatibility**: ✓ Good (table-based with images)
+
+**Priority**: **MEDIUM** - Common use case
+
+---
+
+### 19.4 Priority 3 - Specialized Components
+
+#### 19.4.1 Progress Bar Component
+
+**Purpose**: Visual progress indicators
+
+**Content Properties**:
+- `content.progress` - Progress value (0-100)
+- `content.label` - Progress label text
+- `content.showPercentage` - Show percentage (boolean)
+
+**Style Properties**:
+- `styles.height` - Bar height
+- `styles.backgroundColor` - Background color (unfilled)
+- `styles.fillColor` - Fill color (progress)
+- `styles.borderRadius` - Bar corner rounding
+- `styles.border` - Bar border
+- `styles.labelPosition` - Label position (above, below, inside)
+- `styles.labelStyles` - Label text styling
+
+**Use Cases**:
+- Fundraising campaigns
+- Goal tracking
+- Profile completion
+- Survey progress
+
+**Email Compatibility**: ✓ Good (table-based visual)
+
+**Priority**: **LOW** - Niche use case
+
+---
+
+#### 19.4.2 Table Component
+
+**Purpose**: Data tables
+
+**Content Properties**:
+- `content.headers` - Array of header cells
+- `content.rows` - Array of row data (array of arrays)
+- `content.showHeader` - Show header row (boolean)
+- `content.showFooter` - Show footer row (boolean)
+- `content.footerData` - Footer row data
+
+**Style Properties**:
+- `styles.headerBackgroundColor` - Header background
+- `styles.headerTextColor` - Header text color
+- `styles.rowBackgroundColor` - Row background
+- `styles.alternateRowColor` - Alternate row background
+- `styles.cellPadding` - Cell padding
+- `styles.cellBorder` - Cell borders
+- `styles.textAlign` - Cell text alignment
+- `styles.fontSize` - Table font size
+- `styles.responsive` - Responsive table mode (scroll, stack, collapse)
+
+**Use Cases**:
+- Pricing tables
+- Feature comparisons
+- Order summaries
+- Data reports
+
+**Email Compatibility**: ✓ Excellent (native table structure)
+
+**Priority**: **MEDIUM** - Useful for transactional emails
+
+---
+
+#### 19.4.3 Form Component (Web Only)
+
+**Purpose**: Inline forms for data collection
+
+**Content Properties**:
+- `content.fields` - Array of form fields
+  - `type` - Field type (text, email, tel, select, checkbox, radio)
+  - `label` - Field label
+  - `placeholder` - Placeholder text
+  - `required` - Required field (boolean)
+  - `options` - Options for select/radio/checkbox
+- `content.submitButtonText` - Submit button text
+- `content.successMessage` - Success message
+- `content.errorMessage` - Error message
+
+**Style Properties**:
+- All standard form styling
+- Field borders, backgrounds, focus states
+- Button styling
+- Validation styling
+
+**Email Compatibility**:
+- ✗ Interactive forms: Web only
+- **Email Alternative**: Link to web form/landing page
+
+**Priority**: **LOW** - Web-specific, requires backend
+
+---
+
+### 19.5 New Component Priority Summary
+
+| Component | Priority | Email Support | Complexity | Phase |
+|-----------|----------|---------------|------------|-------|
+| **Video** | HIGH | Partial (poster) | Medium | Phase 1 |
+| **Countdown Timer** | HIGH | Good (external service) | High | Phase 1 |
+| **Product** | HIGH | Excellent | Medium | Phase 1 |
+| **Social Proof** | MEDIUM | Excellent | Low | Phase 2 |
+| **Icon List** | MEDIUM | Excellent | Low | Phase 2 |
+| **Columns/Grid** | MEDIUM | Excellent | Medium | Phase 2 |
+| **Table** | MEDIUM | Excellent | Medium | Phase 2 |
+| **Divider** | MEDIUM | Excellent | Low | Phase 2 |
+| **Progress Bar** | LOW | Good | Low | Phase 3 |
+| **Accordion** | LOW | Fallback only | Medium | Phase 3 |
+| **Form** | LOW | Web only | High | Phase 3 |
+
+---
+
+### 19.6 Implementation Notes
+
+**Phase 1 Focus** (Immediate):
+1. Enhance existing components with priority properties
+2. Add Video, Countdown Timer, and Product components
+
+**Phase 2 Focus** (Short-term):
+3. Add Social Proof, Icon List, Columns, Table, Divider components
+4. Complete medium-priority property enhancements
+
+**Phase 3 Focus** (Long-term):
+5. Add specialized components (Progress Bar, Accordion, Form)
+6. Complete low-priority property enhancements
+
+**Email Compatibility Strategy**:
+- All new components must have email-safe fallbacks
+- Web-only features clearly marked in UI
+- Automatic fallback generation for export
+
+---
+
+## 20. Glossary
 
 - **Component**: Reusable building block (Header, Footer, Button, etc.)
 - **Template**: Complete email/page layout with components
@@ -2553,3 +3670,6 @@ Sensible defaults provided for all configuration options. Integrators can overri
 - **Inheritance**: When a mobile property has no override, it inherits the desktop value
 - **Mobile Layout Manager**: Sidebar panel for reordering and managing component visibility in mobile mode
 - **Diff View**: Audit panel showing all mobile customizations compared to desktop
+- **Per-Side Control**: Ability to set different values for top, right, bottom, left (padding, margin, border)
+- **CSSValue**: Object containing numeric value and unit (px, rem, em, %, etc.)
+- **Email Compatibility**: Level of support across email clients (✓ Good, ⚠ Limited, ✗ Not supported)

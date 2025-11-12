@@ -16,6 +16,7 @@ export * from './SectionItem';
 export * from './ExpandCollapse';
 export * from './InputLabel';
 export * from './InputNumber';
+export * from './CSSValueInput';
 // Note: Label and Input molecules have the same names as atoms, so they're not re-exported here
 // Import them directly from './molecules/Label' or './molecules/Input' if needed
 // export * from './Label';

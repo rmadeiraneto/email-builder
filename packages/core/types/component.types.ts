@@ -40,8 +40,9 @@ export enum ComponentType {
 
 /**
  * CSS unit types
+ * Includes all units required for email/web builder feature parity
  */
-export type CSSUnit = 'px' | 'rem' | 'em' | '%' | 'vh' | 'vw' | 'auto';
+export type CSSUnit = 'px' | 'rem' | 'em' | '%' | 'vh' | 'vw' | 'pt' | 'auto';
 
 /**
  * CSS value with unit
@@ -62,11 +63,26 @@ export interface Spacing {
 }
 
 /**
+ * Border style types (all 9 CSS border styles)
+ * Note: groove, ridge, inset, outset have limited support in Outlook
+ */
+export type BorderStyle =
+  | 'none'
+  | 'solid'
+  | 'dashed'
+  | 'dotted'
+  | 'double'
+  | 'groove'
+  | 'ridge'
+  | 'inset'
+  | 'outset';
+
+/**
  * Border configuration
  */
 export interface Border {
   width: CSSValue;
-  style: 'none' | 'solid' | 'dashed' | 'dotted' | 'double';
+  style: BorderStyle;
   color: string;
   radius?: BorderRadius;
 }

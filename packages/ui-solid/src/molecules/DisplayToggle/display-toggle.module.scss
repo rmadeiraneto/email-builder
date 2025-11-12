@@ -1,0 +1,50 @@
+.display-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__label {
+    flex: 1;
+    margin: 0;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    color: var(--color-success, #4caf50);
+    font-size: 1.25rem;
+    transition: color 0.2s;
+
+    &--hidden {
+      color: var(--color-text-secondary, #757575);
+    }
+
+    i {
+      font-size: inherit;
+    }
+  }
+
+  &__status {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-success, #4caf50);
+    transition: color 0.2s;
+
+    &--hidden {
+      color: var(--color-text-secondary, #757575);
+    }
+  }
+}

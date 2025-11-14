@@ -372,8 +372,11 @@ export class TemplateExporter {
     }
     css += '    }\n\n';
 
-    // Generate responsive media queries
+    // Generate responsive media queries (legacy system)
     css += this.generateResponsiveMediaQueries(template, components);
+
+    // Generate mobile development mode media queries
+    css += this.generateMobileDevModeMediaQueries(template, components);
 
     return css;
   }
@@ -533,6 +536,156 @@ export class TemplateExporter {
     }
 
     return css;
+  }
+
+  /**
+   * Generate mobile development mode media queries
+   *
+   * Handles mobile-specific styles, component visibility, and ordering
+   */
+  private generateMobileDevModeMediaQueries(
+    template: Template,
+    components: BaseComponent[]
+  ): string {
+    let css = '';
+
+    // Check if any component has mobile customizations
+    const hasMobileCustomizations = components.some(
+      (c) => c.mobileStyles || c.visibility
+    );
+
+    if (!hasMobileCustomizations && !template.componentOrder?.mobile) {
+      return css;
+    }
+
+    // Default mobile breakpoint (600px - standard for email)
+    const mobileBreakpoint = 600;
+
+    css += `\n    /* Mobile Development Mode Styles */\n`;
+    css += `    @media only screen and (max-width: ${mobileBreakpoint}px) {\n`;
+
+    // Generate styles for each component with mobile overrides
+    for (const component of components) {
+      const componentRules: string[] = [];
+
+      // Handle mobile style overrides
+      if (component.mobileStyles) {
+        const mobileProps = this.convertStylesToCSS(component.mobileStyles);
+        if (mobileProps.length > 0) {
+          css += `      [data-component-id="${component.id}"] {\n`;
+          mobileProps.forEach((prop) => {
+            css += `        ${prop};\n`;
+          });
+          css += '      }\n';
+        }
+      }
+
+      // Handle component visibility
+      if (component.visibility) {
+        const visibleOnMobile = component.visibility.mobile ?? component.visibility.desktop;
+        if (!visibleOnMobile) {
+          css += `      [data-component-id="${component.id}"] {\n`;
+          css += `        display: none !important;\n`;
+          css += '      }\n';
+        }
+      }
+    }
+
+    // Handle mobile component ordering (if different from desktop)
+    if (template.componentOrder?.mobile) {
+      const desktopOrder = template.componentOrder.desktop;
+      const mobileOrder = template.componentOrder.mobile;
+
+      // Check if order is actually different
+      const orderChanged = JSON.stringify(desktopOrder) !== JSON.stringify(mobileOrder);
+
+      if (orderChanged) {
+        // Use CSS order property for flexbox reordering
+        css += '      .email-canvas {\n';
+        css += '        display: flex;\n';
+        css += '        flex-direction: column;\n';
+        css += '      }\n';
+
+        mobileOrder.forEach((componentId, index) => {
+          css += `      [data-component-id="${componentId}"] {\n`;
+          css += `        order: ${index};\n`;
+          css += '      }\n';
+        });
+      }
+    }
+
+    css += '    }\n';
+
+    return css;
+  }
+
+  /**
+   * Convert BaseStyles to CSS properties array
+   */
+  private convertStylesToCSS(styles: Partial<BaseStyles>): string[] {
+    const props: string[] = [];
+
+    // Background
+    if (styles.backgroundColor) {
+      props.push(`background-color: ${styles.backgroundColor}`);
+    }
+
+    // Text
+    if (styles.color) {
+      props.push(`color: ${styles.color}`);
+    }
+    if (styles.fontSize) {
+      props.push(`font-size: ${styles.fontSize}`);
+    }
+    if (styles.fontWeight) {
+      props.push(`font-weight: ${styles.fontWeight}`);
+    }
+    if (styles.fontFamily) {
+      props.push(`font-family: ${styles.fontFamily}`);
+    }
+    if (styles.textAlign) {
+      props.push(`text-align: ${styles.textAlign}`);
+    }
+    if (styles.lineHeight) {
+      props.push(`line-height: ${styles.lineHeight}`);
+    }
+
+    // Spacing
+    if (styles.padding) {
+      props.push(`padding: ${styles.padding}`);
+    }
+    if (styles.margin) {
+      props.push(`margin: ${styles.margin}`);
+    }
+
+    // Layout
+    if (styles.width) {
+      props.push(`width: ${styles.width}`);
+    }
+    if (styles.height) {
+      props.push(`height: ${styles.height}`);
+    }
+    if (styles.maxWidth) {
+      props.push(`max-width: ${styles.maxWidth}`);
+    }
+    if (styles.minWidth) {
+      props.push(`min-width: ${styles.minWidth}`);
+    }
+
+    // Border
+    if (styles.border) {
+      props.push(`border: ${styles.border}`);
+    }
+    if (styles.borderRadius) {
+      props.push(`border-radius: ${styles.borderRadius}`);
+    }
+
+    // Display
+    if (styles.display) {
+      props.push(`display: ${styles.display}`);
+    }
+
+    return props;
   }
 
   /**

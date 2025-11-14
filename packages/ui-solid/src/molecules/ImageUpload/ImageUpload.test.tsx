@@ -9,6 +9,17 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor } from '../../test-utils';
 import { ImageUpload, ImageData } from './ImageUpload';
 
+// Polyfill for DragEvent (not available in jsdom)
+if (typeof DragEvent === 'undefined') {
+  (global as any).DragEvent = class DragEvent extends Event {
+    dataTransfer: DataTransfer | null;
+    constructor(type: string, init?: EventInit) {
+      super(type, init);
+      this.dataTransfer = null;
+    }
+  };
+}
+
 // Mock URL.createObjectURL and URL.revokeObjectURL
 const mockCreateObjectURL = vi.fn();
 const mockRevokeObjectURL = vi.fn();

@@ -18,7 +18,7 @@ describe('CSSValueInput', () => {
       // Should render InputNumber component
       const input = container.querySelector('input[type="text"]');
       expect(input).toBeInTheDocument();
-      expect(input).toHaveValue('0');
+      expect(input).toHaveValue('0px');
     });
 
     it('should render with provided CSS value', () => {
@@ -26,7 +26,7 @@ describe('CSSValueInput', () => {
       const { container } = render(() => <CSSValueInput value={value} />);
 
       const input = container.querySelector('input[type="text"]');
-      expect(input).toHaveValue('16');
+      expect(input).toHaveValue('16px');
     });
 
     it('should render with auto value', () => {
@@ -35,7 +35,7 @@ describe('CSSValueInput', () => {
 
       const input = container.querySelector('input[type="text"]');
       // Auto is represented as 0 in the InputNumber
-      expect(input).toHaveValue('0');
+      expect(input).toHaveValue('0auto');
     });
 
     it('should render with different units', () => {
@@ -46,7 +46,7 @@ describe('CSSValueInput', () => {
         const { container, unmount } = render(() => <CSSValueInput value={value} />);
 
         const input = container.querySelector('input[type="text"]');
-        expect(input).toHaveValue('10');
+        expect(input).toHaveValue(`10${unit}`);
 
         unmount();
       });
@@ -94,7 +94,7 @@ describe('CSSValueInput', () => {
       render(() => <CSSValueInput value={value} onChange={handleChange} />);
 
       const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('16');
+      expect(input).toHaveValue('16px');
     });
 
     it('should handle rem unit', () => {
@@ -104,7 +104,7 @@ describe('CSSValueInput', () => {
       render(() => <CSSValueInput value={value} onChange={handleChange} />);
 
       const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('1');
+      expect(input).toHaveValue('1rem');
     });
 
     it('should handle em unit', () => {
@@ -114,7 +114,7 @@ describe('CSSValueInput', () => {
       render(() => <CSSValueInput value={value} onChange={handleChange} />);
 
       const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('1.5');
+      expect(input).toHaveValue('1.5em');
     });
 
     it('should handle percentage unit', () => {
@@ -124,7 +124,7 @@ describe('CSSValueInput', () => {
       render(() => <CSSValueInput value={value} onChange={handleChange} />);
 
       const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('50');
+      expect(input).toHaveValue('50%');
     });
 
     it('should handle pt unit', () => {
@@ -134,7 +134,7 @@ describe('CSSValueInput', () => {
       render(() => <CSSValueInput value={value} onChange={handleChange} />);
 
       const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('12');
+      expect(input).toHaveValue('12pt');
     });
   });
 
@@ -145,7 +145,7 @@ describe('CSSValueInput', () => {
 
       const input = container.querySelector('input[type="text"]') as HTMLInputElement;
       // Auto value is represented as 0 in InputNumber
-      expect(input).toHaveValue('0');
+      expect(input).toHaveValue('0px');
     });
 
     it('should convert 0 with auto unit to auto value in onChange', async () => {
@@ -212,7 +212,7 @@ describe('CSSValueInput', () => {
       render(() => <CSSValueInput value={value} min={0} max={100} />);
 
       const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('25');
+      expect(input).toHaveValue('25px');
     });
 
     it('should handle null min constraint', () => {
@@ -221,7 +221,7 @@ describe('CSSValueInput', () => {
       render(() => <CSSValueInput value={value} min={null} />);
 
       const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('-10');
+      expect(input).toHaveValue('-10px');
     });
 
     it('should handle null max constraint', () => {
@@ -230,7 +230,7 @@ describe('CSSValueInput', () => {
       render(() => <CSSValueInput value={value} max={null} />);
 
       const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('1000');
+      expect(input).toHaveValue('1000px');
     });
   });
 
@@ -403,7 +403,7 @@ describe('CSSValueInput', () => {
 
       // Verify all props are applied
       expect(input).toBeInTheDocument();
-      expect(input).toHaveValue('50');
+      expect(input).toHaveValue('50%');
       expect(input).not.toBeDisabled();
     });
 
@@ -413,7 +413,7 @@ describe('CSSValueInput', () => {
       const { container, unmount } = render(() => <CSSValueInput value={value} />);
 
       let input = container.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('10');
+      expect(input).toHaveValue('10px');
 
       unmount();
 
@@ -422,7 +422,7 @@ describe('CSSValueInput', () => {
       render(() => <CSSValueInput value={value} />);
 
       input = document.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('20');
+      expect(input).toHaveValue('20px');
     });
 
     it('should handle zero value correctly', () => {
@@ -431,7 +431,7 @@ describe('CSSValueInput', () => {
       render(() => <CSSValueInput value={value} />);
 
       const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('0');
+      expect(input).toHaveValue('0px');
     });
 
     it('should handle negative values when min is null', () => {
@@ -440,7 +440,7 @@ describe('CSSValueInput', () => {
       render(() => <CSSValueInput value={value} min={null} />);
 
       const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('-10');
+      expect(input).toHaveValue('-10px');
     });
 
     it('should handle large values', () => {
@@ -449,7 +449,7 @@ describe('CSSValueInput', () => {
       render(() => <CSSValueInput value={value} max={null} />);
 
       const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('9999');
+      expect(input).toHaveValue('9999px');
     });
 
     it('should handle decimal values', () => {
@@ -458,7 +458,7 @@ describe('CSSValueInput', () => {
       render(() => <CSSValueInput value={value} />);
 
       const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('1.5');
+      expect(input).toHaveValue('1.5rem');
     });
   });
 
@@ -468,7 +468,7 @@ describe('CSSValueInput', () => {
 
       // Should render with default value (0, px)
       const input = container.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('0');
+      expect(input).toHaveValue('0px');
     });
 
     it('should handle empty availableUnits array', () => {

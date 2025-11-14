@@ -15,7 +15,7 @@ describe('DisplayToggle', () => {
       const { container } = render(() => <DisplayToggle />);
 
       // Should render the toggle button
-      const toggle = container.querySelector('button');
+      const toggle = container.querySelector('[role="switch"]');
       expect(toggle).toBeInTheDocument();
     });
 
@@ -69,7 +69,7 @@ describe('DisplayToggle', () => {
         <DisplayToggle value={true} onChange={handleChange} />
       ));
 
-      const button = container.querySelector('button') as HTMLButtonElement;
+      const button = container.querySelector('[role="switch"]') as HTMLElement;
       expect(button).toBeInTheDocument();
 
       // Click to toggle
@@ -86,7 +86,7 @@ describe('DisplayToggle', () => {
         <DisplayToggle value={false} onChange={handleChange} />
       ));
 
-      const button = container.querySelector('button') as HTMLButtonElement;
+      const button = container.querySelector('[role="switch"]') as HTMLElement;
       button.click();
 
       await waitFor(() => {
@@ -100,7 +100,7 @@ describe('DisplayToggle', () => {
         <DisplayToggle value={true} onChange={handleChange} />
       ));
 
-      const button = container.querySelector('button') as HTMLButtonElement;
+      const button = container.querySelector('[role="switch"]') as HTMLElement;
       button.click();
 
       await waitFor(() => {
@@ -117,7 +117,7 @@ describe('DisplayToggle', () => {
         <DisplayToggle value={currentValue} onChange={handleChange} />
       ));
 
-      const button = container.querySelector('button') as HTMLButtonElement;
+      const button = container.querySelector('[role="switch"]') as HTMLElement;
 
       // First toggle
       button.click();
@@ -133,7 +133,7 @@ describe('DisplayToggle', () => {
         <DisplayToggle value={currentValue} onChange={handleChange} />
       ));
 
-      const button2 = document.querySelector('button') as HTMLButtonElement;
+      const button2 = document.querySelector('[role="switch"]') as HTMLElement;
 
       // Second toggle
       button2.click();
@@ -240,8 +240,8 @@ describe('DisplayToggle', () => {
     it('should render as disabled', () => {
       const { container } = render(() => <DisplayToggle disabled />);
 
-      const button = container.querySelector('button') as HTMLButtonElement;
-      expect(button).toBeDisabled();
+      const button = container.querySelector('[role="switch"]') as HTMLElement;
+      expect(button).toHaveAttribute('aria-disabled', 'true');
     });
 
     it('should not call onChange when disabled', async () => {
@@ -250,7 +250,7 @@ describe('DisplayToggle', () => {
         <DisplayToggle disabled onChange={handleChange} />
       ));
 
-      const button = container.querySelector('button') as HTMLButtonElement;
+      const button = container.querySelector('[role="switch"]') as HTMLElement;
       button.click();
 
       // Wait a bit to ensure it doesn't fire
@@ -261,8 +261,8 @@ describe('DisplayToggle', () => {
     it('should be enabled by default', () => {
       const { container } = render(() => <DisplayToggle />);
 
-      const button = container.querySelector('button') as HTMLButtonElement;
-      expect(button).not.toBeDisabled();
+      const button = container.querySelector('[role="switch"]') as HTMLElement;
+      expect(button).toHaveAttribute('aria-disabled', 'false');
     });
 
     it('should allow toggling when not disabled', async () => {
@@ -271,8 +271,8 @@ describe('DisplayToggle', () => {
         <DisplayToggle value={true} onChange={handleChange} disabled={false} />
       ));
 
-      const button = container.querySelector('button') as HTMLButtonElement;
-      expect(button).not.toBeDisabled();
+      const button = container.querySelector('[role="switch"]') as HTMLElement;
+      expect(button).toHaveAttribute('aria-disabled', 'false');
 
       button.click();
 
@@ -288,14 +288,14 @@ describe('DisplayToggle', () => {
         <DisplayToggle label="Show Image" />
       ));
 
-      const button = container.querySelector('button') as HTMLButtonElement;
+      const button = container.querySelector('[role="switch"]') as HTMLElement;
       expect(button).toHaveAttribute('aria-label', 'Toggle Show Image');
     });
 
     it('should have default aria-label when no label provided', () => {
       const { container } = render(() => <DisplayToggle />);
 
-      const button = container.querySelector('button') as HTMLButtonElement;
+      const button = container.querySelector('[role="switch"]') as HTMLElement;
       expect(button).toHaveAttribute('aria-label', 'Toggle visibility');
     });
 
@@ -327,8 +327,9 @@ describe('DisplayToggle', () => {
     it('should be keyboard accessible', () => {
       const { container } = render(() => <DisplayToggle />);
 
-      const button = container.querySelector('button') as HTMLButtonElement;
-      expect(button.tagName).toBe('BUTTON');
+      const button = container.querySelector('[role="switch"]') as HTMLElement;
+      expect(button.tagName).toBe('DIV');
+      expect(button).toHaveAttribute('role', 'switch');
     });
   });
 
@@ -349,7 +350,7 @@ describe('DisplayToggle', () => {
       ));
 
       const label = container.querySelector('label');
-      const button = container.querySelector('button');
+      const button = container.querySelector('[role="switch"]');
 
       expect(label).toBeInTheDocument();
       expect(button).toBeInTheDocument();
@@ -386,8 +387,8 @@ describe('DisplayToggle', () => {
       const statusText = container.textContent;
       expect(statusText).toContain('Visible');
 
-      const button = container.querySelector('button') as HTMLButtonElement;
-      expect(button).not.toBeDisabled();
+      const button = container.querySelector('[role="switch"]') as HTMLElement;
+      expect(button).toHaveAttribute('aria-disabled', 'false');
 
       button.click();
 
@@ -401,7 +402,7 @@ describe('DisplayToggle', () => {
         <DisplayToggle value={true} />
       ));
 
-      const button = container.querySelector('button') as HTMLButtonElement;
+      const button = container.querySelector('[role="switch"]') as HTMLElement;
       expect(button).toBeInTheDocument();
 
       // Should not throw error when clicked without onChange
@@ -414,7 +415,7 @@ describe('DisplayToggle', () => {
         <DisplayToggle value={true} onChange={handleChange} />
       ));
 
-      const button = container.querySelector('button') as HTMLButtonElement;
+      const button = container.querySelector('[role="switch"]') as HTMLElement;
 
       // Rapid clicks
       button.click();

@@ -53,6 +53,9 @@ import {
   enUS,
   esES,
   type TranslationManager,
+  // Mobile imports
+  DeviceMode,
+  type LayoutComponentItem,
 } from '@email-builder/core';
 
 export interface BuilderState {
@@ -65,6 +68,9 @@ export interface BuilderState {
   emailTestingConfig: EmailTestingConfig | null;
   activeTips: Tip[];
   dismissedTips: string[];
+  // Mobile development mode
+  deviceMode: DeviceMode;
+  isSwitchingMode: boolean;
 }
 
 export interface BuilderContextValue {
@@ -107,6 +113,13 @@ export interface BuilderContextValue {
     dismissTip: (tipId: string) => void;
     // Visual feedback actions
     setCanvasElement: (element: HTMLElement | null) => void;
+    // Mobile development mode actions
+    switchDeviceMode: (mode: DeviceMode) => Promise<void>;
+    getMobileLayoutItems: () => LayoutComponentItem[];
+    reorderMobileComponents: (componentIds: string[]) => void;
+    toggleMobileVisibility: (componentId: string, visible: boolean) => void;
+    resetMobileOrder: () => void;
+    applyMobileDefaults: () => Promise<void>;
   };
 }
 
@@ -188,6 +201,9 @@ export const BuilderProvider: ParentComponent = (props) => {
     emailTestingConfig: loadEmailTestingConfigFromStorage(),
     activeTips: [],
     dismissedTips: loadDismissedTipsFromStorage(),
+    // Mobile development mode
+    deviceMode: DeviceMode.DESKTOP,
+    isSwitchingMode: false,
   });
 
   // Visual feedback state
@@ -955,6 +971,126 @@ export const BuilderProvider: ParentComponent = (props) => {
     // Visual feedback action handlers
     setCanvasElement: (element: HTMLElement | null) => {
       setCanvasElement(element);
+    },
+
+    // Mobile development mode actions
+    switchDeviceMode: async (mode: DeviceMode) => {
+      if (state.isSwitchingMode || state.deviceMode === mode) {
+        return;
+      }
+
+      try {
+        setState('isSwitchingMode', true);
+
+        const modeManager = builder.getModeManager();
+        await modeManager.switchMode(mode, {
+          selectedComponentId: state.selectedComponentId || undefined,
+          scrollPosition: { x: 0, y: 0 },
+        });
+
+        setState('deviceMode', mode);
+
+        console.log(`[BuilderContext] Switched to ${mode} mode`);
+      } catch (error) {
+        console.error('[BuilderContext] Failed to switch mode:', error);
+      } finally {
+        setState('isSwitchingMode', false);
+      }
+    },
+
+    getMobileLayoutItems: (): LayoutComponentItem[] => {
+      if (!state.template) {
+        return [];
+      }
+
+      try {
+        const layoutManager = builder.getMobileLayoutManager();
+        return layoutManager.getLayoutItems();
+      } catch (error) {
+        console.error('[BuilderContext] Failed to get mobile layout items:', error);
+        return [];
+      }
+    },
+
+    reorderMobileComponents: (componentIds: string[]) => {
+      if (!state.template) {
+        console.error('[BuilderContext] Cannot reorder components: no template loaded');
+        return;
+      }
+
+      try {
+        const layoutManager = builder.getMobileLayoutManager();
+        layoutManager.reorderComponents(componentIds);
+
+        // Trigger a template update
+        setState('template', { ...state.template });
+
+        console.log('[BuilderContext] Reordered mobile components');
+      } catch (error) {
+        console.error('[BuilderContext] Failed to reorder components:', error);
+      }
+    },
+
+    toggleMobileVisibility: (componentId: string, visible: boolean) => {
+      if (!state.template) {
+        console.error('[BuilderContext] Cannot toggle visibility: no template loaded');
+        return;
+      }
+
+      try {
+        const layoutManager = builder.getMobileLayoutManager();
+        layoutManager.setComponentVisibility(componentId, visible);
+
+        // Trigger a template update
+        setState('template', { ...state.template });
+
+        console.log(`[BuilderContext] Set component ${componentId} visibility to ${visible}`);
+      } catch (error) {
+        console.error('[BuilderContext] Failed to toggle visibility:', error);
+      }
+    },
+
+    resetMobileOrder: () => {
+      if (!state.template) {
+        console.error('[BuilderContext] Cannot reset order: no template loaded');
+        return;
+      }
+
+      try {
+        const layoutManager = builder.getMobileLayoutManager();
+        layoutManager.resetToDesktopOrder();
+
+        // Trigger a template update
+        setState('template', { ...state.template });
+
+        console.log('[BuilderContext] Reset mobile order to desktop');
+      } catch (error) {
+        console.error('[BuilderContext] Failed to reset order:', error);
+      }
+    },
+
+    applyMobileDefaults: async () => {
+      if (!state.template) {
+        console.error('[BuilderContext] Cannot apply mobile defaults: no template loaded');
+        return;
+      }
+
+      try {
+        const { MobileDefaultsApplicator } = await import('@email-builder/core');
+        const applicator = new MobileDefaultsApplicator({
+          eventEmitter: builder['eventEmitter'],
+          template: state.template,
+        });
+
+        await applicator.applyDefaults();
+
+        // Trigger a template update
+        setState('template', { ...state.template });
+
+        console.log('[BuilderContext] Applied mobile defaults');
+      } catch (error) {
+        console.error('[BuilderContext] Failed to apply mobile defaults:', error);
+      }
     },
   };
 

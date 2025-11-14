@@ -20,8 +20,9 @@ import { TestConfigModal } from '../components/modals/TestConfigModal';
 import { CompatibilityReportModal } from '../components/modals/CompatibilityReportModal';
 import { SupportMatrixModal } from '../components/modals/SupportMatrixModal';
 import { AccessibilityAnnouncer } from '@email-builder/ui-solid/visual-feedback';
+import { ModeSwitcher, MobileLayoutManager } from '@email-builder/ui-solid/mobile';
 import type { ComponentDefinition, EmailTestingConfig, EmailTestRequest, CompatibilityReport } from '@email-builder/core';
-import { getTipsByTrigger, TipTrigger } from '@email-builder/core';
+import { getTipsByTrigger, TipTrigger, DeviceMode } from '@email-builder/core';
 import styles from './Builder.module.scss';
 
 const BuilderContent: Component = () => {
@@ -45,6 +46,17 @@ const BuilderContent: Component = () => {
   const selectedComponent = createMemo(() => {
     if (!state.template || !state.selectedComponentId) return null;
     return state.template.components.find(c => c.id === state.selectedComponentId) || null;
+  });
+
+  // Get mobile layout items when in mobile mode
+  const mobileLayoutItems = createMemo(() => {
+    if (state.deviceMode !== DeviceMode.MOBILE) return [];
+    return actions.getMobileLayoutItems();
+  });
+
+  // Check if we should show mobile layout manager
+  const showMobileLayoutManager = createMemo(() => {
+    return state.deviceMode === DeviceMode.MOBILE && !state.selectedComponentId;
   });
 
   const handleComponentSelect = (id: string | null) => {
@@ -93,6 +105,16 @@ const BuilderContent: Component = () => {
       if (!isInputField) {
         event.preventDefault();
         actions.duplicateComponent(state.selectedComponentId);
+      }
+      return;
+    }
+
+    // Toggle Mobile Mode: Ctrl+M or Cmd+M
+    if ((event.ctrlKey || event.metaKey) && event.key === 'm' && state.template) {
+      if (!isInputField) {
+        event.preventDefault();
+        const newMode = state.deviceMode === DeviceMode.MOBILE ? DeviceMode.DESKTOP : DeviceMode.MOBILE;
+        actions.switchDeviceMode(newMode);
       }
       return;
     }
@@ -416,6 +438,19 @@ const BuilderContent: Component = () => {
           </div>
         </Show>
 
+        {/* Mobile Mode Switcher */}
+        <Show when={state.template}>
+          <div class={styles.modeSwitcherContainer}>
+            <ModeSwitcher
+              currentMode={state.deviceMode}
+              onModeChange={actions.switchDeviceMode}
+              isSwitching={state.isSwitchingMode}
+              showLabels={true}
+              sticky={true}
+            />
+          </div>
+        </Show>
+
         <div class={styles.container}>
           <aside class={styles.leftSidebar}>
             <h2>Components</h2>
@@ -439,23 +474,36 @@ const BuilderContent: Component = () => {
           </main>
 
           <aside class={styles.rightSidebar}>
-            <PropertyPanel
-              selectedComponent={selectedComponent()}
-              template={state.template}
-              onPropertyChange={handlePropertyChange}
-              onGeneralStyleChange={handleGeneralStyleChange}
-              onDelete={handleDelete}
-              presetActions={{
-                applyPreset: actions.applyPreset,
-                createPreset: actions.createPreset,
-                updatePreset: actions.updatePreset,
-                deletePreset: actions.deletePreset,
-                duplicatePreset: actions.duplicatePreset,
-                listPresets: actions.listPresets,
-                exportPresets: actions.exportPresets,
-                importPresets: actions.importPresets,
-              }}
-            />
+            <Show when={showMobileLayoutManager()}>
+              <MobileLayoutManager
+                items={mobileLayoutItems()}
+                onReorder={actions.reorderMobileComponents}
+                onVisibilityToggle={actions.toggleMobileVisibility}
+                onResetOrder={actions.resetMobileOrder}
+                onApplyDefaults={actions.applyMobileDefaults}
+                showFirstTimePrompt={false}
+              />
+            </Show>
+
+            <Show when={!showMobileLayoutManager()}>
+              <PropertyPanel
+                selectedComponent={selectedComponent()}
+                template={state.template}
+                onPropertyChange={handlePropertyChange}
+                onGeneralStyleChange={handleGeneralStyleChange}
+                onDelete={handleDelete}
+                presetActions={{
+                  applyPreset: actions.applyPreset,
+                  createPreset: actions.createPreset,
+                  updatePreset: actions.updatePreset,
+                  deletePreset: actions.deletePreset,
+                  duplicatePreset: actions.duplicatePreset,
+                  listPresets: actions.listPresets,
+                  exportPresets: actions.exportPresets,
+                  importPresets: actions.importPresets,
+                }}
+              />
+            </Show>
           </aside>
         </div>
       </div>

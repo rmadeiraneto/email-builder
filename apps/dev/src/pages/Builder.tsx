@@ -18,6 +18,7 @@ import { PreviewModal } from '../components/modals/PreviewModal';
 import { EmailTestingSettingsModal } from '../components/modals/EmailTestingSettingsModal';
 import { TestConfigModal } from '../components/modals/TestConfigModal';
 import { CompatibilityReportModal } from '../components/modals/CompatibilityReportModal';
+import { SupportMatrixModal } from '../components/modals/SupportMatrixModal';
 import { AccessibilityAnnouncer } from '@email-builder/ui-solid/visual-feedback';
 import type { ComponentDefinition, EmailTestingConfig, EmailTestRequest, CompatibilityReport } from '@email-builder/core';
 import { getTipsByTrigger, TipTrigger } from '@email-builder/core';
@@ -31,6 +32,7 @@ const BuilderContent: Component = () => {
   const [isEmailTestingSettingsModalOpen, setIsEmailTestingSettingsModalOpen] = createSignal(false);
   const [isTestConfigModalOpen, setIsTestConfigModalOpen] = createSignal(false);
   const [isCompatibilityReportModalOpen, setIsCompatibilityReportModalOpen] = createSignal(false);
+  const [isSupportMatrixModalOpen, setIsSupportMatrixModalOpen] = createSignal(false);
   const [compatibilityReport, setCompatibilityReport] = createSignal<CompatibilityReport | null>(null);
   const [pendingAction, setPendingAction] = createSignal<'export' | 'test' | null>(null);
 
@@ -364,6 +366,10 @@ const BuilderContent: Component = () => {
     }
   };
 
+  const handleOpenSupportMatrix = () => {
+    setIsSupportMatrixModalOpen(true);
+  };
+
   return (
     <>
       <div class={styles.builder}>
@@ -496,8 +502,14 @@ const BuilderContent: Component = () => {
           onClose={handleCompatibilityReportClose}
           report={compatibilityReport()!}
           onExportAnyway={handleExportAnyway}
+          onViewSupportMatrix={handleOpenSupportMatrix}
         />
       </Show>
+
+      <SupportMatrixModal
+        isOpen={isSupportMatrixModalOpen()}
+        onClose={() => setIsSupportMatrixModalOpen(false)}
+      />
     </>
   );
 };

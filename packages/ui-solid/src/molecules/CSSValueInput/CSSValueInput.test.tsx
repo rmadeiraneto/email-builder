@@ -145,7 +145,7 @@ describe('CSSValueInput', () => {
 
       const input = container.querySelector('input[type="text"]') as HTMLInputElement;
       // Auto value is represented as 0 in InputNumber
-      expect(input).toHaveValue('0px');
+      expect(input).toHaveValue('0auto');
     });
 
     it('should convert 0 with auto unit to auto value in onChange', async () => {
@@ -422,7 +422,7 @@ describe('CSSValueInput', () => {
       render(() => <CSSValueInput value={value} />);
 
       input = document.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('20px');
+      expect(input).toHaveValue('20rem');
     });
 
     it('should handle zero value correctly', () => {

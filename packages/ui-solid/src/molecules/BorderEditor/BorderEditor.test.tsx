@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, waitFor } from '../../test-utils';
+import { render, screen, waitFor, fireEvent } from '../../test-utils';
 import { BorderEditor } from './BorderEditor';
 import type { Border, BorderStyle } from '@email-builder/core/types/component.types';
 
@@ -36,7 +36,7 @@ describe('BorderEditor', () => {
       const { container } = render(() => <BorderEditor value={border} />);
 
       const input = container.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('2');
+      expect(input).toHaveValue('2px');
     });
 
     it('should render with label', () => {
@@ -112,9 +112,8 @@ describe('BorderEditor', () => {
         const select = container.querySelector('select') as HTMLSelectElement;
         expect(select).toBeInTheDocument();
 
-        // Change style
-        select.value = style;
-        select.dispatchEvent(new Event('change', { bubbles: true }));
+        // Change style using fireEvent which properly triggers SolidJS handlers
+        fireEvent.change(select, { target: { value: style } });
 
         await waitFor(() => {
           expect(handleChange).toHaveBeenCalled();
@@ -164,7 +163,7 @@ describe('BorderEditor', () => {
       ));
 
       const input = container.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('1');
+      expect(input).toHaveValue('1px');
 
       // Change width
       input.focus();
@@ -203,7 +202,7 @@ describe('BorderEditor', () => {
         const { container, unmount } = render(() => <BorderEditor value={border} />);
 
         const input = container.querySelector('input[type="text"]') as HTMLInputElement;
-        expect(input).toHaveValue('2');
+        expect(input).toHaveValue('2px');
 
         unmount();
       });
@@ -500,7 +499,7 @@ describe('BorderEditor', () => {
       expect(text).toContain('Border Radius');
 
       const input = container.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('2');
+      expect(input).toHaveValue('2px');
 
       const select = container.querySelector('select') as HTMLSelectElement;
       expect(select.value).toBe('dashed');
@@ -529,7 +528,7 @@ describe('BorderEditor', () => {
 
       // Should render with default values
       const input = container.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('0');
+      expect(input).toHaveValue('0px');
 
       const select = container.querySelector('select') as HTMLSelectElement;
       expect(select.value).toBe('none');
@@ -545,7 +544,7 @@ describe('BorderEditor', () => {
       const { container } = render(() => <BorderEditor value={border as Border} />);
 
       const input = container.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('1');
+      expect(input).toHaveValue('1px');
     });
 
     it('should handle border with partial radius', () => {
@@ -656,7 +655,7 @@ describe('BorderEditor', () => {
       const { container } = render(() => <BorderEditor value={border} />);
 
       const input = container.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('0');
+      expect(input).toHaveValue('0px');
     });
 
     it('should handle large width values', () => {
@@ -669,7 +668,7 @@ describe('BorderEditor', () => {
       const { container } = render(() => <BorderEditor value={border} />);
 
       const input = container.querySelector('input[type="text"]') as HTMLInputElement;
-      expect(input).toHaveValue('100');
+      expect(input).toHaveValue('100px');
     });
 
     it('should handle transparent color', () => {

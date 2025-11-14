@@ -579,11 +579,22 @@ export const BuilderProvider: ParentComponent = (props) => {
         let mimeType: string;
 
         if (format === 'html') {
-          content = await exporter.toHTML(state.template);
+          const result = exporter.export(state.template, {
+            format: 'html',
+            inlineStyles: false,
+            minify: false,
+            prettyPrint: true,
+            includeComments: true,
+          });
+          content = result.html!;
           filename = `${state.template.metadata.name || 'template'}.html`;
           mimeType = 'text/html';
         } else {
-          content = await exporter.toJSON(state.template);
+          const result = exporter.export(state.template, {
+            format: 'json',
+            prettyPrint: true,
+          });
+          content = result.json!;
           filename = `${state.template.metadata.name || 'template'}.json`;
           mimeType = 'application/json';
         }
@@ -857,7 +868,14 @@ export const BuilderProvider: ParentComponent = (props) => {
         // Export template as HTML
         const { TemplateExporter } = await import('@email-builder/core');
         const exporter = new TemplateExporter();
-        const htmlContent = await exporter.toHTML(state.template);
+        const result = exporter.export(state.template, {
+          format: 'html',
+          inlineStyles: false,
+          minify: false,
+          prettyPrint: false,
+          includeComments: false,
+        });
+        const htmlContent = result.html!;
 
         // Transform HTML for email compatibility
         const emailExportService = new EmailExportService({

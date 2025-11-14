@@ -63,3 +63,6 @@ export * from '../i18n/locales';
 
 // Export data injection
 export * from '../data-injection';
+
+// Export mobile development mode
+export * from '../mobile';

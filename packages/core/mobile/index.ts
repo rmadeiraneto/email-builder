@@ -4,9 +4,36 @@
  * Exports mobile development mode types and utilities
  */
 
-export * from './mobile.types';
+// Export mobile types (excluding conflicts with other modules)
+export {
+  DeviceMode,
+  type ResponsiveCanvasSettings,
+  type CanvasDimensionOverrides,
+  type MobileOverrideMetadata,
+  type MobileDevModeState,
+  type ModeManagerState,
+  type PropertyBlacklist,
+  type MobileDevModeConfig,
+  type ComponentOrder,
+  type ComponentVisibility,
+  DEFAULT_MOBILE_DEV_MODE_CONFIG,
+} from './mobile.types';
+
+// Re-export with different names to avoid conflicts
+export type { ResponsiveStyles as MobileResponsiveStyles } from './mobile.types';
+
+// Export mobile managers and services
 export * from './ModeManager';
-export * from './PropertyOverrideManager';
+
+// PropertyOverrideManager: exclude PropertyCategory to avoid conflict with compatibility module
+export {
+  type PropertyOverrideManagerOptions,
+  PropertyOverrideManager,
+  type SetOverrideResult,
+  type ClearOverrideResult,
+  type PropertyOverride,
+} from './PropertyOverrideManager';
+
 export * from './MobileLayoutManager';
 export * from './ModeSwitcher';
 export * from './KeyboardShortcuts';
@@ -16,5 +43,14 @@ export * from './CanvasRenderer';
 export * from './CanvasManager';
 export * from './MobileDefaultsApplicator';
 export * from './MobileExportService';
-export * from './ValidationService';
+
+// ValidationService: export ValidationResult as MobileValidationResult to avoid conflict
+export {
+  ValidationEvent,
+  type ValidationResult as MobileValidationResult,
+  type ValidationServiceOptions,
+  DEFAULT_VALIDATION_RULES,
+  ValidationService,
+} from './ValidationService';
+
 export * from './PerformanceOptimizer';

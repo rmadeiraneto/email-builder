@@ -8,14 +8,11 @@
 export {
   DeviceMode,
   type ResponsiveCanvasSettings,
-  type CanvasDimensionOverrides,
-  type MobileOverrideMetadata,
-  type MobileDevModeState,
   type ModeManagerState,
-  type PropertyBlacklist,
   type MobileDevModeConfig,
   type ComponentOrder,
   type ComponentVisibility,
+  type MobileOverride,
   DEFAULT_MOBILE_DEV_MODE_CONFIG,
 } from './mobile.types';
 
@@ -29,9 +26,8 @@ export * from './ModeManager';
 export {
   type PropertyOverrideManagerOptions,
   PropertyOverrideManager,
-  type SetOverrideResult,
-  type ClearOverrideResult,
-  type PropertyOverride,
+  type PropertyOverrideResult,
+  type BulkOverrideResult,
 } from './PropertyOverrideManager';
 
 export * from './MobileLayoutManager';

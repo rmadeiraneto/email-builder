@@ -465,6 +465,7 @@ const BuilderContent: Component = () => {
               <TemplateCanvas
                 template={state.template}
                 selectedComponentId={state.selectedComponentId}
+                deviceMode={state.deviceMode}
                 onComponentSelect={handleComponentSelect}
                 onDrop={handleDrop}
                 onComponentReorder={handleComponentReorder}

@@ -566,8 +566,6 @@ export class TemplateExporter {
 
     // Generate styles for each component with mobile overrides
     for (const component of components) {
-      const componentRules: string[] = [];
-
       // Handle mobile style overrides
       if (component.mobileStyles) {
         const mobileProps = this.convertStylesToCSS(component.mobileStyles);
@@ -665,25 +663,16 @@ export class TemplateExporter {
     if (styles.height) {
       props.push(`height: ${styles.height}`);
     }
-    if (styles.maxWidth) {
-      props.push(`max-width: ${styles.maxWidth}`);
-    }
-    if (styles.minWidth) {
-      props.push(`min-width: ${styles.minWidth}`);
-    }
-
-    // Border
-    if (styles.border) {
-      props.push(`border: ${styles.border}`);
-    }
-    if (styles.borderRadius) {
-      props.push(`border-radius: ${styles.borderRadius}`);
-    }
 
     // Display
     if (styles.display) {
       props.push(`display: ${styles.display}`);
     }
+
+    // TODO: Add support for complex types:
+    // - border (Border object with width, style, color, radius)
+    // - padding/margin (Spacing objects)
+    // - CSSValue conversions for width/height/fontSize
 
     return props;
   }

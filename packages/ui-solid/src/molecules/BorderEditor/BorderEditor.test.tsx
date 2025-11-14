@@ -109,11 +109,13 @@ describe('BorderEditor', () => {
           <BorderEditor value={border} onChange={handleChange} />
         ));
 
-        const select = container.querySelector('select') as HTMLSelectElement;
+        const select = container.querySelectorAll('select')[1] as HTMLSelectElement;
         expect(select).toBeInTheDocument();
 
-        // Change style using fireEvent which properly triggers SolidJS handlers
-        fireEvent.change(select, { target: { value: style } });
+        // Set the value on the select element first
+        select.value = style;
+        // Then fire the change event with the updated select as target
+        fireEvent.change(select);
 
         await waitFor(() => {
           expect(handleChange).toHaveBeenCalled();
@@ -129,7 +131,7 @@ describe('BorderEditor', () => {
     it('should render all 9 border style options', () => {
       const { container } = render(() => <BorderEditor />);
 
-      const select = container.querySelector('select') as HTMLSelectElement;
+      const select = container.querySelectorAll('select')[1] as HTMLSelectElement;
       const options = select.querySelectorAll('option');
 
       expect(options.length).toBe(9);
@@ -144,7 +146,7 @@ describe('BorderEditor', () => {
 
       const { container } = render(() => <BorderEditor value={border} />);
 
-      const select = container.querySelector('select') as HTMLSelectElement;
+      const select = container.querySelectorAll('select')[1] as HTMLSelectElement;
       expect(select.value).toBe('dashed');
     });
   });
@@ -202,7 +204,7 @@ describe('BorderEditor', () => {
         const { container, unmount } = render(() => <BorderEditor value={border} />);
 
         const input = container.querySelector('input[type="text"]') as HTMLInputElement;
-        expect(input).toHaveValue('2px');
+        expect(input).toHaveValue(`2${unit}`);
 
         unmount();
       });
@@ -401,7 +403,7 @@ describe('BorderEditor', () => {
       expect(input).toBeDisabled();
 
       // Style select should be disabled
-      const select = container.querySelector('select') as HTMLSelectElement;
+      const select = container.querySelectorAll('select')[1] as HTMLSelectElement;
       expect(select).toBeDisabled();
     });
 
@@ -417,7 +419,7 @@ describe('BorderEditor', () => {
         <BorderEditor value={border} onChange={handleChange} disabled={true} />
       ));
 
-      const select = container.querySelector('select') as HTMLSelectElement;
+      const select = container.querySelectorAll('select')[1] as HTMLSelectElement;
       expect(select).toBeDisabled();
     });
 
@@ -427,7 +429,7 @@ describe('BorderEditor', () => {
       const input = container.querySelector('input[type="text"]') as HTMLInputElement;
       expect(input).not.toBeDisabled();
 
-      const select = container.querySelector('select') as HTMLSelectElement;
+      const select = container.querySelectorAll('select')[1] as HTMLSelectElement;
       expect(select).not.toBeDisabled();
     });
   });
@@ -501,7 +503,7 @@ describe('BorderEditor', () => {
       const input = container.querySelector('input[type="text"]') as HTMLInputElement;
       expect(input).toHaveValue('2px');
 
-      const select = container.querySelector('select') as HTMLSelectElement;
+      const select = container.querySelectorAll('select')[1] as HTMLSelectElement;
       expect(select.value).toBe('dashed');
     });
 
@@ -514,7 +516,7 @@ describe('BorderEditor', () => {
 
       const { container } = render(() => <BorderEditor value={border} />);
 
-      const select = container.querySelector('select') as HTMLSelectElement;
+      const select = container.querySelectorAll('select')[1] as HTMLSelectElement;
 
       // Should not throw error when changed without onChange
       expect(() => {
@@ -530,7 +532,7 @@ describe('BorderEditor', () => {
       const input = container.querySelector('input[type="text"]') as HTMLInputElement;
       expect(input).toHaveValue('0px');
 
-      const select = container.querySelector('select') as HTMLSelectElement;
+      const select = container.querySelectorAll('select')[1] as HTMLSelectElement;
       expect(select.value).toBe('none');
     });
 
@@ -578,7 +580,7 @@ describe('BorderEditor', () => {
         <BorderEditor value={border} onChange={handleChange} />
       ));
 
-      const select = container.querySelector('select') as HTMLSelectElement;
+      const select = container.querySelectorAll('select')[1] as HTMLSelectElement;
       select.value = 'dashed';
       select.dispatchEvent(new Event('change', { bubbles: true }));
 
@@ -630,7 +632,7 @@ describe('BorderEditor', () => {
         <BorderEditor value={border} onChange={handleChange} />
       ));
 
-      const select = container.querySelector('select') as HTMLSelectElement;
+      const select = container.querySelectorAll('select')[1] as HTMLSelectElement;
       select.value = 'dotted';
       select.dispatchEvent(new Event('change', { bubbles: true }));
 

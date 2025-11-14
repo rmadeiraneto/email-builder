@@ -6,7 +6,7 @@ import type {
 } from './PropertyPanel.types';
 import type { ComponentPreset, VisualFeedbackEvent } from '@email-builder/core';
 import { getTestId, getTestAction, getTestState } from '@email-builder/core/utils';
-import { visualFeedbackEventBus } from '@email-builder/core';
+import { visualFeedbackEventBus, DeviceMode } from '@email-builder/core';
 import { PresetPreview, PresetManager } from '../modals';
 import { RichTextEditor } from '../editors';
 import { CompatibilityIcon, CompatibilityModal } from '../compatibility';
@@ -915,6 +915,45 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
 
     return grouped;
   });
+
+  // Mobile Development Mode helpers
+  const isMobileMode = createMemo(() => props.deviceMode === DeviceMode.MOBILE);
+
+  /**
+   * Check if a property has a mobile override
+   */
+  const hasMobileOverride = (component: any | null, propertyKey: string): boolean => {
+    if (!component || !component.mobileStyles) return false;
+
+    // Extract the style property key (e.g., 'styles.backgroundColor' -> 'backgroundColor')
+    const styleProp = propertyKey.startsWith('styles.')
+      ? propertyKey.replace('styles.', '')
+      : propertyKey;
+
+    return component.mobileStyles && styleProp in component.mobileStyles;
+  };
+
+  /**
+   * Get the desktop (base) value for a property
+   */
+  const getDesktopValue = (component: any | null, propertyKey: string): any => {
+    if (!component) return undefined;
+    return getNestedValue(component, propertyKey);
+  };
+
+  /**
+   * Get the mobile override value for a property
+   */
+  const getMobileValue = (component: any | null, propertyKey: string): any => {
+    if (!component || !component.mobileStyles) return undefined;
+
+    // Extract the style property key
+    const styleProp = propertyKey.startsWith('styles.')
+      ? propertyKey.replace('styles.', '')
+      : propertyKey;
+
+    return component.mobileStyles?.[styleProp];
+  };
 
   // Load presets when component type changes
   // Only track the component type, not the entire component object

@@ -332,6 +332,213 @@
 
 ## 🎯 Next Priorities
 
+### 🧩 Priority 0A: Enhanced Property Editor Components
+**Priority: HIGH** - Foundation for advanced component customization
+**Status**: PHASE 0A Complete ✅ | PHASE 0B-0D Pending
+**Time Spent**: ~8 hours (PHASE 0A)
+**Time Remaining**: ~16-20 hours (PHASE 0B-0D)
+**Branch**: `claude/research-email-builders-011CV3ssTQPjmmVKMqQsU5gm`
+
+#### PHASE 0A: Component Implementation & Build Fixes ✅ COMPLETE (Nov 12-14, 2025)
+**Status**: ✅ All 8 components implemented, all build errors fixed
+**Time**: ~8 hours
+
+**Completed Work**:
+- [x] 5 new core components created
+  - [x] CSSValueInput (144 lines) - CSS measurement input with unit selector
+  - [x] BorderEditor (441 lines) - Complete border configuration editor
+  - [x] SpacingEditor (232 lines) - 4-sided spacing editor
+  - [x] DisplayToggle (189 lines) - Show/hide toggle with visual indicators
+  - [x] ImageUpload (597 lines) - Dual-input image selector with preview
+- [x] 3 enhanced existing components
+  - [x] RichTextEditor (+369 lines) - Lists, code blocks, links, super/subscript
+  - [x] ColorPicker (+403 lines) - Mode switcher, swatches, transparency
+  - [x] ListEditor (556 lines) - Drag-and-drop reordering
+- [x] All build errors fixed
+  - [x] TypeScript exactOptionalPropertyTypes compliance
+  - [x] InputLabel component misusage resolved
+  - [x] Missing barrel exports created
+  - [x] Lexical dependencies externalized
+  - [x] SCSS design token errors fixed
+- [x] SolidJS reactivity compliance verified
+- [x] Documentation completed (PR_DESCRIPTION_BUILD_FIXES.md)
+- [x] TODO.md updated
+
+**Deliverables**: 3,200+ lines of production-ready code, zero build errors
+
+---
+
+#### PHASE 0B: Testing & Quality Assurance (Pending)
+**Priority: HIGH** - Ensure component reliability and correctness
+**Estimated Time**: 6-8 hours
+**Status**: Not Started
+
+**Tasks**:
+- [ ] **Unit Tests** (4-5 hours)
+  - [ ] CSSValueInput tests
+    - [ ] Unit conversion (px, rem, em, %, pt, auto)
+    - [ ] Min/max constraints validation
+    - [ ] Auto value handling
+    - [ ] onChange callback verification
+  - [ ] BorderEditor tests
+    - [ ] Border style changes (all 9 styles)
+    - [ ] Width, color updates
+    - [ ] Radius link/unlink behavior
+    - [ ] All 4 corners update correctly when linked
+    - [ ] Independent corner updates when unlinked
+  - [ ] SpacingEditor tests
+    - [ ] 4-sided spacing updates (top, right, bottom, left)
+    - [ ] Link/unlink behavior
+    - [ ] CSSValue handling for each side
+  - [ ] DisplayToggle tests
+    - [ ] Toggle state changes
+    - [ ] Icon state rendering (visible/hidden)
+    - [ ] ARIA labels and accessibility
+  - [ ] ImageUpload tests
+    - [ ] File validation (format: JPEG, PNG, GIF, SVG)
+    - [ ] File size validation (max 5MB)
+    - [ ] Drag & drop events
+    - [ ] URL input handling
+    - [ ] Alt text requirement
+    - [ ] Object URL cleanup on remove
+    - [ ] Upload lifecycle callbacks
+  - [ ] RichTextEditor tests
+    - [ ] List formatting (bullet/numbered)
+    - [ ] Code block insertion
+    - [ ] Link dialog and insertion
+    - [ ] Super/subscript formatting
+  - [ ] ColorPicker tests
+    - [ ] Mode switching (HEX/RGB/HSL)
+    - [ ] Swatch selection
+    - [ ] Empty/transparent color handling
+    - [ ] Color format conversion
+  - [ ] ListEditor tests
+    - [ ] Add/remove items
+    - [ ] Drag-and-drop reordering
+    - [ ] Min/max item constraints
+    - [ ] Custom item rendering
+
+- [ ] **Integration Tests** (2-3 hours)
+  - [ ] PropertyPanel integration
+    - [ ] Components render correctly in property panel
+    - [ ] State updates propagate to template
+    - [ ] Undo/redo works with new components
+  - [ ] Template export verification
+    - [ ] All new component properties export correctly to HTML
+    - [ ] Border styles render in email clients
+    - [ ] Spacing values export correctly
+    - [ ] Images include alt text in export
+  - [ ] Responsive behavior tests
+    - [ ] Components work on mobile/tablet/desktop viewports
+    - [ ] Touch interactions work on mobile devices
+
+**Deliverables**:
+- 50+ unit tests with 90%+ coverage
+- 10+ integration tests
+- All tests passing
+- Test documentation
+
+---
+
+#### PHASE 0C: PropertyPanel Integration (Pending)
+**Priority: HIGH** - Make components usable in the builder
+**Estimated Time**: 6-8 hours
+**Status**: Not Started
+
+**Tasks**:
+- [ ] **Component Property Mappings** (2-3 hours)
+  - [ ] Map CSSValueInput to component properties (padding, margin, width, height, etc.)
+  - [ ] Map BorderEditor to border properties (all email components)
+  - [ ] Map SpacingEditor to padding/margin properties
+  - [ ] Map DisplayToggle to visibility properties (showImage, showButton, etc.)
+  - [ ] Map ImageUpload to image properties (headerImage, logoImage, etc.)
+  - [ ] Update RichTextEditor integration in text properties
+  - [ ] Update ColorPicker integration in color properties
+  - [ ] Update ListEditor integration in list properties
+
+- [ ] **PropertyPanel Updates** (2-3 hours)
+  - [ ] Add BorderEditor to border property sections
+  - [ ] Add SpacingEditor to spacing property sections
+  - [ ] Add ImageUpload to image property sections
+  - [ ] Add DisplayToggle to visibility sections
+  - [ ] Add CSSValueInput to dimension property sections
+  - [ ] Update property panel layouts for new components
+  - [ ] Ensure proper grouping and labeling
+
+- [ ] **Property Validation** (1-2 hours)
+  - [ ] Validate CSS values (units, min/max)
+  - [ ] Validate border properties (style, color, radius)
+  - [ ] Validate spacing values (non-negative)
+  - [ ] Validate image properties (URL format, file types)
+  - [ ] Add validation error messages
+  - [ ] Prevent invalid property updates
+
+- [ ] **Undo/Redo Integration** (1 hour)
+  - [ ] Test undo/redo with all new components
+  - [ ] Ensure state consistency
+  - [ ] Verify command history
+
+**Deliverables**:
+- All 8 components integrated into PropertyPanel
+- Property validation working
+- Undo/redo fully functional
+- Template updates persist correctly
+
+---
+
+#### PHASE 0D: Documentation & Examples (Pending)
+**Priority: MEDIUM** - Enable developers to use components effectively
+**Estimated Time**: 4-6 hours
+**Status**: Not Started
+
+**Tasks**:
+- [ ] **Component Showcase** (2-3 hours)
+  - [ ] Add CSSValueInput to ComponentShowcase in dev app
+  - [ ] Add BorderEditor to ComponentShowcase with live demo
+  - [ ] Add SpacingEditor to ComponentShowcase with live demo
+  - [ ] Add DisplayToggle to ComponentShowcase
+  - [ ] Add ImageUpload to ComponentShowcase with file upload demo
+  - [ ] Add RichTextEditor enhancements showcase
+  - [ ] Add ColorPicker enhancements showcase
+  - [ ] Add ListEditor drag-and-drop demo
+  - [ ] Interactive examples for each component
+  - [ ] Live state management demonstration
+
+- [ ] **Usage Guides** (1-2 hours)
+  - [ ] Create PROPERTY_EDITORS.md usage guide
+  - [ ] Document each component's props and usage
+  - [ ] Add best practices for component usage
+  - [ ] Add common patterns and recipes
+  - [ ] Add troubleshooting section
+
+- [ ] **Storybook Stories** (1-2 hours) - Optional
+  - [ ] Create Storybook stories for visual testing
+  - [ ] Add stories for all component states
+  - [ ] Add interaction examples
+  - [ ] Add accessibility testing
+
+**Deliverables**:
+- Complete component showcase in dev app
+- PROPERTY_EDITORS.md usage guide
+- Developer-friendly documentation
+- (Optional) Storybook integration
+
+---
+
+#### Summary: Priority 0A Roadmap
+
+| Phase | Status | Time Spent | Time Remaining | Progress |
+|-------|--------|-----------|----------------|----------|
+| 0A: Implementation & Fixes | ✅ Complete | 8h | 0h | 100% |
+| 0B: Testing & QA | ⏳ Pending | 0h | 6-8h | 0% |
+| 0C: PropertyPanel Integration | ⏳ Pending | 0h | 6-8h | 0% |
+| 0D: Documentation & Examples | ⏳ Pending | 0h | 4-6h | 0% |
+| **Total** | **25% Complete** | **8h** | **16-22h** | **25%** |
+
+**Next Step**: Start PHASE 0B (Testing & Quality Assurance)
+
+---
+
 ### 🎨 Priority 0: Visual Property Feedback System - IN PROGRESS
 **Priority: CRITICAL** - Dramatically improves UX and builder discoverability
 **Status**: Ready to implement

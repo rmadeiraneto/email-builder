@@ -4,7 +4,7 @@
  * Main page for the email/template builder application
  */
 
-import { type Component, Show, For, createSignal, createMemo, onMount, onCleanup } from 'solid-js';
+import { type Component, Show, For, createSignal, createMemo, onMount, onCleanup, createEffect } from 'solid-js';
 import { BuilderProvider, useBuilder } from '../context/BuilderContext';
 import { TranslationProvider } from '@email-builder/ui-solid/i18n';
 import { TemplateCanvas } from '@email-builder/ui-solid/canvas';

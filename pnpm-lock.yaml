@@ -75,6 +75,39 @@ importers:
       '@email-builder/ui-solid':
         specifier: workspace:*
         version: link:../../packages/ui-solid
+      '@floating-ui/dom':
+        specifier: ^1.6.0
+        version: 1.7.4
+      '@lexical/code':
+        specifier: ^0.38.2
+        version: 0.38.2
+      '@lexical/history':
+        specifier: ^0.38.2
+        version: 0.38.2
+      '@lexical/html':
+        specifier: ^0.38.2
+        version: 0.38.2
+      '@lexical/link':
+        specifier: ^0.38.2
+        version: 0.38.2
+      '@lexical/list':
+        specifier: ^0.38.2
+        version: 0.38.2
+      '@lexical/react':
+        specifier: ^0.38.2
+        version: 0.38.2(react-dom@19.2.0)(react@19.2.0)(yjs@13.6.27)
+      '@lexical/rich-text':
+        specifier: ^0.38.2
+        version: 0.38.2
+      '@lexical/selection':
+        specifier: ^0.38.2
+        version: 0.38.2
+      '@lexical/utils':
+        specifier: ^0.38.2
+        version: 0.38.2
+      lexical:
+        specifier: ^0.38.2
+        version: 0.38.2
       remixicon:
         specifier: ^4.7.0
         version: 4.7.0
@@ -173,6 +206,9 @@ importers:
       '@floating-ui/dom':
         specifier: ^1.6.0
         version: 1.7.4
+      '@lexical/code':
+        specifier: ^0.38.2
+        version: 0.38.2
       '@lexical/history':
         specifier: ^0.38.2
         version: 0.38.2

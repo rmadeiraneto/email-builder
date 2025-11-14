@@ -36,6 +36,18 @@ export default defineConfig({
         '@email-builder/ui-components/utils',
         /^@email-builder\/ui-components\/src\//,
         '@floating-ui/dom',
+        // Lexical dependencies
+        'lexical',
+        '@lexical/code',
+        '@lexical/history',
+        '@lexical/html',
+        '@lexical/link',
+        '@lexical/list',
+        '@lexical/react',
+        '@lexical/rich-text',
+        '@lexical/selection',
+        '@lexical/utils',
+        '@lexical/clipboard',
       ],
       output: {
         preserveModules: true,

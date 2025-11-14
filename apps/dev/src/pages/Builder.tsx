@@ -20,6 +20,7 @@ import { TestConfigModal } from '../components/modals/TestConfigModal';
 import { CompatibilityReportModal } from '../components/modals/CompatibilityReportModal';
 import { AccessibilityAnnouncer } from '@email-builder/ui-solid/visual-feedback';
 import type { ComponentDefinition, EmailTestingConfig, EmailTestRequest, CompatibilityReport } from '@email-builder/core';
+import { getTipsByTrigger, TipTrigger } from '@email-builder/core';
 import styles from './Builder.module.scss';
 
 const BuilderContent: Component = () => {
@@ -112,6 +113,22 @@ const BuilderContent: Component = () => {
 
   onCleanup(() => {
     window.removeEventListener('keydown', handleKeyDown);
+  });
+
+  // Show tips based on email mode
+  createEffect(() => {
+    const template = state.template;
+    if (template && template.settings.target === 'email') {
+      // Get tips for email mode
+      const emailModeTips = getTipsByTrigger(TipTrigger.EMAIL_MODE);
+
+      // Show each tip that hasn't been dismissed
+      emailModeTips.forEach(tip => {
+        if (!state.dismissedTips.includes(tip.id)) {
+          actions.showTip(tip.id);
+        }
+      });
+    }
   });
 
   const handleComponentDragStart = (_definition: ComponentDefinition, _event: DragEvent) => {
@@ -207,9 +224,25 @@ const BuilderContent: Component = () => {
 
   const handleExport = async () => {
     try {
+      // Show export tips
+      const exportTips = getTipsByTrigger(TipTrigger.EXPORT);
+      exportTips.forEach(tip => {
+        if (!state.dismissedTips.includes(tip.id)) {
+          actions.showTip(tip.id);
+        }
+      });
+
       // Check compatibility first
       const report = actions.checkCompatibility();
       if (report && report.issues.length > 0) {
+        // Show poor compatibility tips when issues are found
+        const poorCompatibilityTips = getTipsByTrigger(TipTrigger.POOR_COMPATIBILITY);
+        poorCompatibilityTips.forEach(tip => {
+          if (!state.dismissedTips.includes(tip.id)) {
+            actions.showTip(tip.id);
+          }
+        });
+
         setCompatibilityReport(report);
         setPendingAction('export');
         setIsCompatibilityReportModalOpen(true);
@@ -250,6 +283,14 @@ const BuilderContent: Component = () => {
     // Check compatibility first
     const report = actions.checkCompatibility();
     if (report && report.issues.length > 0) {
+      // Show poor compatibility tips when issues are found
+      const poorCompatibilityTips = getTipsByTrigger(TipTrigger.POOR_COMPATIBILITY);
+      poorCompatibilityTips.forEach(tip => {
+        if (!state.dismissedTips.includes(tip.id)) {
+          actions.showTip(tip.id);
+        }
+      });
+
       setCompatibilityReport(report);
       setPendingAction('test');
       setIsCompatibilityReportModalOpen(true);
@@ -283,6 +324,14 @@ const BuilderContent: Component = () => {
   const handleCheckCompatibility = () => {
     const report = actions.checkCompatibility();
     if (report) {
+      // Show poor compatibility tips when issues are found
+      const poorCompatibilityTips = getTipsByTrigger(TipTrigger.POOR_COMPATIBILITY);
+      poorCompatibilityTips.forEach(tip => {
+        if (!state.dismissedTips.includes(tip.id)) {
+          actions.showTip(tip.id);
+        }
+      });
+
       setCompatibilityReport(report);
       setPendingAction(null);
       setIsCompatibilityReportModalOpen(true);

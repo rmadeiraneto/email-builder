@@ -6,3 +6,4 @@
 
 export * from './ModeSwitcher';
 export * from './MobileLayoutManager';
+export * from './MobileDiffPanel';

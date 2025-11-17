@@ -85,10 +85,12 @@ export const MobileLayoutManager: Component<MobileLayoutManagerProps> = (props) 
       const targetIndex = items.findIndex(i => i.id === targetItem.id);
 
       if (draggedIndex !== -1 && targetIndex !== -1) {
-        const [draggedItem] = items.splice(draggedIndex, 1);
-        items.splice(targetIndex, 0, draggedItem);
-
-        props.onReorder(items.map(i => i.id));
+        const draggedItem = items[draggedIndex];
+        if (draggedItem) {
+          items.splice(draggedIndex, 1);
+          items.splice(targetIndex, 0, draggedItem);
+          props.onReorder(items.map(i => i.id));
+        }
       }
     }
 
@@ -115,20 +117,24 @@ export const MobileLayoutManager: Component<MobileLayoutManagerProps> = (props) 
               and control their visibility.
             </p>
             <div class={styles.promptActions}>
-              <Button
-                variant="primary"
-                size="small"
-                onClick={props.onApplyDefaults}
-              >
-                Apply Mobile-Optimized Defaults
-              </Button>
-              <Button
-                variant="ghost"
-                size="small"
-                onClick={props.onDismissPrompt}
-              >
-                Skip
-              </Button>
+              <Show when={props.onApplyDefaults}>
+                <Button
+                  variant="primary"
+                  size="small"
+                  onClick={() => props.onApplyDefaults?.()}
+                >
+                  Apply Mobile-Optimized Defaults
+                </Button>
+              </Show>
+              <Show when={props.onDismissPrompt}>
+                <Button
+                  variant="ghost"
+                  size="small"
+                  onClick={() => props.onDismissPrompt?.()}
+                >
+                  Skip
+                </Button>
+              </Show>
             </div>
           </div>
         </div>
@@ -137,11 +143,11 @@ export const MobileLayoutManager: Component<MobileLayoutManagerProps> = (props) 
       <div class={styles.header}>
         <h3>Mobile Layout</h3>
         <div class={styles.headerActions}>
-          <Show when={hasOrderChanges()}>
+          <Show when={hasOrderChanges() && props.onResetOrder}>
             <Button
               variant="ghost"
               size="small"
-              onClick={props.onResetOrder}
+              onClick={() => props.onResetOrder?.()}
               icon="refresh-line"
             >
               Reset Order

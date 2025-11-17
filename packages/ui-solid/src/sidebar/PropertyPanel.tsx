@@ -10,6 +10,9 @@ import { visualFeedbackEventBus, DeviceMode } from '@email-builder/core';
 import { PresetPreview, PresetManager } from '../modals';
 import { RichTextEditor } from '../editors';
 import { CompatibilityIcon, CompatibilityModal } from '../compatibility';
+import { CSSValueInput, BorderEditor, SpacingEditor, DisplayToggle, ImageUpload } from '../molecules';
+import type { ImageData } from '../molecules/ImageUpload/ImageUpload';
+import type { CSSValue, Border, BorderRadius, Spacing } from '@email-builder/core';
 import styles from './PropertyPanel.module.scss';
 
 /**
@@ -291,19 +294,16 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
       section: 'styles',
     },
     {
-      key: 'styles.borderRadius',
-      label: 'Border Radius',
-      type: 'number',
+      key: 'styles.border',
+      label: 'Border',
+      type: 'border',
       section: 'styles',
-      min: 0,
-      max: 50,
     },
     {
       key: 'styles.padding',
       label: 'Padding',
-      type: 'text',
+      type: 'spacing',
       section: 'styles',
-      placeholder: '12px 24px',
     },
   ],
   text: [
@@ -370,24 +370,16 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
   ],
   image: [
     {
-      key: 'content.src',
-      label: 'Image URL',
-      type: 'url',
+      key: 'content',
+      label: 'Image',
+      type: 'imageupload',
       section: 'content',
-      placeholder: 'https://example.com/image.jpg',
-    },
-    {
-      key: 'content.alt',
-      label: 'Alt Text',
-      type: 'text',
-      section: 'content',
-      placeholder: 'Describe the image',
-      description: 'Important for accessibility',
+      description: 'Upload an image or provide a URL',
     },
     {
       key: 'styles.width',
       label: 'Width',
-      type: 'number',
+      type: 'cssvalue',
       section: 'styles',
       min: 0,
       max: 1000,
@@ -395,7 +387,7 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
     {
       key: 'styles.height',
       label: 'Height',
-      type: 'number',
+      type: 'cssvalue',
       section: 'styles',
       min: 0,
       max: 1000,
@@ -411,12 +403,18 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
         { label: 'Right', value: 'right' },
       ],
     },
+    {
+      key: 'styles.border',
+      label: 'Border',
+      type: 'border',
+      section: 'styles',
+    },
   ],
   separator: [
     {
       key: 'styles.height',
       label: 'Height',
-      type: 'number',
+      type: 'cssvalue',
       section: 'styles',
       min: 1,
       max: 20,
@@ -443,7 +441,7 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
     {
       key: 'styles.height',
       label: 'Height',
-      type: 'number',
+      type: 'cssvalue',
       section: 'styles',
       min: 0,
       max: 200,
@@ -463,18 +461,17 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
       ],
     },
     {
-      key: 'content.image.src',
-      label: 'Logo URL',
-      type: 'url',
+      key: 'content.showLogo',
+      label: 'Show Logo',
+      type: 'displaytoggle',
       section: 'content',
-      placeholder: 'https://example.com/logo.png',
     },
     {
-      key: 'content.image.alt',
-      label: 'Logo Alt Text',
-      type: 'text',
+      key: 'content.image',
+      label: 'Logo Image',
+      type: 'imageupload',
       section: 'content',
-      placeholder: 'Company logo',
+      description: 'Upload logo or provide URL',
     },
     {
       key: 'styles.backgroundColor',
@@ -497,9 +494,14 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
     {
       key: 'styles.padding',
       label: 'Padding',
-      type: 'text',
+      type: 'spacing',
       section: 'styles',
-      placeholder: '20px',
+    },
+    {
+      key: 'styles.border',
+      label: 'Border',
+      type: 'border',
+      section: 'styles',
     },
   ],
   footer: [
@@ -509,6 +511,12 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
       type: 'text',
       section: 'content',
       placeholder: '© 2025 Your Company. All rights reserved.',
+    },
+    {
+      key: 'content.showSocialIcons',
+      label: 'Show Social Icons',
+      type: 'displaytoggle',
+      section: 'content',
     },
     {
       key: 'styles.backgroundColor',
@@ -525,7 +533,7 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
     {
       key: 'styles.textStyles.fontSize',
       label: 'Font Size',
-      type: 'number',
+      type: 'cssvalue',
       section: 'styles',
       min: 10,
       max: 24,
@@ -539,9 +547,14 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
     {
       key: 'styles.padding',
       label: 'Padding',
-      type: 'text',
+      type: 'spacing',
       section: 'styles',
-      placeholder: '30px 20px',
+    },
+    {
+      key: 'styles.border',
+      label: 'Border',
+      type: 'border',
+      section: 'styles',
     },
   ],
   hero: [
@@ -558,11 +571,17 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
       ],
     },
     {
-      key: 'content.image.src',
-      label: 'Image URL',
-      type: 'url',
+      key: 'content.showImage',
+      label: 'Show Image',
+      type: 'displaytoggle',
       section: 'content',
-      placeholder: 'https://example.com/hero-image.jpg',
+    },
+    {
+      key: 'content.image',
+      label: 'Hero Image',
+      type: 'imageupload',
+      section: 'content',
+      description: 'Upload hero image or provide URL',
     },
     {
       key: 'content.heading.plainText',
@@ -577,6 +596,12 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
       type: 'textarea',
       section: 'content',
       placeholder: 'Supporting text for your hero section',
+    },
+    {
+      key: 'content.showButton',
+      label: 'Show Button',
+      type: 'displaytoggle',
+      section: 'content',
     },
     {
       key: 'content.button.text',
@@ -607,7 +632,7 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
     {
       key: 'styles.headingStyles.fontSize',
       label: 'Heading Size',
-      type: 'number',
+      type: 'cssvalue',
       section: 'styles',
       min: 24,
       max: 72,
@@ -622,6 +647,18 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
         { label: 'Center', value: 'center' },
         { label: 'Right', value: 'right' },
       ],
+    },
+    {
+      key: 'styles.padding',
+      label: 'Padding',
+      type: 'spacing',
+      section: 'styles',
+    },
+    {
+      key: 'styles.border',
+      label: 'Border',
+      type: 'border',
+      section: 'styles',
     },
   ],
   list: [
@@ -676,10 +713,28 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
     {
       key: 'styles.titleStyles.fontSize',
       label: 'Title Size',
-      type: 'number',
+      type: 'cssvalue',
       section: 'styles',
       min: 14,
       max: 36,
+    },
+    {
+      key: 'styles.padding',
+      label: 'Padding',
+      type: 'spacing',
+      section: 'styles',
+    },
+    {
+      key: 'styles.itemPadding',
+      label: 'Item Padding',
+      type: 'spacing',
+      section: 'styles',
+    },
+    {
+      key: 'styles.border',
+      label: 'Border',
+      type: 'border',
+      section: 'styles',
     },
   ],
   call_to_action: [
@@ -710,6 +765,12 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
       placeholder: 'Join thousands of satisfied customers',
     },
     {
+      key: 'content.showPrimaryButton',
+      label: 'Show Primary Button',
+      type: 'displaytoggle',
+      section: 'content',
+    },
+    {
       key: 'content.primaryButton.text',
       label: 'Primary Button Text',
       type: 'text',
@@ -722,6 +783,12 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
       type: 'url',
       section: 'content',
       placeholder: 'https://example.com',
+    },
+    {
+      key: 'content.showSecondaryButton',
+      label: 'Show Secondary Button',
+      type: 'displaytoggle',
+      section: 'content',
     },
     {
       key: 'content.secondaryButton.text',
@@ -752,10 +819,22 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
     {
       key: 'styles.headingStyles.fontSize',
       label: 'Heading Size',
-      type: 'number',
+      type: 'cssvalue',
       section: 'styles',
       min: 20,
       max: 48,
+    },
+    {
+      key: 'styles.padding',
+      label: 'Padding',
+      type: 'spacing',
+      section: 'styles',
+    },
+    {
+      key: 'styles.border',
+      label: 'Border',
+      type: 'border',
+      section: 'styles',
     },
   ],
 };
@@ -832,6 +911,27 @@ function getCssPropertyName(propertyKey: string): string | null {
  * PropertyPanel component
  * Displays and manages properties of the selected component
  */
+// Stable default values to avoid creating new objects on every render
+// This prevents infinite loops when components call onChange on value prop changes
+const DEFAULT_CSS_VALUE: CSSValue = { value: 0, unit: 'px' };
+const DEFAULT_BORDER: Border & { radius?: BorderRadius } = {
+  width: { value: 1, unit: 'px' },
+  style: 'solid',
+  color: '#000000',
+  radius: {
+    topLeft: { value: 0, unit: 'px' },
+    topRight: { value: 0, unit: 'px' },
+    bottomLeft: { value: 0, unit: 'px' },
+    bottomRight: { value: 0, unit: 'px' }
+  }
+};
+const DEFAULT_SPACING: Spacing = {
+  top: { value: 0, unit: 'px' },
+  right: { value: 0, unit: 'px' },
+  bottom: { value: 0, unit: 'px' },
+  left: { value: 0, unit: 'px' }
+};
+
 export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
   // Tab state for component selected
   type ComponentTabType = 'content' | 'style';
@@ -1090,14 +1190,106 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
     return Array.from(types);
   });
 
+  /**
+   * Validate property value before updating
+   */
+  const validatePropertyValue = (property: PropertyDefinition, value: any): { valid: boolean; error?: string } => {
+    // CSSValue validation
+    if (property.type === 'cssvalue' && value) {
+      const cssValue = value as CSSValue;
+      if (typeof cssValue.value !== 'number') {
+        return { valid: false, error: 'CSS value must be a number' };
+      }
+      if (property.min !== undefined && cssValue.value < property.min) {
+        return { valid: false, error: `Value cannot be less than ${property.min}` };
+      }
+      if (property.max !== undefined && cssValue.value > property.max) {
+        return { valid: false, error: `Value cannot be greater than ${property.max}` };
+      }
+      const validUnits = ['px', 'rem', 'em', '%', 'vh', 'vw', 'pt', 'auto'];
+      if (!validUnits.includes(cssValue.unit)) {
+        return { valid: false, error: `Invalid unit: ${cssValue.unit}` };
+      }
+    }
+
+    // Border validation
+    if (property.type === 'border' && value) {
+      const border = value as Border & { radius?: BorderRadius };
+      if (!border.width || typeof border.width.value !== 'number') {
+        return { valid: false, error: 'Border width must be a valid CSS value' };
+      }
+      const validStyles = ['none', 'solid', 'dashed', 'dotted', 'double', 'groove', 'ridge', 'inset', 'outset'];
+      if (!validStyles.includes(border.style)) {
+        return { valid: false, error: `Invalid border style: ${border.style}` };
+      }
+      // Simple color validation (hex or named color)
+      if (border.color && !(/^#[0-9A-F]{6}$/i.test(border.color) || /^[a-z]+$/i.test(border.color))) {
+        return { valid: false, error: 'Border color must be a valid hex color or color name' };
+      }
+    }
+
+    // Spacing validation
+    if (property.type === 'spacing' && value) {
+      const spacing = value as Spacing;
+      const sides = ['top', 'right', 'bottom', 'left'] as const;
+      for (const side of sides) {
+        if (spacing[side]) {
+          const cssValue = spacing[side];
+          if (typeof cssValue.value !== 'number') {
+            return { valid: false, error: `Spacing ${side} must be a valid CSS value` };
+          }
+          if (cssValue.value < 0) {
+            return { valid: false, error: `Spacing cannot be negative` };
+          }
+        }
+      }
+    }
+
+    // ImageData validation
+    if (property.type === 'imageupload' && value) {
+      const imageData = value as ImageData;
+      // URL validation (basic)
+      if (imageData.url && imageData.url.trim()) {
+        try {
+          new URL(imageData.url);
+        } catch {
+          // If it's not a valid URL, check if it's a data URL or relative path
+          if (!imageData.url.startsWith('data:') && !imageData.url.startsWith('/') && !imageData.url.startsWith('./')) {
+            return { valid: false, error: 'Image URL must be a valid URL, data URL, or relative path' };
+          }
+        }
+      }
+      // Alt text validation
+      if (imageData.url && (!imageData.alt || imageData.alt.trim() === '')) {
+        console.warn('Image missing alt text - important for accessibility');
+      }
+    }
+
+    return { valid: true };
+  };
+
   const handlePropertyChange = (property: PropertyDefinition, value: any) => {
     if (!props.selectedComponent) return;
 
-    // Create a copy of the component with updated property
-    const updatedComponent = { ...props.selectedComponent };
-    setNestedValue(updatedComponent, property.key, value);
+    // Get current value to check if it's actually changing
+    const currentValue = getNestedValue(props.selectedComponent, property.key);
 
-    // Call the onChange callback
+    // Deep equality check to prevent unnecessary updates that cause infinite loops
+    // This is critical for object-based properties (border, spacing, cssvalue)
+    if (JSON.stringify(currentValue) === JSON.stringify(value)) {
+      // Value hasn't changed, don't trigger update
+      return;
+    }
+
+    // Validate the value
+    const validation = validatePropertyValue(property, value);
+    if (!validation.valid) {
+      console.error(`Validation error for ${property.key}: ${validation.error}`);
+      // In a real app, you might want to show this error to the user
+      return;
+    }
+
+    // Call the onChange callback only if value has actually changed
     props.onPropertyChange(
       props.selectedComponent.id,
       property.key,
@@ -1417,6 +1609,133 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               </For>
             </div>
             {renderInheritedValue(property)}
+            <Show when={property.description}>
+              <span class={styles.propertyDescription}>{property.description}</span>
+            </Show>
+          </div>
+        );
+
+      case 'cssvalue':
+        const cssvalueCssProp = getCssPropertyName(property.key);
+        return (
+          <div class={styles.propertyField}>
+            <label class={styles.propertyLabel}>
+              {property.label}
+              <Show when={cssvalueCssProp}>
+                <CompatibilityIcon
+                  property={cssvalueCssProp!}
+                  size={16}
+                  onClick={() => {
+                    setSelectedProperty(cssvalueCssProp!);
+                    setCompatibilityModalOpen(true);
+                  }}
+                />
+              </Show>
+            </label>
+            <CSSValueInput
+              value={(currentValue as CSSValue) || DEFAULT_CSS_VALUE}
+              onChange={(value) => handlePropertyChange(property, value)}
+              min={property.min ?? null}
+              max={property.max ?? null}
+            />
+            <Show when={property.description}>
+              <span class={styles.propertyDescription}>{property.description}</span>
+            </Show>
+          </div>
+        );
+
+      case 'border':
+        const borderCssProp = getCssPropertyName(property.key);
+        return (
+          <div class={styles.propertyField}>
+            <label class={styles.propertyLabel}>
+              {property.label}
+              <Show when={borderCssProp}>
+                <CompatibilityIcon
+                  property={borderCssProp!}
+                  size={16}
+                  onClick={() => {
+                    setSelectedProperty(borderCssProp!);
+                    setCompatibilityModalOpen(true);
+                  }}
+                />
+              </Show>
+            </label>
+            <BorderEditor
+              value={(currentValue as Border & { radius?: BorderRadius }) || DEFAULT_BORDER}
+              onChange={(value: Border & { radius?: BorderRadius }) => handlePropertyChange(property, value)}
+            />
+            <Show when={property.description}>
+              <span class={styles.propertyDescription}>{property.description}</span>
+            </Show>
+          </div>
+        );
+
+      case 'spacing':
+        const spacingCssProp = getCssPropertyName(property.key);
+        return (
+          <div class={styles.propertyField}>
+            <label class={styles.propertyLabel}>
+              {property.label}
+              <Show when={spacingCssProp}>
+                <CompatibilityIcon
+                  property={spacingCssProp!}
+                  size={16}
+                  onClick={() => {
+                    setSelectedProperty(spacingCssProp!);
+                    setCompatibilityModalOpen(true);
+                  }}
+                />
+              </Show>
+            </label>
+            <SpacingEditor
+              value={(currentValue as Spacing) || DEFAULT_SPACING}
+              onChange={(value: Spacing) => handlePropertyChange(property, value)}
+            />
+            <Show when={property.description}>
+              <span class={styles.propertyDescription}>{property.description}</span>
+            </Show>
+          </div>
+        );
+
+      case 'displaytoggle':
+        return (
+          <div class={styles.propertyField}>
+            <label class={styles.propertyLabel}>
+              {property.label}
+            </label>
+            <DisplayToggle
+              value={currentValue !== undefined ? currentValue : true}
+              onChange={(value: boolean) => handlePropertyChange(property, value)}
+            />
+            <Show when={property.description}>
+              <span class={styles.propertyDescription}>{property.description}</span>
+            </Show>
+          </div>
+        );
+
+      case 'imageupload':
+        return (
+          <div class={styles.propertyField}>
+            <label class={styles.propertyLabel}>
+              {property.label}
+            </label>
+            <ImageUpload
+              value={{
+                url: getNestedValue(props.selectedComponent, property.key + '.src') || getNestedValue(props.selectedComponent, property.key + '.url') || '',
+                alt: getNestedValue(props.selectedComponent, property.key + '.alt') || ''
+              }}
+              onChange={(value: ImageData) => {
+                if (getNestedValue(props.selectedComponent, property.key + '.src') !== undefined) {
+                  props.onPropertyChange(props.selectedComponent!.id, property.key + '.src', value.url || '');
+                  props.onPropertyChange(props.selectedComponent!.id, property.key + '.alt', value.alt || '');
+                } else {
+                  props.onPropertyChange(props.selectedComponent!.id, property.key, value);
+                }
+              }}
+              onUploadStart={() => handlePropertyEditStart(property)}
+              onUploadComplete={() => handlePropertyEditEnd(property)}
+            />
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
             </Show>

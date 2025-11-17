@@ -70,12 +70,18 @@ class VisualFeedbackEventBus {
     }
 
     // Update last emitted event
-    this.lastEmittedEvent = {
-      type: event.type,
-      propertyPath: event.propertyPath,
-      componentId: event.componentId,
-      timestamp: now,
-    };
+    this.lastEmittedEvent = event.componentId
+      ? {
+          type: event.type,
+          propertyPath: event.propertyPath,
+          componentId: event.componentId,
+          timestamp: now,
+        }
+      : {
+          type: event.type,
+          propertyPath: event.propertyPath,
+          timestamp: now,
+        };
 
     // Use setTimeout to schedule in a new task, completely breaking out of Solid.js reactive batching
     // This prevents infinite recursion when handlers update signals that trigger re-renders

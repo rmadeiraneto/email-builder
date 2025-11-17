@@ -911,6 +911,27 @@ function getCssPropertyName(propertyKey: string): string | null {
  * PropertyPanel component
  * Displays and manages properties of the selected component
  */
+// Stable default values to avoid creating new objects on every render
+// This prevents infinite loops when components call onChange on value prop changes
+const DEFAULT_CSS_VALUE: CSSValue = { value: 0, unit: 'px' };
+const DEFAULT_BORDER: Border & { radius?: BorderRadius } = {
+  width: { value: 1, unit: 'px' },
+  style: 'solid',
+  color: '#000000',
+  radius: {
+    topLeft: { value: 0, unit: 'px' },
+    topRight: { value: 0, unit: 'px' },
+    bottomLeft: { value: 0, unit: 'px' },
+    bottomRight: { value: 0, unit: 'px' }
+  }
+};
+const DEFAULT_SPACING: Spacing = {
+  top: { value: 0, unit: 'px' },
+  right: { value: 0, unit: 'px' },
+  bottom: { value: 0, unit: 'px' },
+  left: { value: 0, unit: 'px' }
+};
+
 export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
   // Tab state for component selected
   type ComponentTabType = 'content' | 'style';
@@ -1606,7 +1627,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               </Show>
             </label>
             <CSSValueInput
-              value={currentValue as CSSValue || { value: property.min || 0, unit: 'px' }}
+              value={(currentValue as CSSValue) || DEFAULT_CSS_VALUE}
               onChange={(value) => handlePropertyChange(property, value)}
               min={property.min ?? null}
               max={property.max ?? null}
@@ -1635,12 +1656,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               </Show>
             </label>
             <BorderEditor
-              value={(currentValue || {
-                width: { value: 1, unit: 'px' },
-                style: 'solid',
-                color: '#000000',
-                radius: { topLeft: { value: 0, unit: 'px' }, topRight: { value: 0, unit: 'px' }, bottomLeft: { value: 0, unit: 'px' }, bottomRight: { value: 0, unit: 'px' } }
-              }) as Border & { radius?: BorderRadius }}
+              value={(currentValue as Border & { radius?: BorderRadius }) || DEFAULT_BORDER}
               onChange={(value: Border & { radius?: BorderRadius }) => handlePropertyChange(property, value)}
             />
             <Show when={property.description}>
@@ -1667,7 +1683,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               </Show>
             </label>
             <SpacingEditor
-              value={(currentValue || { top: { value: 0, unit: 'px' }, right: { value: 0, unit: 'px' }, bottom: { value: 0, unit: 'px' }, left: { value: 0, unit: 'px' } }) as Spacing}
+              value={(currentValue as Spacing) || DEFAULT_SPACING}
               onChange={(value: Spacing) => handlePropertyChange(property, value)}
             />
             <Show when={property.description}>

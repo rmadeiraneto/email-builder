@@ -4,7 +4,7 @@
  * Main page for the email/template builder application
  */
 
-import { type Component, Show, For, createSignal, createMemo, onMount, onCleanup } from 'solid-js';
+import { type Component, Show, For, createSignal, createMemo, onMount, onCleanup, createEffect } from 'solid-js';
 import { BuilderProvider, useBuilder } from '../context/BuilderContext';
 import { TranslationProvider } from '@email-builder/ui-solid/i18n';
 import { TemplateCanvas } from '@email-builder/ui-solid/canvas';
@@ -18,8 +18,11 @@ import { PreviewModal } from '../components/modals/PreviewModal';
 import { EmailTestingSettingsModal } from '../components/modals/EmailTestingSettingsModal';
 import { TestConfigModal } from '../components/modals/TestConfigModal';
 import { CompatibilityReportModal } from '../components/modals/CompatibilityReportModal';
+import { SupportMatrixModal } from '../components/modals/SupportMatrixModal';
 import { AccessibilityAnnouncer } from '@email-builder/ui-solid/visual-feedback';
+import { ModeSwitcher, MobileLayoutManager } from '@email-builder/ui-solid/mobile';
 import type { ComponentDefinition, EmailTestingConfig, EmailTestRequest, CompatibilityReport } from '@email-builder/core';
+import { getTipsByTrigger, TipTrigger, DeviceMode } from '@email-builder/core';
 import styles from './Builder.module.scss';
 
 const BuilderContent: Component = () => {
@@ -30,6 +33,7 @@ const BuilderContent: Component = () => {
   const [isEmailTestingSettingsModalOpen, setIsEmailTestingSettingsModalOpen] = createSignal(false);
   const [isTestConfigModalOpen, setIsTestConfigModalOpen] = createSignal(false);
   const [isCompatibilityReportModalOpen, setIsCompatibilityReportModalOpen] = createSignal(false);
+  const [isSupportMatrixModalOpen, setIsSupportMatrixModalOpen] = createSignal(false);
   const [compatibilityReport, setCompatibilityReport] = createSignal<CompatibilityReport | null>(null);
   const [pendingAction, setPendingAction] = createSignal<'export' | 'test' | null>(null);
 
@@ -42,6 +46,17 @@ const BuilderContent: Component = () => {
   const selectedComponent = createMemo(() => {
     if (!state.template || !state.selectedComponentId) return null;
     return state.template.components.find(c => c.id === state.selectedComponentId) || null;
+  });
+
+  // Get mobile layout items when in mobile mode
+  const mobileLayoutItems = createMemo(() => {
+    if (state.deviceMode !== DeviceMode.MOBILE) return [];
+    return actions.getMobileLayoutItems();
+  });
+
+  // Check if we should show mobile layout manager
+  const showMobileLayoutManager = createMemo(() => {
+    return state.deviceMode === DeviceMode.MOBILE && !state.selectedComponentId;
   });
 
   const handleComponentSelect = (id: string | null) => {
@@ -94,6 +109,16 @@ const BuilderContent: Component = () => {
       return;
     }
 
+    // Toggle Mobile Mode: Ctrl+M or Cmd+M
+    if ((event.ctrlKey || event.metaKey) && event.key === 'm' && state.template) {
+      if (!isInputField) {
+        event.preventDefault();
+        const newMode = state.deviceMode === DeviceMode.MOBILE ? DeviceMode.DESKTOP : DeviceMode.MOBILE;
+        actions.switchDeviceMode(newMode);
+      }
+      return;
+    }
+
     // Delete or Backspace key - delete selected component
     if ((event.key === 'Delete' || event.key === 'Backspace') && state.selectedComponentId) {
       if (isInputField) {
@@ -112,6 +137,22 @@ const BuilderContent: Component = () => {
 
   onCleanup(() => {
     window.removeEventListener('keydown', handleKeyDown);
+  });
+
+  // Show tips based on email mode
+  createEffect(() => {
+    const template = state.template;
+    if (template && template.settings.target === 'email') {
+      // Get tips for email mode
+      const emailModeTips = getTipsByTrigger(TipTrigger.EMAIL_MODE);
+
+      // Show each tip that hasn't been dismissed
+      emailModeTips.forEach(tip => {
+        if (!state.dismissedTips.includes(tip.id)) {
+          actions.showTip(tip.id);
+        }
+      });
+    }
   });
 
   const handleComponentDragStart = (_definition: ComponentDefinition, _event: DragEvent) => {
@@ -207,9 +248,25 @@ const BuilderContent: Component = () => {
 
   const handleExport = async () => {
     try {
+      // Show export tips
+      const exportTips = getTipsByTrigger(TipTrigger.EXPORT);
+      exportTips.forEach(tip => {
+        if (!state.dismissedTips.includes(tip.id)) {
+          actions.showTip(tip.id);
+        }
+      });
+
       // Check compatibility first
       const report = actions.checkCompatibility();
       if (report && report.issues.length > 0) {
+        // Show poor compatibility tips when issues are found
+        const poorCompatibilityTips = getTipsByTrigger(TipTrigger.POOR_COMPATIBILITY);
+        poorCompatibilityTips.forEach(tip => {
+          if (!state.dismissedTips.includes(tip.id)) {
+            actions.showTip(tip.id);
+          }
+        });
+
         setCompatibilityReport(report);
         setPendingAction('export');
         setIsCompatibilityReportModalOpen(true);
@@ -250,6 +307,14 @@ const BuilderContent: Component = () => {
     // Check compatibility first
     const report = actions.checkCompatibility();
     if (report && report.issues.length > 0) {
+      // Show poor compatibility tips when issues are found
+      const poorCompatibilityTips = getTipsByTrigger(TipTrigger.POOR_COMPATIBILITY);
+      poorCompatibilityTips.forEach(tip => {
+        if (!state.dismissedTips.includes(tip.id)) {
+          actions.showTip(tip.id);
+        }
+      });
+
       setCompatibilityReport(report);
       setPendingAction('test');
       setIsCompatibilityReportModalOpen(true);
@@ -283,6 +348,14 @@ const BuilderContent: Component = () => {
   const handleCheckCompatibility = () => {
     const report = actions.checkCompatibility();
     if (report) {
+      // Show poor compatibility tips when issues are found
+      const poorCompatibilityTips = getTipsByTrigger(TipTrigger.POOR_COMPATIBILITY);
+      poorCompatibilityTips.forEach(tip => {
+        if (!state.dismissedTips.includes(tip.id)) {
+          actions.showTip(tip.id);
+        }
+      });
+
       setCompatibilityReport(report);
       setPendingAction(null);
       setIsCompatibilityReportModalOpen(true);
@@ -313,6 +386,10 @@ const BuilderContent: Component = () => {
       console.error('[Builder] Failed to proceed with action:', error);
       alert('Failed to proceed. Please try again.');
     }
+  };
+
+  const handleOpenSupportMatrix = () => {
+    setIsSupportMatrixModalOpen(true);
   };
 
   return (
@@ -361,6 +438,19 @@ const BuilderContent: Component = () => {
           </div>
         </Show>
 
+        {/* Mobile Mode Switcher */}
+        <Show when={state.template}>
+          <div class={styles.modeSwitcherContainer}>
+            <ModeSwitcher
+              currentMode={state.deviceMode}
+              onModeChange={actions.switchDeviceMode}
+              isSwitching={state.isSwitchingMode}
+              showLabels={true}
+              sticky={true}
+            />
+          </div>
+        </Show>
+
         <div class={styles.container}>
           <aside class={styles.leftSidebar}>
             <h2>Components</h2>
@@ -375,6 +465,7 @@ const BuilderContent: Component = () => {
               <TemplateCanvas
                 template={state.template}
                 selectedComponentId={state.selectedComponentId}
+                deviceMode={state.deviceMode}
                 onComponentSelect={handleComponentSelect}
                 onDrop={handleDrop}
                 onComponentReorder={handleComponentReorder}
@@ -384,23 +475,39 @@ const BuilderContent: Component = () => {
           </main>
 
           <aside class={styles.rightSidebar}>
-            <PropertyPanel
-              selectedComponent={selectedComponent()}
-              template={state.template}
-              onPropertyChange={handlePropertyChange}
-              onGeneralStyleChange={handleGeneralStyleChange}
-              onDelete={handleDelete}
-              presetActions={{
-                applyPreset: actions.applyPreset,
-                createPreset: actions.createPreset,
-                updatePreset: actions.updatePreset,
-                deletePreset: actions.deletePreset,
-                duplicatePreset: actions.duplicatePreset,
-                listPresets: actions.listPresets,
-                exportPresets: actions.exportPresets,
-                importPresets: actions.importPresets,
-              }}
-            />
+            <Show when={showMobileLayoutManager()}>
+              <MobileLayoutManager
+                items={mobileLayoutItems()}
+                onReorder={actions.reorderMobileComponents}
+                onVisibilityToggle={actions.toggleMobileVisibility}
+                onResetOrder={actions.resetMobileOrder}
+                onApplyDefaults={actions.applyMobileDefaults}
+                showFirstTimePrompt={false}
+              />
+            </Show>
+
+            <Show when={!showMobileLayoutManager()}>
+              <PropertyPanel
+                selectedComponent={selectedComponent()}
+                template={state.template}
+                onPropertyChange={handlePropertyChange}
+                onGeneralStyleChange={handleGeneralStyleChange}
+                onDelete={handleDelete}
+                deviceMode={state.deviceMode}
+                onClearMobileOverride={actions.clearMobileOverride}
+                onSetVisibility={actions.setMobileVisibility}
+                presetActions={{
+                  applyPreset: actions.applyPreset,
+                  createPreset: actions.createPreset,
+                  updatePreset: actions.updatePreset,
+                  deletePreset: actions.deletePreset,
+                  duplicatePreset: actions.duplicatePreset,
+                  listPresets: actions.listPresets,
+                  exportPresets: actions.exportPresets,
+                  importPresets: actions.importPresets,
+                }}
+              />
+            </Show>
           </aside>
         </div>
       </div>
@@ -447,8 +554,14 @@ const BuilderContent: Component = () => {
           onClose={handleCompatibilityReportClose}
           report={compatibilityReport()!}
           onExportAnyway={handleExportAnyway}
+          onViewSupportMatrix={handleOpenSupportMatrix}
         />
       </Show>
+
+      <SupportMatrixModal
+        isOpen={isSupportMatrixModalOpen()}
+        onClose={() => setIsSupportMatrixModalOpen(false)}
+      />
     </>
   );
 };

@@ -4,15 +4,16 @@
  * Renders the template and allows for component selection and interaction
  */
 
-import { type Component, For, Show, createSignal, onMount, onCleanup } from 'solid-js';
+import { type Component, For, Show, createSignal, onMount, onCleanup, createMemo } from 'solid-js';
 import type { Template, BaseComponent } from '@email-builder/core';
-import { getTestId, getTestAction, getTestState } from '@email-builder/core/utils';
+import { getTestId, getTestAction, getTestState, DeviceMode } from '@email-builder/core';
 import { ComponentRenderer } from './ComponentRenderer';
 import styles from './TemplateCanvas.module.scss';
 
 export interface TemplateCanvasProps {
   template: Template | null;
   selectedComponentId: string | null;
+  deviceMode?: DeviceMode;
   onComponentSelect?: (id: string | null) => void;
   onComponentAdd?: (component: BaseComponent, index?: number) => void;
   onDrop?: (event: DragEvent) => void;
@@ -25,6 +26,22 @@ export const TemplateCanvas: Component<TemplateCanvasProps> = (props) => {
   const [isDraggingOver, setIsDraggingOver] = createSignal(false);
   const [draggedComponentId, setDraggedComponentId] = createSignal<string | null>(null);
   const [dropIndicatorIndex, setDropIndicatorIndex] = createSignal<number | null>(null);
+
+  // Check if component is visible in current mode
+  const isComponentVisible = (component: BaseComponent): boolean => {
+    if (!component.visibility) return true;
+
+    if (props.deviceMode === DeviceMode.MOBILE) {
+      return component.visibility.mobile ?? component.visibility.desktop;
+    }
+
+    return component.visibility.desktop;
+  };
+
+  // Check if component has mobile customizations
+  const hasMobileCustomizations = (component: BaseComponent): boolean => {
+    return !!(component.mobileStyles || (component.visibility && component.visibility.mobile !== undefined));
+  };
 
   // Notify parent when canvas element is mounted
   onMount(() => {
@@ -161,6 +178,9 @@ export const TemplateCanvas: Component<TemplateCanvasProps> = (props) => {
                     component={component}
                     isSelected={props.selectedComponentId === component.id}
                     isDragging={draggedComponentId() === component.id}
+                    isHidden={!isComponentVisible(component)}
+                    hasMobileOverrides={hasMobileCustomizations(component)}
+                    isMobileMode={props.deviceMode === DeviceMode.MOBILE}
                     onClick={(event) => handleComponentClick(component, event)}
                     onDragStart={(event) => handleComponentDragStart(component, event)}
                     onDragOver={(event) => handleComponentDragOver(index(), event)}
@@ -202,6 +222,9 @@ interface ComponentItemProps {
   component: BaseComponent;
   isSelected: boolean;
   isDragging: boolean;
+  isHidden?: boolean;
+  hasMobileOverrides?: boolean;
+  isMobileMode?: boolean;
   onClick: (event: MouseEvent) => void;
   onDragStart: (event: DragEvent) => void;
   onDragOver: (event: DragEvent) => void;
@@ -209,6 +232,16 @@ interface ComponentItemProps {
 }
 
 const ComponentItem: Component<ComponentItemProps> = (props) => {
+  const componentClasses = () => {
+    const classes = [styles.component];
+
+    if (props.isSelected) classes.push(styles.selected);
+    if (props.isDragging) classes.push(styles.dragging);
+    if (props.isHidden) classes.push(styles.hidden);
+
+    return classes.join(' ');
+  };
+
   return (
     <div
       {...getTestId(`canvas-component-${props.component.type.toLowerCase()}-${props.component.id}`)}
@@ -216,9 +249,11 @@ const ComponentItem: Component<ComponentItemProps> = (props) => {
       {...getTestState({
         selected: props.isSelected,
         dragging: props.isDragging,
+        hidden: props.isHidden || false,
+        hasMobileOverrides: props.hasMobileOverrides || false,
         type: props.component.type
       })}
-      class={`${styles.component} ${props.isSelected ? styles.selected : ''} ${props.isDragging ? styles.dragging : ''}`}
+      class={componentClasses()}
       onClick={props.onClick}
       draggable={true}
       onDragStart={props.onDragStart}
@@ -227,9 +262,10 @@ const ComponentItem: Component<ComponentItemProps> = (props) => {
       data-component-id={props.component.id}
       data-component-type={props.component.type}
       role="button"
-      aria-label={`${props.component.type} component`}
+      aria-label={`${props.component.type} component${props.isHidden ? ' (hidden on mobile)' : ''}`}
       aria-selected={props.isSelected}
       tabindex={0}
+      title={props.isHidden ? `Hidden on ${props.isMobileMode ? 'mobile' : 'desktop'}` : undefined}
     >
       <div class={styles.componentOverlay}>
         <span class={styles.dragHandle} title="Drag to reorder">
@@ -237,6 +273,16 @@ const ComponentItem: Component<ComponentItemProps> = (props) => {
         </span>
         <span class={styles.componentLabel}>
           {props.component.type}
+          <Show when={props.hasMobileOverrides && !props.isMobileMode}>
+            <span class={styles.mobileBadge} title="Has mobile customizations">
+              📱
+            </span>
+          </Show>
+          <Show when={props.isHidden}>
+            <span class={styles.hiddenBadge} title={`Hidden on ${props.isMobileMode ? 'mobile' : 'desktop'}`}>
+              👁️‍🗨️
+            </span>
+          </Show>
         </span>
       </div>
       <div class={styles.componentContent}>

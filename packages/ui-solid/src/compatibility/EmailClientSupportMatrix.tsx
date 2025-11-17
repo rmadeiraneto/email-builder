@@ -7,7 +7,7 @@
  * @module compatibility
  */
 
-import { Component, For, createSignal, Show } from 'solid-js';
+import { Component, For, createSignal, Show, createMemo } from 'solid-js';
 import { CompatibilityService } from '@email-builder/core/compatibility';
 import type { EmailClientId } from '@email-builder/core/compatibility';
 import { SupportLevel } from '@email-builder/core/compatibility';
@@ -211,6 +211,11 @@ export interface EmailClientSupportMatrixProps {
    * @default true
    */
   showMatrix?: boolean;
+
+  /**
+   * Additional CSS properties to include in matrix
+   */
+  additionalProperties?: string[];
 }
 
 /**
@@ -229,10 +234,51 @@ export const EmailClientSupportMatrix: Component<EmailClientSupportMatrixProps> 
   const [expandedTier, setExpandedTier] = createSignal<number | null>(1);
   const showMatrix = props.showMatrix ?? true;
 
-  // Group clients by tier
-  const tier1Clients = EMAIL_CLIENTS.filter((c) => c.tier === 1);
-  const tier2Clients = EMAIL_CLIENTS.filter((c) => c.tier === 2);
-  const tier3Clients = EMAIL_CLIENTS.filter((c) => c.tier === 3);
+  // Filter and sort state
+  const [platformFilter, setPlatformFilter] = createSignal<string>('all');
+  const [tierFilter, setTierFilter] = createSignal<number | 'all'>('all');
+  const [sortBy, setSortBy] = createSignal<'name' | 'tier' | 'marketShare'>('tier');
+  const [sortOrder, setSortOrder] = createSignal<'asc' | 'desc'>('asc');
+
+  // Filtered and sorted clients
+  const filteredClients = createMemo(() => {
+    let clients = EMAIL_CLIENTS;
+
+    // Apply platform filter
+    if (platformFilter() !== 'all') {
+      clients = clients.filter((c) => c.platform === platformFilter());
+    }
+
+    // Apply tier filter
+    if (tierFilter() !== 'all') {
+      clients = clients.filter((c) => c.tier === tierFilter());
+    }
+
+    // Apply sorting
+    clients = [...clients].sort((a, b) => {
+      const order = sortOrder() === 'asc' ? 1 : -1;
+
+      switch (sortBy()) {
+        case 'name':
+          return order * a.name.localeCompare(b.name);
+        case 'tier':
+          return order * (a.tier - b.tier);
+        case 'marketShare':
+          const aShare = parseFloat(a.marketShare?.replace(/[^0-9.]/g, '') || '0');
+          const bShare = parseFloat(b.marketShare?.replace(/[^0-9.]/g, '') || '0');
+          return order * (bShare - aShare); // Descending by default for market share
+        default:
+          return 0;
+      }
+    });
+
+    return clients;
+  });
+
+  // Group clients by tier (from filtered list)
+  const tier1Clients = createMemo(() => filteredClients().filter((c) => c.tier === 1));
+  const tier2Clients = createMemo(() => filteredClients().filter((c) => c.tier === 2));
+  const tier3Clients = createMemo(() => filteredClients().filter((c) => c.tier === 3));
 
   // Get support level for a property/client combination
   const getSupportLevel = (property: string, clientId: EmailClientId): SupportLevel => {
@@ -257,6 +303,43 @@ export const EmailClientSupportMatrix: Component<EmailClientSupportMatrixProps> 
   // Toggle tier expansion
   const toggleTier = (tier: number) => {
     setExpandedTier(expandedTier() === tier ? null : tier);
+  };
+
+  // CSV Export functionality
+  const exportToCSV = () => {
+    const properties = [...MATRIX_PROPERTIES, ...(props.additionalProperties || [])];
+    const clients = filteredClients();
+
+    // Create CSV header
+    const header = ['CSS Property', 'Support Score', ...clients.map((c) => c.name)];
+    const rows = [header];
+
+    // Add property rows
+    properties.forEach((property) => {
+      const stats = service.getPropertyStatistics(property);
+      const row = [property, stats ? `${stats.supportScore}%` : 'N/A'];
+
+      clients.forEach((client) => {
+        const level = getSupportLevel(property, client.id);
+        row.push(level);
+      });
+
+      rows.push(row);
+    });
+
+    // Convert to CSV string
+    const csvContent = rows.map((row) => row.map((cell) => `"${cell}"`).join(',')).join('\n');
+
+    // Create download link
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `email-client-support-matrix-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   // Render client card
@@ -344,6 +427,66 @@ export const EmailClientSupportMatrix: Component<EmailClientSupportMatrixProps> 
         </p>
       </div>
 
+      {/* Filter and Sort Controls */}
+      <div class={styles.filterControls}>
+        <div class={styles.filterGroup}>
+          <label class={styles.filterLabel}>Platform:</label>
+          <select
+            class={styles.filterSelect}
+            value={platformFilter()}
+            onChange={(e) => setPlatformFilter(e.currentTarget.value)}
+          >
+            <option value="all">All Platforms</option>
+            <option value="desktop">Desktop</option>
+            <option value="webmail">Webmail</option>
+            <option value="mobile">Mobile</option>
+          </select>
+        </div>
+
+        <div class={styles.filterGroup}>
+          <label class={styles.filterLabel}>Tier:</label>
+          <select
+            class={styles.filterSelect}
+            value={String(tierFilter())}
+            onChange={(e) => setTierFilter(e.currentTarget.value === 'all' ? 'all' : Number(e.currentTarget.value))}
+          >
+            <option value="all">All Tiers</option>
+            <option value="1">Tier 1</option>
+            <option value="2">Tier 2</option>
+            <option value="3">Tier 3</option>
+          </select>
+        </div>
+
+        <div class={styles.filterGroup}>
+          <label class={styles.filterLabel}>Sort By:</label>
+          <select
+            class={styles.filterSelect}
+            value={sortBy()}
+            onChange={(e) => setSortBy(e.currentTarget.value as any)}
+          >
+            <option value="tier">Tier</option>
+            <option value="name">Name</option>
+            <option value="marketShare">Market Share</option>
+          </select>
+        </div>
+
+        <div class={styles.filterGroup}>
+          <label class={styles.filterLabel}>Order:</label>
+          <select
+            class={styles.filterSelect}
+            value={sortOrder()}
+            onChange={(e) => setSortOrder(e.currentTarget.value as any)}
+          >
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+        </div>
+
+        <button class={styles.exportButton} onClick={exportToCSV}>
+          📥 Export to CSV
+        </button>
+      </div>
+
       {/* Summary Stats */}
       <div class={styles.supportMatrix__stats}>
         <div class={styles.stat}>
@@ -368,19 +511,19 @@ export const EmailClientSupportMatrix: Component<EmailClientSupportMatrixProps> 
       <div class={styles.tierSections}>
         {TierSection(
           1,
-          tier1Clients,
+          tier1Clients(),
           'Must Support',
           'Highest priority clients with largest market share (70%+ coverage)'
         )}
         {TierSection(
           2,
-          tier2Clients,
+          tier2Clients(),
           'Should Support',
           'Important secondary clients for comprehensive coverage'
         )}
         {TierSection(
           3,
-          tier3Clients,
+          tier3Clients(),
           'Nice to Have',
           'Lower priority clients for maximum coverage'
         )}
@@ -400,7 +543,7 @@ export const EmailClientSupportMatrix: Component<EmailClientSupportMatrixProps> 
                 <thead>
                   <tr>
                     <th class={styles.matrixTable__propertyHeader}>CSS Property</th>
-                    <For each={EMAIL_CLIENTS}>
+                    <For each={filteredClients()}>
                       {(client) => (
                         <th class={styles.matrixTable__clientHeader} title={client.name}>
                           <div class={styles.matrixTable__clientName}>
@@ -433,7 +576,7 @@ export const EmailClientSupportMatrix: Component<EmailClientSupportMatrixProps> 
                               </span>
                             </Show>
                           </td>
-                          <For each={EMAIL_CLIENTS}>
+                          <For each={filteredClients()}>
                             {(client) => {
                               const level = getSupportLevel(property, client.id);
                               const supportClass = getSupportClass(level);

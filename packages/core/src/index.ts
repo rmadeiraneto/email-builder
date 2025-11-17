@@ -16,6 +16,9 @@ export * from '../errors';
 // Export types
 export * from '../types';
 
+// Export utils
+export * from '../utils';
+
 // Export builder
 export * from '../builder';
 
@@ -63,3 +66,6 @@ export * from '../i18n/locales';
 
 // Export data injection
 export * from '../data-injection';
+
+// Export mobile development mode
+export * from '../mobile';

@@ -1,0 +1,333 @@
+/**
+ * Mobile Diff Panel Styles
+ */
+
+.diffPanelOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.diffPanel {
+  background: tokens.$color-ui-background-primary;
+  border-radius: tokens.$border-radius-lg;
+  box-shadow: tokens.$shadow-xl;
+  width: 90%;
+  max-width: 800px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.diffHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: tokens.$spacing-4;
+  border-bottom: tokens.$border-width-base solid tokens.$color-ui-border-base;
+}
+
+.diffTitle {
+  margin: 0;
+  font-size: tokens.$typography-font-size-lg;
+  font-weight: tokens.$typography-font-weight-semibold;
+  color: tokens.$color-ui-text-primary;
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 24px;
+  line-height: 1;
+  color: tokens.$color-ui-text-secondary;
+  background: transparent;
+  border: none;
+  border-radius: tokens.$border-radius-md;
+  cursor: pointer;
+  transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
+
+  &:hover {
+    background: tokens.$color-ui-background-secondary;
+    color: tokens.$color-ui-text-primary;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.diffSummary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: tokens.$spacing-3;
+  padding: tokens.$spacing-4;
+  background: tokens.$color-ui-background-secondary;
+  border-bottom: tokens.$border-width-base solid tokens.$color-ui-border-base;
+}
+
+.summaryItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.summaryLabel {
+  font-size: tokens.$typography-font-size-xs;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-ui-text-secondary;
+  margin-bottom: tokens.$spacing-1;
+}
+
+.summaryValue {
+  font-size: tokens.$typography-font-size-xl;
+  font-weight: tokens.$typography-font-weight-bold;
+  color: tokens.$color-brand-primary-600;
+}
+
+.diffContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: tokens.$spacing-4;
+}
+
+.noChanges {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: tokens.$spacing-8;
+  text-align: center;
+  color: tokens.$color-ui-text-secondary;
+}
+
+.noChangesIcon {
+  font-size: 48px;
+  margin-bottom: tokens.$spacing-3;
+}
+
+.componentDiff {
+  background: tokens.$color-ui-background-secondary;
+  border: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  border-radius: tokens.$border-radius-md;
+  margin-bottom: tokens.$spacing-4;
+  overflow: hidden;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.componentHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: tokens.$spacing-3;
+  background: tokens.$color-neutral-100;
+  border-bottom: tokens.$border-width-base solid tokens.$color-ui-border-base;
+}
+
+.componentName {
+  font-size: tokens.$typography-font-size-base;
+  font-weight: tokens.$typography-font-weight-semibold;
+  color: tokens.$color-ui-text-primary;
+}
+
+.componentType {
+  font-size: tokens.$typography-font-size-xs;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-ui-text-tertiary;
+  background: tokens.$color-neutral-200;
+  padding: tokens.$spacing-1 tokens.$spacing-2;
+  border-radius: tokens.$border-radius-sm;
+}
+
+.changeList {
+  padding: tokens.$spacing-3;
+}
+
+.changeItem {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  gap: tokens.$spacing-2;
+  padding: tokens.$spacing-2;
+  background: tokens.$color-ui-background-primary;
+  border-radius: tokens.$border-radius-sm;
+  margin-bottom: tokens.$spacing-2;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.changeIcon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.changeLabel {
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-ui-text-primary;
+}
+
+.changeValues {
+  display: flex;
+  align-items: center;
+  gap: tokens.$spacing-2;
+  justify-content: flex-end;
+  font-size: tokens.$typography-font-size-sm;
+}
+
+.desktopValue {
+  color: tokens.$color-neutral-600;
+  font-family: tokens.$typography-font-family-mono;
+
+  code {
+    background: tokens.$color-neutral-100;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: tokens.$typography-font-size-xs;
+  }
+}
+
+.mobileValue {
+  color: tokens.$color-brand-primary-600;
+  font-weight: tokens.$typography-font-weight-medium;
+  font-family: tokens.$typography-font-family-mono;
+
+  code {
+    background: tokens.$color-brand-primary-50;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: tokens.$typography-font-size-xs;
+  }
+}
+
+.arrow {
+  color: tokens.$color-ui-text-tertiary;
+  font-size: 14px;
+}
+
+.propertyOverrides {
+  margin-top: tokens.$spacing-2;
+}
+
+.propertyOverridesHeader {
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-semibold;
+  color: tokens.$color-ui-text-primary;
+  margin-bottom: tokens.$spacing-2;
+  padding-left: tokens.$spacing-1;
+}
+
+.propertyDiff {
+  background: tokens.$color-ui-background-primary;
+  border: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  border-radius: tokens.$border-radius-sm;
+  padding: tokens.$spacing-2;
+  margin-bottom: tokens.$spacing-2;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.propertyHeader {
+  display: flex;
+  align-items: center;
+  gap: tokens.$spacing-1-5;
+  margin-bottom: tokens.$spacing-2;
+}
+
+.categoryIcon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.propertyLabel {
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-ui-text-primary;
+}
+
+.propertyValues {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: tokens.$spacing-3;
+}
+
+.valueLabel {
+  display: block;
+  font-size: tokens.$typography-font-size-xs;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-ui-text-tertiary;
+  margin-bottom: tokens.$spacing-1;
+}
+
+.diffFooter {
+  display: flex;
+  justify-content: flex-end;
+  padding: tokens.$spacing-4;
+  border-top: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  background: tokens.$color-ui-background-secondary;
+}
+
+.closeButtonFooter {
+  padding: tokens.$spacing-2 tokens.$spacing-4;
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-ui-text-primary;
+  background: tokens.$color-ui-background-primary;
+  border: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  border-radius: tokens.$border-radius-md;
+  cursor: pointer;
+  transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
+
+  &:hover {
+    background: tokens.$color-ui-background-secondary;
+    border-color: tokens.$color-ui-border-strong;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: tokens.$border-width-2 solid tokens.$color-brand-primary-500;
+    outline-offset: tokens.$border-width-2;
+  }
+}

@@ -1,0 +1,163 @@
+/**
+ * Mobile Validation Panel Styles
+ */
+
+.validationPanel {
+  background: tokens.$color-ui-background-primary;
+  border: tokens.$border-width-base solid tokens.$color-semantic-warning-light;
+  border-radius: tokens.$border-radius-md;
+  overflow: hidden;
+  margin-bottom: tokens.$spacing-4;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: tokens.$spacing-3;
+  background: tokens.$color-semantic-warning-light;
+  border: none;
+  cursor: pointer;
+  transition: background-color tokens.$animation-duration-fast tokens.$animation-easing-ease;
+
+  &:hover {
+    background: darken(tokens.$color-semantic-warning-light, 5%);
+  }
+
+  &:focus-visible {
+    outline: tokens.$border-width-2 solid tokens.$color-semantic-warning-base;
+    outline-offset: -2px;
+  }
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: tokens.$spacing-2;
+}
+
+.warningIcon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.headerTitle {
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-semibold;
+  color: tokens.$color-ui-text-primary;
+}
+
+.issueCount {
+  font-size: tokens.$typography-font-size-xs;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-semantic-warning-dark;
+  background: tokens.$color-ui-background-primary;
+  padding: tokens.$spacing-1 tokens.$spacing-2;
+  border-radius: tokens.$border-radius-full;
+}
+
+.collapseIcon {
+  font-size: 12px;
+  color: tokens.$color-ui-text-secondary;
+}
+
+.panelContent {
+  padding: tokens.$spacing-3;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.issueSection {
+  margin-bottom: tokens.$spacing-3;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: tokens.$spacing-1-5;
+  margin-bottom: tokens.$spacing-2;
+}
+
+.sectionIcon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.sectionTitle {
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-semibold;
+  color: tokens.$color-ui-text-primary;
+}
+
+.issueItem {
+  background: tokens.$color-ui-background-secondary;
+  border-radius: tokens.$border-radius-sm;
+  padding: tokens.$spacing-2;
+  margin-bottom: tokens.$spacing-2;
+  border-left: 3px solid transparent;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.errorItem {
+  border-left-color: tokens.$color-semantic-error-base;
+  background: rgba(tokens.$color-semantic-error-light, 0.3);
+}
+
+.warningItem {
+  border-left-color: tokens.$color-semantic-warning-base;
+  background: rgba(tokens.$color-semantic-warning-light, 0.3);
+}
+
+.infoItem {
+  border-left-color: tokens.$color-brand-primary-500;
+  background: rgba(tokens.$color-brand-primary-50, 0.5);
+}
+
+.issueHeader {
+  display: flex;
+  align-items: center;
+  gap: tokens.$spacing-2;
+  margin-bottom: tokens.$spacing-1-5;
+}
+
+.categoryBadge {
+  font-size: tokens.$typography-font-size-xs;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-ui-text-secondary;
+  background: tokens.$color-neutral-200;
+  padding: tokens.$spacing-0-5 tokens.$spacing-1-5;
+  border-radius: tokens.$border-radius-sm;
+  text-transform: capitalize;
+}
+
+.componentId {
+  font-size: tokens.$typography-font-size-xs;
+  font-family: tokens.$typography-font-family-mono;
+  color: tokens.$color-ui-text-tertiary;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+.issueMessage {
+  font-size: tokens.$typography-font-size-sm;
+  color: tokens.$color-ui-text-primary;
+  line-height: tokens.$typography-line-height-relaxed;
+}
+
+.issueSuggestion {
+  font-size: tokens.$typography-font-size-xs;
+  color: tokens.$color-ui-text-secondary;
+  margin-top: tokens.$spacing-1-5;
+  padding-top: tokens.$spacing-1-5;
+  border-top: tokens.$border-width-base dashed tokens.$color-ui-border-base;
+}

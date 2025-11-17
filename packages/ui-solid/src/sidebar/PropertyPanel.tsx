@@ -1212,11 +1212,14 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
       const spacing = value as Spacing;
       const sides = ['top', 'right', 'bottom', 'left'] as const;
       for (const side of sides) {
-        if (spacing[side] && typeof spacing[side].value !== 'number') {
-          return { valid: false, error: `Spacing ${side} must be a valid CSS value` };
-        }
-        if (spacing[side] && spacing[side].value < 0) {
-          return { valid: false, error: `Spacing cannot be negative` };
+        if (spacing[side]) {
+          const cssValue = spacing[side];
+          if (typeof cssValue.value !== 'number') {
+            return { valid: false, error: `Spacing ${side} must be a valid CSS value` };
+          }
+          if (cssValue.value < 0) {
+            return { valid: false, error: `Spacing cannot be negative` };
+          }
         }
       }
     }

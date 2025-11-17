@@ -1130,8 +1130,91 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
     return Array.from(types);
   });
 
+  /**
+   * Validate property value before updating
+   */
+  const validatePropertyValue = (property: PropertyDefinition, value: any): { valid: boolean; error?: string } => {
+    // CSSValue validation
+    if (property.type === 'cssvalue' && value) {
+      const cssValue = value as CSSValue;
+      if (typeof cssValue.value !== 'number') {
+        return { valid: false, error: 'CSS value must be a number' };
+      }
+      if (property.min !== undefined && cssValue.value < property.min) {
+        return { valid: false, error: `Value cannot be less than ${property.min}` };
+      }
+      if (property.max !== undefined && cssValue.value > property.max) {
+        return { valid: false, error: `Value cannot be greater than ${property.max}` };
+      }
+      const validUnits = ['px', 'rem', 'em', '%', 'vh', 'vw', 'pt', 'auto'];
+      if (!validUnits.includes(cssValue.unit)) {
+        return { valid: false, error: `Invalid unit: ${cssValue.unit}` };
+      }
+    }
+
+    // Border validation
+    if (property.type === 'border' && value) {
+      const border = value as Border & { radius?: BorderRadius };
+      if (!border.width || typeof border.width.value !== 'number') {
+        return { valid: false, error: 'Border width must be a valid CSS value' };
+      }
+      const validStyles = ['none', 'solid', 'dashed', 'dotted', 'double', 'groove', 'ridge', 'inset', 'outset'];
+      if (!validStyles.includes(border.style)) {
+        return { valid: false, error: `Invalid border style: ${border.style}` };
+      }
+      // Simple color validation (hex or named color)
+      if (border.color && !(/^#[0-9A-F]{6}$/i.test(border.color) || /^[a-z]+$/i.test(border.color))) {
+        return { valid: false, error: 'Border color must be a valid hex color or color name' };
+      }
+    }
+
+    // Spacing validation
+    if (property.type === 'spacing' && value) {
+      const spacing = value as Spacing;
+      const sides = ['top', 'right', 'bottom', 'left'] as const;
+      for (const side of sides) {
+        if (spacing[side] && typeof spacing[side].value !== 'number') {
+          return { valid: false, error: `Spacing ${side} must be a valid CSS value` };
+        }
+        if (spacing[side] && spacing[side].value < 0) {
+          return { valid: false, error: `Spacing cannot be negative` };
+        }
+      }
+    }
+
+    // ImageData validation
+    if (property.type === 'imageupload' && value) {
+      const imageData = value as ImageData;
+      // URL validation (basic)
+      if (imageData.url && imageData.url.trim()) {
+        try {
+          new URL(imageData.url);
+        } catch {
+          // If it's not a valid URL, check if it's a data URL or relative path
+          if (!imageData.url.startsWith('data:') && !imageData.url.startsWith('/') && !imageData.url.startsWith('./')) {
+            return { valid: false, error: 'Image URL must be a valid URL, data URL, or relative path' };
+          }
+        }
+      }
+      // Alt text validation
+      if (imageData.url && (!imageData.alt || imageData.alt.trim() === '')) {
+        console.warn('Image missing alt text - important for accessibility');
+      }
+    }
+
+    return { valid: true };
+  };
+
   const handlePropertyChange = (property: PropertyDefinition, value: any) => {
     if (!props.selectedComponent) return;
+
+    // Validate the value
+    const validation = validatePropertyValue(property, value);
+    if (!validation.valid) {
+      console.error(`Validation error for ${property.key}: ${validation.error}`);
+      // In a real app, you might want to show this error to the user
+      return;
+    }
 
     // Create a copy of the component with updated property
     const updatedComponent = { ...props.selectedComponent };

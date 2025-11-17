@@ -1151,6 +1151,73 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
     });
   };
 
+  /**
+   * Render property label with mobile indicators
+   * Shows:
+   * - 📱 badge when property has mobile override (desktop mode only)
+   * - Reset button when in mobile mode with override
+   * - Inherited desktop value when in mobile mode
+   */
+  const renderPropertyLabel = (property: PropertyDefinition, inputId: string, cssProp?: string) => {
+    const hasOverride = hasMobileOverride(props.selectedComponent, property.key);
+    const showMobileIndicator = hasOverride && !isMobileMode();
+    const showResetButton = hasOverride && isMobileMode() && props.onClearMobileOverride;
+    const desktopValue = getDesktopValue(props.selectedComponent, property.key);
+
+    return (
+      <div class={styles.propertyLabelWithMobile}>
+        <label for={inputId} class={styles.propertyLabelText}>
+          {property.label}
+          <Show when={showMobileIndicator}>
+            <span class={styles.mobileIndicator} title="Has mobile override">
+              📱
+            </span>
+          </Show>
+          <Show when={cssProp}>
+            <CompatibilityIcon
+              property={cssProp!}
+              size={16}
+              onClick={() => {
+                setSelectedProperty(cssProp!);
+                setCompatibilityModalOpen(true);
+              }}
+            />
+          </Show>
+        </label>
+        <Show when={showResetButton}>
+          <button
+            type="button"
+            class={styles.resetMobileButton}
+            onClick={() => props.onClearMobileOverride!(props.selectedComponent!.id, property.key)}
+            title="Reset to desktop value"
+          >
+            Reset
+          </button>
+        </Show>
+      </div>
+    );
+  };
+
+  /**
+   * Render inherited value hint (shown in mobile mode when there's an override)
+   */
+  const renderInheritedValue = (property: PropertyDefinition) => {
+    if (!isMobileMode() || !hasMobileOverride(props.selectedComponent, property.key)) {
+      return null;
+    }
+
+    const desktopValue = getDesktopValue(props.selectedComponent, property.key);
+    const displayValue = typeof desktopValue === 'object'
+      ? JSON.stringify(desktopValue)
+      : String(desktopValue ?? 'undefined');
+
+    return (
+      <span class={styles.inheritedValue}>
+        Desktop: {displayValue}
+      </span>
+    );
+  };
+
   const renderPropertyEditor = (property: PropertyDefinition) => {
     if (!props.selectedComponent) return null;
 
@@ -1163,19 +1230,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
         const textCssProp = getCssPropertyName(property.key);
         return (
           <div class={styles.propertyField}>
-            <label for={inputId} class={styles.propertyLabel}>
-              {property.label}
-              <Show when={textCssProp}>
-                <CompatibilityIcon
-                  property={textCssProp!}
-                  size={16}
-                  onClick={() => {
-                    setSelectedProperty(textCssProp!);
-                    setCompatibilityModalOpen(true);
-                  }}
-                />
-              </Show>
-            </label>
+            {renderPropertyLabel(property, inputId, textCssProp || undefined)}
             <input
               id={inputId}
               type="text"
@@ -1188,6 +1243,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               onFocus={() => handlePropertyEditStart(property)}
               onBlur={() => handlePropertyEditEnd(property)}
             />
+            {renderInheritedValue(property)}
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
             </Show>
@@ -1245,19 +1301,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
         const numberCssProp = getCssPropertyName(property.key);
         return (
           <div class={styles.propertyField}>
-            <label for={inputId} class={styles.propertyLabel}>
-              {property.label}
-              <Show when={numberCssProp}>
-                <CompatibilityIcon
-                  property={numberCssProp!}
-                  size={16}
-                  onClick={() => {
-                    setSelectedProperty(numberCssProp!);
-                    setCompatibilityModalOpen(true);
-                  }}
-                />
-              </Show>
-            </label>
+            {renderPropertyLabel(property, inputId, numberCssProp || undefined)}
             <input
               id={inputId}
               type="number"
@@ -1274,6 +1318,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               onFocus={() => handlePropertyEditStart(property)}
               onBlur={() => handlePropertyEditEnd(property)}
             />
+            {renderInheritedValue(property)}
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
             </Show>
@@ -1284,19 +1329,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
         const colorCssProp = getCssPropertyName(property.key);
         return (
           <div class={styles.propertyField}>
-            <label for={inputId} class={styles.propertyLabel}>
-              {property.label}
-              <Show when={colorCssProp}>
-                <CompatibilityIcon
-                  property={colorCssProp!}
-                  size={16}
-                  onClick={() => {
-                    setSelectedProperty(colorCssProp!);
-                    setCompatibilityModalOpen(true);
-                  }}
-                />
-              </Show>
-            </label>
+            {renderPropertyLabel(property, inputId, colorCssProp || undefined)}
             <input
               id={inputId}
               type="color"
@@ -1318,6 +1351,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               onFocus={() => handlePropertyEditStart(property)}
               onBlur={() => handlePropertyEditEnd(property)}
             />
+            {renderInheritedValue(property)}
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
             </Show>
@@ -1328,19 +1362,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
         const selectCssProp = getCssPropertyName(property.key);
         return (
           <div class={styles.propertyField}>
-            <label for={inputId} class={styles.propertyLabel}>
-              {property.label}
-              <Show when={selectCssProp}>
-                <CompatibilityIcon
-                  property={selectCssProp!}
-                  size={16}
-                  onClick={() => {
-                    setSelectedProperty(selectCssProp!);
-                    setCompatibilityModalOpen(true);
-                  }}
-                />
-              </Show>
-            </label>
+            {renderPropertyLabel(property, inputId, selectCssProp || undefined)}
             <select
               id={inputId}
               class={styles.propertySelect}
@@ -1357,6 +1379,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
                 )}
               </For>
             </select>
+            {renderInheritedValue(property)}
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
             </Show>
@@ -1366,7 +1389,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
       case 'radio':
         return (
           <div class={styles.propertyField}>
-            <label class={styles.propertyLabel}>{property.label}</label>
+            {renderPropertyLabel(property, inputId)}
             <div class={styles.propertyRadioGroup}>
               <For each={property.options}>
                 {(option) => {
@@ -1393,6 +1416,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
                 }}
               </For>
             </div>
+            {renderInheritedValue(property)}
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
             </Show>
@@ -1942,6 +1966,60 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
             </div>
           </Show>
         </div>
+
+        {/* Mobile Behavior Section - Always visible at bottom */}
+        <Show when={props.deviceMode !== undefined && props.onSetVisibility}>
+          <div class={styles.mobileBehaviorSection}>
+            <h4 class={styles.mobileBehaviorTitle}>
+              Mobile Behavior
+              <Show when={isMobileMode()}>
+                <span class={styles.mobileIndicator} title="Currently editing mobile styles">
+                  📱
+                </span>
+              </Show>
+            </h4>
+
+            <div class={styles.visibilityControls}>
+              <div class={styles.visibilityRow}>
+                <span class={styles.visibilityLabel}>Visible on Desktop</span>
+                <label class={styles.visibilityToggle}>
+                  <input
+                    type="checkbox"
+                    checked={props.selectedComponent?.visibility?.desktop ?? true}
+                    onChange={(e) => {
+                      const desktop = e.currentTarget.checked;
+                      const mobile = props.selectedComponent?.visibility?.mobile ?? desktop;
+                      props.onSetVisibility!(props.selectedComponent!.id, desktop, mobile);
+                    }}
+                  />
+                  <span class={styles.visibilitySlider} />
+                </label>
+              </div>
+
+              <div class={styles.visibilityRow}>
+                <span class={styles.visibilityLabel}>Visible on Mobile</span>
+                <label class={styles.visibilityToggle}>
+                  <input
+                    type="checkbox"
+                    checked={props.selectedComponent?.visibility?.mobile ?? (props.selectedComponent?.visibility?.desktop ?? true)}
+                    onChange={(e) => {
+                      const mobile = e.currentTarget.checked;
+                      const desktop = props.selectedComponent?.visibility?.desktop ?? true;
+                      props.onSetVisibility!(props.selectedComponent!.id, desktop, mobile);
+                    }}
+                  />
+                  <span class={styles.visibilitySlider} />
+                </label>
+              </div>
+            </div>
+
+            <Show when={props.selectedComponent?.mobileStyles}>
+              <div class={styles.propertyDescription} style={{ "margin-top": "12px" }}>
+                This component has mobile style overrides. Properties with 📱 have custom mobile values.
+              </div>
+            </Show>
+          </div>
+        </Show>
       </Show>
 
       {/* Preset Preview Modal */}

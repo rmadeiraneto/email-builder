@@ -7,3 +7,4 @@
 export * from './ModeSwitcher';
 export * from './MobileLayoutManager';
 export * from './MobileDiffPanel';
+export * from './MobileValidationPanel';

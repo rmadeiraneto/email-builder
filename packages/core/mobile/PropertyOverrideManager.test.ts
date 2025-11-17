@@ -109,7 +109,7 @@ describe('PropertyOverrideManager', () => {
       const result = overrideManager.setOverride('comp-1', 'type', 'button');
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Only style properties');
+      expect(result.error).toContain('Property cannot be overridden');
     });
 
     it('should update template metadata', () => {

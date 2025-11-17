@@ -50,6 +50,12 @@ import { initializeTestAPI } from '../config/TestAPI';
 import { BreakpointManager } from '../responsive';
 import { DataSourceManager, DataProcessingService } from '../data-injection';
 import { TranslationManager } from '../i18n/TranslationManager';
+import {
+  ModeManager,
+  PropertyOverrideManager,
+  MobileLayoutManager,
+  DEFAULT_MOBILE_DEV_MODE_CONFIG
+} from '../mobile';
 
 interface NormalizedConfig extends BuilderConfig {
   locale: string;
@@ -73,6 +79,10 @@ export class Builder {
   private dataProcessingService: DataProcessingService;
   private translationManager?: TranslationManager;
   private storageAdapter: StorageAdapter;
+  private modeManager!: ModeManager;
+  private propertyOverrideManager: PropertyOverrideManager | null = null;
+  private mobileLayoutManager: MobileLayoutManager | null = null;
+  private mobileCommandManager!: CommandManager;
   private initialized: boolean = false;
   private state: Record<string, unknown> = {};
 
@@ -144,6 +154,20 @@ export class Builder {
 
       // Load presets from storage into registry
       await this.presetManager.loadAllFromStorage();
+
+      // Initialize mobile development mode
+      // Create separate command manager for mobile mode (separate undo/redo history)
+      this.mobileCommandManager = new CommandManager(this.eventEmitter);
+
+      this.modeManager = new ModeManager({
+        eventEmitter: this.eventEmitter,
+        config: DEFAULT_MOBILE_DEV_MODE_CONFIG,
+        desktopCommandManager: this.commandManager,
+        mobileCommandManager: this.mobileCommandManager,
+      });
+
+      // PropertyOverrideManager and MobileLayoutManager are initialized when a template is loaded
+      // because they need a template to operate on
 
       this.initialized = true;
       this.eventEmitter.emit(BuilderEvent.INITIALIZED, {
@@ -353,6 +377,94 @@ export class Builder {
    */
   public getTranslationManager(): TranslationManager | undefined {
     return this.translationManager;
+  }
+
+  /**
+   * Gets the mode manager
+   *
+   * Provides access to Mobile Development Mode functionality for switching
+   * between desktop and mobile editing modes, managing property inheritance,
+   * and coordinating mode-specific behaviors.
+   *
+   * @example
+   * ```ts
+   * const modeManager = builder.getModeManager();
+   * await modeManager.switchMode(DeviceMode.MOBILE);
+   * console.log('Now editing in mobile mode');
+   * ```
+   */
+  public getModeManager(): ModeManager {
+    this.ensureInitialized();
+    return this.modeManager;
+  }
+
+  /**
+   * Gets the property override manager
+   *
+   * Provides access to mobile property override functionality for setting,
+   * clearing, and querying mobile-specific style overrides.
+   *
+   * Note: This requires a template to be loaded first.
+   *
+   * @throws Error if no template is loaded
+   *
+   * @example
+   * ```ts
+   * const overrideManager = builder.getPropertyOverrideManager();
+   * overrideManager.setOverride('component-123', 'styles.padding', '16px');
+   * ```
+   */
+  public getPropertyOverrideManager(): PropertyOverrideManager {
+    this.ensureInitialized();
+    const template = this.getCurrentTemplate();
+    if (!template) {
+      throw new Error('No template loaded. Load or create a template first.');
+    }
+
+    // Lazy initialization
+    if (!this.propertyOverrideManager) {
+      this.propertyOverrideManager = new PropertyOverrideManager({
+        eventEmitter: this.eventEmitter,
+        config: DEFAULT_MOBILE_DEV_MODE_CONFIG,
+        template,
+      });
+    }
+
+    return this.propertyOverrideManager;
+  }
+
+  /**
+   * Gets the mobile layout manager
+   *
+   * Provides access to mobile layout functionality for managing component
+   * ordering and visibility on mobile devices.
+   *
+   * Note: This requires a template to be loaded first.
+   *
+   * @throws Error if no template is loaded
+   *
+   * @example
+   * ```ts
+   * const layoutManager = builder.getMobileLayoutManager();
+   * layoutManager.setComponentVisibility('component-123', false);
+   * ```
+   */
+  public getMobileLayoutManager(): MobileLayoutManager {
+    this.ensureInitialized();
+    const template = this.getCurrentTemplate();
+    if (!template) {
+      throw new Error('No template loaded. Load or create a template first.');
+    }
+
+    // Lazy initialization
+    if (!this.mobileLayoutManager) {
+      this.mobileLayoutManager = new MobileLayoutManager({
+        eventEmitter: this.eventEmitter,
+        template,
+      });
+    }
+
+    return this.mobileLayoutManager;
   }
 
   /**

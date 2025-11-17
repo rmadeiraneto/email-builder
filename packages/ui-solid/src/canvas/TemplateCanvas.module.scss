@@ -127,6 +127,39 @@
     opacity: 0.5;
     cursor: move;
   }
+
+  // Hidden component (mobile mode)
+  &.hidden {
+    opacity: 0.4;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0, 0, 0, 0.03) 10px,
+        rgba(0, 0, 0, 0.03) 20px
+      );
+      pointer-events: none;
+      z-index: 5;
+      border-radius: tokens.$border-radius-sm;
+    }
+
+    .componentContent {
+      filter: grayscale(60%);
+    }
+
+    &:hover {
+      opacity: 0.6;
+    }
+  }
 }
 
 .componentOverlay {
@@ -161,7 +194,9 @@
 }
 
 .componentLabel {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: tokens.$spacing-1;
   padding: tokens.$spacing-1 tokens.$spacing-2;
   background: tokens.$color-brand-primary-600;
   color: tokens.$color-ui-text-inverse;
@@ -171,6 +206,38 @@
   text-transform: uppercase;
   letter-spacing: tokens.$typography-letter-spacing-wide;
   margin-left: tokens.$spacing-8;
+}
+
+.mobileBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+  margin-left: tokens.$spacing-1;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.hiddenBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+  margin-left: tokens.$spacing-1;
+  opacity: 0.8;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .dropIndicator {

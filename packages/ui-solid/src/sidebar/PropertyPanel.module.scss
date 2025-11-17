@@ -590,3 +590,160 @@
     outline-offset: tokens.$border-width-2;
   }
 }
+
+// Mobile Development Mode Styles
+.propertyLabelWithMobile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: tokens.$spacing-2;
+  margin-bottom: tokens.$spacing-2;
+}
+
+.propertyLabelText {
+  display: flex;
+  align-items: center;
+  gap: tokens.$spacing-1-5;
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-neutral-700;
+}
+
+.mobileIndicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+  opacity: 0.7;
+  cursor: help;
+  transition: opacity tokens.$animation-duration-fast tokens.$animation-easing-ease;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.resetMobileButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: tokens.$spacing-1 tokens.$spacing-1-5;
+  font-size: tokens.$typography-font-size-xs;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-brand-primary-600;
+  background: tokens.$color-brand-primary-50;
+  border: none;
+  border-radius: tokens.$border-radius-sm;
+  cursor: pointer;
+  transition: all tokens.$animation-duration-fast tokens.$animation-easing-ease;
+
+  &:hover {
+    background: tokens.$color-brand-primary-100;
+    color: tokens.$color-brand-primary-700;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus-visible {
+    outline: tokens.$border-width-2 solid tokens.$color-brand-primary-500;
+    outline-offset: tokens.$border-width-base;
+  }
+}
+
+.inheritedValue {
+  display: block;
+  margin-top: tokens.$spacing-1;
+  padding: tokens.$spacing-1-5 tokens.$spacing-2;
+  font-size: tokens.$typography-font-size-xs;
+  color: tokens.$color-neutral-600;
+  background: tokens.$color-neutral-50;
+  border-radius: tokens.$border-radius-sm;
+  font-family: tokens.$typography-font-family-mono;
+}
+
+.mobileBehaviorSection {
+  padding: tokens.$spacing-4;
+  background: tokens.$color-ui-background-secondary;
+  border-top: tokens.$border-width-base solid tokens.$color-ui-border-base;
+}
+
+.mobileBehaviorTitle {
+  margin: 0 0 tokens.$spacing-3 0;
+  font-size: tokens.$typography-font-size-base;
+  font-weight: tokens.$typography-font-weight-semibold;
+  color: tokens.$color-ui-text-primary;
+}
+
+.visibilityControls {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$spacing-2;
+}
+
+.visibilityRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: tokens.$spacing-2;
+  background: tokens.$color-ui-background-primary;
+  border: tokens.$border-width-base solid tokens.$color-ui-border-base;
+  border-radius: tokens.$border-radius-md;
+}
+
+.visibilityLabel {
+  font-size: tokens.$typography-font-size-sm;
+  font-weight: tokens.$typography-font-weight-medium;
+  color: tokens.$color-ui-text-primary;
+}
+
+.visibilityToggle {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.visibilityToggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.visibilitySlider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: tokens.$color-neutral-300;
+  border-radius: 24px;
+  transition: background-color tokens.$animation-duration-normal tokens.$animation-easing-ease;
+
+  &::before {
+    position: absolute;
+    content: '';
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: tokens.$color-ui-background-primary;
+    border-radius: 50%;
+    transition: transform tokens.$animation-duration-normal tokens.$animation-easing-ease;
+  }
+}
+
+.visibilityToggle input:checked + .visibilitySlider {
+  background-color: tokens.$color-brand-primary-500;
+}
+
+.visibilityToggle input:checked + .visibilitySlider::before {
+  transform: translateX(20px);
+}
+
+.visibilityToggle input:focus-visible + .visibilitySlider {
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}

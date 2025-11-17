@@ -1,4 +1,10 @@
-import type { BaseComponent, ComponentPreset, ComponentType, Template } from '@email-builder/core';
+import type {
+  BaseComponent,
+  ComponentPreset,
+  ComponentType,
+  Template,
+  DeviceMode,
+} from '@email-builder/core';
 
 /**
  * Visual feedback event for property hover
@@ -67,6 +73,21 @@ export interface PropertyPanelProps {
     exportPresets: () => Promise<void>;
     importPresets: (file: File) => Promise<void>;
   };
+
+  /**
+   * Current device mode (for mobile development mode)
+   */
+  deviceMode?: DeviceMode;
+
+  /**
+   * Callback to clear a mobile override and revert to desktop value
+   */
+  onClearMobileOverride?: (componentId: string, property: string) => void;
+
+  /**
+   * Callback to set component visibility per device
+   */
+  onSetVisibility?: (componentId: string, desktop: boolean, mobile: boolean) => void;
 }
 
 /**

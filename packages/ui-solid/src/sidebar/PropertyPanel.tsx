@@ -1271,6 +1271,16 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
   const handlePropertyChange = (property: PropertyDefinition, value: any) => {
     if (!props.selectedComponent) return;
 
+    // Get current value to check if it's actually changing
+    const currentValue = getNestedValue(props.selectedComponent, property.key);
+
+    // Deep equality check to prevent unnecessary updates that cause infinite loops
+    // This is critical for object-based properties (border, spacing, cssvalue)
+    if (JSON.stringify(currentValue) === JSON.stringify(value)) {
+      // Value hasn't changed, don't trigger update
+      return;
+    }
+
     // Validate the value
     const validation = validatePropertyValue(property, value);
     if (!validation.valid) {
@@ -1279,11 +1289,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
       return;
     }
 
-    // Create a copy of the component with updated property
-    const updatedComponent = { ...props.selectedComponent };
-    setNestedValue(updatedComponent, property.key, value);
-
-    // Call the onChange callback
+    // Call the onChange callback only if value has actually changed
     props.onPropertyChange(
       props.selectedComponent.id,
       property.key,

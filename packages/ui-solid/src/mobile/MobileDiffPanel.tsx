@@ -5,8 +5,9 @@
  */
 
 import { type Component, Show, For, createMemo } from 'solid-js';
-import { DiffCalculator, type DiffSummary, type ComponentDiff } from '@email-builder/core/mobile/DiffCalculator';
 import type { Template } from '@email-builder/core';
+import type { DiffSummary, ComponentDiff } from '@email-builder/core/mobile/DiffCalculator';
+import { DiffCalculator } from '@email-builder/core';
 import styles from './MobileDiffPanel.module.scss';
 
 export interface MobileDiffPanelProps {

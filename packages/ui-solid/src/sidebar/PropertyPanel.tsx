@@ -11,7 +11,8 @@ import { PresetPreview, PresetManager } from '../modals';
 import { RichTextEditor } from '../editors';
 import { CompatibilityIcon, CompatibilityModal } from '../compatibility';
 import { CSSValueInput, BorderEditor, SpacingEditor, DisplayToggle, ImageUpload } from '../molecules';
-import type { CSSValue, BorderConfig, Spacing } from '@email-builder/core';
+import type { ImageData } from '../molecules/ImageUpload/ImageUpload';
+import type { CSSValue, Border, BorderRadius, Spacing } from '@email-builder/core';
 import styles from './PropertyPanel.module.scss';
 
 /**
@@ -460,18 +461,17 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
       ],
     },
     {
-      key: 'content.image.src',
-      label: 'Logo URL',
-      type: 'url',
+      key: 'content.showLogo',
+      label: 'Show Logo',
+      type: 'displaytoggle',
       section: 'content',
-      placeholder: 'https://example.com/logo.png',
     },
     {
-      key: 'content.image.alt',
-      label: 'Logo Alt Text',
-      type: 'text',
+      key: 'content.image',
+      label: 'Logo Image',
+      type: 'imageupload',
       section: 'content',
-      placeholder: 'Company logo',
+      description: 'Upload logo or provide URL',
     },
     {
       key: 'styles.backgroundColor',
@@ -494,9 +494,14 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
     {
       key: 'styles.padding',
       label: 'Padding',
-      type: 'text',
+      type: 'spacing',
       section: 'styles',
-      placeholder: '20px',
+    },
+    {
+      key: 'styles.border',
+      label: 'Border',
+      type: 'border',
+      section: 'styles',
     },
   ],
   footer: [
@@ -506,6 +511,12 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
       type: 'text',
       section: 'content',
       placeholder: '© 2025 Your Company. All rights reserved.',
+    },
+    {
+      key: 'content.showSocialIcons',
+      label: 'Show Social Icons',
+      type: 'displaytoggle',
+      section: 'content',
     },
     {
       key: 'styles.backgroundColor',
@@ -522,7 +533,7 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
     {
       key: 'styles.textStyles.fontSize',
       label: 'Font Size',
-      type: 'number',
+      type: 'cssvalue',
       section: 'styles',
       min: 10,
       max: 24,
@@ -536,9 +547,14 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
     {
       key: 'styles.padding',
       label: 'Padding',
-      type: 'text',
+      type: 'spacing',
       section: 'styles',
-      placeholder: '30px 20px',
+    },
+    {
+      key: 'styles.border',
+      label: 'Border',
+      type: 'border',
+      section: 'styles',
     },
   ],
   hero: [
@@ -555,11 +571,17 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
       ],
     },
     {
-      key: 'content.image.src',
-      label: 'Image URL',
-      type: 'url',
+      key: 'content.showImage',
+      label: 'Show Image',
+      type: 'displaytoggle',
       section: 'content',
-      placeholder: 'https://example.com/hero-image.jpg',
+    },
+    {
+      key: 'content.image',
+      label: 'Hero Image',
+      type: 'imageupload',
+      section: 'content',
+      description: 'Upload hero image or provide URL',
     },
     {
       key: 'content.heading.plainText',
@@ -574,6 +596,12 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
       type: 'textarea',
       section: 'content',
       placeholder: 'Supporting text for your hero section',
+    },
+    {
+      key: 'content.showButton',
+      label: 'Show Button',
+      type: 'displaytoggle',
+      section: 'content',
     },
     {
       key: 'content.button.text',
@@ -604,7 +632,7 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
     {
       key: 'styles.headingStyles.fontSize',
       label: 'Heading Size',
-      type: 'number',
+      type: 'cssvalue',
       section: 'styles',
       min: 24,
       max: 72,
@@ -619,6 +647,18 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
         { label: 'Center', value: 'center' },
         { label: 'Right', value: 'right' },
       ],
+    },
+    {
+      key: 'styles.padding',
+      label: 'Padding',
+      type: 'spacing',
+      section: 'styles',
+    },
+    {
+      key: 'styles.border',
+      label: 'Border',
+      type: 'border',
+      section: 'styles',
     },
   ],
   list: [
@@ -673,10 +713,28 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
     {
       key: 'styles.titleStyles.fontSize',
       label: 'Title Size',
-      type: 'number',
+      type: 'cssvalue',
       section: 'styles',
       min: 14,
       max: 36,
+    },
+    {
+      key: 'styles.padding',
+      label: 'Padding',
+      type: 'spacing',
+      section: 'styles',
+    },
+    {
+      key: 'styles.itemPadding',
+      label: 'Item Padding',
+      type: 'spacing',
+      section: 'styles',
+    },
+    {
+      key: 'styles.border',
+      label: 'Border',
+      type: 'border',
+      section: 'styles',
     },
   ],
   call_to_action: [
@@ -707,6 +765,12 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
       placeholder: 'Join thousands of satisfied customers',
     },
     {
+      key: 'content.showPrimaryButton',
+      label: 'Show Primary Button',
+      type: 'displaytoggle',
+      section: 'content',
+    },
+    {
       key: 'content.primaryButton.text',
       label: 'Primary Button Text',
       type: 'text',
@@ -719,6 +783,12 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
       type: 'url',
       section: 'content',
       placeholder: 'https://example.com',
+    },
+    {
+      key: 'content.showSecondaryButton',
+      label: 'Show Secondary Button',
+      type: 'displaytoggle',
+      section: 'content',
     },
     {
       key: 'content.secondaryButton.text',
@@ -749,10 +819,22 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
     {
       key: 'styles.headingStyles.fontSize',
       label: 'Heading Size',
-      type: 'number',
+      type: 'cssvalue',
       section: 'styles',
       min: 20,
       max: 48,
+    },
+    {
+      key: 'styles.padding',
+      label: 'Padding',
+      type: 'spacing',
+      section: 'styles',
+    },
+    {
+      key: 'styles.border',
+      label: 'Border',
+      type: 'border',
+      section: 'styles',
     },
   ],
 };
@@ -1377,10 +1459,8 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
             <CSSValueInput
               value={currentValue as CSSValue || { value: property.min || 0, unit: 'px' }}
               onChange={(value) => handlePropertyChange(property, value)}
-              min={property.min}
-              max={property.max}
-              onFocus={() => handlePropertyEditStart(property)}
-              onBlur={() => handlePropertyEditEnd(property)}
+              min={property.min ?? null}
+              max={property.max ?? null}
             />
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
@@ -1406,15 +1486,13 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               </Show>
             </label>
             <BorderEditor
-              value={currentValue as BorderConfig || {
+              value={(currentValue || {
                 width: { value: 1, unit: 'px' },
                 style: 'solid',
                 color: '#000000',
                 radius: { topLeft: { value: 0, unit: 'px' }, topRight: { value: 0, unit: 'px' }, bottomLeft: { value: 0, unit: 'px' }, bottomRight: { value: 0, unit: 'px' } }
-              }}
-              onChange={(value) => handlePropertyChange(property, value)}
-              onFocus={() => handlePropertyEditStart(property)}
-              onBlur={() => handlePropertyEditEnd(property)}
+              }) as Border & { radius?: BorderRadius }}
+              onChange={(value: Border & { radius?: BorderRadius }) => handlePropertyChange(property, value)}
             />
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
@@ -1440,10 +1518,8 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               </Show>
             </label>
             <SpacingEditor
-              value={currentValue as Spacing || { top: { value: 0, unit: 'px' }, right: { value: 0, unit: 'px' }, bottom: { value: 0, unit: 'px' }, left: { value: 0, unit: 'px' } }}
-              onChange={(value) => handlePropertyChange(property, value)}
-              onFocus={() => handlePropertyEditStart(property)}
-              onBlur={() => handlePropertyEditEnd(property)}
+              value={(currentValue || { top: { value: 0, unit: 'px' }, right: { value: 0, unit: 'px' }, bottom: { value: 0, unit: 'px' }, left: { value: 0, unit: 'px' } }) as Spacing}
+              onChange={(value: Spacing) => handlePropertyChange(property, value)}
             />
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
@@ -1459,9 +1535,7 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
             </label>
             <DisplayToggle
               value={currentValue !== undefined ? currentValue : true}
-              onChange={(value) => handlePropertyChange(property, value)}
-              onFocus={() => handlePropertyEditStart(property)}
-              onBlur={() => handlePropertyEditEnd(property)}
+              onChange={(value: boolean) => handlePropertyChange(property, value)}
             />
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
@@ -1476,11 +1550,17 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
               {property.label}
             </label>
             <ImageUpload
-              src={getNestedValue(props.selectedComponent, property.key + '.src') || ''}
-              alt={getNestedValue(props.selectedComponent, property.key + '.alt') || ''}
-              onChange={(src, alt) => {
-                props.onPropertyChange(props.selectedComponent!.id, property.key + '.src', src);
-                props.onPropertyChange(props.selectedComponent!.id, property.key + '.alt', alt);
+              value={{
+                url: getNestedValue(props.selectedComponent, property.key + '.src') || getNestedValue(props.selectedComponent, property.key + '.url') || '',
+                alt: getNestedValue(props.selectedComponent, property.key + '.alt') || ''
+              }}
+              onChange={(value: ImageData) => {
+                if (getNestedValue(props.selectedComponent, property.key + '.src') !== undefined) {
+                  props.onPropertyChange(props.selectedComponent!.id, property.key + '.src', value.url || '');
+                  props.onPropertyChange(props.selectedComponent!.id, property.key + '.alt', value.alt || '');
+                } else {
+                  props.onPropertyChange(props.selectedComponent!.id, property.key, value);
+                }
               }}
               onUploadStart={() => handlePropertyEditStart(property)}
               onUploadComplete={() => handlePropertyEditEnd(property)}

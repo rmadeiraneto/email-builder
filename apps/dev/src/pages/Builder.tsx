@@ -493,6 +493,9 @@ const BuilderContent: Component = () => {
                 onPropertyChange={handlePropertyChange}
                 onGeneralStyleChange={handleGeneralStyleChange}
                 onDelete={handleDelete}
+                deviceMode={state.deviceMode}
+                onClearMobileOverride={actions.clearMobileOverride}
+                onSetVisibility={actions.setMobileVisibility}
                 presetActions={{
                   applyPreset: actions.applyPreset,
                   createPreset: actions.createPreset,

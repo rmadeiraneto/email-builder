@@ -120,6 +120,8 @@ export interface BuilderContextValue {
     toggleMobileVisibility: (componentId: string, visible: boolean) => void;
     resetMobileOrder: () => void;
     applyMobileDefaults: () => Promise<void>;
+    setMobileVisibility: (componentId: string, desktop: boolean, mobile: boolean) => void;
+    clearMobileOverride: (componentId: string, property: string) => void;
   };
 }
 
@@ -1091,6 +1093,58 @@ export const BuilderProvider: ParentComponent = (props) => {
       } catch (error) {
         console.error('[BuilderContext] Failed to apply mobile defaults:', error);
       }
+    },
+
+    setMobileVisibility: (componentId: string, desktop: boolean, mobile: boolean) => {
+      if (!state.template) {
+        console.error('[BuilderContext] Cannot set visibility: no template loaded');
+        return;
+      }
+
+      const component = state.template.components.find((c) => c.id === componentId);
+      if (!component) {
+        console.error('[BuilderContext] Cannot set visibility: component not found');
+        return;
+      }
+
+      // Update component visibility
+      component.visibility = { desktop, mobile };
+      setState('template', { ...state.template });
+
+      console.log('[BuilderContext] Set visibility for component:', componentId, { desktop, mobile });
+    },
+
+    clearMobileOverride: (componentId: string, property: string) => {
+      if (!state.template) {
+        console.error('[BuilderContext] Cannot clear override: no template loaded');
+        return;
+      }
+
+      const component = state.template.components.find((c) => c.id === componentId);
+      if (!component) {
+        console.error('[BuilderContext] Cannot clear override: component not found');
+        return;
+      }
+
+      if (!component.mobileStyles) {
+        console.warn('[BuilderContext] No mobile styles to clear');
+        return;
+      }
+
+      // Extract the style property key (e.g., 'styles.backgroundColor' -> 'backgroundColor')
+      const styleProp = property.startsWith('styles.') ? property.replace('styles.', '') : property;
+
+      // Delete the mobile override
+      delete (component.mobileStyles as Record<string, unknown>)[styleProp];
+
+      // If no more mobile styles, remove the object entirely
+      if (Object.keys(component.mobileStyles).length === 0) {
+        delete component.mobileStyles;
+      }
+
+      setState('template', { ...state.template });
+
+      console.log('[BuilderContext] Cleared mobile override:', componentId, property);
     },
   };
 

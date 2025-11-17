@@ -10,6 +10,8 @@ import { visualFeedbackEventBus } from '@email-builder/core';
 import { PresetPreview, PresetManager } from '../modals';
 import { RichTextEditor } from '../editors';
 import { CompatibilityIcon, CompatibilityModal } from '../compatibility';
+import { CSSValueInput, BorderEditor, SpacingEditor, DisplayToggle, ImageUpload } from '../molecules';
+import type { CSSValue, BorderConfig, Spacing } from '@email-builder/core';
 import styles from './PropertyPanel.module.scss';
 
 /**
@@ -291,19 +293,16 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
       section: 'styles',
     },
     {
-      key: 'styles.borderRadius',
-      label: 'Border Radius',
-      type: 'number',
+      key: 'styles.border',
+      label: 'Border',
+      type: 'border',
       section: 'styles',
-      min: 0,
-      max: 50,
     },
     {
       key: 'styles.padding',
       label: 'Padding',
-      type: 'text',
+      type: 'spacing',
       section: 'styles',
-      placeholder: '12px 24px',
     },
   ],
   text: [
@@ -370,24 +369,16 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
   ],
   image: [
     {
-      key: 'content.src',
-      label: 'Image URL',
-      type: 'url',
+      key: 'content',
+      label: 'Image',
+      type: 'imageupload',
       section: 'content',
-      placeholder: 'https://example.com/image.jpg',
-    },
-    {
-      key: 'content.alt',
-      label: 'Alt Text',
-      type: 'text',
-      section: 'content',
-      placeholder: 'Describe the image',
-      description: 'Important for accessibility',
+      description: 'Upload an image or provide a URL',
     },
     {
       key: 'styles.width',
       label: 'Width',
-      type: 'number',
+      type: 'cssvalue',
       section: 'styles',
       min: 0,
       max: 1000,
@@ -395,7 +386,7 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
     {
       key: 'styles.height',
       label: 'Height',
-      type: 'number',
+      type: 'cssvalue',
       section: 'styles',
       min: 0,
       max: 1000,
@@ -411,12 +402,18 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
         { label: 'Right', value: 'right' },
       ],
     },
+    {
+      key: 'styles.border',
+      label: 'Border',
+      type: 'border',
+      section: 'styles',
+    },
   ],
   separator: [
     {
       key: 'styles.height',
       label: 'Height',
-      type: 'number',
+      type: 'cssvalue',
       section: 'styles',
       min: 1,
       max: 20,
@@ -443,7 +440,7 @@ const PROPERTY_DEFINITIONS: ComponentPropertyMap = {
     {
       key: 'styles.height',
       label: 'Height',
-      type: 'number',
+      type: 'cssvalue',
       section: 'styles',
       min: 0,
       max: 200,
@@ -1354,6 +1351,140 @@ export const PropertyPanel: Component<PropertyPanelProps> = (props) => {
                 }}
               </For>
             </div>
+            <Show when={property.description}>
+              <span class={styles.propertyDescription}>{property.description}</span>
+            </Show>
+          </div>
+        );
+
+      case 'cssvalue':
+        const cssvalueCssProp = getCssPropertyName(property.key);
+        return (
+          <div class={styles.propertyField}>
+            <label class={styles.propertyLabel}>
+              {property.label}
+              <Show when={cssvalueCssProp}>
+                <CompatibilityIcon
+                  property={cssvalueCssProp!}
+                  size={16}
+                  onClick={() => {
+                    setSelectedProperty(cssvalueCssProp!);
+                    setCompatibilityModalOpen(true);
+                  }}
+                />
+              </Show>
+            </label>
+            <CSSValueInput
+              value={currentValue as CSSValue || { value: property.min || 0, unit: 'px' }}
+              onChange={(value) => handlePropertyChange(property, value)}
+              min={property.min}
+              max={property.max}
+              onFocus={() => handlePropertyEditStart(property)}
+              onBlur={() => handlePropertyEditEnd(property)}
+            />
+            <Show when={property.description}>
+              <span class={styles.propertyDescription}>{property.description}</span>
+            </Show>
+          </div>
+        );
+
+      case 'border':
+        const borderCssProp = getCssPropertyName(property.key);
+        return (
+          <div class={styles.propertyField}>
+            <label class={styles.propertyLabel}>
+              {property.label}
+              <Show when={borderCssProp}>
+                <CompatibilityIcon
+                  property={borderCssProp!}
+                  size={16}
+                  onClick={() => {
+                    setSelectedProperty(borderCssProp!);
+                    setCompatibilityModalOpen(true);
+                  }}
+                />
+              </Show>
+            </label>
+            <BorderEditor
+              value={currentValue as BorderConfig || {
+                width: { value: 1, unit: 'px' },
+                style: 'solid',
+                color: '#000000',
+                radius: { topLeft: { value: 0, unit: 'px' }, topRight: { value: 0, unit: 'px' }, bottomLeft: { value: 0, unit: 'px' }, bottomRight: { value: 0, unit: 'px' } }
+              }}
+              onChange={(value) => handlePropertyChange(property, value)}
+              onFocus={() => handlePropertyEditStart(property)}
+              onBlur={() => handlePropertyEditEnd(property)}
+            />
+            <Show when={property.description}>
+              <span class={styles.propertyDescription}>{property.description}</span>
+            </Show>
+          </div>
+        );
+
+      case 'spacing':
+        const spacingCssProp = getCssPropertyName(property.key);
+        return (
+          <div class={styles.propertyField}>
+            <label class={styles.propertyLabel}>
+              {property.label}
+              <Show when={spacingCssProp}>
+                <CompatibilityIcon
+                  property={spacingCssProp!}
+                  size={16}
+                  onClick={() => {
+                    setSelectedProperty(spacingCssProp!);
+                    setCompatibilityModalOpen(true);
+                  }}
+                />
+              </Show>
+            </label>
+            <SpacingEditor
+              value={currentValue as Spacing || { top: { value: 0, unit: 'px' }, right: { value: 0, unit: 'px' }, bottom: { value: 0, unit: 'px' }, left: { value: 0, unit: 'px' } }}
+              onChange={(value) => handlePropertyChange(property, value)}
+              onFocus={() => handlePropertyEditStart(property)}
+              onBlur={() => handlePropertyEditEnd(property)}
+            />
+            <Show when={property.description}>
+              <span class={styles.propertyDescription}>{property.description}</span>
+            </Show>
+          </div>
+        );
+
+      case 'displaytoggle':
+        return (
+          <div class={styles.propertyField}>
+            <label class={styles.propertyLabel}>
+              {property.label}
+            </label>
+            <DisplayToggle
+              value={currentValue !== undefined ? currentValue : true}
+              onChange={(value) => handlePropertyChange(property, value)}
+              onFocus={() => handlePropertyEditStart(property)}
+              onBlur={() => handlePropertyEditEnd(property)}
+            />
+            <Show when={property.description}>
+              <span class={styles.propertyDescription}>{property.description}</span>
+            </Show>
+          </div>
+        );
+
+      case 'imageupload':
+        return (
+          <div class={styles.propertyField}>
+            <label class={styles.propertyLabel}>
+              {property.label}
+            </label>
+            <ImageUpload
+              src={getNestedValue(props.selectedComponent, property.key + '.src') || ''}
+              alt={getNestedValue(props.selectedComponent, property.key + '.alt') || ''}
+              onChange={(src, alt) => {
+                props.onPropertyChange(props.selectedComponent!.id, property.key + '.src', src);
+                props.onPropertyChange(props.selectedComponent!.id, property.key + '.alt', alt);
+              }}
+              onUploadStart={() => handlePropertyEditStart(property)}
+              onUploadComplete={() => handlePropertyEditEnd(property)}
+            />
             <Show when={property.description}>
               <span class={styles.propertyDescription}>{property.description}</span>
             </Show>

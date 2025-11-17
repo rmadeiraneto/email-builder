@@ -7,7 +7,7 @@ export interface PropertyHoverEvent {
   propertyPath: string;
   componentId: string | undefined;
   currentValue?: any;
-  propertyType: 'text' | 'number' | 'color' | 'select' | 'textarea' | 'url' | 'richtext' | 'radio';
+  propertyType: 'text' | 'number' | 'color' | 'select' | 'textarea' | 'url' | 'richtext' | 'radio' | 'cssvalue' | 'border' | 'spacing' | 'displaytoggle' | 'imageupload';
 }
 
 /**
@@ -80,7 +80,12 @@ export type PropertyEditorType =
   | 'color'
   | 'select'
   | 'radio'
-  | 'url';
+  | 'url'
+  | 'cssvalue'
+  | 'border'
+  | 'spacing'
+  | 'displaytoggle'
+  | 'imageupload';
 
 /**
  * Property definition for rendering editors
